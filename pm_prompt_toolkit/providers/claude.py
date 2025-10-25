@@ -19,8 +19,6 @@ Example:
 """
 
 import logging
-import xml.etree.ElementTree as ET
-from typing import Optional
 from xml.sax.saxutils import escape
 
 try:
@@ -44,7 +42,7 @@ CLAUDE_PRICING = {
 
 # Try to import new pricing system (graceful fallback if not available)
 try:
-    from ai_models import get_pricing_service
+    from ai_models import get_pricing_service  # noqa: F401
 
     _use_new_pricing = True
 except ImportError:

@@ -23,9 +23,8 @@ See Also:
 """
 
 import logging
-from typing import Optional
 
-from pm_prompt_toolkit.providers.base import ClassificationResult, LLMProvider, SignalCategory
+from pm_prompt_toolkit.providers.base import ClassificationResult, LLMProvider
 
 logger = logging.getLogger(__name__)
 
