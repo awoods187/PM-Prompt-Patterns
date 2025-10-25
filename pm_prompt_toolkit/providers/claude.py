@@ -21,6 +21,7 @@ Example:
 import logging
 import xml.etree.ElementTree as ET
 from typing import Optional
+from xml.sax.saxutils import escape
 
 try:
     import anthropic
@@ -153,12 +154,20 @@ class ClaudeProvider(LLMProvider):
 
         Claude has native XML understanding, making it faster and more reliable.
 
+        Security:
+            Uses xml.sax.saxutils.escape() to prevent XML injection attacks.
+            Customer signals may contain XML special characters (< > & ' ")
+            that must be properly escaped.
+
         Args:
             text: Signal text to classify
 
         Returns:
-            XML-formatted prompt
+            XML-formatted prompt with escaped user input
         """
+        # Escape XML special characters to prevent injection
+        escaped_text = escape(text)
+
         return f"""<task>Classify this customer signal into exactly ONE category</task>
 
 <categories>
@@ -169,7 +178,7 @@ class ClaudeProvider(LLMProvider):
 <category id="general_feedback">Other feedback</category>
 </categories>
 
-<signal>{text}</signal>
+<signal>{escaped_text}</signal>
 
 <output_format>
 category|confidence|evidence
@@ -179,6 +188,10 @@ category|confidence|evidence
         """Parse Claude's response.
 
         Expected format: category|confidence|evidence
+
+        Security:
+            Truncates logged response to prevent sensitive customer data exposure.
+            Full response is not logged to avoid leaking PII or confidential content.
 
         Args:
             response: Raw response from Claude
@@ -200,7 +213,9 @@ category|confidence|evidence
 
             return category, confidence, evidence.strip()
         except Exception as e:
-            logger.error(f"Failed to parse response: {response}")
+            # Truncate response to prevent logging sensitive customer data
+            safe_response = response[:100] + "..." if len(response) > 100 else response
+            logger.error(f"Failed to parse response: {safe_response}")
             raise ValueError(f"Invalid response format: {e}") from e
 
     def _calculate_cost(
