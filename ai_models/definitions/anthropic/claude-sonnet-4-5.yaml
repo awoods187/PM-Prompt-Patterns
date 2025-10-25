@@ -1,0 +1,53 @@
+# Claude Sonnet 4.5 Model Definition
+# Last verified: 2025-10-25
+# Source: https://docs.claude.com/en/docs/about-claude/models
+
+schema_version: "1.0.0"
+model_id: "claude-sonnet-4-5"
+provider: "anthropic"
+name: "Claude Sonnet 4.5"
+api_identifier: "claude-sonnet-4-5-20250929"
+
+metadata:
+  context_window_input: 200000
+  context_window_output: null  # Same as input
+  knowledge_cutoff: "January 2025"
+  release_date: "2025-09-29"
+  last_verified: "2025-10-25"
+  docs_url: "https://docs.claude.com/en/docs/about-claude/models"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - prompt_caching
+  - streaming
+  - json_mode
+
+pricing:
+  input_per_1m: 3.00
+  output_per_1m: 15.00
+  cache_write_per_1m: 3.75
+  cache_read_per_1m: 0.30
+
+optimization:
+  recommended_for:
+    - "Production workhorse applications"
+    - "Complex analysis and reasoning tasks"
+    - "Long-form content generation"
+    - "Code generation and review"
+    - "Multi-step instructions"
+    - "Document analysis and summarization"
+  best_practices:
+    - "Use XML tags for structured prompts (Claude's native format)"
+    - "Enable prompt caching for repeated system prompts (90% cost savings)"
+    - "Leverage 200k context window for comprehensive analysis"
+    - "Use function calling for structured outputs"
+    - "Place examples in system prompt to benefit from caching"
+    - "Use thinking tags for complex reasoning tasks"
+  cost_tier: "mid-tier"
+  speed_tier: "balanced"
+
+notes: "RECOMMENDED for most use cases. Training data through July 2025. Extended context window (1M tokens) available in beta."

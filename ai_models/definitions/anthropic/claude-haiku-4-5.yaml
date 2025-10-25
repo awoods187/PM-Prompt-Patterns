@@ -1,0 +1,53 @@
+# Claude Haiku 4.5 Model Definition
+# Last verified: 2025-10-25
+# Source: https://docs.claude.com/en/docs/about-claude/models
+
+schema_version: "1.0.0"
+model_id: "claude-haiku-4-5"
+provider: "anthropic"
+name: "Claude Haiku 4.5"
+api_identifier: "claude-haiku-4-5-20251001"
+
+metadata:
+  context_window_input: 200000
+  context_window_output: null
+  knowledge_cutoff: "February 2025"
+  release_date: "2025-10-01"
+  last_verified: "2025-10-25"
+  docs_url: "https://docs.claude.com/en/docs/about-claude/models"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - prompt_caching
+  - streaming
+  - json_mode
+
+pricing:
+  input_per_1m: 1.00
+  output_per_1m: 5.00
+  cache_write_per_1m: 1.25
+  cache_read_per_1m: 0.10
+
+optimization:
+  recommended_for:
+    - "High-volume classification tasks"
+    - "Fast processing requirements"
+    - "Real-time applications"
+    - "Cost-conscious projects"
+    - "Simple content generation"
+    - "Data extraction and parsing"
+  best_practices:
+    - "Ideal for tasks under 10 seconds response time"
+    - "Use for high-frequency API calls (>1000/day)"
+    - "Enable prompt caching for maximum cost savings"
+    - "Perfect for customer signal classification"
+    - "Use XML tags for best structured output"
+    - "Cascade from Haiku to Sonnet for edge cases"
+  cost_tier: "budget"
+  speed_tier: "fast"
+
+notes: "Fast processing model. Price INCREASED from Haiku 3.x ($0.25→$1.00 input, $1.25→$5.00 output) but capabilities greatly enhanced. Training data through July 2025."

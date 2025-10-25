@@ -1,0 +1,63 @@
+# Pre-commit hooks for PM Prompt Patterns repository
+#
+# Installation:
+#   pip install pre-commit
+#   pre-commit install
+#
+# Manual run:
+#   pre-commit run --all-files
+#
+# See https://pre-commit.com for more information
+
+repos:
+  # Deprecated model detection
+  - repo: local
+    hooks:
+      - id: check-deprecated-models
+        name: Check for deprecated model identifiers
+        entry: python -m pytest tests/test_deprecated_models.py -v
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [commit]
+
+  # Registry validation (fast, no API calls)
+  - repo: local
+    hooks:
+      - id: validate-model-registry
+        name: Validate model registry structure
+        entry: python -m pytest tests/test_model_registry.py -v
+        language: system
+        pass_filenames: false
+        files: ^models/
+        stages: [commit]
+
+  # Standard Python code quality
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+      - id: debug-statements
+
+  # Python formatting (optional - uncomment if desired)
+  # - repo: https://github.com/psf/black
+  #   rev: 24.1.1
+  #   hooks:
+  #     - id: black
+  #       language_version: python3
+
+  # Python import sorting (optional - uncomment if desired)
+  # - repo: https://github.com/pycqa/isort
+  #   rev: 5.13.2
+  #   hooks:
+  #     - id: isort
+  #       args: ["--profile", "black"]
+
+# Skip expensive endpoint tests in pre-commit (run in CI instead)
+# To run endpoint tests manually: pytest tests/test_model_endpoints.py
