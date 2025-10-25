@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Andy Woods
+# Licensed under the MIT License (see LICENSE file)
+
 """
 DEPRECATED: This module is deprecated and will be removed in a future version.
 

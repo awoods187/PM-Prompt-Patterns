@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Andy Woods
+# Licensed under the MIT License (see LICENSE file)
+
 """Application settings and configuration management.
 
 This module provides secure configuration management using Pydantic Settings.

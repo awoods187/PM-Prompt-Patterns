@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Andy Woods
+# Licensed under the MIT License (see LICENSE file)
+
 """Comprehensive tests for the new ai_models system.
 
 Tests YAML loading, pricing service, capabilities, and model registry.

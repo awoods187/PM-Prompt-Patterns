@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Andy Woods
+# Licensed under the MIT License (see LICENSE file)
+
 """Model Capability System
 
 Defines and validates AI model capabilities for runtime feature checking.

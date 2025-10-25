@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Andy Woods
+# Licensed under the MIT License (see LICENSE file)
+
 """Base classes and interfaces for LLM providers.
 
 This module defines the abstract base class that all LLM providers must implement,

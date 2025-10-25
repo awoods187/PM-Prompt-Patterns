@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Andy Woods
+# Licensed under the MIT License (see LICENSE file)
+
 """Anthropic Claude provider implementation.
 
 This module provides integration with Anthropic's Claude models (Haiku, Sonnet, Opus)

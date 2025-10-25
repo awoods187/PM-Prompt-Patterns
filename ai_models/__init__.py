@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Andy Woods
+# Licensed under the MIT License (see LICENSE file)
+
 """AI Models Package
 
 Unified interface for AI model specifications, pricing, and capabilities.

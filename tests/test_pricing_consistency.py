@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Andy Woods
+# Licensed under the MIT License (see LICENSE file)
+
 """Test pricing consistency between registry and providers.
 
 This test suite ensures that hardcoded pricing in provider implementations

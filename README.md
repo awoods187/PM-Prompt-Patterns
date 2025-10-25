@@ -1,5 +1,9 @@
 # AI PM Toolkit
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 **Production-grade prompts and frameworks for AI-native product management**
 
 A comprehensive collection of battle-tested prompt patterns, model optimization strategies, and production frameworks for product managers building with LLMs. Built on real-world experience deploying AI systems processing 10K+ signals weekly and monitoring $100M+ ARR.
@@ -390,9 +394,42 @@ Built by [Andy Woods](https://github.com/awoods187), Product Manager with 8+ yea
 
 Connect: [LinkedIn](https://linkedin.com/in/andrew-woods-pm) | [GitHub](https://github.com/awoods187)
 
-## License
+## License & Contributing
 
-MIT License - see [LICENSE](./LICENSE)
+### License
+
+This project is licensed under the **MIT License** - see [LICENSE](./LICENSE) for full details.
+
+**TL;DR**: You can use this freely in commercial products, modify as needed, and don't need attribution (though it's appreciated).
+
+**Key Points**:
+- ✅ Commercial use allowed
+- ✅ Modification allowed
+- ✅ Distribution allowed
+- ✅ Private use allowed
+- ❌ No warranty provided
+- ❌ No liability accepted
+
+**Questions about licensing?**
+- [LICENSE_FAQ.md](./LICENSE_FAQ.md) - Common questions answered
+- [CONTENT_LICENSE.md](./CONTENT_LICENSE.md) - Prompt-specific clarifications
+- [ATTRIBUTION.md](./ATTRIBUTION.md) - How to credit (optional)
+
+### Contributing
+
+We welcome contributions! This project thrives on:
+- 📊 **Production-tested prompts** with real metrics
+- 🔧 **Code improvements** to ai_models system
+- 📚 **Documentation** enhancements
+- 🧪 **Test additions** and quality improvements
+
+**How to contribute**:
+1. Read [CONTRIBUTING.md](./CONTRIBUTING.md) - Quality standards and process
+2. Check [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) - Community guidelines
+3. Sign your commits with DCO (`git commit -s`)
+4. Submit a PR using our [template](.github/pull_request_template.md)
+
+**All contributors** are recognized in [ATTRIBUTION.md](./ATTRIBUTION.md).
 
 ## 📦 Recent Changes: Analytics Category Reorganization
 

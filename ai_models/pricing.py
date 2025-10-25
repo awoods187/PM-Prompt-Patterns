@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Andy Woods
+# Licensed under the MIT License (see LICENSE file)
+
 """Pricing Service for AI Models
 
 This module provides versioned pricing information with historical tracking

@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Andy Woods
+# Licensed under the MIT License (see LICENSE file)
+
 #!/usr/bin/env python3
 """Basic example of using the PM Prompt Toolkit.
 
