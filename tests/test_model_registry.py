@@ -11,9 +11,10 @@ Usage:
     pytest tests/test_model_registry.py
 """
 
-import pytest
 from datetime import date, timedelta
 from typing import Set
+
+import pytest
 
 from models.registry import ModelRegistry, ModelSpec, Provider
 
@@ -24,12 +25,14 @@ class TestRegistryStructure:
     def test_all_providers_have_verification_sources(self):
         """Verify each provider has a verification source URL."""
         for provider in Provider:
-            assert provider in ModelRegistry.VERIFICATION_SOURCES, \
-                f"Missing verification source for {provider.value}"
+            assert (
+                provider in ModelRegistry.VERIFICATION_SOURCES
+            ), f"Missing verification source for {provider.value}"
 
             url = ModelRegistry.VERIFICATION_SOURCES[provider]
-            assert url.startswith("https://"), \
-                f"Verification URL for {provider.value} must use HTTPS"
+            assert url.startswith(
+                "https://"
+            ), f"Verification URL for {provider.value} must use HTTPS"
 
     def test_registry_has_models(self):
         """Verify registry contains at least one model per provider."""
@@ -41,8 +44,7 @@ class TestRegistryStructure:
         providers_with_models = {spec.provider for spec in all_models.values()}
 
         for provider in Provider:
-            assert provider in providers_with_models, \
-                f"No models found for {provider.value}"
+            assert provider in providers_with_models, f"No models found for {provider.value}"
 
     def test_registry_class_attributes_exist(self):
         """Verify expected class attributes are present."""
@@ -78,8 +80,7 @@ class TestModelSpecValidation:
     def test_all_specs_are_frozen_dataclasses(self):
         """Verify all ModelSpec instances are immutable."""
         for key, spec in ModelRegistry.get_all_current_models().items():
-            assert isinstance(spec, ModelSpec), \
-                f"{key} is not a ModelSpec instance"
+            assert isinstance(spec, ModelSpec), f"{key} is not a ModelSpec instance"
 
             # Frozen dataclasses should raise FrozenInstanceError on assignment
             with pytest.raises(Exception):  # FrozenInstanceError
@@ -88,9 +89,15 @@ class TestModelSpecValidation:
     def test_all_required_fields_present(self):
         """Verify all ModelSpec instances have required fields populated."""
         required_fields = [
-            "provider", "name", "api_identifier", "context_window_input",
-            "input_price_per_1m", "output_price_per_1m", "knowledge_cutoff",
-            "last_verified", "docs_url"
+            "provider",
+            "name",
+            "api_identifier",
+            "context_window_input",
+            "input_price_per_1m",
+            "output_price_per_1m",
+            "knowledge_cutoff",
+            "last_verified",
+            "docs_url",
         ]
 
         for key, spec in ModelRegistry.get_all_current_models().items():
@@ -100,8 +107,7 @@ class TestModelSpecValidation:
 
                 # String fields should not be empty
                 if isinstance(value, str):
-                    assert len(value) > 0, \
-                        f"{key} has empty {field}"
+                    assert len(value) > 0, f"{key} has empty {field}"
 
     def test_api_identifiers_are_unique(self):
         """Verify no two models share the same API identifier."""
@@ -113,42 +119,48 @@ class TestModelSpecValidation:
                 duplicates.append((key, spec.api_identifier))
             identifiers.add(spec.api_identifier)
 
-        assert len(duplicates) == 0, \
-            f"Duplicate API identifiers found: {duplicates}"
+        assert len(duplicates) == 0, f"Duplicate API identifiers found: {duplicates}"
 
     def test_pricing_is_positive(self):
         """Verify all pricing is positive (no free models)."""
         for key, spec in ModelRegistry.get_all_current_models().items():
-            assert spec.input_price_per_1m > 0, \
-                f"{key} has non-positive input price: {spec.input_price_per_1m}"
-            assert spec.output_price_per_1m > 0, \
-                f"{key} has non-positive output price: {spec.output_price_per_1m}"
+            assert (
+                spec.input_price_per_1m > 0
+            ), f"{key} has non-positive input price: {spec.input_price_per_1m}"
+            assert (
+                spec.output_price_per_1m > 0
+            ), f"{key} has non-positive output price: {spec.output_price_per_1m}"
 
     def test_context_windows_positive(self):
         """Verify context windows are positive integers."""
         for key, spec in ModelRegistry.get_all_current_models().items():
-            assert spec.context_window_input > 0, \
-                f"{key} has non-positive input context: {spec.context_window_input}"
+            assert (
+                spec.context_window_input > 0
+            ), f"{key} has non-positive input context: {spec.context_window_input}"
 
             if spec.context_window_output is not None:
-                assert spec.context_window_output > 0, \
-                    f"{key} has non-positive output context: {spec.context_window_output}"
+                assert (
+                    spec.context_window_output > 0
+                ), f"{key} has non-positive output context: {spec.context_window_output}"
 
     def test_last_verified_is_date(self):
         """Verify last_verified is a date object (not datetime or string)."""
         for key, spec in ModelRegistry.get_all_current_models().items():
-            assert isinstance(spec.last_verified, date), \
-                f"{key} last_verified is not a date object: {type(spec.last_verified)}"
+            assert isinstance(
+                spec.last_verified, date
+            ), f"{key} last_verified is not a date object: {type(spec.last_verified)}"
 
     def test_docs_urls_are_valid(self):
         """Verify all documentation URLs are properly formatted."""
         for key, spec in ModelRegistry.get_all_current_models().items():
-            assert spec.docs_url.startswith("http"), \
-                f"{key} docs_url doesn't start with http: {spec.docs_url}"
+            assert spec.docs_url.startswith(
+                "http"
+            ), f"{key} docs_url doesn't start with http: {spec.docs_url}"
 
             # Should use HTTPS
-            assert spec.docs_url.startswith("https://"), \
-                f"{key} docs_url should use HTTPS: {spec.docs_url}"
+            assert spec.docs_url.startswith(
+                "https://"
+            ), f"{key} docs_url should use HTTPS: {spec.docs_url}"
 
 
 class TestRegistryHelperMethods:
@@ -303,32 +315,37 @@ class TestDeprecatedModelsComplete:
         for key, spec in ModelRegistry.get_all_current_models().items():
             if spec.provider == Provider.ANTHROPIC:
                 # Should NOT contain "claude-3" in identifier
-                assert "claude-3" not in spec.api_identifier.lower(), \
-                    f"{key} appears to be Claude 3.x (should be 4.x or later)"
+                assert (
+                    "claude-3" not in spec.api_identifier.lower()
+                ), f"{key} appears to be Claude 3.x (should be 4.x or later)"
 
     def test_no_old_gemini_1_models_in_current(self):
         """Verify no Gemini 1.x models in current registry."""
         for key, spec in ModelRegistry.get_all_current_models().items():
             if spec.provider == Provider.GOOGLE:
                 # Should NOT contain "gemini-1" in identifier
-                assert "gemini-1" not in spec.api_identifier.lower(), \
-                    f"{key} appears to be Gemini 1.x (should be 2.x or later)"
+                assert (
+                    "gemini-1" not in spec.api_identifier.lower()
+                ), f"{key} appears to be Gemini 1.x (should be 2.x or later)"
 
     def test_deprecated_list_has_common_old_models(self):
         """Verify deprecated list includes commonly-used old models."""
         deprecated = ModelRegistry._DEPRECATED
 
         # Should have old Claude models
-        assert any("claude-3-5" in k.lower() for k in deprecated.keys()), \
-            "Missing Claude 3.5 models in deprecated list"
+        assert any(
+            "claude-3-5" in k.lower() for k in deprecated.keys()
+        ), "Missing Claude 3.5 models in deprecated list"
 
         # Should have old Gemini models
-        assert any("gemini-1.5" in k.lower() for k in deprecated.keys()), \
-            "Missing Gemini 1.5 models in deprecated list"
+        assert any(
+            "gemini-1.5" in k.lower() for k in deprecated.keys()
+        ), "Missing Gemini 1.5 models in deprecated list"
 
         # Should have old GPT models
-        assert any("gpt-3.5" in k.lower() or "gpt-4-turbo" in k.lower() for k in deprecated.keys()), \
-            "Missing old GPT models in deprecated list"
+        assert any(
+            "gpt-3.5" in k.lower() or "gpt-4-turbo" in k.lower() for k in deprecated.keys()
+        ), "Missing old GPT models in deprecated list"
 
 
 class TestConvenienceExports:
@@ -337,25 +354,39 @@ class TestConvenienceExports:
     def test_convenience_exports_exist(self):
         """Verify convenience exports are available."""
         from models.registry import (
-            CLAUDE_SONNET, CLAUDE_HAIKU, CLAUDE_OPUS,
-            GEMINI_PRO, GEMINI_FLASH, GEMINI_FLASH_LITE,
-            GPT_4O, GPT_4O_MINI
+            CLAUDE_HAIKU,
+            CLAUDE_OPUS,
+            CLAUDE_SONNET,
+            GEMINI_FLASH,
+            GEMINI_FLASH_LITE,
+            GEMINI_PRO,
+            GPT_4O,
+            GPT_4O_MINI,
         )
 
         # All should be ModelSpec instances
         for export in [
-            CLAUDE_SONNET, CLAUDE_HAIKU, CLAUDE_OPUS,
-            GEMINI_PRO, GEMINI_FLASH, GEMINI_FLASH_LITE,
-            GPT_4O, GPT_4O_MINI
+            CLAUDE_SONNET,
+            CLAUDE_HAIKU,
+            CLAUDE_OPUS,
+            GEMINI_PRO,
+            GEMINI_FLASH,
+            GEMINI_FLASH_LITE,
+            GPT_4O,
+            GPT_4O_MINI,
         ]:
             assert isinstance(export, ModelSpec)
 
     def test_convenience_exports_match_registry(self):
         """Verify convenience exports point to correct registry entries."""
         from models.registry import (
-            CLAUDE_SONNET, CLAUDE_HAIKU, CLAUDE_OPUS,
-            GEMINI_PRO, GEMINI_FLASH,
-            GPT_4O, GPT_4O_MINI
+            CLAUDE_HAIKU,
+            CLAUDE_OPUS,
+            CLAUDE_SONNET,
+            GEMINI_FLASH,
+            GEMINI_PRO,
+            GPT_4O,
+            GPT_4O_MINI,
         )
 
         assert CLAUDE_SONNET == ModelRegistry.CLAUDE_SONNET_4_5
@@ -375,20 +406,23 @@ class TestProviderConsistency:
     def test_anthropic_models_use_claude_prefix(self):
         """Verify all Anthropic models start with 'claude-'."""
         for key, spec in ModelRegistry.get_by_provider(Provider.ANTHROPIC).items():
-            assert spec.api_identifier.startswith("claude-"), \
-                f"Anthropic model {key} doesn't start with 'claude-': {spec.api_identifier}"
+            assert spec.api_identifier.startswith(
+                "claude-"
+            ), f"Anthropic model {key} doesn't start with 'claude-': {spec.api_identifier}"
 
     def test_google_models_use_gemini_prefix(self):
         """Verify all Google models start with 'gemini-'."""
         for key, spec in ModelRegistry.get_by_provider(Provider.GOOGLE).items():
-            assert spec.api_identifier.startswith("gemini-"), \
-                f"Google model {key} doesn't start with 'gemini-': {spec.api_identifier}"
+            assert spec.api_identifier.startswith(
+                "gemini-"
+            ), f"Google model {key} doesn't start with 'gemini-': {spec.api_identifier}"
 
     def test_openai_models_use_gpt_prefix(self):
         """Verify all OpenAI models start with 'gpt-'."""
         for key, spec in ModelRegistry.get_by_provider(Provider.OPENAI).items():
-            assert spec.api_identifier.startswith("gpt-"), \
-                f"OpenAI model {key} doesn't start with 'gpt-': {spec.api_identifier}"
+            assert spec.api_identifier.startswith(
+                "gpt-"
+            ), f"OpenAI model {key} doesn't start with 'gpt-': {spec.api_identifier}"
 
 
 if __name__ == "__main__":

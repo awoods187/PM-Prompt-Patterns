@@ -13,12 +13,12 @@ Usage:
 
 import os
 import re
-import pytest
 from pathlib import Path
 from typing import List, Tuple
 
-from models.registry import ModelRegistry
+import pytest
 
+from models.registry import ModelRegistry
 
 # Directories to scan for deprecated model usage
 SCAN_DIRECTORIES = [
@@ -83,13 +83,30 @@ def scan_file_for_deprecated(file_path: Path) -> List[Tuple[int, str, str]]:
                     # Case-insensitive search for the identifier
                     if deprecated_id.lower() in line_lower:
                         # Skip if it's just documentation or a comment about migration
-                        if any(word in line_lower for word in [
-                            "deprecated", "old", "legacy", "was:", "before:",
-                            "previous", "replaced", "migration", "→", "->",
-                            "instead of", "don't use", "do not use", "replaces",
-                            "get_replacement(", "test_", "# latest", "# current",
-                            "model_lower in ["
-                        ]):
+                        if any(
+                            word in line_lower
+                            for word in [
+                                "deprecated",
+                                "old",
+                                "legacy",
+                                "was:",
+                                "before:",
+                                "previous",
+                                "replaced",
+                                "migration",
+                                "→",
+                                "->",
+                                "instead of",
+                                "don't use",
+                                "do not use",
+                                "replaces",
+                                "get_replacement(",
+                                "test_",
+                                "# latest",
+                                "# current",
+                                "model_lower in [",
+                            ]
+                        ):
                             continue
 
                         violations.append((line_num, deprecated_id, line.strip()))
@@ -133,9 +150,7 @@ class TestNoDeprecatedModelsInPrompts:
                     replacement = ModelRegistry.get_replacement(deprecated_id)
                     error_msg.append(f"    Use: {replacement}\n")
 
-            error_msg.append(
-                "\nFix: Update deprecated model identifiers using MIGRATION_MAP.md\n"
-            )
+            error_msg.append("\nFix: Update deprecated model identifiers using MIGRATION_MAP.md\n")
             pytest.fail("\n".join(error_msg))
 
 
@@ -253,21 +268,18 @@ class TestDeprecatedModelRegistry:
 
     def test_deprecated_registry_not_empty(self):
         """Verify deprecated models list is populated."""
-        assert len(ModelRegistry._DEPRECATED) > 0, \
-            "Deprecated models registry is empty"
+        assert len(ModelRegistry._DEPRECATED) > 0, "Deprecated models registry is empty"
 
     def test_all_deprecated_models_have_replacements(self):
         """Verify all deprecated models have replacement suggestions."""
         for old_id, replacement in ModelRegistry._DEPRECATED.items():
             assert replacement, f"Deprecated model {old_id} has no replacement"
-            assert len(replacement) > 0, \
-                f"Deprecated model {old_id} has empty replacement"
+            assert len(replacement) > 0, f"Deprecated model {old_id} has empty replacement"
 
     def test_deprecated_models_not_in_current_registry(self):
         """Verify no deprecated models appear in current registry."""
         current_identifiers = {
-            spec.api_identifier
-            for spec in ModelRegistry.get_all_current_models().values()
+            spec.api_identifier for spec in ModelRegistry.get_all_current_models().values()
         }
 
         deprecated_in_current = []
@@ -275,8 +287,9 @@ class TestDeprecatedModelRegistry:
             if deprecated_id in current_identifiers:
                 deprecated_in_current.append(deprecated_id)
 
-        assert len(deprecated_in_current) == 0, \
-            f"Deprecated models found in current registry: {deprecated_in_current}"
+        assert (
+            len(deprecated_in_current) == 0
+        ), f"Deprecated models found in current registry: {deprecated_in_current}"
 
     def test_deprecated_models_include_major_legacy_versions(self):
         """Verify major legacy model versions are in deprecated list."""
@@ -346,7 +359,7 @@ class TestPreCommitCompatibility:
 
         with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
             f.write('model = "claude-3-5-sonnet-20241022"\n')
-            f.write('# This is a test\n')
+            f.write("# This is a test\n")
             temp_path = Path(f.name)
 
         try:

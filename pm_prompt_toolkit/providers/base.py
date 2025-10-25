@@ -100,9 +100,7 @@ class ClassificationResult:
             ValueError: If cost or latency is negative
         """
         if not 0.0 <= self.confidence <= 1.0:
-            raise ValueError(
-                f"Confidence must be between 0.0 and 1.0, got {self.confidence}"
-            )
+            raise ValueError(f"Confidence must be between 0.0 and 1.0, got {self.confidence}")
         if self.cost < 0:
             raise ValueError(f"Cost cannot be negative, got {self.cost}")
         if self.latency_ms < 0:
@@ -173,16 +171,12 @@ class ProviderMetrics:
     @property
     def average_latency_ms(self) -> float:
         """Calculate average latency per request."""
-        return (
-            self.total_latency_ms / self.total_requests if self.total_requests > 0 else 0.0
-        )
+        return self.total_latency_ms / self.total_requests if self.total_requests > 0 else 0.0
 
     @property
     def cache_hit_rate(self) -> float:
         """Calculate cache hit rate as percentage of tokens cached."""
-        return (
-            self.total_cached_tokens / self.total_tokens if self.total_tokens > 0 else 0.0
-        )
+        return self.total_cached_tokens / self.total_tokens if self.total_tokens > 0 else 0.0
 
     def record_request(
         self,

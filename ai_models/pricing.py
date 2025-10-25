@@ -19,9 +19,10 @@ Example:
 from dataclasses import dataclass
 from datetime import date, datetime
 from functools import lru_cache
-from typing import Dict, Optional
-import yaml
 from pathlib import Path
+from typing import Dict, Optional
+
+import yaml
 
 
 @dataclass(frozen=True)
@@ -37,6 +38,7 @@ class Pricing:
         effective_date: Date this pricing became effective
         verified_date: Date when pricing was last verified
     """
+
     model_id: str
     input_per_1m: float
     output_per_1m: float
@@ -181,11 +183,7 @@ class PricingService:
             return None
 
     @lru_cache(maxsize=128)
-    def get_pricing(
-        self,
-        model_id: str,
-        as_of_date: Optional[date] = None
-    ) -> Optional[Pricing]:
+    def get_pricing(self, model_id: str, as_of_date: Optional[date] = None) -> Optional[Pricing]:
         """Get pricing for a model.
 
         Args:

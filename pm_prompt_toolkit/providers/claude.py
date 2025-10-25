@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 # This dict is kept for backward compatibility but will be removed in future versions
 # Last verified: 2025-10-25
 CLAUDE_PRICING = {
-    "claude-haiku": (1.00, 5.00),     # Fixed: was (0.25, 1.25) - 4x underestimation
+    "claude-haiku": (1.00, 5.00),  # Fixed: was (0.25, 1.25) - 4x underestimation
     "claude-sonnet": (3.0, 15.0),
     "claude-opus": (15.0, 75.0),
 }
@@ -45,6 +45,7 @@ CLAUDE_PRICING = {
 # Try to import new pricing system (graceful fallback if not available)
 try:
     from ai_models import get_pricing_service
+
     _use_new_pricing = True
 except ImportError:
     _use_new_pricing = False
@@ -87,9 +88,7 @@ class ClaudeProvider(LLMProvider):
             ValueError: If ANTHROPIC_API_KEY is not configured
         """
         if anthropic is None:
-            raise ImportError(
-                "anthropic package is required. Install with: pip install anthropic"
-            )
+            raise ImportError("anthropic package is required. Install with: pip install anthropic")
 
         if model not in CLAUDE_PRICING:
             raise ValueError(
@@ -250,7 +249,7 @@ category|confidence|evidence
             Full model identifier for API
         """
         # Import current models from registry
-        from models.registry import CLAUDE_HAIKU, CLAUDE_SONNET, CLAUDE_OPUS
+        from models.registry import CLAUDE_HAIKU, CLAUDE_OPUS, CLAUDE_SONNET
 
         model_map = {
             "claude-haiku": CLAUDE_HAIKU.api_identifier,

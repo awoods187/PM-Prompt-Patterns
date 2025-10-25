@@ -24,21 +24,23 @@ Usage:
 """
 
 import os
-import pytest
 from datetime import datetime
 from typing import Optional
 
-from models.registry import ModelRegistry, Provider, ModelSpec
+import pytest
 
+from models.registry import ModelRegistry, ModelSpec, Provider
 
 # Skip all tests in this file if no API keys present
 pytestmark = pytest.mark.skipif(
-    not any([
-        os.getenv("ANTHROPIC_API_KEY"),
-        os.getenv("OPENAI_API_KEY"),
-        os.getenv("GOOGLE_API_KEY"),
-    ]),
-    reason="No API keys found - skipping endpoint tests"
+    not any(
+        [
+            os.getenv("ANTHROPIC_API_KEY"),
+            os.getenv("OPENAI_API_KEY"),
+            os.getenv("GOOGLE_API_KEY"),
+        ]
+    ),
+    reason="No API keys found - skipping endpoint tests",
 )
 
 
@@ -64,12 +66,13 @@ class TestAnthropicEndpoints:
         response = client.messages.create(
             model=model.api_identifier,
             max_tokens=10,
-            messages=[{"role": "user", "content": "test"}]
+            messages=[{"role": "user", "content": "test"}],
         )
 
         assert response.content, "Empty response from Claude Sonnet"
-        assert response.model == model.api_identifier, \
-            f"Expected {model.api_identifier}, got {response.model}"
+        assert (
+            response.model == model.api_identifier
+        ), f"Expected {model.api_identifier}, got {response.model}"
 
     def test_claude_haiku_endpoint(self):
         """Verify Claude Haiku 4.5 endpoint is accessible."""
@@ -84,7 +87,7 @@ class TestAnthropicEndpoints:
         response = client.messages.create(
             model=model.api_identifier,
             max_tokens=10,
-            messages=[{"role": "user", "content": "test"}]
+            messages=[{"role": "user", "content": "test"}],
         )
 
         assert response.content, "Empty response from Claude Haiku"
@@ -103,7 +106,7 @@ class TestAnthropicEndpoints:
         response = client.messages.create(
             model=model.api_identifier,
             max_tokens=10,
-            messages=[{"role": "user", "content": "test"}]
+            messages=[{"role": "user", "content": "test"}],
         )
 
         assert response.content, "Empty response from Claude Opus"
@@ -123,12 +126,14 @@ class TestAnthropicEndpoints:
         response = client.messages.create(
             model=model.api_identifier,
             max_tokens=10,
-            system=[{
-                "type": "text",
-                "text": "Test system prompt",
-                "cache_control": {"type": "ephemeral"}
-            }],
-            messages=[{"role": "user", "content": "test"}]
+            system=[
+                {
+                    "type": "text",
+                    "text": "Test system prompt",
+                    "cache_control": {"type": "ephemeral"},
+                }
+            ],
+            messages=[{"role": "user", "content": "test"}],
         )
 
         assert response.content, "Prompt caching request failed"
@@ -156,7 +161,7 @@ class TestOpenAIEndpoints:
         response = client.chat.completions.create(
             model=model.api_identifier,
             max_tokens=10,
-            messages=[{"role": "user", "content": "test"}]
+            messages=[{"role": "user", "content": "test"}],
         )
 
         assert response.choices, "Empty response from GPT-4o"
@@ -175,7 +180,7 @@ class TestOpenAIEndpoints:
         response = client.chat.completions.create(
             model=model.api_identifier,
             max_tokens=10,
-            messages=[{"role": "user", "content": "test"}]
+            messages=[{"role": "user", "content": "test"}],
         )
 
         assert response.choices, "Empty response from GPT-4o mini"
@@ -197,13 +202,15 @@ class TestOpenAIEndpoints:
         response = client.chat.completions.create(
             model=model.api_identifier,
             max_tokens=20,
-            messages=[{
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": "What color is this pixel?"},
-                    {"type": "image_url", "image_url": {"url": data_url}}
-                ]
-            }]
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": "What color is this pixel?"},
+                        {"type": "image_url", "image_url": {"url": data_url}},
+                    ],
+                }
+            ],
         )
 
         assert response.choices, "Vision request failed"
@@ -288,16 +295,17 @@ class TestContextWindowLimits:
     def test_context_windows_declared(self):
         """Verify all models have context windows declared."""
         for key, spec in ModelRegistry.get_all_current_models().items():
-            assert spec.context_window_input > 0, \
-                f"{key} has no input context window declared"
+            assert spec.context_window_input > 0, f"{key} has no input context window declared"
 
     def test_context_window_reasonable(self):
         """Verify context windows are within reasonable ranges."""
         for key, spec in ModelRegistry.get_all_current_models().items():
-            assert spec.context_window_input >= 8_000, \
-                f"{key} context window too small: {spec.context_window_input}"
-            assert spec.context_window_input <= 2_000_000, \
-                f"{key} context window unreasonably large: {spec.context_window_input}"
+            assert (
+                spec.context_window_input >= 8_000
+            ), f"{key} context window too small: {spec.context_window_input}"
+            assert (
+                spec.context_window_input <= 2_000_000
+            ), f"{key} context window unreasonably large: {spec.context_window_input}"
 
 
 class TestPricingAccuracy:
@@ -306,27 +314,28 @@ class TestPricingAccuracy:
     def test_pricing_declared(self):
         """Verify all models have pricing declared."""
         for key, spec in ModelRegistry.get_all_current_models().items():
-            assert spec.input_price_per_1m > 0, \
-                f"{key} has no input price declared"
-            assert spec.output_price_per_1m > 0, \
-                f"{key} has no output price declared"
+            assert spec.input_price_per_1m > 0, f"{key} has no input price declared"
+            assert spec.output_price_per_1m > 0, f"{key} has no output price declared"
 
     def test_pricing_reasonable(self):
         """Verify pricing is within reasonable ranges."""
         for key, spec in ModelRegistry.get_all_current_models().items():
             # Input price should be $0.01 to $20 per 1M tokens
-            assert 0.01 <= spec.input_price_per_1m <= 20, \
-                f"{key} input price unreasonable: ${spec.input_price_per_1m}"
+            assert (
+                0.01 <= spec.input_price_per_1m <= 20
+            ), f"{key} input price unreasonable: ${spec.input_price_per_1m}"
 
             # Output price typically 2-10x input
-            assert 0.01 <= spec.output_price_per_1m <= 100, \
-                f"{key} output price unreasonable: ${spec.output_price_per_1m}"
+            assert (
+                0.01 <= spec.output_price_per_1m <= 100
+            ), f"{key} output price unreasonable: ${spec.output_price_per_1m}"
 
     def test_output_more_expensive_than_input(self):
         """Verify output tokens cost >= input tokens (industry standard)."""
         for key, spec in ModelRegistry.get_all_current_models().items():
-            assert spec.output_price_per_1m >= spec.input_price_per_1m, \
-                f"{key} output cheaper than input (unusual)"
+            assert (
+                spec.output_price_per_1m >= spec.input_price_per_1m
+            ), f"{key} output cheaper than input (unusual)"
 
 
 class TestModelMetadata:
@@ -336,8 +345,9 @@ class TestModelMetadata:
         """Verify all models link to official documentation."""
         for key, spec in ModelRegistry.get_all_current_models().items():
             assert spec.docs_url, f"{key} has no docs_url"
-            assert spec.docs_url.startswith("http"), \
-                f"{key} docs_url not a valid URL: {spec.docs_url}"
+            assert spec.docs_url.startswith(
+                "http"
+            ), f"{key} docs_url not a valid URL: {spec.docs_url}"
 
     def test_all_models_recently_verified(self):
         """Verify all models were verified recently (within 90 days)."""
@@ -353,8 +363,7 @@ class TestModelMetadata:
 
         if stale_models:
             warnings = "\n".join(
-                f"  - {key}: {days} days since verification"
-                for key, days in stale_models
+                f"  - {key}: {days} days since verification" for key, days in stale_models
             )
             pytest.fail(
                 f"Models not verified in 90+ days:\n{warnings}\n\n"
@@ -364,8 +373,7 @@ class TestModelMetadata:
     def test_all_models_have_knowledge_cutoff(self):
         """Verify all models declare knowledge cutoff."""
         for key, spec in ModelRegistry.get_all_current_models().items():
-            assert spec.knowledge_cutoff, \
-                f"{key} has no knowledge_cutoff declared"
+            assert spec.knowledge_cutoff, f"{key} has no knowledge_cutoff declared"
 
 
 if __name__ == "__main__":

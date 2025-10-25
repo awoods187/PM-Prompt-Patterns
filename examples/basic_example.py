@@ -48,7 +48,7 @@ def main() -> None:
     print()
 
     for i, signal in enumerate(test_signals, 1):
-        print(f"{i}. Signal: \"{signal}\"")
+        print(f'{i}. Signal: "{signal}"')
 
         result = classifier.classify(signal)
 
@@ -75,20 +75,19 @@ def main() -> None:
     print(f"Average cost: ${metrics['average_cost']:.4f}")
     print(f"Average latency: {metrics['average_latency_ms']:.0f}ms")
 
-    if metrics['cache_hit_rate'] > 0:
+    if metrics["cache_hit_rate"] > 0:
         print(f"Cache hit rate: {metrics['cache_hit_rate']:.1%}")
 
     # Cost savings breakdown
     keyword_savings = sum(
-        1 for result in [classifier.classify(s) for s in test_signals]
-        if result.method == "keyword"
+        1 for result in [classifier.classify(s) for s in test_signals] if result.method == "keyword"
     )
     if keyword_savings > 0:
         print()
         print("💡 Cost Savings:")
         print(f"   {keyword_savings}/{len(test_signals)} signals caught by keyword filter (FREE)")
         estimated_without_filter = len(test_signals) * 0.0008  # Avg Sonnet cost
-        actual_cost = metrics['total_cost']
+        actual_cost = metrics["total_cost"]
         savings = estimated_without_filter - actual_cost
         print(f"   Estimated savings: ${savings:.4f} ({savings/estimated_without_filter:.1%})")
 
