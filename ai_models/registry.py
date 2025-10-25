@@ -27,8 +27,8 @@ from typing import Dict, List, Optional, Set
 
 import yaml
 
-from ai_models.capabilities import CapabilityValidator, ModelCapability
-from ai_models.pricing import Pricing, PricingService
+from ai_models.capabilities import CapabilityValidator, ModelCapability  # noqa: F401
+from ai_models.pricing import Pricing, PricingService  # noqa: F401
 
 
 @dataclass

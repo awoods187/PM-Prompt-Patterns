@@ -11,7 +11,6 @@ Usage:
     pytest tests/test_deprecated_models.py
 """
 
-import os
 import re
 from pathlib import Path
 from typing import List, Tuple
@@ -111,7 +110,7 @@ def scan_file_for_deprecated(file_path: Path) -> List[Tuple[int, str, str]]:
 
                         violations.append((line_num, deprecated_id, line.strip()))
 
-    except Exception as e:
+    except Exception:
         # Skip files that can't be read
         pass
 

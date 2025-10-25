@@ -13,7 +13,6 @@ Example:
 """
 
 import logging
-from typing import Optional
 
 from pm_prompt_toolkit.providers.base import LLMProvider
 from pm_prompt_toolkit.providers.claude import ClaudeProvider

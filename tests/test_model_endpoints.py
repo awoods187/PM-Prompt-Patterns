@@ -24,12 +24,10 @@ Usage:
 """
 
 import os
-from datetime import datetime
-from typing import Optional
 
 import pytest
 
-from models.registry import ModelRegistry, ModelSpec, Provider
+from models.registry import ModelRegistry
 
 # Skip all tests in this file if no API keys present
 pytestmark = pytest.mark.skipif(
