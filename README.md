@@ -45,9 +45,9 @@ python -c "from ai_models import get_model; print(get_model('claude-sonnet-4-5')
 
 | Use Case | Prompt | Complexity | Models |
 |----------|--------|------------|--------|
-| Customer Signal Classification | [signal-classification.md](./prompts/data-analysis/signal-classification.md) | 🟢 Basic | Claude, GPT-4, Gemini |
+| Analytics & Metrics | [analytics/](./prompts/analytics/) | 🟢-🔴 All levels | All models |
 | Epic Categorization | [epic-categorization](./examples/epic-categorization/) | 🟡 Intermediate | Claude Sonnet, GPT-4 |
-| Executive Reporting | [executive-reporting](./examples/executive-reporting/) | 🔴 Advanced | Claude Opus, GPT-4 |
+| Product Strategy | [product-strategy/](./prompts/product-strategy/) | 🟡-🔴 Intermediate-Advanced | Claude Opus, Sonnet |
 
 ## Model Selection Guide
 
@@ -176,19 +176,21 @@ See [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md) for migrating from old `models/re
 3. **Batch processing**: Process signals in groups of 50-100 for 92% cost reduction
 4. **Confidence-based escalation**: Automatic escalation when confidence < 0.85
 
-[→ Read the full case study](./examples/signal-classification/README.md)
+[→ Read the full case study](./examples/epic-categorization/)
 
-[→ See the production prompt](./prompts/data-analysis/signal-classification.md)
+[→ Explore analytics prompts](./prompts/analytics/)
 
 ## Repository Structure
 
 ```
 PM-Prompt-Patterns/
 ├── prompts/                    # Production-ready prompts by category
-│   ├── data-analysis/          # Classification, extraction, analysis
+│   ├── analytics/              # ✨ NEW: Data analysis, metrics, reporting (MECE organized)
+│   │   ├── monitoring/         # Real-time alerts, anomaly detection
+│   │   ├── reporting/          # Periodic dashboards, business reviews
+│   │   └── investigation/      # Ad-hoc analysis, root cause deep dives
 │   ├── product-strategy/       # Roadmapping, prioritization
 │   ├── customer-research/      # User feedback analysis
-│   ├── metrics-reporting/      # KPI tracking, dashboards
 │   ├── roadmap-planning/       # Feature prioritization
 │   ├── stakeholder-communication/
 │   └── technical-documentation/
@@ -391,6 +393,20 @@ Connect: [LinkedIn](https://linkedin.com/in/andrew-woods-pm) | [GitHub](https://
 ## License
 
 MIT License - see [LICENSE](./LICENSE)
+
+## 📦 Recent Changes: Analytics Category Reorganization
+
+**What Changed** (October 2025):
+- Consolidated `prompts/data-analysis/` and `prompts/metrics-reporting/` into new `prompts/analytics/` structure
+- Organized by temporal pattern (monitoring, reporting, investigation) for MECE principles
+- Added comprehensive navigation and category guidelines
+
+**Migration**:
+- Old `data-analysis/` → Now `analytics/` (organized by use case)
+- Old `metrics-reporting/` → Now `analytics/reporting/`
+- See [prompts/analytics/README.md](./prompts/analytics/) for navigation guide
+
+**Why**: The new structure eliminates category overlap and makes it clearer which prompts to use for real-time monitoring vs. periodic reporting vs. ad-hoc investigation.
 
 ## Important Note
 
