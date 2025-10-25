@@ -14,8 +14,9 @@ Example:
 """
 
 from enum import Enum
-from typing import List, Set
 from pathlib import Path
+from typing import List, Set
+
 import yaml
 
 
@@ -65,9 +66,7 @@ class ModelCapability(str, Enum):
             return cls(value)
         except ValueError:
             valid = ", ".join(c.value for c in cls)
-            raise ValueError(
-                f"Invalid capability '{value}'. Valid: {valid}"
-            )
+            raise ValueError(f"Invalid capability '{value}'. Valid: {valid}")
 
 
 class CapabilityValidator:
@@ -136,11 +135,7 @@ class CapabilityValidator:
         return cls._capabilities_cache.get(model_id, set()).copy()
 
     @classmethod
-    def has_capability(
-        cls,
-        model_id: str,
-        capability: ModelCapability
-    ) -> bool:
+    def has_capability(cls, model_id: str, capability: ModelCapability) -> bool:
         """Check if model has a specific capability.
 
         Args:
@@ -161,11 +156,7 @@ class CapabilityValidator:
         return capability in caps
 
     @classmethod
-    def has_all_capabilities(
-        cls,
-        model_id: str,
-        capabilities: List[ModelCapability]
-    ) -> bool:
+    def has_all_capabilities(cls, model_id: str, capabilities: List[ModelCapability]) -> bool:
         """Check if model has all specified capabilities.
 
         Args:
@@ -186,11 +177,7 @@ class CapabilityValidator:
         return all(cap in model_caps for cap in capabilities)
 
     @classmethod
-    def has_any_capability(
-        cls,
-        model_id: str,
-        capabilities: List[ModelCapability]
-    ) -> bool:
+    def has_any_capability(cls, model_id: str, capabilities: List[ModelCapability]) -> bool:
         """Check if model has any of the specified capabilities.
 
         Args:
@@ -211,10 +198,7 @@ class CapabilityValidator:
         return any(cap in model_caps for cap in capabilities)
 
     @classmethod
-    def filter_models_by_capability(
-        cls,
-        capability: ModelCapability
-    ) -> List[str]:
+    def filter_models_by_capability(cls, capability: ModelCapability) -> List[str]:
         """Get all models that have a specific capability.
 
         Args:
@@ -232,9 +216,7 @@ class CapabilityValidator:
         """
         cls._load_capabilities()
         return [
-            model_id
-            for model_id, caps in cls._capabilities_cache.items()
-            if capability in caps
+            model_id for model_id, caps in cls._capabilities_cache.items() if capability in caps
         ]
 
     @classmethod
@@ -284,10 +266,7 @@ def has_function_calling(model_id: str) -> bool:
     Returns:
         True if model has function calling capability
     """
-    return CapabilityValidator.has_capability(
-        model_id,
-        ModelCapability.FUNCTION_CALLING
-    )
+    return CapabilityValidator.has_capability(model_id, ModelCapability.FUNCTION_CALLING)
 
 
 def has_prompt_caching(model_id: str) -> bool:
@@ -299,10 +278,7 @@ def has_prompt_caching(model_id: str) -> bool:
     Returns:
         True if model has prompt caching capability
     """
-    return CapabilityValidator.has_capability(
-        model_id,
-        ModelCapability.PROMPT_CACHING
-    )
+    return CapabilityValidator.has_capability(model_id, ModelCapability.PROMPT_CACHING)
 
 
 def supports_large_context(model_id: str) -> bool:
@@ -314,7 +290,4 @@ def supports_large_context(model_id: str) -> bool:
     Returns:
         True if model supports large context
     """
-    return CapabilityValidator.has_capability(
-        model_id,
-        ModelCapability.LARGE_CONTEXT
-    )
+    return CapabilityValidator.has_capability(model_id, ModelCapability.LARGE_CONTEXT)

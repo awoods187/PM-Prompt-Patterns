@@ -15,15 +15,17 @@ Why this matters:
 Run: pytest tests/test_pricing_consistency.py -v
 """
 
-import pytest
-from models.registry import ModelRegistry
-
 # Import provider pricing dicts directly (avoid package-level imports)
 import sys
 from pathlib import Path
 
+import pytest
+
+from models.registry import ModelRegistry
+
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
+
 
 # Now we can import the pricing dictionaries
 # We'll parse them from the source files since importing triggers missing deps
@@ -35,6 +37,7 @@ def get_claude_pricing():
 
     # Extract the pricing dict
     import ast
+
     tree = ast.parse(content)
     for node in ast.walk(tree):
         if isinstance(node, ast.Assign):
@@ -43,6 +46,7 @@ def get_claude_pricing():
                     # Evaluate the dict literal
                     return ast.literal_eval(node.value)
     raise ValueError("CLAUDE_PRICING not found")
+
 
 # Get pricing dicts (only Claude is implemented as of 2025-10-25)
 CLAUDE_PRICING = get_claude_pricing()
@@ -179,9 +183,10 @@ class TestCostCalculationAccuracy:
         output_tokens = 100_000
 
         expected_cost = (
-            (input_tokens / 1_000_000) * ModelRegistry.CLAUDE_HAIKU_4_5.input_price_per_1m
-            + (output_tokens / 1_000_000) * ModelRegistry.CLAUDE_HAIKU_4_5.output_price_per_1m
-        )
+            input_tokens / 1_000_000
+        ) * ModelRegistry.CLAUDE_HAIKU_4_5.input_price_per_1m + (
+            output_tokens / 1_000_000
+        ) * ModelRegistry.CLAUDE_HAIKU_4_5.output_price_per_1m
 
         # With correct pricing ($1.00/$5.00):
         # = (1M / 1M * 1.00) + (100k / 1M * 5.00)

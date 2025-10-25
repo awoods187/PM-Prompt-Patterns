@@ -18,21 +18,22 @@ DEPRECATED: 2025-10-25
 
 import warnings
 from dataclasses import dataclass
+from datetime import date
 from enum import Enum
 from typing import Dict, Optional
-from datetime import date
 
 # Issue deprecation warning
 warnings.warn(
     "models.registry is deprecated. Use 'from ai_models import get_model' instead. "
     "See MIGRATION_GUIDE.md for details.",
     DeprecationWarning,
-    stacklevel=2
+    stacklevel=2,
 )
 
 
 class Provider(Enum):
     """AI model providers."""
+
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
     GOOGLE = "google"
@@ -56,6 +57,7 @@ class ModelSpec:
         notes: Additional information (beta features, deprecation, etc.)
         recommended_for: List of recommended use cases
     """
+
     provider: Provider
     name: str
     api_identifier: str
@@ -123,8 +125,8 @@ class ModelRegistry:
             "Analysis and reasoning",
             "Long-form writing",
             "Code generation",
-            "Complex instructions"
-        )
+            "Complex instructions",
+        ),
     )
 
     CLAUDE_HAIKU_4_5 = ModelSpec(
@@ -143,8 +145,8 @@ class ModelRegistry:
             "High-volume classification",
             "Fast processing",
             "Real-time applications",
-            "Cost-conscious projects (relative to Sonnet/Opus)"
-        )
+            "Cost-conscious projects (relative to Sonnet/Opus)",
+        ),
     )
 
     CLAUDE_OPUS_4_1 = ModelSpec(
@@ -164,8 +166,8 @@ class ModelRegistry:
             "High-stakes decisions",
             "Creative writing",
             "Advanced analysis",
-            "Research tasks"
-        )
+            "Research tasks",
+        ),
     )
 
     # ============================================================================
@@ -190,8 +192,8 @@ class ModelRegistry:
             "Entire codebase analysis",
             "Large document processing",
             "Code/math/STEM reasoning",
-            "Multimodal tasks (text + images)"
-        )
+            "Multimodal tasks (text + images)",
+        ),
     )
 
     GEMINI_2_5_FLASH = ModelSpec(
@@ -210,8 +212,8 @@ class ModelRegistry:
             "Large-scale batch processing",
             "Low-latency applications",
             "High-volume tasks",
-            "Cost-sensitive projects"
-        )
+            "Cost-sensitive projects",
+        ),
     )
 
     GEMINI_2_5_FLASH_LITE = ModelSpec(
@@ -229,8 +231,8 @@ class ModelRegistry:
         recommended_for=(
             "Maximum cost efficiency",
             "Ultra high-throughput",
-            "Simple classification at scale"
-        )
+            "Simple classification at scale",
+        ),
     )
 
     # ============================================================================
@@ -256,8 +258,8 @@ class ModelRegistry:
             "Vision/multimodal tasks",
             "Function calling",
             "Structured extraction",
-            "General purpose applications"
-        )
+            "General purpose applications",
+        ),
     )
 
     GPT_4O_MINI = ModelSpec(
@@ -276,8 +278,8 @@ class ModelRegistry:
             "High-volume tasks",
             "Cost-sensitive projects",
             "Function calling at scale",
-            "Real-time applications"
-        )
+            "Real-time applications",
+        ),
     )
 
     # ============================================================================
@@ -292,14 +294,12 @@ class ModelRegistry:
         "claude-3-5-haiku-20241022": "Use CLAUDE_HAIKU_4_5 instead",
         "claude-3-opus-20240229": "Use CLAUDE_OPUS_4_1 instead",
         "claude-sonnet-3.7": "Use CLAUDE_SONNET_4_5 instead",
-
         # Gemini legacy models
         "gemini-1.5-pro": "Use GEMINI_2_5_PRO instead",
         "gemini-1.5-pro-002": "Use GEMINI_2_5_PRO instead",
         "gemini-1.5-flash": "Use GEMINI_2_5_FLASH instead",
         "gemini-1.5-flash-002": "Use GEMINI_2_5_FLASH instead",
         "gemini-2.0-flash": "Use GEMINI_2_5_FLASH instead",
-
         # OpenAI legacy models (likely)
         "gpt-3.5-turbo": "Use GPT_4O_MINI instead (verify first)",
         "gpt-4-turbo": "May be superseded by GPT_4O (verify first)",
@@ -317,12 +317,10 @@ class ModelRegistry:
             "claude-sonnet-4.5": cls.CLAUDE_SONNET_4_5,
             "claude-haiku-4.5": cls.CLAUDE_HAIKU_4_5,
             "claude-opus-4.1": cls.CLAUDE_OPUS_4_1,
-
             # Gemini
             "gemini-2.5-pro": cls.GEMINI_2_5_PRO,
             "gemini-2.5-flash": cls.GEMINI_2_5_FLASH,
             "gemini-2.5-flash-lite": cls.GEMINI_2_5_FLASH_LITE,
-
             # OpenAI (needs verification)
             "gpt-4o": cls.GPT_4O,
             "gpt-4o-mini": cls.GPT_4O_MINI,
@@ -377,6 +375,7 @@ class ModelRegistry:
             Dict mapping provider to accessibility status
         """
         import requests
+
         results = {}
         for provider, url in cls.VERIFICATION_SOURCES.items():
             try:
@@ -418,7 +417,9 @@ if __name__ == "__main__":
             print(f"\n{spec.name}")
             print(f"  API ID: {spec.api_identifier}")
             print(f"  Context: {spec.context_window_input:,} tokens")
-            print(f"  Price: ${spec.input_price_per_1m:.2f} / ${spec.output_price_per_1m:.2f} per 1M tokens")
+            print(
+                f"  Price: ${spec.input_price_per_1m:.2f} / ${spec.output_price_per_1m:.2f} per 1M tokens"
+            )
             print(f"  Verified: {spec.last_verified}")
             if spec.notes.startswith("⚠️"):
                 print(f"  ⚠️  {spec.notes}")

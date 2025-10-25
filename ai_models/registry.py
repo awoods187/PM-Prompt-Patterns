@@ -24,15 +24,17 @@ from datetime import date
 from functools import lru_cache
 from pathlib import Path
 from typing import Dict, List, Optional, Set
+
 import yaml
 
-from ai_models.capabilities import ModelCapability, CapabilityValidator
+from ai_models.capabilities import CapabilityValidator, ModelCapability
 from ai_models.pricing import Pricing, PricingService
 
 
 @dataclass
 class ModelOptimization:
     """Optimization guidance for a model."""
+
     recommended_for: List[str] = field(default_factory=list)
     best_practices: List[str] = field(default_factory=list)
     cost_tier: str = "mid-tier"  # budget, mid-tier, premium
@@ -42,6 +44,7 @@ class ModelOptimization:
 @dataclass
 class ModelMetadata:
     """Metadata about a model."""
+
     context_window_input: int
     context_window_output: Optional[int]
     knowledge_cutoff: str
@@ -57,6 +60,7 @@ class Model:
     This class represents a full model definition loaded from YAML,
     including metadata, capabilities, pricing, and optimization guidance.
     """
+
     model_id: str
     provider: str
     name: str
@@ -87,10 +91,7 @@ class Model:
 
     def has_all_capabilities(self, capabilities: List[ModelCapability | str]) -> bool:
         """Check if model has all specified capabilities."""
-        caps = [
-            ModelCapability.from_string(c) if isinstance(c, str) else c
-            for c in capabilities
-        ]
+        caps = [ModelCapability.from_string(c) if isinstance(c, str) else c for c in capabilities]
         return all(cap in self.capabilities for cap in caps)
 
     def calculate_cost(
@@ -109,11 +110,7 @@ class Model:
         Returns:
             Cost in USD
         """
-        return self.pricing.calculate_cost(
-            input_tokens,
-            output_tokens,
-            cached_input_tokens
-        )
+        return self.pricing.calculate_cost(input_tokens, output_tokens, cached_input_tokens)
 
     def to_dict(self) -> Dict:
         """Convert to dictionary representation."""
@@ -239,6 +236,7 @@ class ModelRegistry:
             return date.today()
         try:
             from datetime import datetime
+
             return datetime.strptime(date_str, "%Y-%m-%d").date()
         except ValueError:
             return date.today()
@@ -294,8 +292,7 @@ class ModelRegistry:
         """
         cls._load_models()
         return [
-            model for model in cls._models.values()
-            if model.provider.lower() == provider.lower()
+            model for model in cls._models.values() if model.provider.lower() == provider.lower()
         ]
 
     @classmethod
@@ -317,10 +314,7 @@ class ModelRegistry:
         if isinstance(capability, str):
             capability = ModelCapability.from_string(capability)
 
-        return [
-            model for model in cls._models.values()
-            if capability in model.capabilities
-        ]
+        return [model for model in cls._models.values() if capability in model.capabilities]
 
     @classmethod
     def filter_by_cost_tier(cls, tier: str) -> List[Model]:
@@ -338,10 +332,7 @@ class ModelRegistry:
             True
         """
         cls._load_models()
-        return [
-            model for model in cls._models.values()
-            if model.optimization.cost_tier == tier
-        ]
+        return [model for model in cls._models.values() if model.optimization.cost_tier == tier]
 
     @classmethod
     def clear_cache(cls) -> None:

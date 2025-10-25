@@ -210,8 +210,7 @@ class Settings(BaseSettings):
 
         if provider not in key_map:
             raise ValueError(
-                f"Unknown provider: {provider}. "
-                f"Valid providers: {list(key_map.keys())}"
+                f"Unknown provider: {provider}. " f"Valid providers: {list(key_map.keys())}"
             )
 
         api_key = key_map[provider]

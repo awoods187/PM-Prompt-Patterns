@@ -6,20 +6,21 @@
 Tests YAML loading, pricing service, capabilities, and model registry.
 """
 
-import pytest
 from datetime import date
 
+import pytest
+
 from ai_models import (
-    ModelRegistry,
-    get_model,
-    list_models,
-    list_providers,
-    ModelCapability,
     CapabilityValidator,
+    ModelCapability,
+    ModelRegistry,
     PricingService,
-    has_vision,
+    get_model,
     has_function_calling,
     has_prompt_caching,
+    has_vision,
+    list_models,
+    list_providers,
 )
 
 
@@ -103,9 +104,7 @@ class TestPricingService:
         """Should calculate basic cost correctly."""
         service = PricingService()
         cost = service.calculate_cost(
-            "claude-haiku-4-5",
-            input_tokens=1_000_000,
-            output_tokens=100_000
+            "claude-haiku-4-5", input_tokens=1_000_000, output_tokens=100_000
         )
         # (1M * $1.00/1M) + (100k * $5.00/1M) = $1.00 + $0.50 = $1.50
         assert cost == 1.50
@@ -117,7 +116,7 @@ class TestPricingService:
             "claude-sonnet-4-5",
             input_tokens=1_000_000,
             output_tokens=500_000,
-            cached_input_tokens=900_000
+            cached_input_tokens=900_000,
         )
         # Uncached input: 100k * $3.00/1M = $0.30
         # Cached input: 900k * $0.30/1M = $0.27
@@ -155,13 +154,9 @@ class TestCapabilities:
 
     def test_has_capability(self):
         """Should check capabilities correctly."""
+        assert CapabilityValidator.has_capability("claude-sonnet-4-5", ModelCapability.VISION)
         assert CapabilityValidator.has_capability(
-            "claude-sonnet-4-5",
-            ModelCapability.VISION
-        )
-        assert CapabilityValidator.has_capability(
-            "claude-haiku-4-5",
-            ModelCapability.FUNCTION_CALLING
+            "claude-haiku-4-5", ModelCapability.FUNCTION_CALLING
         )
 
     def test_model_has_capability_method(self):
@@ -174,11 +169,13 @@ class TestCapabilities:
     def test_model_has_all_capabilities(self):
         """Model.has_all_capabilities() should work."""
         model = ModelRegistry.get("claude-sonnet-4-5")
-        assert model.has_all_capabilities([
-            ModelCapability.VISION,
-            ModelCapability.FUNCTION_CALLING,
-            ModelCapability.PROMPT_CACHING
-        ])
+        assert model.has_all_capabilities(
+            [
+                ModelCapability.VISION,
+                ModelCapability.FUNCTION_CALLING,
+                ModelCapability.PROMPT_CACHING,
+            ]
+        )
 
     def test_filter_by_capability(self):
         """Should filter models by capability."""
@@ -246,9 +243,7 @@ class TestModelIntegration:
 
         # Calculate cost
         cost = model.calculate_cost(
-            input_tokens=10_000,
-            output_tokens=2_000,
-            cached_input_tokens=5_000
+            input_tokens=10_000, output_tokens=2_000, cached_input_tokens=5_000
         )
         # Uncached: 5k * $3/1M = $0.015
         # Cached: 5k * $0.30/1M = $0.0015
@@ -265,7 +260,9 @@ class TestModelIntegration:
         # Need: budget + vision + function calling
         budget_models = ModelRegistry.filter_by_cost_tier("budget")
         vision_models = [m for m in budget_models if m.has_capability(ModelCapability.VISION)]
-        func_models = [m for m in vision_models if m.has_capability(ModelCapability.FUNCTION_CALLING)]
+        func_models = [
+            m for m in vision_models if m.has_capability(ModelCapability.FUNCTION_CALLING)
+        ]
 
         # Should find: Haiku, 4o-mini, Flash
         assert len(func_models) >= 2
@@ -318,8 +315,9 @@ class TestPricingConsistency:
             if model.pricing.input_per_1m == 0 and model.pricing.output_per_1m == 0:
                 continue
 
-            assert model.pricing.output_per_1m >= model.pricing.input_per_1m, \
-                f"{model.model_id}: output should cost >= input"
+            assert (
+                model.pricing.output_per_1m >= model.pricing.input_per_1m
+            ), f"{model.model_id}: output should cost >= input"
 
 
 class TestYAMLSchemaCompliance:
@@ -361,8 +359,9 @@ class TestYAMLSchemaCompliance:
         models = ModelRegistry.get_all()
 
         for model in models.values():
-            assert model.provider in valid_providers, \
-                f"{model.model_id} has invalid provider: {model.provider}"
+            assert (
+                model.provider in valid_providers
+            ), f"{model.model_id} has invalid provider: {model.provider}"
 
     def test_cost_tiers_valid(self):
         """Cost tiers should be valid values."""
@@ -370,8 +369,9 @@ class TestYAMLSchemaCompliance:
         models = ModelRegistry.get_all()
 
         for model in models.values():
-            assert model.optimization.cost_tier in valid_tiers, \
-                f"{model.model_id} has invalid cost tier: {model.optimization.cost_tier}"
+            assert (
+                model.optimization.cost_tier in valid_tiers
+            ), f"{model.model_id} has invalid cost tier: {model.optimization.cost_tier}"
 
     def test_speed_tiers_valid(self):
         """Speed tiers should be valid values."""
@@ -379,8 +379,9 @@ class TestYAMLSchemaCompliance:
         models = ModelRegistry.get_all()
 
         for model in models.values():
-            assert model.optimization.speed_tier in valid_tiers, \
-                f"{model.model_id} has invalid speed tier: {model.optimization.speed_tier}"
+            assert (
+                model.optimization.speed_tier in valid_tiers
+            ), f"{model.model_id} has invalid speed tier: {model.optimization.speed_tier}"
 
 
 class TestCacheClear:
