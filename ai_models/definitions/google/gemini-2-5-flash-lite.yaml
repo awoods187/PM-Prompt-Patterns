@@ -1,0 +1,48 @@
+# Gemini 2.5 Flash-Lite Model Definition
+# Last verified: 2025-10-25
+# Source: https://ai.google.dev/gemini-api/docs/models/gemini
+
+schema_version: "1.0.0"
+model_id: "gemini-2-5-flash-lite"
+provider: "google"
+name: "Gemini 2.5 Flash-Lite"
+api_identifier: "gemini-2.5-flash-lite-002"
+
+metadata:
+  context_window_input: 1000000
+  context_window_output: 8192
+  knowledge_cutoff: "August 2024"
+  release_date: "2024-12-01"
+  last_verified: "2025-10-25"
+  docs_url: "https://ai.google.dev/gemini-api/docs/models/gemini"
+
+capabilities:
+  - text_input
+  - text_output
+  - vision
+  - large_context
+  - streaming
+
+pricing:
+  input_per_1m: 0.00
+  output_per_1m: 0.00
+
+optimization:
+  recommended_for:
+    - "Experimental projects"
+    - "Prototyping and testing"
+    - "Educational use cases"
+    - "Low-cost POCs"
+    - "Simple text tasks"
+    - "Vision tasks (free tier)"
+  best_practices:
+    - "Free tier with rate limits"
+    - "No function calling or caching"
+    - "Good for learning and experimentation"
+    - "Rate limits apply - check quotas"
+    - "Use for non-production workloads"
+    - "Upgrade to Flash for production"
+  cost_tier: "budget"
+  speed_tier: "fast"
+
+notes: "Free tier model with limited capabilities. Subject to rate limits and quota restrictions."
