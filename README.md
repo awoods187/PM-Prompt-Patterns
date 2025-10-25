@@ -13,8 +13,25 @@ Most prompt libraries focus on toy examples. This toolkit provides **production-
 - ✅ **Multi-model expertise** across Claude, GPT, and Gemini families
 - ✅ **Token-level optimization** (prompt caching, hybrid classification, model cascading)
 - ✅ **Quality frameworks** (evaluation methodology, test sets, continuous monitoring)
+- ✅ **Production model management** (YAML-based registry, pricing service, capability validation)
 
 ## Quick Start
+
+### Installation
+
+For Python integration:
+
+```bash
+# Clone the repository
+git clone https://github.com/awoods187/PM-Prompt-Patterns.git
+cd PM-Prompt-Patterns
+
+# Install as package (optional)
+pip install -e .
+
+# Verify installation
+python -c "from ai_models import get_model; print(get_model('claude-sonnet-4-5').name)"
+```
 
 ### By Experience Level
 
@@ -22,7 +39,7 @@ Most prompt libraries focus on toy examples. This toolkit provides **production-
 
 **🟡 Optimizing Prompts** → Explore [MODEL_OPTIMIZATION_GUIDE.md](./MODEL_OPTIMIZATION_GUIDE.md) for provider-specific techniques
 
-**🔴 Production Systems** → Study [examples/signal-classification](./examples/signal-classification/README.md) for end-to-end architecture
+**🔴 Production Systems** → Study [examples/epic-categorization](./examples/epic-categorization/) for end-to-end architecture
 
 ### By Use Case
 
@@ -40,15 +57,16 @@ Understanding **when** to use each model is as important as **how** to prompt th
 
 | Model | Cost (Input/Output per 1M tokens) | Context | Best For | Production Use |
 |-------|---------|---------|----------|----------------|
-| **Claude Haiku** | $0.25 / $1.25 | 200K | High-volume classification (1000s/day) | 70% of our workload |
-| **Claude Sonnet** | $3 / $15 | 200K | Production workhorse, complex analysis | 25% of our workload |
-| **Claude Opus** | $15 / $75 | 200K | High-stakes decisions, creative work | 5% of our workload |
-| **GPT-4 Turbo** | $10 / $30 | 128K | Function calling, structured extraction | Specific use cases |
-| **GPT-3.5 Turbo** | $0.50 / $1.50 | 16K | Simple classification, cost-sensitive | Legacy systems |
-| **Gemini Pro** | $1.25 / $5 | 2M | Massive context analysis | Codebase analysis |
-| **Gemini Flash** | $0.075 / $0.30 | 1M | Speed-critical applications | Real-time features |
+| **Claude Haiku 4.5** | $1.00 / $5.00 | 200K | High-volume classification (1000s/day) | 70% of our workload |
+| **Claude Sonnet 4.5** | $3.00 / $15.00 | 200K | Production workhorse, complex analysis | 25% of our workload |
+| **Claude Opus 4.1** | $15.00 / $75.00 | 200K | High-stakes decisions, creative work | 5% of our workload |
+| **GPT-4o** | $2.50 / $10.00 | 128K | Multimodal, function calling, structured extraction | Specific use cases |
+| **GPT-4o mini** | $0.15 / $0.60 | 128K | Cost-efficient alternative to 3.5 Turbo | Budget tasks |
+| **Gemini 2.5 Pro** | $1.25 / $5.00 | 2M | Massive context analysis (entire codebases) | Large document analysis |
+| **Gemini 2.5 Flash** | $0.075 / $0.30 | 1M | Speed-critical, high-volume applications | Real-time features |
+| **Gemini 2.5 Flash-Lite** | Coming Soon | 1M | Ultra cost-efficient processing | Maximum throughput |
 
-*Pricing as of October 2024. See [MODEL_OPTIMIZATION_GUIDE.md](./MODEL_OPTIMIZATION_GUIDE.md) for detailed comparison.*
+*Pricing verified October 2025. Managed via `ai_models` system - see [MODEL_OPTIMIZATION_GUIDE.md](./MODEL_OPTIMIZATION_GUIDE.md).*
 
 ### Model Cascading Pattern
 
@@ -85,6 +103,60 @@ Naive Opus-only approach: $0.015 (15x more expensive)
 
 See [Cost Optimization Guide](./docs/cost-optimization.md) for implementation details.
 
+## AI Model Management System
+
+This repository includes a production-grade model management system (`ai_models/`) with:
+
+### Key Features
+
+**✅ YAML-based Model Definitions**: Version-controlled model specifications
+```python
+from ai_models import get_model
+
+model = get_model("claude-sonnet-4-5")
+print(f"Context: {model.metadata.context_window_input:,} tokens")
+print(f"Cost: ${model.pricing.input_per_1m}/M input")
+# Context: 200,000 tokens
+# Cost: $3.0/M input
+```
+
+**✅ Runtime Capability Validation**: Check model features before API calls
+```python
+from ai_models import has_vision, has_function_calling, has_prompt_caching
+
+if has_vision("gpt-4o"):
+    process_image()  # Safe - GPT-4o supports vision
+
+if has_prompt_caching("claude-sonnet-4-5"):
+    enable_caching()  # 90% cost savings on cached tokens
+```
+
+**✅ Optimized Pricing Service**: LRU-cached cost calculations
+```python
+model = get_model("claude-haiku-4-5")
+cost = model.calculate_cost(
+    input_tokens=10_000,
+    output_tokens=2_000,
+    cached_input_tokens=5_000  # Automatic cache discount
+)
+# Cost: ~$0.013 (vs $0.025 without caching)
+```
+
+**✅ Cost Tier Filtering**: Find budget-friendly models
+```python
+from ai_models import ModelRegistry
+
+budget_models = ModelRegistry.filter_by_cost_tier("budget")
+# Returns: Haiku, 4o-mini, Flash, Flash-Lite
+```
+
+**✅ Comprehensive Testing**: 97 tests ensure pricing accuracy
+- Fixed critical bug: Claude Haiku was 4x underpriced
+- Prevents future pricing regressions
+- Validates all model specs against official docs
+
+See [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md) for migrating from old `models/registry.py` system.
+
 ## Featured Example: Signal Classification System
 
 **Problem**: Manual classification of customer signals taking 8+ hours/week, inconsistent quality
@@ -111,29 +183,45 @@ See [Cost Optimization Guide](./docs/cost-optimization.md) for implementation de
 ## Repository Structure
 
 ```
-ai-pm-toolkit/
-├── prompts/              # Production-ready prompts by category
-│   ├── data-analysis/    # Classification, extraction, analysis
-│   ├── product-strategy/ # Roadmapping, prioritization
-│   └── ...
-├── templates/            # Reusable prompt patterns
-│   ├── meta-prompting.md        # Use LLMs to improve prompts
-│   ├── chain-of-thought.md      # Reasoning patterns
-│   ├── structured-output.md     # JSON/XML output design
-│   └── few-shot-examples.md     # Example-based learning
-├── model-configs/        # Provider-specific optimizations
-│   ├── anthropic/        # Claude Haiku, Sonnet, Opus
-│   ├── openai/           # GPT-4, GPT-3.5
-│   └── google/           # Gemini Pro, Flash
-├── examples/             # Complete production systems
-│   ├── signal-classification/
-│   ├── epic-categorization/
-│   └── executive-reporting/
-└── docs/                 # Deep-dive guides
-    ├── getting-started.md
-    ├── advanced-techniques.md
-    ├── cost-optimization.md
-    └── quality-evaluation.md
+PM-Prompt-Patterns/
+├── prompts/                    # Production-ready prompts by category
+│   ├── data-analysis/          # Classification, extraction, analysis
+│   ├── product-strategy/       # Roadmapping, prioritization
+│   ├── customer-research/      # User feedback analysis
+│   ├── metrics-reporting/      # KPI tracking, dashboards
+│   ├── roadmap-planning/       # Feature prioritization
+│   ├── stakeholder-communication/
+│   └── technical-documentation/
+├── templates/                  # Reusable prompt patterns
+│   ├── meta-prompting.md       # Use LLMs to improve prompts
+│   ├── chain-of-thought.md     # Reasoning patterns
+│   ├── structured-output.md    # JSON/XML output design
+│   └── few-shot-examples.md    # Example-based learning
+├── ai_models/                  # ✨ NEW: Unified model management
+│   ├── registry.py             # YAML-based model registry
+│   ├── pricing.py              # Pricing service with caching
+│   ├── capabilities.py         # Runtime capability validation
+│   └── definitions/            # Model specifications (YAML)
+│       ├── anthropic/          # Claude Haiku, Sonnet, Opus 4.x
+│       ├── openai/             # GPT-4o, GPT-4o mini
+│       └── google/             # Gemini 2.5 Pro, Flash, Flash-Lite
+├── pm_prompt_toolkit/          # Python package for production use
+│   ├── providers/              # LLM provider integrations
+│   ├── optimizers/             # Prompt optimization utilities
+│   └── config/                 # Configuration management
+├── examples/                   # Complete production systems
+│   └── epic-categorization/    # Real-world classification
+├── tests/                      # Comprehensive test suite (97 tests)
+│   ├── test_model_registry.py  # Registry validation
+│   ├── test_ai_models.py       # New system tests
+│   └── test_pricing_consistency.py
+├── scripts/                    # Automation and testing
+│   └── run_tests.sh            # Test runner with multiple modes
+└── docs/                       # Deep-dive guides
+    ├── PROMPT_DESIGN_PRINCIPLES.md
+    ├── MODEL_OPTIMIZATION_GUIDE.md
+    ├── MIGRATION_GUIDE.md      # ✨ NEW: Old → new system migration
+    └── REFACTOR_COMPLETE.md    # ✨ NEW: Refactor summary
 ```
 
 ## Complexity Levels
@@ -310,6 +398,14 @@ All examples are genericized for public sharing. No proprietary information, cus
 
 ---
 
-**Start here**: [PROMPT_DESIGN_PRINCIPLES.md](./PROMPT_DESIGN_PRINCIPLES.md) → [MODEL_OPTIMIZATION_GUIDE.md](./MODEL_OPTIMIZATION_GUIDE.md) → [examples/signal-classification](./examples/signal-classification/)
+## Quick Links
+
+**📚 Learning Path**: [PROMPT_DESIGN_PRINCIPLES.md](./PROMPT_DESIGN_PRINCIPLES.md) → [MODEL_OPTIMIZATION_GUIDE.md](./MODEL_OPTIMIZATION_GUIDE.md) → [examples/epic-categorization](./examples/epic-categorization/)
+
+**🔧 Developer Guide**: [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md) for using the `ai_models` system
+
+**✅ Test Suite**: `./scripts/run_tests.sh` to run 97 tests validating all models
+
+**📊 Model Registry**: See `ai_models/definitions/` for current model specifications
 
 Questions? Open an issue or contribute your own patterns.

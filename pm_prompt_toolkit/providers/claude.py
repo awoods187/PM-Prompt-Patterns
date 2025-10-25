@@ -29,12 +29,21 @@ from pm_prompt_toolkit.providers.base import ClassificationResult, LLMProvider, 
 
 logger = logging.getLogger(__name__)
 
-# Model pricing (input/output per 1M tokens as of Oct 2024)
+# DEPRECATED: Use ai_models.PricingService instead
+# This dict is kept for backward compatibility but will be removed in future versions
+# Last verified: 2025-10-25
 CLAUDE_PRICING = {
-    "claude-haiku": (0.25, 1.25),
+    "claude-haiku": (1.00, 5.00),     # Fixed: was (0.25, 1.25) - 4x underestimation
     "claude-sonnet": (3.0, 15.0),
     "claude-opus": (15.0, 75.0),
 }
+
+# Try to import new pricing system (graceful fallback if not available)
+try:
+    from ai_models import get_pricing_service
+    _use_new_pricing = True
+except ImportError:
+    _use_new_pricing = False
 
 
 class ClaudeProvider(LLMProvider):
@@ -47,7 +56,7 @@ class ClaudeProvider(LLMProvider):
         - Model-specific pricing
 
     Supported Models:
-        - claude-haiku: Fast, cheap classification ($0.25/$1.25 per 1M tokens)
+        - claude-haiku: Fast, cheap classification ($1.00/$5.00 per 1M tokens)
         - claude-sonnet: Production workhorse ($3/$15 per 1M tokens)
         - claude-opus: Highest quality ($15/$75 per 1M tokens)
 
@@ -222,9 +231,12 @@ category|confidence|evidence
         Returns:
             Full model identifier for API
         """
+        # Import current models from registry
+        from models.registry import CLAUDE_HAIKU, CLAUDE_SONNET, CLAUDE_OPUS
+
         model_map = {
-            "claude-haiku": "claude-3-haiku-20240307",
-            "claude-sonnet": "claude-3-5-sonnet-20241022",
-            "claude-opus": "claude-3-opus-20240229",
+            "claude-haiku": CLAUDE_HAIKU.api_identifier,
+            "claude-sonnet": CLAUDE_SONNET.api_identifier,
+            "claude-opus": CLAUDE_OPUS.api_identifier,
         }
         return model_map[self.model]

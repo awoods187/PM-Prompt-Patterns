@@ -1,0 +1,54 @@
+# Gemini 2.5 Flash Model Definition
+# Last verified: 2025-10-25
+# Source: https://ai.google.dev/gemini-api/docs/models/gemini
+
+schema_version: "1.0.0"
+model_id: "gemini-2-5-flash"
+provider: "google"
+name: "Gemini 2.5 Flash"
+api_identifier: "gemini-2.5-flash-002"
+
+metadata:
+  context_window_input: 1000000
+  context_window_output: 8192
+  knowledge_cutoff: "August 2024"
+  release_date: "2024-11-15"
+  last_verified: "2025-10-25"
+  docs_url: "https://ai.google.dev/gemini-api/docs/models/gemini"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - prompt_caching
+  - streaming
+  - json_mode
+  - code_execution
+
+pricing:
+  input_per_1m: 0.075
+  output_per_1m: 0.30
+  cache_write_per_1m: 0.19
+  cache_read_per_1m: 0.019
+
+optimization:
+  recommended_for:
+    - "High-speed processing"
+    - "Cost-optimized applications"
+    - "Large document processing"
+    - "Real-time analysis"
+    - "High-frequency API calls"
+    - "Multimodal tasks (text + vision)"
+  best_practices:
+    - "Fastest model with 1M context window"
+    - "Excellent price-to-performance ratio"
+    - "Use for high-volume workflows"
+    - "Context caching reduces costs further"
+    - "Strong vision capabilities"
+    - "Code execution built-in"
+  cost_tier: "budget"
+  speed_tier: "fast"
+
+notes: "Fast, versatile model with 1M token context. Excellent cost-performance balance."
