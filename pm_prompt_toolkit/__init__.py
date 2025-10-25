@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Andy Woods
+# Licensed under the MIT License (see LICENSE file)
+
 """PM Prompt Toolkit - Production-grade prompt engineering for AI-native product managers.
 
 This package provides tools and frameworks for building production LLM systems with:

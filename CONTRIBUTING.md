@@ -495,6 +495,42 @@ Original authors will be tagged for input on updates.
 
 ---
 
+## Developer Certificate of Origin (DCO)
+
+This project uses the Developer Certificate of Origin (DCO) to ensure that contributors have the right to submit their code. By contributing to this project, you certify that:
+
+1. The contribution was created in whole or in part by you and you have the right to submit it under the MIT License; or
+2. The contribution is based upon previous work that, to your knowledge, is covered under an appropriate open source license and you have the right to submit that work with modifications under the same open source license; or
+3. The contribution was provided directly to you by some other person who certified (1) or (2) and you have not modified it.
+
+### How to Sign Off Commits
+
+All commits must include a `Signed-off-by` line. Add it with the `-s` flag:
+
+```bash
+git commit -s -m "Add new prompt for feature prioritization
+
+This prompt helps PMs prioritize features using weighted scoring.
+Tested with Claude Sonnet 4.5, achieving 92% stakeholder agreement.
+
+Signed-off-by: Your Name <your.email@example.com>"
+```
+
+The `-s` flag automatically adds the `Signed-off-by` line to your commit message.
+
+**Important**: Pull requests with unsigned commits will not be merged. The DCO check runs automatically on all PRs.
+
+### Why DCO?
+
+The DCO protects both you and the project:
+- **For you**: Certifies you have the right to contribute
+- **For the project**: Creates a clear legal trail for contributions
+- **For users**: Ensures code can be used under the MIT License
+
+This is a lightweight alternative to a Contributor License Agreement (CLA) and is used by many major open source projects including Linux, Docker, and GitLab.
+
+---
+
 ## Questions?
 
 Open an issue or email [your contact].

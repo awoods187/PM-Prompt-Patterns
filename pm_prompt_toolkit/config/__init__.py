@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Andy Woods
+# Licensed under the MIT License (see LICENSE file)
+
 """Configuration management for PM Prompt Toolkit.
 
 This module provides secure configuration management using Pydantic Settings,

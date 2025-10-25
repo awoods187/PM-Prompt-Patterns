@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Andy Woods
+# Licensed under the MIT License (see LICENSE file)
+
 """LLM provider implementations for multiple vendors.
 
 This module provides a unified interface for working with different LLM providers

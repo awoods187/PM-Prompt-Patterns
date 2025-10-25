@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Andy Woods
+# Licensed under the MIT License (see LICENSE file)
+
 """Unified Model Registry
 
 Auto-loads model definitions from YAML files and provides a single
