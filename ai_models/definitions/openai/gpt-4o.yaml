@@ -1,0 +1,50 @@
+# GPT-4o Model Definition
+# Last verified: 2025-10-25
+# Source: https://platform.openai.com/docs/models
+
+schema_version: "1.0.0"
+model_id: "gpt-4o"
+provider: "openai"
+name: "GPT-4o"
+api_identifier: "gpt-4o-2024-08-06"
+
+metadata:
+  context_window_input: 128000
+  context_window_output: 16384
+  knowledge_cutoff: "October 2023"
+  release_date: "2024-08-06"
+  last_verified: "2025-10-25"
+  docs_url: "https://platform.openai.com/docs/models/gpt-4o"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - streaming
+  - json_mode
+
+pricing:
+  input_per_1m: 2.50
+  output_per_1m: 10.00
+
+optimization:
+  recommended_for:
+    - "Multimodal applications (text + vision)"
+    - "Complex reasoning tasks"
+    - "Function calling workflows"
+    - "Structured JSON output"
+    - "General purpose API integration"
+    - "Cost-effective GPT-4 level quality"
+  best_practices:
+    - "Use JSON mode for structured outputs"
+    - "Leverage function calling for tool integration"
+    - "Vision capability for image understanding"
+    - "Set max_tokens to control output costs"
+    - "Use system messages for consistent behavior"
+    - "Stream responses for better UX"
+  cost_tier: "mid-tier"
+  speed_tier: "balanced"
+
+notes: "OpenAI's flagship model. Good balance of capability and cost. 128k context window."

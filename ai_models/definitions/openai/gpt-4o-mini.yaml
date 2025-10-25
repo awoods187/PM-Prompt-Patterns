@@ -1,0 +1,50 @@
+# GPT-4o Mini Model Definition
+# Last verified: 2025-10-25
+# Source: https://platform.openai.com/docs/models
+
+schema_version: "1.0.0"
+model_id: "gpt-4o-mini"
+provider: "openai"
+name: "GPT-4o Mini"
+api_identifier: "gpt-4o-mini-2024-07-18"
+
+metadata:
+  context_window_input: 128000
+  context_window_output: 16384
+  knowledge_cutoff: "October 2023"
+  release_date: "2024-07-18"
+  last_verified: "2025-10-25"
+  docs_url: "https://platform.openai.com/docs/models/gpt-4o-mini"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - streaming
+  - json_mode
+
+pricing:
+  input_per_1m: 0.15
+  output_per_1m: 0.60
+
+optimization:
+  recommended_for:
+    - "High-volume classification"
+    - "Cost-sensitive applications"
+    - "Fast response requirements"
+    - "Simple reasoning tasks"
+    - "Data extraction and parsing"
+    - "Customer support automation"
+  best_practices:
+    - "Excellent price-to-performance ratio"
+    - "Use for tasks that don't need GPT-4o power"
+    - "Great for rapid prototyping"
+    - "Ideal for >10k requests/day"
+    - "Use JSON mode for structured data"
+    - "Cascade from Mini to 4o for complex cases"
+  cost_tier: "budget"
+  speed_tier: "fast"
+
+notes: "Affordable, intelligent small model. 60%+ cheaper than GPT-4o while maintaining strong performance."

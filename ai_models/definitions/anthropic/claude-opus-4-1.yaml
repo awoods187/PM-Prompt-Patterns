@@ -1,0 +1,53 @@
+# Claude Opus 4.1 Model Definition
+# Last verified: 2025-10-25
+# Source: https://docs.claude.com/en/docs/about-claude/models
+
+schema_version: "1.0.0"
+model_id: "claude-opus-4-1"
+provider: "anthropic"
+name: "Claude Opus 4.1"
+api_identifier: "claude-opus-4-1-20250514"
+
+metadata:
+  context_window_input: 200000
+  context_window_output: null
+  knowledge_cutoff: "December 2024"
+  release_date: "2025-05-14"
+  last_verified: "2025-10-25"
+  docs_url: "https://docs.claude.com/en/docs/about-claude/models"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - prompt_caching
+  - streaming
+  - json_mode
+
+pricing:
+  input_per_1m: 15.00
+  output_per_1m: 75.00
+  cache_write_per_1m: 18.75
+  cache_read_per_1m: 1.50
+
+optimization:
+  recommended_for:
+    - "Highest quality reasoning tasks"
+    - "Complex research and analysis"
+    - "Expert-level content generation"
+    - "Legal and medical document review"
+    - "Scientific reasoning"
+    - "Creative writing and ideation"
+  best_practices:
+    - "Use when Sonnet quality is insufficient"
+    - "Leverage for complex multi-step reasoning"
+    - "Ideal for tasks requiring deep domain expertise"
+    - "Worth the premium for business-critical decisions"
+    - "Enable caching to reduce costs on repeated prompts"
+    - "Use for final review in cascading workflows"
+  cost_tier: "premium"
+  speed_tier: "thorough"
+
+notes: "Highest capability model with superior reasoning. Training data through August 2025. Use selectively for maximum ROI."
