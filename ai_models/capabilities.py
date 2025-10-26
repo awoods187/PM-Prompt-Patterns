@@ -66,7 +66,7 @@ class ModelCapability(str, Enum):
             return cls(value)
         except ValueError:
             valid = ", ".join(c.value for c in cls)
-            raise ValueError(f"Invalid capability '{value}'. Valid: {valid}")
+            raise ValueError(f"Invalid capability '{value}'. Valid: {valid}") from None
 
 
 class CapabilityValidator:

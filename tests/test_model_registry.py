@@ -11,6 +11,7 @@ Usage:
     pytest tests/test_model_registry.py
 """
 
+from dataclasses import FrozenInstanceError
 from datetime import date, timedelta
 from typing import Set
 
@@ -83,7 +84,7 @@ class TestModelSpecValidation:
             assert isinstance(spec, ModelSpec), f"{key} is not a ModelSpec instance"
 
             # Frozen dataclasses should raise FrozenInstanceError on assignment
-            with pytest.raises(Exception):  # FrozenInstanceError
+            with pytest.raises(FrozenInstanceError):
                 spec.api_identifier = "should_fail"
 
     def test_all_required_fields_present(self):
