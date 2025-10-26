@@ -25,7 +25,6 @@ from pm_prompt_toolkit.providers.base import ClassificationResult, LLMProvider
 
 __version__ = "0.1.0"
 __author__ = "Andy Woods"
-__email__ = "your.email@example.com"
 
 __all__ = [
     "SignalClassifier",
