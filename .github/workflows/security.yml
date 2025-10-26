@@ -36,8 +36,9 @@ jobs:
         pip-audit --desc || true
 
     - name: Upload Bandit report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
+      continue-on-error: true
       with:
         name: bandit-report
         path: bandit-report.json
