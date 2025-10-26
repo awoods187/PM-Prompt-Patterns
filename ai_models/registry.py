@@ -23,7 +23,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from functools import lru_cache
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 import yaml
 
@@ -71,7 +71,7 @@ class Model:
     optimization: ModelOptimization
     notes: str = ""
 
-    def has_capability(self, capability: ModelCapability | str) -> bool:
+    def has_capability(self, capability: Union[ModelCapability, str]) -> bool:
         """Check if model has a specific capability.
 
         Args:
@@ -89,7 +89,7 @@ class Model:
             capability = ModelCapability.from_string(capability)
         return capability in self.capabilities
 
-    def has_all_capabilities(self, capabilities: list[ModelCapability | str]) -> bool:
+    def has_all_capabilities(self, capabilities: list[Union[ModelCapability, str]]) -> bool:
         """Check if model has all specified capabilities."""
         caps = [ModelCapability.from_string(c) if isinstance(c, str) else c for c in capabilities]
         return all(cap in self.capabilities for cap in caps)
@@ -296,7 +296,7 @@ class ModelRegistry:
         ]
 
     @classmethod
-    def filter_by_capability(cls, capability: ModelCapability | str) -> list[Model]:
+    def filter_by_capability(cls, capability: Union[ModelCapability, str]) -> list[Model]:
         """Get all models with a specific capability.
 
         Args:
