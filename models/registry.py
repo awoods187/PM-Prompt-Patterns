@@ -20,7 +20,7 @@ import warnings
 from dataclasses import dataclass
 from datetime import date
 from enum import Enum
-from typing import Dict, Optional
+from typing import Optional
 
 # Issue deprecation warning
 warnings.warn(
@@ -310,7 +310,7 @@ class ModelRegistry:
     # ============================================================================
 
     @classmethod
-    def get_all_current_models(cls) -> Dict[str, ModelSpec]:
+    def get_all_current_models(cls) -> dict[str, ModelSpec]:
         """Get all current (non-deprecated) model specifications."""
         return {
             # Claude
@@ -339,7 +339,7 @@ class ModelRegistry:
         return cls.get_all_current_models().get(model_key)
 
     @classmethod
-    def get_by_provider(cls, provider: Provider) -> Dict[str, ModelSpec]:
+    def get_by_provider(cls, provider: Provider) -> dict[str, ModelSpec]:
         """Get all models for a specific provider."""
         return {
             key: spec
@@ -368,7 +368,7 @@ class ModelRegistry:
         return recommendations[provider]
 
     @classmethod
-    def verify_all_docs_accessible(cls) -> Dict[Provider, bool]:
+    def verify_all_docs_accessible(cls) -> dict[Provider, bool]:
         """Check if all verification source URLs are accessible.
 
         Returns:
@@ -413,7 +413,7 @@ if __name__ == "__main__":
         print(f"\n{provider.value.upper()} MODELS:")
         print("-" * 80)
 
-        for key, spec in ModelRegistry.get_by_provider(provider).items():
+        for _key, spec in ModelRegistry.get_by_provider(provider).items():
             print(f"\n{spec.name}")
             print(f"  API ID: {spec.api_identifier}")
             print(f"  Context: {spec.context_window_input:,} tokens")

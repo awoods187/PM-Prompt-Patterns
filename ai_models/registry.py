@@ -23,7 +23,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from functools import lru_cache
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import Optional
 
 import yaml
 
@@ -35,8 +35,8 @@ from ai_models.pricing import Pricing, PricingService  # noqa: F401
 class ModelOptimization:
     """Optimization guidance for a model."""
 
-    recommended_for: List[str] = field(default_factory=list)
-    best_practices: List[str] = field(default_factory=list)
+    recommended_for: list[str] = field(default_factory=list)
+    best_practices: list[str] = field(default_factory=list)
     cost_tier: str = "mid-tier"  # budget, mid-tier, premium
     speed_tier: str = "balanced"  # fast, balanced, thorough
 
@@ -66,7 +66,7 @@ class Model:
     name: str
     api_identifier: str
     metadata: ModelMetadata
-    capabilities: Set[ModelCapability]
+    capabilities: set[ModelCapability]
     pricing: Pricing
     optimization: ModelOptimization
     notes: str = ""
@@ -89,7 +89,7 @@ class Model:
             capability = ModelCapability.from_string(capability)
         return capability in self.capabilities
 
-    def has_all_capabilities(self, capabilities: List[ModelCapability | str]) -> bool:
+    def has_all_capabilities(self, capabilities: list[ModelCapability | str]) -> bool:
         """Check if model has all specified capabilities."""
         caps = [ModelCapability.from_string(c) if isinstance(c, str) else c for c in capabilities]
         return all(cap in self.capabilities for cap in caps)
@@ -112,7 +112,7 @@ class Model:
         """
         return self.pricing.calculate_cost(input_tokens, output_tokens, cached_input_tokens)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         """Convert to dictionary representation."""
         return {
             "model_id": self.model_id,
@@ -146,7 +146,7 @@ class ModelRegistry:
     a unified interface for accessing model information.
     """
 
-    _models: Dict[str, Model] = {}
+    _models: dict[str, Model] = {}
     _loaded = False
 
     @classmethod
@@ -261,7 +261,7 @@ class ModelRegistry:
         return cls._models.get(model_id)
 
     @classmethod
-    def get_all(cls) -> Dict[str, Model]:
+    def get_all(cls) -> dict[str, Model]:
         """Get all models.
 
         Returns:
@@ -276,7 +276,7 @@ class ModelRegistry:
         return cls._models.copy()
 
     @classmethod
-    def get_by_provider(cls, provider: str) -> List[Model]:
+    def get_by_provider(cls, provider: str) -> list[Model]:
         """Get all models from a specific provider.
 
         Args:
@@ -296,7 +296,7 @@ class ModelRegistry:
         ]
 
     @classmethod
-    def filter_by_capability(cls, capability: ModelCapability | str) -> List[Model]:
+    def filter_by_capability(cls, capability: ModelCapability | str) -> list[Model]:
         """Get all models with a specific capability.
 
         Args:
@@ -317,7 +317,7 @@ class ModelRegistry:
         return [model for model in cls._models.values() if capability in model.capabilities]
 
     @classmethod
-    def filter_by_cost_tier(cls, tier: str) -> List[Model]:
+    def filter_by_cost_tier(cls, tier: str) -> list[Model]:
         """Get all models in a specific cost tier.
 
         Args:
@@ -355,7 +355,7 @@ def get_model(model_id: str) -> Optional[Model]:
     return ModelRegistry.get(model_id)
 
 
-def list_models() -> List[str]:
+def list_models() -> list[str]:
     """List all available model IDs.
 
     Returns:
@@ -364,11 +364,11 @@ def list_models() -> List[str]:
     return list(ModelRegistry.get_all().keys())
 
 
-def list_providers() -> List[str]:
+def list_providers() -> list[str]:
     """List all available providers.
 
     Returns:
         List of unique provider names
     """
     models = ModelRegistry.get_all()
-    return list(set(model.provider for model in models.values()))
+    return list({model.provider for model in models.values()})

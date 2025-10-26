@@ -13,7 +13,6 @@ Usage:
 
 import re
 from pathlib import Path
-from typing import List, Tuple
 
 import pytest
 
@@ -62,7 +61,7 @@ def should_skip_file(file_path: Path) -> bool:
     return False
 
 
-def scan_file_for_deprecated(file_path: Path) -> List[Tuple[int, str, str]]:
+def scan_file_for_deprecated(file_path: Path) -> list[tuple[int, str, str]]:
     """
     Scan a file for deprecated model identifiers.
 
@@ -73,7 +72,7 @@ def scan_file_for_deprecated(file_path: Path) -> List[Tuple[int, str, str]]:
     violations = []
 
     try:
-        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+        with open(file_path, encoding="utf-8", errors="ignore") as f:
             for line_num, line in enumerate(f, start=1):
                 line_lower = line.lower()
 

@@ -25,7 +25,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Dict, Optional
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +106,7 @@ class ClassificationResult:
         if self.latency_ms < 0:
             raise ValueError(f"Latency cannot be negative, got {self.latency_ms}")
 
-    def to_dict(self) -> Dict[str, object]:
+    def to_dict(self) -> dict[str, object]:
         """Convert result to dictionary for serialization.
 
         Returns:
@@ -202,7 +202,7 @@ class ProviderMetrics:
         self.total_cached_tokens += cached_tokens
         self.total_latency_ms += latency_ms
 
-    def to_dict(self) -> Dict[str, float]:
+    def to_dict(self) -> dict[str, float]:
         """Convert metrics to dictionary.
 
         Returns:

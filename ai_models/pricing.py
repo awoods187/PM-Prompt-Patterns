@@ -18,9 +18,8 @@ Example:
 
 from dataclasses import dataclass
 from datetime import date, datetime
-from functools import lru_cache
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Optional
 
 import yaml
 
@@ -86,7 +85,7 @@ class Pricing:
 
         return input_cost + cache_cost + output_cost
 
-    def to_dict(self) -> Dict[str, float]:
+    def to_dict(self) -> dict[str, float]:
         """Convert to dictionary representation."""
         result = {
             "model_id": self.model_id,
@@ -133,7 +132,7 @@ class PricingService:
             definitions_dir = Path(__file__).parent / "definitions"
 
         self.definitions_dir = definitions_dir
-        self._pricing_cache: Dict[str, Pricing] = {}
+        self._pricing_cache: dict[str, Pricing] = {}
         self._load_all_pricing()
 
     def _load_all_pricing(self) -> None:
@@ -182,7 +181,6 @@ class PricingService:
         except ValueError:
             return None
 
-    @lru_cache(maxsize=128)
     def get_pricing(self, model_id: str, as_of_date: Optional[date] = None) -> Optional[Pricing]:
         """Get pricing for a model.
 
@@ -240,7 +238,7 @@ class PricingService:
 
         return pricing.calculate_cost(input_tokens, output_tokens, cached_input_tokens)
 
-    def get_all_pricing(self) -> Dict[str, Pricing]:
+    def get_all_pricing(self) -> dict[str, Pricing]:
         """Get pricing for all models.
 
         Returns:
