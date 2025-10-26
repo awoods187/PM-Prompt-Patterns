@@ -87,3 +87,6 @@ test_outputs/
 cache/
 *.pkl
 *.pickle
+
+# Claude Code local settings
+.claude/

@@ -1,0 +1,87 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev,test]"
+
+    - name: Run linters
+      run: |
+        black --check .
+        ruff check .
+
+    - name: Run tests (no API calls)
+      run: |
+        # Run fast tests that don't require API keys
+        pytest tests/test_ai_models.py -v
+        pytest tests/test_model_registry.py -v
+        pytest tests/test_deprecated_models.py -v
+        pytest tests/test_pricing_consistency.py -v
+
+    - name: Run tests with coverage
+      run: |
+        pytest --cov=pm_prompt_toolkit --cov=ai_models --cov-report=xml --cov-report=term-missing
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+  test-endpoints:
+    # Only run on main branch or manual trigger (requires API keys)
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        pip install -e ".[test]"
+
+    - name: Test API endpoints (requires secrets)
+      env:
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+      run: |
+        # Only run if keys are available
+        if [ -n "$ANTHROPIC_API_KEY" ]; then
+          pytest tests/test_model_endpoints.py -v -k "anthropic"
+        fi

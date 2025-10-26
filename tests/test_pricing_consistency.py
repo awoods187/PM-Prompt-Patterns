@@ -251,7 +251,7 @@ class TestPricingDocumentation:
 
         all_models_dict = ModelRegistry.get_all_current_models()
 
-        for model_id, spec in all_models_dict.items():
+        for _model_id, spec in all_models_dict.items():
             days_old = (today - spec.last_verified).days
             assert spec.last_verified >= min_allowed_date, (
                 f"{spec.name}: Verification date {spec.last_verified} is {days_old} days old (max {max_age_days})\n"

@@ -11,8 +11,8 @@ Usage:
     pytest tests/test_model_registry.py
 """
 
+from dataclasses import FrozenInstanceError
 from datetime import date, timedelta
-from typing import Set
 
 import pytest
 
@@ -83,7 +83,7 @@ class TestModelSpecValidation:
             assert isinstance(spec, ModelSpec), f"{key} is not a ModelSpec instance"
 
             # Frozen dataclasses should raise FrozenInstanceError on assignment
-            with pytest.raises(Exception):  # FrozenInstanceError
+            with pytest.raises(FrozenInstanceError):
                 spec.api_identifier = "should_fail"
 
     def test_all_required_fields_present(self):
@@ -111,7 +111,7 @@ class TestModelSpecValidation:
 
     def test_api_identifiers_are_unique(self):
         """Verify no two models share the same API identifier."""
-        identifiers: Set[str] = set()
+        identifiers: set[str] = set()
         duplicates = []
 
         for key, spec in ModelRegistry.get_all_current_models().items():

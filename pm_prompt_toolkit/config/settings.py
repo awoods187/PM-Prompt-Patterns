@@ -241,7 +241,7 @@ class Settings(BaseSettings):
         logger.debug(f"{provider} provider is properly configured")
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> Settings:
     """Get application settings (cached singleton).
 

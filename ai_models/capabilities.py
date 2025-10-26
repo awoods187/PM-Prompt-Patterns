@@ -15,7 +15,6 @@ Example:
 
 from enum import Enum
 from pathlib import Path
-from typing import List, Set
 
 import yaml
 
@@ -66,7 +65,7 @@ class ModelCapability(str, Enum):
             return cls(value)
         except ValueError:
             valid = ", ".join(c.value for c in cls)
-            raise ValueError(f"Invalid capability '{value}'. Valid: {valid}")
+            raise ValueError(f"Invalid capability '{value}'. Valid: {valid}") from None
 
 
 class CapabilityValidator:
@@ -76,7 +75,7 @@ class CapabilityValidator:
     fast lookup for runtime capability checking.
     """
 
-    _capabilities_cache: dict[str, Set[ModelCapability]] = {}
+    _capabilities_cache: dict[str, set[ModelCapability]] = {}
     _loaded = False
 
     @classmethod
@@ -117,7 +116,7 @@ class CapabilityValidator:
         cls._loaded = True
 
     @classmethod
-    def get_capabilities(cls, model_id: str) -> Set[ModelCapability]:
+    def get_capabilities(cls, model_id: str) -> set[ModelCapability]:
         """Get all capabilities for a model.
 
         Args:
@@ -156,7 +155,7 @@ class CapabilityValidator:
         return capability in caps
 
     @classmethod
-    def has_all_capabilities(cls, model_id: str, capabilities: List[ModelCapability]) -> bool:
+    def has_all_capabilities(cls, model_id: str, capabilities: list[ModelCapability]) -> bool:
         """Check if model has all specified capabilities.
 
         Args:
@@ -177,7 +176,7 @@ class CapabilityValidator:
         return all(cap in model_caps for cap in capabilities)
 
     @classmethod
-    def has_any_capability(cls, model_id: str, capabilities: List[ModelCapability]) -> bool:
+    def has_any_capability(cls, model_id: str, capabilities: list[ModelCapability]) -> bool:
         """Check if model has any of the specified capabilities.
 
         Args:
@@ -198,7 +197,7 @@ class CapabilityValidator:
         return any(cap in model_caps for cap in capabilities)
 
     @classmethod
-    def filter_models_by_capability(cls, capability: ModelCapability) -> List[str]:
+    def filter_models_by_capability(cls, capability: ModelCapability) -> list[str]:
         """Get all models that have a specific capability.
 
         Args:
@@ -220,7 +219,7 @@ class CapabilityValidator:
         ]
 
     @classmethod
-    def get_capability_matrix(cls) -> dict[str, Set[str]]:
+    def get_capability_matrix(cls) -> dict[str, set[str]]:
         """Get complete capability matrix for all models.
 
         Returns:

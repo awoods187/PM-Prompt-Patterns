@@ -9,7 +9,7 @@ This provider is planned but not yet implemented. Currently only the Claude
 provider is fully functional. Contributions welcome!
 
 Planned features:
-    - GPT-3.5-Turbo and GPT-4 support
+    - GPT-4o and GPT-4o mini support
     - JSON mode for structured outputs
     - Function calling for complex classifications
     - Proper cost tracking with latest pricing
@@ -36,9 +36,8 @@ class OpenAIProvider(LLMProvider):
     Use ClaudeProvider for production workloads.
 
     Planned Support:
-        - gpt-3.5-turbo: Fast, cost-effective
-        - gpt-4: High quality
-        - gpt-4-turbo: Balanced performance
+        - gpt-4o: High quality, multimodal
+        - gpt-4o-mini: Fast, cost-effective
         - JSON mode for reliable structured outputs
         - Function calling for complex tasks
 
