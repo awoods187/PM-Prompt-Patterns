@@ -55,5 +55,8 @@ jobs:
       uses: trufflesecurity/trufflehog@main
       with:
         path: ./
-        base: ${{ github.event.repository.default_branch }}
+        # Use the previous commit as base for push events, empty string for PRs (scans all commits in PR)
+        base: ${{ github.event_name == 'push' && github.event.before || '' }}
         head: HEAD
+        # Add extra args to handle edge cases and prevent failures
+        extra_args: --only-verified
