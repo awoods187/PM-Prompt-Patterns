@@ -6,7 +6,7 @@
 
 **Production-grade prompts and frameworks for AI-native product management**
 
-A comprehensive collection of battle-tested prompt patterns, model optimization strategies, and production frameworks for product managers building with LLMs. Built on real-world experience deploying AI systems processing 10K+ signals weekly and monitoring $100M+ ARR.
+A comprehensive collection of battle-tested prompt patterns, model optimization strategies, and production frameworks for product managers building with LLMs. Built on real-world experience deploying AI systems processing 5K+ heterogeneous data points weekly with 95% accuracy and monitoring $100M+ ARR.
 
 ## Why This Exists
 
@@ -47,11 +47,11 @@ python -c "from ai_models import get_model; print(get_model('claude-sonnet-4-5')
 
 ### By Use Case
 
-| Use Case | Prompt | Complexity | Models |
-|----------|--------|------------|--------|
+| Use Case            | Prompt       | Complexity | Models |
+|---------------------|--------------|------------|--------|
 | Analytics & Metrics | [analytics/](./prompts/analytics/) | 🟢-🔴 All levels | All models |
 | Epic Categorization | [epic-categorization](./examples/epic-categorization/) | 🟡 Intermediate | Claude Sonnet, GPT-4 |
-| Product Strategy | [product-strategy/](./prompts/product-strategy/) | 🟡-🔴 Intermediate-Advanced | Claude Opus, Sonnet |
+| Product Strategy    | [product-strategy/](./prompts/product-strategy/) | 🟡-🔴 Intermediate-Advanced | Claude Opus, Sonnet |
 
 ## Model Selection Guide
 
@@ -59,8 +59,8 @@ Understanding **when** to use each model is as important as **how** to prompt th
 
 ### Quick Reference
 
-| Model | Cost (Input/Output per 1M tokens) | Context | Best For | Production Use |
-|-------|---------|---------|----------|----------------|
+| Model                    | Cost (Input/Output per 1M tokens) | Context | Best For | Production Use |
+|--------------------------|---------|---------|----------|----------------|
 | **Claude Haiku 4.5** | $1.00 / $5.00 | 200K | High-volume classification (1000s/day) | 70% of our workload |
 | **Claude Sonnet 4.5** | $3.00 / $15.00 | 200K | Production workhorse, complex analysis | 25% of our workload |
 | **Claude Opus 4.1** | $15.00 / $75.00 | 200K | High-stakes decisions, creative work | 5% of our workload |
@@ -380,19 +380,6 @@ This is a living repository. Contributions welcome for:
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 **Quality bar**: All contributions must include quantified results from real usage (no toy examples).
-
-## About
-
-Built by [Andy Woods](https://github.com/awoods187), Product Manager with 8+ years building B2B infrastructure products and production AI systems.
-
-**Production AI Experience**:
-- Customer intelligence systems processing 10K+ signals weekly
-- Classification accuracy: 95%+ on production datasets
-- Cost optimization: $0.001/signal (99.7% reduction from naive approaches)
-- Multi-model orchestration across Claude, GPT-4, and Gemini
-- Systems monitoring $100M+ ARR in B2B SaaS
-
-Connect: [LinkedIn](https://linkedin.com/in/andrew-woods-pm) | [GitHub](https://github.com/awoods187)
 
 ## License & Contributing
 
