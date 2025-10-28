@@ -31,6 +31,15 @@ Production-tested prompts for technical documentation, code quality, and enginee
   - **Production metrics**: 60-70% reduction in onboarding time, 40-50% fewer support requests
   - **Best for**: New projects, monorepo standardization, documentation audits
 
+### System Architecture & Infrastructure
+
+- **[Multi-Provider LLM Orchestration System](./llm-orchestration-system.md)** - 🔴 Advanced
+  - Build unified Python library for OpenAI, Anthropic, and Gemini integration
+  - Adapter pattern with dynamic model discovery and intelligent fallback
+  - Comprehensive cost tracking and usage analytics
+  - **Production metrics**: 90%+ test coverage, <1% failure rate, 100% cost visibility
+  - **Best for**: LLM-powered applications, provider flexibility, cost optimization
+
 ## Coming Soon
 
 Planned prompts:
