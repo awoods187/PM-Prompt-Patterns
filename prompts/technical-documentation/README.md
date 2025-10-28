@@ -23,6 +23,14 @@ Production-tested prompts for technical documentation, code quality, and enginee
   - Improve documentation by removing AI-generated writing patterns
   - Make documentation more natural and human-like
 
+### Documentation Generation
+
+- **[Enterprise README Generator](./enterprise-readme-generator.md)** - 🟡 Intermediate
+  - Create and optimize professional READMEs for multiple stakeholders
+  - Progressive information disclosure (exec summary → quick start → details)
+  - **Production metrics**: 60-70% reduction in onboarding time, 40-50% fewer support requests
+  - **Best for**: New projects, monorepo standardization, documentation audits
+
 ## Coming Soon
 
 Planned prompts:
