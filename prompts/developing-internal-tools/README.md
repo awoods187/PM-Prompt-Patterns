@@ -36,6 +36,15 @@ Production-tested prompts for building internal tools, libraries, and developmen
   - **Production metrics**: 90%+ test coverage, <1% failure rate, 100% cost visibility
   - **Best for**: LLM-powered applications, provider flexibility, cost optimization
 
+### Prompt Engineering & Analysis
+
+- **[Prompt Extraction & Cataloging System](./prompt-extraction-cataloging.md)** - 🔴 Advanced
+  - Extract and catalog AI/LLM prompts from GitHub repositories
+  - Privacy-aware sanitization with automatic PII/secret redaction
+  - Structured JSON output with quality scoring and metadata
+  - **Production metrics**: 95%+ extraction accuracy, 100% privacy compliance
+  - **Best for**: Prompt library building, repository audits, competitive research
+
 ## Coming Soon
 
 Planned prompts:
