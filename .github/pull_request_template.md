@@ -81,13 +81,22 @@
 
 <!-- All items must be checked before merging -->
 
-- [ ] My code follows the project's style guidelines
+### Code Quality
+- [ ] My code follows the project's style guidelines (Black, Ruff, isort)
 - [ ] I have performed a self-review of my changes
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] My changes generate no new warnings
 - [ ] I have added tests that prove my fix/feature works
 - [ ] New and existing tests pass locally
 - [ ] Any dependent changes have been merged and published
+
+### CI/CD Pipeline
+- [ ] All CI jobs pass (lint, test, security, build)
+- [ ] Code coverage meets or exceeds threshold
+- [ ] Pre-commit hooks pass locally (`pre-commit run --all-files`)
+- [ ] No security vulnerabilities introduced (Bandit, Safety, pip-audit, Semgrep)
+- [ ] Package builds successfully (`python -m build`)
+- [ ] Branch is up to date with base branch
 
 ## DCO Sign-Off
 

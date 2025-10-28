@@ -15,6 +15,7 @@ Example:
 
 from enum import Enum
 from pathlib import Path
+from typing import ClassVar
 
 import yaml
 
@@ -75,8 +76,8 @@ class CapabilityValidator:
     fast lookup for runtime capability checking.
     """
 
-    _capabilities_cache: dict[str, set[ModelCapability]] = {}
-    _loaded = False
+    _capabilities_cache: ClassVar[dict[str, set[ModelCapability]]] = {}
+    _loaded: ClassVar[bool] = False
 
     @classmethod
     def _load_capabilities(cls) -> None:

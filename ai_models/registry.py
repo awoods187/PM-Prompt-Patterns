@@ -23,7 +23,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from functools import lru_cache
 from pathlib import Path
-from typing import Optional, Union
+from typing import ClassVar, Optional, Union
 
 import yaml
 
@@ -146,8 +146,8 @@ class ModelRegistry:
     a unified interface for accessing model information.
     """
 
-    _models: dict[str, Model] = {}
-    _loaded = False
+    _models: ClassVar[dict[str, Model]] = {}
+    _loaded: ClassVar[bool] = False
 
     @classmethod
     def _load_models(cls) -> None:

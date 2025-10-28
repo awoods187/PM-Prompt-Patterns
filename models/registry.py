@@ -20,7 +20,7 @@ import warnings
 from dataclasses import dataclass
 from datetime import date
 from enum import Enum
-from typing import Optional
+from typing import ClassVar, Optional
 
 # Issue deprecation warning
 warnings.warn(
@@ -96,7 +96,7 @@ class ModelRegistry:
     """
 
     # Verification sources - check these when updating
-    VERIFICATION_SOURCES = {
+    VERIFICATION_SOURCES: ClassVar[dict] = {
         Provider.ANTHROPIC: "https://docs.claude.com/en/docs/about-claude/models",
         Provider.OPENAI: "https://platform.openai.com/docs/models",
         Provider.GOOGLE: "https://ai.google.dev/gemini-api/docs/models/gemini",
@@ -288,7 +288,7 @@ class ModelRegistry:
     # These are here for reference only. Code should never use these identifiers.
     # ============================================================================
 
-    _DEPRECATED = {
+    _DEPRECATED: ClassVar[dict[str, str]] = {
         # Claude legacy models
         "claude-3-5-sonnet-20241022": "Use CLAUDE_SONNET_4_5 instead",
         "claude-3-5-haiku-20241022": "Use CLAUDE_HAIKU_4_5 instead",

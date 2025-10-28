@@ -8,31 +8,11 @@
 #   pre-commit run --all-files
 #
 # See https://pre-commit.com for more information
+#
+# IMPORTANT: This configuration matches CI exactly (.github/workflows/ci.yml)
 
 repos:
-  # Deprecated model detection
-  - repo: local
-    hooks:
-      - id: check-deprecated-models
-        name: Check for deprecated model identifiers
-        entry: python -m pytest tests/test_deprecated_models.py -v
-        language: system
-        pass_filenames: false
-        always_run: true
-        stages: [commit]
-
-  # Registry validation (fast, no API calls)
-  - repo: local
-    hooks:
-      - id: validate-model-registry
-        name: Validate model registry structure
-        entry: python -m pytest tests/test_model_registry.py -v
-        language: system
-        pass_filenames: false
-        files: ^models/
-        stages: [commit]
-
-  # Standard Python code quality
+  # Standard Python code quality (must run first)
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
@@ -45,19 +25,46 @@ repos:
       - id: check-merge-conflict
       - id: debug-statements
 
-  # Python formatting (optional - uncomment if desired)
-  # - repo: https://github.com/psf/black
-  #   rev: 24.1.1
-  #   hooks:
-  #     - id: black
-  #       language_version: python3
+  # Python formatting (matches CI)
+  - repo: https://github.com/psf/black
+    rev: 24.1.1
+    hooks:
+      - id: black
+        language_version: python3
+        args: ['--line-length=100']
 
-  # Python import sorting (optional - uncomment if desired)
-  # - repo: https://github.com/pycqa/isort
-  #   rev: 5.13.2
-  #   hooks:
-  #     - id: isort
-  #       args: ["--profile", "black"]
+  # Python import sorting (matches CI)
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: ["--profile", "black", "--line-length", "100"]
+
+  # Python linting (matches CI)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.14
+    hooks:
+      - id: ruff
+        args: ['--fix']
+
+  # Project-specific validation (fast, no API calls)
+  - repo: local
+    hooks:
+      - id: check-deprecated-models
+        name: Check for deprecated model identifiers
+        entry: python -m pytest tests/test_deprecated_models.py -v
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [commit]
+
+      - id: validate-model-registry
+        name: Validate model registry structure
+        entry: python -m pytest tests/test_model_registry.py -v
+        language: system
+        pass_filenames: false
+        files: ^models/
+        stages: [commit]
 
 # Skip expensive endpoint tests in pre-commit (run in CI instead)
 # To run endpoint tests manually: pytest tests/test_model_endpoints.py

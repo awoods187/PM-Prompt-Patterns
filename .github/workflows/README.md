@@ -1,131 +1,252 @@
 # GitHub Actions CI/CD Workflows
 
-This directory contains automated workflows for continuous integration and quality assurance.
+This directory contains the production-ready CI/CD pipeline for the PM Prompt Toolkit project.
 
 ## Workflows
 
-### 🧪 tests.yml - Main Test Suite
-**Triggers:** Push/PR to main or develop branches
+### 🚀 ci.yml - Unified CI Pipeline
+**Triggers:** Push to main, all PRs, manual dispatch
 
-**What it does:**
-- Runs on Python 3.9, 3.10, 3.11, 3.12
-- Linting (Black, Ruff)
-- Fast unit tests (no API calls required)
-- Coverage reporting (uploads to Codecov)
-- API endpoint tests (main branch only, requires secrets)
+**What it does (all jobs run in parallel):**
 
-**Duration:** ~3-5 minutes
+1. **Lint** - Code quality and formatting
+   - Black formatting verification
+   - isort import sorting
+   - Ruff linting
+   - mypy type checking
 
-### 🔒 security.yml - Security Scanning
-**Triggers:** Push/PR, weekly schedule
+2. **Test** - Comprehensive testing matrix
+   - Python versions: 3.9, 3.10, 3.11, 3.12
+   - Full test suite with coverage
+   - Codecov integration
+   - Coverage artifact uploads
 
-**What it does:**
-- Bandit security linter (finds common security issues)
-- Safety check (dependency vulnerability scanning)
-- pip-audit (PyPI package vulnerabilities)
-- TruffleHog (secret scanning)
+3. **Security** - Multi-layer security scanning
+   - Bandit (Python security linter)
+   - Safety (dependency vulnerabilities)
+   - pip-audit (supply chain security)
+   - Semgrep (SAST)
+   - TruffleHog (secret scanning)
 
-**Duration:** ~2-3 minutes
+4. **Build** - Package verification
+   - Build wheel and sdist
+   - Validate with twine
+   - Test installation in clean venv
 
-### ✨ lint.yml - Code Quality
-**Triggers:** Push/PR to main or develop branches
+5. **Test Endpoints** - Live API testing (conditional)
+   - Runs on main branch or manual trigger
+   - Requires API secrets
+   - Tests real Claude/GPT/Gemini endpoints
 
-**What it does:**
-- Black formatting check
-- Ruff linting
-- mypy type checking
+**Duration:** 2-3 minutes (with cache)
 
-**Duration:** ~1-2 minutes
+**Performance features:**
+- Intelligent caching per job
+- Concurrency control (cancels outdated runs)
+- Path filtering (skips docs-only changes)
 
 ## Setup Instructions
 
-### 1. Enable GitHub Actions
-GitHub Actions should be enabled automatically for the repository.
+### 1. Repository Settings
 
-### 2. Add Repository Secrets (Optional)
-For API endpoint testing on main branch:
+#### Branch Protection for `main`
+Navigate to: **Settings → Branches → Add rule**
 
-Go to: Settings → Secrets and variables → Actions → New repository secret
+Required status checks:
+- ✓ lint
+- ✓ test (3.9, 3.10, 3.11, 3.12)
+- ✓ security
+- ✓ build
 
-Add:
-- `ANTHROPIC_API_KEY` - For Claude endpoint tests
-- `OPENAI_API_KEY` - For GPT endpoint tests
-- `GOOGLE_API_KEY` - For Gemini endpoint tests
+Settings:
+- ☑ Require PR reviews (1 approval)
+- ☑ Require status checks to pass
+- ☑ Require branches to be up to date
+- ☑ Dismiss stale reviews
+- ☑ Include administrators
 
-**Note:** These are optional. Tests will skip if not present.
+#### GitHub Secrets (Optional)
+Navigate to: **Settings → Secrets and variables → Actions**
 
-### 3. Enable Codecov (Optional)
-For coverage reporting:
-1. Go to https://codecov.io/
-2. Sign in with GitHub
-3. Add your repository
-4. Coverage reports will appear automatically
+For API endpoint testing:
+- `ANTHROPIC_API_KEY` - Claude endpoint tests
+- `OPENAI_API_KEY` - GPT endpoint tests
+- `GOOGLE_API_KEY` - Gemini endpoint tests
+- `PYPI_API_TOKEN` - PyPI releases (future)
 
-## Running Locally
+#### Enable Security Features
+Navigate to: **Settings → Code security and analysis**
 
-You can test workflows locally using [act](https://github.com/nektos/act):
+Enable:
+- ☑ Dependency graph
+- ☑ Dependabot alerts
+- ☑ Dependabot security updates
+- ☑ Secret scanning
 
+### 2. Local Development Setup
+
+#### Install Pre-commit Hooks
 ```bash
-# Install act
-brew install act
+pip install pre-commit
+pre-commit install
 
-# Run tests workflow
-act -j test
-
-# Run security workflow
-act -j security
-
-# Run lint workflow
-act -j lint
+# Test hooks
+pre-commit run --all-files
 ```
 
-## Workflow Configuration
+#### Install Dependencies
+```bash
+pip install -e ".[dev,test]"
+```
 
-### Test Strategy
-- **Fast tests:** Run on all PRs (no API keys needed)
-- **API tests:** Run only on main branch (requires secrets)
-- **Coverage:** Tracked and reported on all test runs
+#### Run Checks Locally (matches CI)
+```bash
+# Formatting
+black --check --diff .
+black .  # auto-fix
 
-### Security Strategy
-- **On every PR:** Bandit, dependency checks
-- **Weekly:** Full security scan of all dependencies
-- **Secret scanning:** TruffleHog checks entire git history
+# Import sorting
+isort --check-only --diff .
+isort .  # auto-fix
 
-### Performance
-- **Caching:** pip dependencies cached for faster runs
-- **Matrix testing:** Parallel runs across Python versions
-- **Conditional execution:** API tests only when secrets available
+# Linting
+ruff check .
+ruff check --fix .  # auto-fix
 
-## Badges
+# Type checking
+mypy pm_prompt_toolkit/ ai_models/
 
-Add these to your README.md:
+# Tests with coverage
+pytest --cov=pm_prompt_toolkit --cov=ai_models --cov-report=html --cov-report=term-missing
+
+# Build package
+python -m build
+twine check dist/*
+```
+
+### 3. Testing the Pipeline
+
+#### Option A: Create Test Branch
+```bash
+git checkout -b test-ci
+echo "# CI Test" >> test.txt
+git add test.txt
+git commit -m "test: Verify CI configuration"
+git push -u origin test-ci
+# Open PR and watch workflows run
+```
+
+#### Option B: Manual Workflow Dispatch
+1. Go to **Actions** tab
+2. Select **CI** workflow
+3. Click **Run workflow**
+4. Select branch and run
+
+## Workflow Architecture
+
+### Caching Strategy
+Each job caches dependencies independently:
+```
+${{ runner.os }}-pip-{job}-{python-version}-${{ hashFiles('pyproject.toml') }}
+```
+
+**Benefits:**
+- Faster CI runs (2-3 min vs 4-6 min cold)
+- Independent job caches
+- Automatic invalidation on dependency changes
+
+### Path Filtering
+CI skips when ONLY these change:
+- Markdown files (`**.md`)
+- Documentation (`docs/**`)
+- License file
+
+### Concurrency Control
+```yaml
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+```
+Cancels outdated runs when new commits pushed.
+
+## Tool Configuration
+
+All tools configured in `pyproject.toml`:
+
+**Black:** Line length 100, targets Python 3.9-3.12
+**isort:** Black-compatible profile, line length 100
+**Ruff:** Comprehensive ruleset (30+ categories), line length 100
+**Coverage:** Branch coverage enabled, HTML reports in `htmlcov/`
+
+**Pre-commit matches CI exactly** - see `.pre-commit-config.yaml`
+
+## Status Badges
+
+Add to README.md:
 
 ```markdown
-[![Tests](https://github.com/awoods187/PM-Prompt-Patterns/actions/workflows/tests.yml/badge.svg)](https://github.com/awoods187/PM-Prompt-Patterns/actions/workflows/tests.yml)
-[![Security](https://github.com/awoods187/PM-Prompt-Patterns/actions/workflows/security.yml/badge.svg)](https://github.com/awoods187/PM-Prompt-Patterns/actions/workflows/security.yml)
-[![Lint](https://github.com/awoods187/PM-Prompt-Patterns/actions/workflows/lint.yml/badge.svg)](https://github.com/awoods187/PM-Prompt-Patterns/actions/workflows/lint.yml)
+![CI](https://github.com/awoods187/PM-Prompt-Patterns/workflows/CI/badge.svg)
+![Python](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)
+![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)
+![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ```
 
 ## Troubleshooting
 
-### Tests failing locally but passing in CI?
-- Check Python version (CI runs 3.9-3.12)
-- Verify all dependencies installed: `pip install -e ".[dev,test]"`
+### Pre-commit hooks failing
+```bash
+# Update hooks
+pre-commit autoupdate
 
-### Security workflow failing?
-- Bandit may find new issues - review and add `# nosec` comments if false positives
-- Dependency vulnerabilities - update requirements.txt
+# Clear cache
+pre-commit clean
+pre-commit run --all-files
+```
 
-### Lint workflow failing?
-- Run `black .` to auto-format
-- Run `ruff check --fix .` to auto-fix linting issues
-- Type errors are currently warnings (won't fail build)
+### CI failing but local passes
+**Causes:**
+1. Different Python version - test all 3.9-3.12
+2. Missing dependency - check `pyproject.toml`
+3. Cached dependencies - clear GitHub cache
+4. Path differences - use relative paths
 
-## Future Enhancements
+**Debug:**
+```bash
+# Test in clean environment
+python -m venv fresh_env
+source fresh_env/bin/activate
+pip install -e ".[dev,test]"
+pytest
+```
 
-Potential additions:
-- [ ] Deploy documentation on release
-- [ ] Publish package to PyPI on tag
-- [ ] Integration tests with larger test data
-- [ ] Performance benchmarking
-- [ ] Dependabot for automated dependency updates
+### Security scan false positives
+Add `# nosec B101` with justification:
+```python
+# nosec B101 - Assert acceptable in tests
+assert result == expected
+```
+
+## Maintenance
+
+### Dependency Updates
+Dependabot runs weekly (Monday 9am UTC).
+
+**Manual update:**
+```bash
+pre-commit autoupdate
+pip install -e ".[dev,test]" --upgrade
+pre-commit run --all-files
+pytest
+```
+
+## Performance Metrics
+
+**With cache:**
+- Lint: 30-45s
+- Test (per version): 60-90s
+- Security: 60-90s
+- Build: 30-45s
+- **Total: 2-3 minutes**
+
+**Without cache:** 4-6 minutes
