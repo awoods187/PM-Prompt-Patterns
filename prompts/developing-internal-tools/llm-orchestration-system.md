@@ -294,12 +294,12 @@ providers:
     api_key: "${OPENAI_API_KEY}"
     fallback_models:
       - "gpt-4"
-      - "gpt-3.5-turbo"
+      - "gpt-4o-mini"
 
   anthropic:
     api_key: "${ANTHROPIC_API_KEY}"
     fallback_models:
-      - "claude-3-opus-20240229"
+      - "claude-opus-4-20250514"
       - "claude-3-sonnet-20240229"
 
   gemini:
@@ -459,10 +459,10 @@ class CostTracker:
     PRICING = {
         "openai": {
             "gpt-4": {"input": 30.0, "output": 60.0},
-            "gpt-3.5-turbo": {"input": 0.5, "output": 1.5},
+            "gpt-4o-mini": {"input": 0.5, "output": 1.5},
         },
         "anthropic": {
-            "claude-3-opus-20240229": {"input": 15.0, "output": 75.0},
+            "claude-opus-4-20250514": {"input": 15.0, "output": 75.0},
             "claude-3-sonnet-20240229": {"input": 3.0, "output": 15.0},
         },
         "gemini": {
@@ -632,7 +632,7 @@ def test_fetch_openai_models():
     """Verify OpenAI API returns model list."""
     # Use real API call with try/except for CI
     # Verify structure: list of strings
-    # Check for expected models (gpt-4, gpt-3.5-turbo)
+    # Check for expected models (gpt-4, gpt-4o-mini)
     pass
 
 def test_model_caching():
@@ -667,7 +667,7 @@ import pytest
 @pytest.mark.integration
 def test_openai_request():
     """Test OpenAI adapter with real API."""
-    # Use cheapest model (gpt-3.5-turbo)
+    # Use cheapest model (gpt-4o-mini)
     # Send simple request
     # Verify response normalization
     # Check token counting
@@ -1183,11 +1183,11 @@ active_model: "gpt-4"
 providers:
   openai:
     api_key: "${OPENAI_API_KEY}"
-    fallback_models: ["gpt-4", "gpt-3.5-turbo"]
+    fallback_models: ["gpt-4", "gpt-4o-mini"]
 
   anthropic:  # Add Anthropic
     api_key: "${ANTHROPIC_API_KEY}"
-    fallback_models: ["claude-3-opus-20240229"]
+    fallback_models: ["claude-opus-4-20250514"]
 
 # Week 2: Test Anthropic integration
 from llm_orchestrator import LLMOrchestrator
@@ -1201,7 +1201,7 @@ print(f"Anthropic ready: {len(anthropic_models)} models")
 # Week 3: Switch active provider
 # config.yaml
 active_provider: "anthropic"  # Switch!
-active_model: "claude-3-opus-20240229"
+active_model: "claude-opus-4-20250514"
 
 # No code changes needed - just config update
 ```
@@ -1217,7 +1217,7 @@ import pandas as pd
 # Run experiment with different models
 configs = [
     ("openai", "gpt-4"),
-    ("openai", "gpt-3.5-turbo"),
+    ("openai", "gpt-4o-mini"),
     ("anthropic", "claude-3-sonnet-20240229"),
 ]
 
@@ -1249,7 +1249,7 @@ print(df.sort_values("cost"))
 
 # Output:
 #     provider                          model      cost  cost_per_request
-# 1    openai              gpt-3.5-turbo   0.42          0.0042
+# 1    openai              gpt-4o-mini   0.42          0.0042
 # 2  anthropic  claude-3-sonnet-20240229   1.85          0.0185
 # 0    openai                      gpt-4   6.30          0.0630
 ```
@@ -1261,12 +1261,12 @@ print(df.sort_values("cost"))
 ```python
 # config.dev.yaml (cheap models for testing)
 active_provider: "openai"
-active_model: "gpt-3.5-turbo"
+active_model: "gpt-4o-mini"
 
 providers:
   openai:
     api_key: "${OPENAI_API_KEY}"
-    fallback_models: ["gpt-3.5-turbo"]
+    fallback_models: ["gpt-4o-mini"]
 
 cost_tracking:
   enabled: true
@@ -1274,13 +1274,13 @@ cost_tracking:
 
 # config.prod.yaml (production models)
 active_provider: "anthropic"
-active_model: "claude-3-opus-20240229"
+active_model: "claude-opus-4-20250514"
 
 providers:
   anthropic:
     api_key: "${ANTHROPIC_API_KEY}"
     fallback_models:
-      - "claude-3-opus-20240229"
+      - "claude-opus-4-20250514"
       - "claude-3-sonnet-20240229"  # Fallback to cheaper
 
 cost_tracking:
@@ -1430,8 +1430,8 @@ By Provider:
 
 By Model:
   gpt-4: $6.50
-  gpt-3.5-turbo: $1.73
-  claude-3-opus-20240229: $4.11
+  gpt-4o-mini: $1.73
+  claude-opus-4-20250514: $4.11
 
 Exported to usage_last_7_days.csv
 ```
@@ -1465,7 +1465,7 @@ openai_response = openai.ChatCompletion.create(
 # Anthropic (completely different API)
 anthropic_client = anthropic.Anthropic(api_key="...")
 anthropic_response = anthropic_client.messages.create(
-    model="claude-3-opus-20240229",
+    model="claude-opus-4-20250514",
     messages=[{"role": "user", "content": "Hello"}]
 )
 
@@ -1628,7 +1628,7 @@ echo $OPENAI_API_KEY
 
 ### Issue 3: Model Not Found
 
-**Problem**: `ModelNotFoundError: gpt-4-turbo not found`
+**Problem**: `ModelNotFoundError: gpt-4o not found`
 
 **Fix**: Refresh model registry
 ```python
