@@ -27,10 +27,10 @@ __version__ = "0.1.0"
 __author__ = "Andy Woods"
 
 __all__ = [
-    "SignalClassifier",
-    "Settings",
-    "get_settings",
     "ClassificationResult",
     "LLMProvider",
+    "Settings",
+    "SignalClassifier",
     "__version__",
+    "get_settings",
 ]

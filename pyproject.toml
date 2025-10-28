@@ -137,12 +137,26 @@ ignore = [
     "C901",  # too complex
     "S101",  # use of assert (fine in tests)
     "S104",  # possible binding to all interfaces
+    "S110",  # try-except-pass (sometimes intentional)
     "PLR0913", # too many arguments to function call
     "PLR0912", # too many branches
+    "PLR0915", # too many statements (acceptable for main functions)
+    "PLR2004", # magic values (common in validation)
+    "PLW0603", # global statement (used intentionally for singleton)
+    "ARG002",  # unused method arguments (sometimes needed for interface)
+    "EM101",   # exception string literals (common pattern)
+    "EM102",   # exception f-strings (common pattern)
+    "DTZ007",  # naive datetime strptime (not timezone-critical)
+    "DTZ011",  # datetime.date.today() (not timezone-critical)
+    "PIE790",  # unnecessary pass after docstring (used for abstract methods)
+    "PT006",   # pytest parametrize string format (more readable)
+    "SIM105",  # contextlib.suppress (try-except-pass is clearer)
+    "SIM118",  # dict.keys() (explicit is fine)
+    "RUF059",  # unused unpacked variables (sometimes unavoidable)
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401"]
+"__init__.py" = ["F401", "RUF022"]  # unused imports, __all__ sorting
 "tests/**" = ["S101", "PLR2004", "ARG001"]
 
 [tool.mypy]

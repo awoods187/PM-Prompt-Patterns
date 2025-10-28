@@ -285,7 +285,6 @@ class LLMProvider(ABC):
             ...         ...
             ...     )
         """
-        pass
 
     @abstractmethod
     def _calculate_cost(
@@ -311,7 +310,6 @@ class LLMProvider(ABC):
             ...     cached_tokens=900  # 90% cache hit
             ... )
         """
-        pass
 
     def classify(self, text: str, prompt: Optional[str] = None) -> ClassificationResult:
         """Classify text using this provider.
