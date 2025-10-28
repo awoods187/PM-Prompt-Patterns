@@ -13,6 +13,13 @@ Production-tested prompts for effective executive and cross-functional communica
   - Best for: Board presentations, strategy reviews, investment requests
   - Time savings: 5-10 hours per major presentation
 
+### Documentation & Writing
+
+- **[Remove AI Writing Patterns](./remove-ai-writing-patterns.md)** - Improve documentation clarity and professionalism
+  - Removes common AI-generated writing patterns and clichés
+  - Makes documentation more natural and human-like
+  - Best for: Executive communications, customer-facing docs, professional writing
+
 ---
 
 ## Coming Soon

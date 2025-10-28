@@ -1,6 +1,6 @@
-# Technical Documentation
+# Developing Internal Tools
 
-Production-tested prompts for technical documentation, code quality, and engineering standards.
+Production-tested prompts for building internal tools, libraries, and development infrastructure.
 
 ## Available Prompts
 
@@ -18,10 +18,6 @@ Production-tested prompts for technical documentation, code quality, and enginee
   - Security audit, PEP 8 compliance, documentation improvements
   - **Production metrics**: 98% security issue detection, 90%+ documentation coverage
   - **Best for**: Pre-open-source audits, code quality improvements, legacy modernization
-
-- **[Remove AI Writing Patterns](./remove-ai-writing-patterns.md)**
-  - Improve documentation by removing AI-generated writing patterns
-  - Make documentation more natural and human-like
 
 ### Documentation Generation
 
