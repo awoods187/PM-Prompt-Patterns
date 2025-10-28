@@ -19,6 +19,15 @@ Production-tested prompts for building internal tools, libraries, and developmen
   - **Production metrics**: 98% security issue detection, 90%+ documentation coverage
   - **Best for**: Pre-open-source audits, code quality improvements, legacy modernization
 
+### CI/CD & DevOps
+
+- **[GitHub Actions CI/CD Pipeline for Python](./github-actions-python-cicd.md)** - 🔴 Advanced
+  - Generate production-ready GitHub Actions workflows with comprehensive quality gates
+  - Parallel execution: formatting, linting, testing, security scanning, build verification
+  - 100% coverage enforcement, PR automation, first-contributor welcome
+  - **Production metrics**: 90%+ issue detection before merge, 70% faster PR reviews
+  - **Best for**: New Python projects, CI/CD modernization, open source setup
+
 ### Documentation Generation
 
 - **[Enterprise README Generator](./enterprise-readme-generator.md)** - 🟡 Intermediate
