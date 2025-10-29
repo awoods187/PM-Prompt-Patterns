@@ -27,9 +27,7 @@ class TestGetProviderClaude:
 
         result = get_provider("claude-haiku")
 
-        mock_claude_provider.assert_called_once_with(
-            model="claude-haiku", enable_caching=True
-        )
+        mock_claude_provider.assert_called_once_with(model="claude-haiku", enable_caching=True)
         assert result == mock_instance
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
@@ -40,9 +38,7 @@ class TestGetProviderClaude:
 
         result = get_provider("claude-sonnet")
 
-        mock_claude_provider.assert_called_once_with(
-            model="claude-sonnet", enable_caching=True
-        )
+        mock_claude_provider.assert_called_once_with(model="claude-sonnet", enable_caching=True)
         assert result == mock_instance
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
@@ -53,9 +49,7 @@ class TestGetProviderClaude:
 
         result = get_provider("claude-opus")
 
-        mock_claude_provider.assert_called_once_with(
-            model="claude-opus", enable_caching=True
-        )
+        mock_claude_provider.assert_called_once_with(model="claude-opus", enable_caching=True)
         assert result == mock_instance
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
@@ -71,9 +65,7 @@ class TestGetProviderClaude:
 
         # Should normalize to lowercase
         assert mock_claude_provider.call_count == 3
-        assert all(
-            call[1]["model"].islower() for call in mock_claude_provider.call_args_list
-        )
+        assert all(call[1]["model"].islower() for call in mock_claude_provider.call_args_list)
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
     def test_get_provider_with_caching_enabled(self, mock_claude_provider):
@@ -83,9 +75,7 @@ class TestGetProviderClaude:
 
         get_provider("claude-sonnet")
 
-        mock_claude_provider.assert_called_once_with(
-            model="claude-sonnet", enable_caching=True
-        )
+        mock_claude_provider.assert_called_once_with(model="claude-sonnet", enable_caching=True)
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
     def test_get_provider_with_caching_disabled(self, mock_claude_provider):
@@ -95,9 +85,7 @@ class TestGetProviderClaude:
 
         get_provider("claude-haiku", enable_caching=False)
 
-        mock_claude_provider.assert_called_once_with(
-            model="claude-haiku", enable_caching=False
-        )
+        mock_claude_provider.assert_called_once_with(model="claude-haiku", enable_caching=False)
 
 
 class TestGetProviderOpenAI:
@@ -265,9 +253,7 @@ class TestGetProviderEdgeCases:
             get_provider("claude/haiku")
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_get_provider_preserves_original_model_casing_in_error(
-        self, mock_claude_provider
-    ):
+    def test_get_provider_preserves_original_model_casing_in_error(self, mock_claude_provider):
         """Test that error messages preserve original model casing."""
         # When ClaudeProvider raises an error, the original casing should be visible
         mock_claude_provider.side_effect = ValueError("Invalid model")
@@ -276,9 +262,7 @@ class TestGetProviderEdgeCases:
             get_provider("CLAUDE-HAIKU")
 
         # The provider should receive lowercase
-        mock_claude_provider.assert_called_once_with(
-            model="claude-haiku", enable_caching=True
-        )
+        mock_claude_provider.assert_called_once_with(model="claude-haiku", enable_caching=True)
 
 
 class TestGetProviderParameterCombinations:
@@ -297,10 +281,7 @@ class TestGetProviderParameterCombinations:
 
         # All should be called with caching disabled
         assert mock_claude_provider.call_count == 3
-        assert all(
-            not call[1]["enable_caching"]
-            for call in mock_claude_provider.call_args_list
-        )
+        assert all(not call[1]["enable_caching"] for call in mock_claude_provider.call_args_list)
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
     def test_all_claude_models_with_caching_enabled(self, mock_claude_provider):
@@ -314,6 +295,4 @@ class TestGetProviderParameterCombinations:
             get_provider(model, enable_caching=True)
 
         assert mock_claude_provider.call_count == 3
-        assert all(
-            call[1]["enable_caching"] for call in mock_claude_provider.call_args_list
-        )
+        assert all(call[1]["enable_caching"] for call in mock_claude_provider.call_args_list)

@@ -8,7 +8,7 @@ Comprehensive coverage of base classes, dataclasses, enums, and abstract interfa
 """
 
 from datetime import datetime
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 import pytest
 

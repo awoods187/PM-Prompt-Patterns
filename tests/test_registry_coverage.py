@@ -16,7 +16,7 @@ import yaml
 
 from ai_models import ModelRegistry, get_model, list_models, list_providers
 from ai_models.capabilities import ModelCapability
-from ai_models.registry import Model, ModelMetadata, ModelOptimization
+from ai_models.registry import ModelMetadata, ModelOptimization
 
 
 class TestModelToDict:

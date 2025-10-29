@@ -271,9 +271,7 @@ class TestParseResponse:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_parse_response_truncates_long_responses_in_error(
-        self, mock_settings, mock_anthropic
-    ):
+    def test_parse_response_truncates_long_responses_in_error(self, mock_settings, mock_anthropic):
         """Test error logging truncates long responses to prevent PII exposure."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -348,9 +346,7 @@ class TestCalculateCost:
 
         # 1000 input tokens, 900 cached (90% discount)
         # Uncached: 100 tokens, Cached: 900 tokens
-        cost = provider._calculate_cost(
-            input_tokens=1000, output_tokens=500, cached_tokens=900
-        )
+        cost = provider._calculate_cost(input_tokens=1000, output_tokens=500, cached_tokens=900)
 
         # Uncached input: (100/1M * 3.00) = 0.0003
         # Cached input: (900/1M * 3.00 * 0.1) = 0.00027
@@ -368,9 +364,7 @@ class TestCalculateCost:
         provider = ClaudeProvider(model="claude-haiku")
 
         # All 1000 input tokens are cached
-        cost = provider._calculate_cost(
-            input_tokens=1000, output_tokens=500, cached_tokens=1000
-        )
+        cost = provider._calculate_cost(input_tokens=1000, output_tokens=500, cached_tokens=1000)
 
         # Cached input: (1000/1M * 1.00 * 0.1) = 0.0001
         # Output: (500/1M * 5.00) = 0.0025

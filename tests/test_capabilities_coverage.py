@@ -41,12 +41,8 @@ class TestModelCapabilityEnum:
     def test_from_string_with_valid_capabilities(self):
         """Test from_string correctly converts valid capability strings."""
         assert ModelCapability.from_string("vision") == ModelCapability.VISION
-        assert (
-            ModelCapability.from_string("function_calling") == ModelCapability.FUNCTION_CALLING
-        )
-        assert (
-            ModelCapability.from_string("prompt_caching") == ModelCapability.PROMPT_CACHING
-        )
+        assert ModelCapability.from_string("function_calling") == ModelCapability.FUNCTION_CALLING
+        assert ModelCapability.from_string("prompt_caching") == ModelCapability.PROMPT_CACHING
         assert ModelCapability.from_string("streaming") == ModelCapability.STREAMING
 
     def test_str_representation(self):
@@ -140,9 +136,7 @@ capabilities:
     @patch("pathlib.Path.rglob")
     @patch("builtins.open", new_callable=mock_open)
     @patch("builtins.print")
-    def test_yaml_load_exception_handling(
-        self, mock_print, mock_file, mock_rglob, mock_exists
-    ):
+    def test_yaml_load_exception_handling(self, mock_print, mock_file, mock_rglob, mock_exists):
         """Test exception handling when YAML loading fails."""
         mock_exists.return_value = True
 
@@ -180,7 +174,11 @@ class TestHasAllCapabilities:
         # Gemini Flash-Lite has limited capabilities
         result = CapabilityValidator.has_all_capabilities(
             "gemini-2-5-flash-lite",
-            [ModelCapability.VISION, ModelCapability.FUNCTION_CALLING, ModelCapability.PROMPT_CACHING],
+            [
+                ModelCapability.VISION,
+                ModelCapability.FUNCTION_CALLING,
+                ModelCapability.PROMPT_CACHING,
+            ],
         )
         assert result is False
 
@@ -208,7 +206,11 @@ class TestHasAnyCapability:
         # Flash-Lite has VISION but not all advanced features
         result = CapabilityValidator.has_any_capability(
             "gemini-2-5-flash-lite",
-            [ModelCapability.VISION, ModelCapability.FUNCTION_CALLING, ModelCapability.PROMPT_CACHING],
+            [
+                ModelCapability.VISION,
+                ModelCapability.FUNCTION_CALLING,
+                ModelCapability.PROMPT_CACHING,
+            ],
         )
         assert result is True  # Has VISION
 

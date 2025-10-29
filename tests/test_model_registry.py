@@ -16,7 +16,7 @@ from datetime import date, timedelta
 
 import pytest
 
-from ai_models.registry import ModelRegistry, Model, ModelMetadata
+from ai_models.registry import ModelRegistry
 
 
 class TestRegistryStructure:

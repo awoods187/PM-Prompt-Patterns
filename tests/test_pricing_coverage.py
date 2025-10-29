@@ -292,6 +292,7 @@ class TestGetPricingService:
         """Test get_pricing_service returns the same instance."""
         # Reset singleton
         import ai_models.pricing
+
         ai_models.pricing._pricing_service = None
 
         service1 = get_pricing_service()
@@ -303,6 +304,7 @@ class TestGetPricingService:
     def test_get_pricing_service_returns_pricing_service(self):
         """Test get_pricing_service returns PricingService instance."""
         import ai_models.pricing
+
         ai_models.pricing._pricing_service = None
 
         service = get_pricing_service()
