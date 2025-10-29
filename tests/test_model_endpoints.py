@@ -27,7 +27,7 @@ import os
 
 import pytest
 
-from models.registry import ModelRegistry
+from ai_models.registry import ModelRegistry
 
 # Skip all tests in this file if no API keys present
 pytestmark = pytest.mark.skipif(

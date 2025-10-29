@@ -21,7 +21,7 @@ from pathlib import Path
 
 import pytest
 
-from models.registry import ModelRegistry
+from ai_models.registry import ModelRegistry
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -126,51 +126,57 @@ class TestPricingReasonableness:
     """Sanity checks for pricing values."""
 
     @pytest.mark.parametrize(
-        "model_name,spec",
+        "model_id",
         [
-            ("Claude Haiku 4.5", ModelRegistry.CLAUDE_HAIKU_4_5),
-            ("Claude Sonnet 4.5", ModelRegistry.CLAUDE_SONNET_4_5),
-            ("Claude Opus 4.1", ModelRegistry.CLAUDE_OPUS_4_1),
-            ("GPT-4o", ModelRegistry.GPT_4O),
-            ("GPT-4o Mini", ModelRegistry.GPT_4O_MINI),
-            ("Gemini 2.5 Pro", ModelRegistry.GEMINI_2_5_PRO),
-            ("Gemini 2.5 Flash", ModelRegistry.GEMINI_2_5_FLASH),
-            ("Gemini 2.5 Flash-Lite", ModelRegistry.GEMINI_2_5_FLASH_LITE),
+            "claude-haiku-4-5",
+            "claude-sonnet-4-5",
+            "claude-opus-4-1",
+            "gpt-4o",
+            "gpt-4o-mini",
+            "gemini-2-5-pro",
+            "gemini-2-5-flash",
+            "gemini-2-5-flash-lite",
         ],
     )
-    def test_output_more_expensive_than_input(self, model_name, spec):
+    def test_output_more_expensive_than_input(self, model_id):
         """Output tokens should cost more than input tokens (industry standard)."""
+        model = ModelRegistry.get(model_id)
+        assert model is not None, f"Model {model_id} not found in registry"
+
         # Exception: Free models
-        if spec.input_price_per_1m == 0.0 and spec.output_price_per_1m == 0.0:
-            pytest.skip(f"{model_name} is free tier")
+        if model.pricing.input_per_1m == 0.0 and model.pricing.output_per_1m == 0.0:
+            pytest.skip(f"{model.name} is free tier")
 
         assert (
-            spec.output_price_per_1m >= spec.input_price_per_1m
-        ), f"{model_name}: Output (${spec.output_price_per_1m}) should cost >= input (${spec.input_price_per_1m})"
+            model.pricing.output_per_1m >= model.pricing.input_per_1m
+        ), f"{model.name}: Output (${model.pricing.output_per_1m}) should cost >= input (${model.pricing.input_per_1m})"
 
     @pytest.mark.parametrize(
-        "model_name,spec,expected_range",
+        "model_id,expected_range",
         [
-            ("Claude Haiku", ModelRegistry.CLAUDE_HAIKU_4_5, (0.1, 10.0)),  # Budget model
-            ("Claude Sonnet", ModelRegistry.CLAUDE_SONNET_4_5, (1.0, 30.0)),  # Mid-tier
-            ("Claude Opus", ModelRegistry.CLAUDE_OPUS_4_1, (10.0, 100.0)),  # Premium
-            ("GPT-4o", ModelRegistry.GPT_4O, (1.0, 20.0)),  # Mid-tier
-            ("GPT-4o Mini", ModelRegistry.GPT_4O_MINI, (0.1, 5.0)),  # Budget
-            ("Gemini Pro", ModelRegistry.GEMINI_2_5_PRO, (0.5, 20.0)),  # Mid-tier
-            ("Gemini Flash", ModelRegistry.GEMINI_2_5_FLASH, (0.01, 5.0)),  # Fast/cheap
+            ("claude-haiku-4-5", (0.1, 10.0)),  # Budget model
+            ("claude-sonnet-4-5", (1.0, 30.0)),  # Mid-tier
+            ("claude-opus-4-1", (10.0, 100.0)),  # Premium
+            ("gpt-4o", (1.0, 20.0)),  # Mid-tier
+            ("gpt-4o-mini", (0.1, 5.0)),  # Budget
+            ("gemini-2-5-pro", (0.5, 20.0)),  # Mid-tier
+            ("gemini-2-5-flash", (0.01, 5.0)),  # Fast/cheap
         ],
     )
-    def test_pricing_in_reasonable_range(self, model_name, spec, expected_range):
+    def test_pricing_in_reasonable_range(self, model_id, expected_range):
         """Pricing should be in reasonable range for model tier."""
+        model = ModelRegistry.get(model_id)
+        assert model is not None, f"Model {model_id} not found in registry"
+
         min_price, max_price = expected_range
 
         assert (
-            min_price <= spec.input_price_per_1m <= max_price
-        ), f"{model_name} input pricing ${spec.input_price_per_1m} outside expected range ${min_price}-${max_price}"
+            min_price <= model.pricing.input_per_1m <= max_price
+        ), f"{model.name} input pricing ${model.pricing.input_per_1m} outside expected range ${min_price}-${max_price}"
 
         assert (
-            min_price <= spec.output_price_per_1m <= max_price
-        ), f"{model_name} output pricing ${spec.output_price_per_1m} outside expected range ${min_price}-${max_price}"
+            min_price <= model.pricing.output_per_1m <= max_price
+        ), f"{model.name} output pricing ${model.pricing.output_per_1m} outside expected range ${min_price}-${max_price}"
 
 
 class TestCostCalculationAccuracy:
@@ -182,11 +188,10 @@ class TestCostCalculationAccuracy:
         input_tokens = 1_000_000
         output_tokens = 100_000
 
-        expected_cost = (
-            input_tokens / 1_000_000
-        ) * ModelRegistry.CLAUDE_HAIKU_4_5.input_price_per_1m + (
-            output_tokens / 1_000_000
-        ) * ModelRegistry.CLAUDE_HAIKU_4_5.output_price_per_1m
+        model = ModelRegistry.get("claude-haiku-4-5")
+        assert model is not None
+
+        expected_cost = model.calculate_cost(input_tokens, output_tokens)
 
         # With correct pricing ($1.00/$5.00):
         # = (1M / 1M * 1.00) + (100k / 1M * 5.00)

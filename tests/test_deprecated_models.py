@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from models.registry import ModelRegistry
+from ai_models.registry import ModelRegistry
 
 # Directories to scan for deprecated model usage
 SCAN_DIRECTORIES = [
