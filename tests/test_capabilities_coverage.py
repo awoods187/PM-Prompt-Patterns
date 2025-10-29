@@ -294,7 +294,7 @@ class TestGetCapabilityMatrix:
         """Test capability values in matrix are strings, not enums."""
         matrix = CapabilityValidator.get_capability_matrix()
 
-        for model_id, capabilities in matrix.items():
+        for _model_id, capabilities in matrix.items():
             assert isinstance(capabilities, set)
             for cap in capabilities:
                 assert isinstance(cap, str)

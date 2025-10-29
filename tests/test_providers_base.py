@@ -385,7 +385,7 @@ class TestLLMProvider:
         provider = MockProvider(model="test-model")
 
         with patch.object(provider, "_get_default_prompt", return_value="default prompt"):
-            result = provider.classify("Test text")
+            provider.classify("Test text")
             provider._get_default_prompt.assert_called_once()
 
     def test_classify_records_metrics(self):

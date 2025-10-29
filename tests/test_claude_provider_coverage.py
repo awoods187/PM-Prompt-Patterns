@@ -22,7 +22,6 @@ class TestClaudeProviderInitialization:
     def test_init_missing_anthropic_package(self, mock_anthropic_module):
         """Test initialization raises ImportError when anthropic is not installed."""
         # Simulate missing anthropic package
-        mock_anthropic_module = None
 
         with patch("pm_prompt_toolkit.providers.claude.anthropic", None):
             with pytest.raises(ImportError) as exc_info:
@@ -525,7 +524,7 @@ class TestClaudePricingConstants:
 
     def test_pricing_values_are_tuples(self):
         """Test all pricing values are (input, output) tuples."""
-        for model, prices in CLAUDE_PRICING.items():
+        for _model, prices in CLAUDE_PRICING.items():
             assert isinstance(prices, tuple)
             assert len(prices) == 2
             input_price, output_price = prices

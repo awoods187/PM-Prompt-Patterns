@@ -1,0 +1,8 @@
+# Ruff configuration
+[lint.per-file-ignores]
+# Ignore test-specific warnings (too broad pytest.raises, etc.)
+"tests/*" = ["PT011", "B017", "DTZ001", "S108"]
+# Deprecated test files using old API (will be removed/updated later)
+"tests/test_model_registry.py" = ["F821"]
+"tests/test_deprecated_models.py" = ["F821"]
+"tests/test_pricing_consistency.py" = ["F821"]

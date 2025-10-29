@@ -103,7 +103,7 @@ class TestPricingServiceInit:
         """Test initialization uses default directory when not specified."""
         service = PricingService()
 
-        expected_dir = Path(__file__).parent.parent / "ai_models" / "definitions"
+        Path(__file__).parent.parent / "ai_models" / "definitions"
         # The actual path will be relative to pricing.py, so just check it's a Path
         assert isinstance(service.definitions_dir, Path)
         assert service.definitions_dir.name == "definitions"
@@ -172,7 +172,7 @@ class TestPricingServiceErrorHandling:
 
         # Simulate YAML error
         with patch("yaml.safe_load", side_effect=yaml.YAMLError("Parse error")):
-            service = PricingService()
+            PricingService()
 
             # Should print warning
             mock_print.assert_called()
