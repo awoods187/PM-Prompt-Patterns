@@ -6,14 +6,14 @@ schema_version: "1.0.0"
 model_id: "claude-opus-4-1"
 provider: "anthropic"
 name: "Claude Opus 4.1"
-api_identifier: "claude-opus-4-1-20250514"
+api_identifier: "claude-opus-4-1-20250805"
 
 metadata:
   context_window_input: 200000
   context_window_output: null
   knowledge_cutoff: "December 2024"
-  release_date: "2025-05-14"
-  last_verified: "2025-10-25"
+  release_date: "2025-08-05"
+  last_verified: "2025-10-29"
   docs_url: "https://docs.claude.com/en/docs/about-claude/models"
 
 capabilities:

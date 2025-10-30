@@ -13,7 +13,7 @@ metadata:
   context_window_output: null
   knowledge_cutoff: "February 2025"
   release_date: "2025-10-01"
-  last_verified: "2025-10-25"
+  last_verified: "2025-10-29"
   docs_url: "https://docs.claude.com/en/docs/about-claude/models"
 
 capabilities:

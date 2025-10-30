@@ -266,11 +266,14 @@ PM-Prompt-Patterns/
 
 | Section | Update Frequency | Next Update |
 |---------|-----------------|-------------|
+| Model Definitions | Weekly (automated staleness check) | Continuous |
 | Model Pricing | Monthly | Nov 2025 |
 | Model Specs | As released | Ongoing |
 | Security Scans | Weekly (automated) | Continuous |
 | Dependencies | Weekly (Dependabot) | Continuous |
 | Prompts | Ad-hoc | As contributed |
+
+**Model Update Process:** Automated weekly staleness checks via GitHub Actions. See [Model Update Workflow](./docs/workflows/MODEL_UPDATE_WORKFLOW.md) for manual update procedures.
 
 **Deprecation Policy:** 90-day notice for breaking changes. See [CHANGELOG.md](./CHANGELOG.md).
 
