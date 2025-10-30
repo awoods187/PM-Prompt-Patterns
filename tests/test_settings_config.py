@@ -13,23 +13,20 @@ import logging
 import os
 import tempfile
 from pathlib import Path
-from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 from pydantic import ValidationError
 
 from pm_prompt_toolkit.config.settings import Settings, get_settings
 
-
 # ============================================================================
 # FIXTURES
 # ============================================================================
 
+
 @pytest.fixture
 def clean_env(monkeypatch):
     """Provide clean environment without any API keys set."""
-    import os
-    from pathlib import Path
 
     # Temporarily rename .env file to prevent loading
     env_file = Path.cwd() / ".env"
@@ -124,6 +121,7 @@ def mock_env_vertex_enabled(monkeypatch, clean_env):
 # INITIALIZATION TESTS
 # ============================================================================
 
+
 class TestSettingsInitialization:
     """Test suite for Settings initialization."""
 
@@ -186,6 +184,7 @@ class TestSettingsInitialization:
 # API KEY VALIDATION TESTS
 # ============================================================================
 
+
 class TestAPIKeyValidation:
     """Test suite for API key validation logic."""
 
@@ -223,7 +222,9 @@ class TestAPIKeyValidation:
         # Assert - Warning should be logged before validation error
         # (Note: placeholder check happens before length check in code)
 
-    def test_validate_api_key_with_dots_placeholder_logs_warning(self, monkeypatch, clean_env, caplog):
+    def test_validate_api_key_with_dots_placeholder_logs_warning(
+        self, monkeypatch, clean_env, caplog
+    ):
         """Test that '...' placeholder API key triggers warning."""
         # Arrange
         monkeypatch.setenv("ANTHROPIC_API_KEY", "...")
@@ -247,6 +248,7 @@ class TestAPIKeyValidation:
 # ============================================================================
 # GET_API_KEY METHOD TESTS
 # ============================================================================
+
 
 class TestGetAPIKey:
     """Test suite for get_api_key() method."""
@@ -304,14 +306,15 @@ class TestGetAPIKey:
         with pytest.raises(ValueError, match="API key not configured for anthropic"):
             settings.get_api_key("anthropic")
 
-    @pytest.mark.parametrize("provider,env_var", [
-        ("anthropic", "ANTHROPIC_API_KEY"),
-        ("openai", "OPENAI_API_KEY"),
-        ("google", "GOOGLE_API_KEY"),
-    ])
-    def test_get_api_key_error_message_includes_env_var_name(
-        self, clean_env, provider, env_var
-    ):
+    @pytest.mark.parametrize(
+        "provider,env_var",
+        [
+            ("anthropic", "ANTHROPIC_API_KEY"),
+            ("openai", "OPENAI_API_KEY"),
+            ("google", "GOOGLE_API_KEY"),
+        ],
+    )
+    def test_get_api_key_error_message_includes_env_var_name(self, clean_env, provider, env_var):
         """Test that error message includes environment variable name."""
         # Arrange
         settings = Settings()
@@ -324,6 +327,7 @@ class TestGetAPIKey:
 # ============================================================================
 # VALIDATE_PROVIDER_CONFIG TESTS
 # ============================================================================
+
 
 class TestValidateProviderConfig:
     """Test suite for validate_provider_config() method."""
@@ -345,9 +349,7 @@ class TestValidateProviderConfig:
         with pytest.raises(ValueError, match="API key not configured"):
             settings.validate_provider_config("anthropic")
 
-    def test_validate_provider_config_logs_debug_message(
-        self, mock_env_with_anthropic, caplog
-    ):
+    def test_validate_provider_config_logs_debug_message(self, mock_env_with_anthropic, caplog):
         """Test that successful validation logs debug message."""
         # Arrange
         settings = Settings()
@@ -363,6 +365,7 @@ class TestValidateProviderConfig:
 # ============================================================================
 # VALIDATE_BEDROCK_CONFIG TESTS
 # ============================================================================
+
 
 class TestValidateBedrockConfig:
     """Test suite for validate_bedrock_config() method."""
@@ -412,9 +415,7 @@ class TestValidateBedrockConfig:
         with pytest.raises(ValueError, match="AWS Bedrock is enabled but credentials are missing"):
             settings.validate_bedrock_config()
 
-    def test_validate_bedrock_config_logs_debug_message(
-        self, mock_env_bedrock_enabled, caplog
-    ):
+    def test_validate_bedrock_config_logs_debug_message(self, mock_env_bedrock_enabled, caplog):
         """Test that successful validation logs debug message with region."""
         # Arrange
         settings = Settings()
@@ -432,6 +433,7 @@ class TestValidateBedrockConfig:
 # VALIDATE_VERTEX_CONFIG TESTS
 # ============================================================================
 
+
 class TestValidateVertexConfig:
     """Test suite for validate_vertex_config() method."""
 
@@ -444,9 +446,7 @@ class TestValidateVertexConfig:
         # Act & Assert - Should not raise
         settings.validate_vertex_config()
 
-    def test_validate_vertex_config_with_valid_config_succeeds(
-        self, mock_env_vertex_enabled
-    ):
+    def test_validate_vertex_config_with_valid_config_succeeds(self, mock_env_vertex_enabled):
         """Test that valid Vertex configuration passes validation."""
         # Arrange
         settings = Settings()
@@ -463,7 +463,9 @@ class TestValidateVertexConfig:
         settings = Settings()
 
         # Act & Assert
-        with pytest.raises(ValueError, match="Google Vertex AI is enabled but GCP_PROJECT_ID is missing"):
+        with pytest.raises(
+            ValueError, match="Google Vertex AI is enabled but GCP_PROJECT_ID is missing"
+        ):
             settings.validate_vertex_config()
 
     def test_validate_vertex_config_with_nonexistent_credentials_file_raises_error(
@@ -485,7 +487,7 @@ class TestValidateVertexConfig:
     ):
         """Test that Vertex with existing credentials file passes validation."""
         # Arrange
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             f.write('{"type": "service_account"}')
             credentials_path = f.name
 
@@ -501,9 +503,7 @@ class TestValidateVertexConfig:
             # Cleanup
             os.unlink(credentials_path)
 
-    def test_validate_vertex_config_logs_debug_message(
-        self, mock_env_vertex_enabled, caplog
-    ):
+    def test_validate_vertex_config_logs_debug_message(self, mock_env_vertex_enabled, caplog):
         """Test that successful validation logs debug message with project and region."""
         # Arrange
         settings = Settings()
@@ -521,6 +521,7 @@ class TestValidateVertexConfig:
 # ============================================================================
 # GET_SETTINGS FUNCTION TESTS
 # ============================================================================
+
 
 class TestGetSettings:
     """Test suite for get_settings() function."""
@@ -546,7 +547,7 @@ class TestGetSettings:
         """Test that get_settings logs warning when no API keys configured."""
         # Act
         with caplog.at_level(logging.WARNING):
-            settings = get_settings()
+            get_settings()
 
         # Assert
         assert "No API keys configured" in caplog.text
@@ -557,7 +558,7 @@ class TestGetSettings:
         """Test that get_settings logs configured Anthropic provider."""
         # Act
         with caplog.at_level(logging.INFO):
-            settings = get_settings()
+            get_settings()
 
         # Assert
         assert "Configured providers:" in caplog.text
@@ -569,7 +570,7 @@ class TestGetSettings:
         """Test that get_settings logs configured Bedrock provider."""
         # Act
         with caplog.at_level(logging.INFO):
-            settings = get_settings()
+            get_settings()
 
         # Assert
         assert "Configured providers:" in caplog.text
@@ -581,7 +582,7 @@ class TestGetSettings:
         """Test that get_settings logs configured Vertex AI provider."""
         # Act
         with caplog.at_level(logging.INFO):
-            settings = get_settings()
+            get_settings()
 
         # Assert
         assert "Configured providers:" in caplog.text
@@ -597,7 +598,7 @@ class TestGetSettings:
 
         # Act
         with caplog.at_level(logging.INFO):
-            settings = get_settings()
+            get_settings()
 
         # Assert
         assert "Configured providers:" in caplog.text
@@ -612,7 +613,7 @@ class TestGetSettings:
 
         # Act
         with caplog.at_level(logging.INFO):
-            settings = get_settings()
+            get_settings()
 
         # Assert
         assert "Configured providers:" in caplog.text
@@ -624,7 +625,7 @@ class TestGetSettings:
         """Test that get_settings logs all configured providers."""
         # Act
         with caplog.at_level(logging.INFO):
-            settings = get_settings()
+            get_settings()
 
         # Assert
         assert "Configured providers:" in caplog.text
@@ -635,6 +636,7 @@ class TestGetSettings:
 # ============================================================================
 # EDGE CASES AND ERROR HANDLING
 # ============================================================================
+
 
 class TestEdgeCases:
     """Test suite for edge cases and error handling."""
@@ -666,9 +668,7 @@ class TestEdgeCases:
         assert settings.aws_region == "eu-west-1"
         assert settings.gcp_region == "europe-west1"
 
-    def test_cache_clear_allows_reloading_settings(
-        self, monkeypatch, mock_env_with_anthropic
-    ):
+    def test_cache_clear_allows_reloading_settings(self, monkeypatch, mock_env_with_anthropic):
         """Test that cache_clear allows reloading settings with different config."""
         # Act
         settings1 = get_settings()

@@ -104,7 +104,9 @@ def get_provider(
         provider_prefix, model_name = model.split(":", 1)
         # Normalize model name to lowercase for consistency
         model_name_normalized = model_name.lower()
-        return _get_provider_by_prefix(provider_prefix, model_name_normalized, enable_caching, settings)
+        return _get_provider_by_prefix(
+            provider_prefix, model_name_normalized, enable_caching, settings
+        )
 
     # Tier 2: Check enabled providers and route accordingly
     # Priority order: Bedrock > Vertex > OpenAI > Gemini > Anthropic (default)
@@ -122,9 +124,9 @@ def get_provider(
         "claude-haiku",
         "claude-opus",
     ]
-    is_claude_model = any(model_normalized in m for m in claude_models) or model_normalized.startswith(
-        "claude"
-    )
+    is_claude_model = any(
+        model_normalized in m for m in claude_models
+    ) or model_normalized.startswith("claude")
 
     if is_claude_model:
         # Check if Bedrock is enabled for Claude models
@@ -206,7 +208,7 @@ def _get_provider_by_prefix(
     if prefix_lower == "bedrock":
         if not settings.enable_bedrock:  # type: ignore[attr-defined]
             raise ConfigurationError(
-                f"Explicit 'bedrock:' prefix used but enable_bedrock=False. "
+                "Explicit 'bedrock:' prefix used but enable_bedrock=False. "
                 "Set ENABLE_BEDROCK=true in your .env file to enable Bedrock provider."
             )
         logger.info(f"Using Bedrock provider for model '{model_name}' (explicit prefix)")
@@ -216,7 +218,7 @@ def _get_provider_by_prefix(
     if prefix_lower == "vertex":
         if not settings.enable_vertex:  # type: ignore[attr-defined]
             raise ConfigurationError(
-                f"Explicit 'vertex:' prefix used but enable_vertex=False. "
+                "Explicit 'vertex:' prefix used but enable_vertex=False. "
                 "Set ENABLE_VERTEX=true in your .env file to enable Vertex AI provider."
             )
         logger.info(f"Using Vertex AI provider for model '{model_name}' (explicit prefix)")
@@ -231,7 +233,7 @@ def _get_provider_by_prefix(
     if prefix_lower == "openai":
         if not settings.enable_openai:  # type: ignore[attr-defined]
             raise ConfigurationError(
-                f"Explicit 'openai:' prefix used but enable_openai=False. "
+                "Explicit 'openai:' prefix used but enable_openai=False. "
                 "Set ENABLE_OPENAI=true in your .env file to enable OpenAI provider."
             )
         logger.info(f"Using OpenAI provider for model '{model_name}' (explicit prefix)")

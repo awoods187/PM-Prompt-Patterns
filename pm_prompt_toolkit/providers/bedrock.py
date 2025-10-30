@@ -90,7 +90,10 @@ class BedrockProvider(LLMProvider):
     """
 
     def __init__(
-        self, model: str = "claude-sonnet-4-5", enable_caching: bool = False, region: str | None = None
+        self,
+        model: str = "claude-sonnet-4-5",
+        enable_caching: bool = False,
+        region: str | None = None,
     ) -> None:
         """Initialize Bedrock provider.
 
@@ -106,8 +109,7 @@ class BedrockProvider(LLMProvider):
         """
         if boto3 is None:
             raise ImportError(
-                "boto3 package is required for Bedrock provider. "
-                "Install with: pip install boto3"
+                "boto3 package is required for Bedrock provider. " "Install with: pip install boto3"
             )
 
         if model not in BEDROCK_MODEL_IDS:
@@ -271,7 +273,9 @@ category|confidence|evidence
             logger.error(f"Failed to parse response: {safe_response}")
             raise ValueError(f"Invalid response format: {e}") from e
 
-    def _calculate_cost(self, input_tokens: int, output_tokens: int, cached_tokens: int = 0) -> float:
+    def _calculate_cost(
+        self, input_tokens: int, output_tokens: int, cached_tokens: int = 0
+    ) -> float:
         """Calculate cost based on Bedrock pricing.
 
         Note: Bedrock caching works differently than direct Anthropic API.

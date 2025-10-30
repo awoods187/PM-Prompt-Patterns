@@ -9,17 +9,16 @@ The Mock provider is critical for testing infrastructure and CI/CD pipelines.
 Tests focus on deterministic behavior, keyword matching, and zero-cost guarantees.
 """
 
-import hashlib
+
 import pytest
-from unittest.mock import patch
 
-from pm_prompt_toolkit.providers.mock import MockProvider, CLASSIFICATION_RULES
-from pm_prompt_toolkit.providers.base import SignalCategory, ClassificationResult
-
+from pm_prompt_toolkit.providers.base import SignalCategory
+from pm_prompt_toolkit.providers.mock import CLASSIFICATION_RULES, MockProvider
 
 # ============================================================================
 # FIXTURES
 # ============================================================================
+
 
 @pytest.fixture
 def mock_provider():
@@ -36,6 +35,7 @@ def low_confidence_provider():
 # ============================================================================
 # INITIALIZATION TESTS
 # ============================================================================
+
 
 class TestMockProviderInitialization:
     """Test suite for MockProvider initialization."""
@@ -74,23 +74,29 @@ class TestMockProviderInitialization:
         # Assert
         assert provider.enable_caching is False  # Always false for mock
 
-    @pytest.mark.parametrize("invalid_confidence", [
-        -0.1,  # Negative
-        1.1,   # > 1.0
-        2.0,   # Way too high
-        -1.0,  # Negative
-    ])
+    @pytest.mark.parametrize(
+        "invalid_confidence",
+        [
+            -0.1,  # Negative
+            1.1,  # > 1.0
+            2.0,  # Way too high
+            -1.0,  # Negative
+        ],
+    )
     def test_init_with_invalid_confidence_raises_value_error(self, invalid_confidence):
         """Test that invalid confidence values raise ValueError."""
         # Arrange & Act & Assert
         with pytest.raises(ValueError, match="base_confidence must be between 0.0 and 1.0"):
             MockProvider(base_confidence=invalid_confidence)
 
-    @pytest.mark.parametrize("valid_confidence", [
-        0.0,   # Minimum
-        0.5,   # Middle
-        1.0,   # Maximum
-    ])
+    @pytest.mark.parametrize(
+        "valid_confidence",
+        [
+            0.0,  # Minimum
+            0.5,  # Middle
+            1.0,  # Maximum
+        ],
+    )
     def test_init_with_boundary_confidence_succeeds(self, valid_confidence):
         """Test that boundary confidence values are accepted."""
         # Arrange & Act
@@ -103,6 +109,7 @@ class TestMockProviderInitialization:
 # ============================================================================
 # CLASSIFICATION TESTS
 # ============================================================================
+
 
 class TestMockProviderClassification:
     """Test suite for MockProvider classification logic."""
@@ -195,23 +202,27 @@ class TestMockProviderClassification:
 # KEYWORD MATCHING TESTS
 # ============================================================================
 
+
 class TestKeywordMatching:
     """Test suite for keyword matching logic."""
 
-    @pytest.mark.parametrize("text,expected_category", [
-        ("I want a new feature", SignalCategory.FEATURE_REQUEST),
-        ("We need SSO support", SignalCategory.FEATURE_REQUEST),
-        ("Please add API integration", SignalCategory.FEATURE_REQUEST),
-        ("Error 500 on dashboard", SignalCategory.BUG_REPORT),
-        ("Application crashed", SignalCategory.BUG_REPORT),
-        ("System is not working", SignalCategory.BUG_REPORT),
-        ("We're canceling our subscription", SignalCategory.CHURN_RISK),
-        ("Very unhappy with service", SignalCategory.CHURN_RISK),
-        ("Looking at competitors", SignalCategory.CHURN_RISK),
-        ("Want to upgrade to enterprise plan", SignalCategory.EXPANSION_SIGNAL),
-        ("Add more users to our team", SignalCategory.EXPANSION_SIGNAL),
-        ("Increase our growth capacity", SignalCategory.EXPANSION_SIGNAL),
-    ])
+    @pytest.mark.parametrize(
+        "text,expected_category",
+        [
+            ("I want a new feature", SignalCategory.FEATURE_REQUEST),
+            ("We need SSO support", SignalCategory.FEATURE_REQUEST),
+            ("Please add API integration", SignalCategory.FEATURE_REQUEST),
+            ("Error 500 on dashboard", SignalCategory.BUG_REPORT),
+            ("Application crashed", SignalCategory.BUG_REPORT),
+            ("System is not working", SignalCategory.BUG_REPORT),
+            ("We're canceling our subscription", SignalCategory.CHURN_RISK),
+            ("Very unhappy with service", SignalCategory.CHURN_RISK),
+            ("Looking at competitors", SignalCategory.CHURN_RISK),
+            ("Want to upgrade to enterprise plan", SignalCategory.EXPANSION_SIGNAL),
+            ("Add more users to our team", SignalCategory.EXPANSION_SIGNAL),
+            ("Increase our growth capacity", SignalCategory.EXPANSION_SIGNAL),
+        ],
+    )
     def test_classify_matches_expected_category(self, mock_provider, text, expected_category):
         """Test that various inputs match expected categories."""
         # Act
@@ -254,6 +265,7 @@ class TestKeywordMatching:
 # ============================================================================
 # CONFIDENCE CALCULATION TESTS
 # ============================================================================
+
 
 class TestConfidenceCalculation:
     """Test suite for confidence score calculation."""
@@ -316,6 +328,7 @@ class TestConfidenceCalculation:
 # PROVIDER METADATA TESTS
 # ============================================================================
 
+
 class TestProviderMetadata:
     """Test suite for provider metadata."""
 
@@ -371,6 +384,7 @@ class TestProviderMetadata:
 # COST AND PERFORMANCE TESTS
 # ============================================================================
 
+
 class TestCostAndPerformance:
     """Test suite for cost and performance characteristics."""
 
@@ -392,9 +406,7 @@ class TestCostAndPerformance:
         """Test that _calculate_cost always returns 0."""
         # Arrange & Act
         cost = mock_provider._calculate_cost(
-            input_tokens=1000,
-            output_tokens=500,
-            cached_tokens=200
+            input_tokens=1000, output_tokens=500, cached_tokens=200
         )
 
         # Assert
@@ -415,6 +427,7 @@ class TestCostAndPerformance:
         """Test that classification is fast (< 5ms)."""
         # Arrange
         import time
+
         text = "We need SSO integration"
 
         # Act
@@ -430,6 +443,7 @@ class TestCostAndPerformance:
 # ============================================================================
 # EDGE CASES AND ERROR HANDLING
 # ============================================================================
+
 
 class TestEdgeCases:
     """Test suite for edge cases and error handling."""
@@ -494,6 +508,7 @@ class TestEdgeCases:
 # CLASSIFICATION RULES VALIDATION
 # ============================================================================
 
+
 class TestClassificationRules:
     """Test suite for the CLASSIFICATION_RULES constant."""
 
@@ -504,12 +519,7 @@ class TestClassificationRules:
     def test_classification_rules_has_all_categories(self):
         """Test that CLASSIFICATION_RULES covers all main categories."""
         # Arrange
-        expected_categories = {
-            "feature_request",
-            "bug_report",
-            "churn_risk",
-            "expansion_signal"
-        }
+        expected_categories = {"feature_request", "bug_report", "churn_risk", "expansion_signal"}
 
         # Act & Assert
         assert expected_categories.issubset(set(CLASSIFICATION_RULES.keys()))
@@ -519,7 +529,9 @@ class TestClassificationRules:
         # Act & Assert
         for category, keywords in CLASSIFICATION_RULES.items():
             for keyword in keywords:
-                assert keyword == keyword.lower(), f"Keyword '{keyword}' in {category} is not lowercase"
+                assert (
+                    keyword == keyword.lower()
+                ), f"Keyword '{keyword}' in {category} is not lowercase"
 
     def test_classification_rules_keywords_are_strings(self):
         """Test that all keywords are strings."""
@@ -533,6 +545,7 @@ class TestClassificationRules:
 # ============================================================================
 # METHOD TESTS
 # ============================================================================
+
 
 class TestGetDefaultPrompt:
     """Test suite for _get_default_prompt method."""

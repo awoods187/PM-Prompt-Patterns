@@ -22,7 +22,6 @@ Example:
     {'provider': 'vertex', 'project_id': 'my-project', ...}
 """
 
-import json
 import logging
 import os
 from typing import Any
@@ -121,7 +120,8 @@ class VertexProvider(LLMProvider):
 
         if model not in VERTEX_MODEL_IDS:
             raise ValueError(
-                f"Unsupported Vertex model: {model}. " f"Valid models: {list(VERTEX_MODEL_IDS.keys())}"
+                f"Unsupported Vertex model: {model}. "
+                f"Valid models: {list(VERTEX_MODEL_IDS.keys())}"
             )
 
         super().__init__(model=model, enable_caching=enable_caching)
@@ -268,7 +268,9 @@ category|confidence|evidence
             logger.error(f"Failed to parse response: {safe_response}")
             raise ValueError(f"Invalid response format: {e}") from e
 
-    def _calculate_cost(self, input_tokens: int, output_tokens: int, cached_tokens: int = 0) -> float:
+    def _calculate_cost(
+        self, input_tokens: int, output_tokens: int, cached_tokens: int = 0
+    ) -> float:
         """Calculate cost based on Vertex AI pricing.
 
         Note: Vertex AI caching works differently than direct Anthropic API.

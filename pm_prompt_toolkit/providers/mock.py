@@ -111,7 +111,10 @@ class MockProvider(LLMProvider):
     """
 
     def __init__(
-        self, model: str = "mock-claude-sonnet", enable_caching: bool = False, base_confidence: float = 0.95
+        self,
+        model: str = "mock-claude-sonnet",
+        enable_caching: bool = False,
+        base_confidence: float = 0.95,
     ) -> None:
         """Initialize mock provider.
 
@@ -203,7 +206,9 @@ class MockProvider(LLMProvider):
             provider_metadata=provider_metadata,
         )
 
-    def _calculate_cost(self, input_tokens: int, output_tokens: int, cached_tokens: int = 0) -> float:
+    def _calculate_cost(
+        self, input_tokens: int, output_tokens: int, cached_tokens: int = 0
+    ) -> float:
         """Calculate cost (always zero for mock).
 
         Args:
