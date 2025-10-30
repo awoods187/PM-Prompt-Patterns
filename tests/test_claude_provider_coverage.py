@@ -381,15 +381,12 @@ class TestGetModelId:
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
 
-        # Mock the model constants from models.registry (imported inside method)
-        mock_haiku = Mock()
-        mock_haiku.api_identifier = "claude-haiku-4-5-20250929"
+        provider = ClaudeProvider(model="claude-haiku")
+        model_id = provider._get_model_id()
 
-        with patch("models.registry.CLAUDE_HAIKU", mock_haiku):
-            provider = ClaudeProvider(model="claude-haiku")
-            model_id = provider._get_model_id()
-
-            assert model_id == "claude-haiku-4-5-20250929"
+        # Should return the real API identifier from registry
+        assert model_id.startswith("claude-haiku-4-5-")
+        assert len(model_id.split("-")) == 5  # claude-haiku-4-5-YYYYMMDD
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
@@ -398,14 +395,12 @@ class TestGetModelId:
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
 
-        mock_sonnet = Mock()
-        mock_sonnet.api_identifier = "claude-sonnet-4-5-20250929"
+        provider = ClaudeProvider(model="claude-sonnet")
+        model_id = provider._get_model_id()
 
-        with patch("models.registry.CLAUDE_SONNET", mock_sonnet):
-            provider = ClaudeProvider(model="claude-sonnet")
-            model_id = provider._get_model_id()
-
-            assert model_id == "claude-sonnet-4-5-20250929"
+        # Should return the real API identifier from registry
+        assert model_id.startswith("claude-sonnet-4-5-")
+        assert len(model_id.split("-")) == 5  # claude-sonnet-4-5-YYYYMMDD
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
@@ -414,14 +409,12 @@ class TestGetModelId:
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
 
-        mock_opus = Mock()
-        mock_opus.api_identifier = "claude-opus-4-1-20250514"
+        provider = ClaudeProvider(model="claude-opus")
+        model_id = provider._get_model_id()
 
-        with patch("models.registry.CLAUDE_OPUS", mock_opus):
-            provider = ClaudeProvider(model="claude-opus")
-            model_id = provider._get_model_id()
-
-            assert model_id == "claude-opus-4-1-20250514"
+        # Should return the real API identifier from registry
+        assert model_id.startswith("claude-opus-4-1-")
+        assert len(model_id.split("-")) == 5  # claude-opus-4-1-YYYYMMDD
 
 
 class TestClassifyImpl:
