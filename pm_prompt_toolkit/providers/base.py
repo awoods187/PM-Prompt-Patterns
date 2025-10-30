@@ -25,7 +25,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +69,7 @@ class ClassificationResult:
         cached_tokens: Number of tokens that were cached (if applicable)
         model: Model name used for classification
         timestamp: When the classification was performed
+        provider_metadata: Provider-specific metadata (provider, region, model_id, etc.)
 
     Example:
         >>> result = ClassificationResult(
@@ -91,6 +92,7 @@ class ClassificationResult:
     cached_tokens: int = 0
     model: str = ""
     timestamp: datetime = field(default_factory=datetime.now)
+    provider_metadata: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         """Validate classification result after initialization.
@@ -132,6 +134,7 @@ class ClassificationResult:
             "cached_tokens": self.cached_tokens,
             "model": self.model,
             "timestamp": self.timestamp.isoformat(),
+            "provider_metadata": self.provider_metadata,
         }
 
 
@@ -365,6 +368,7 @@ class LLMProvider(ABC):
                 tokens_used=result.tokens_used,
                 cached_tokens=result.cached_tokens,
                 model=self.model,
+                provider_metadata=result.provider_metadata,
             )
 
             # Record metrics

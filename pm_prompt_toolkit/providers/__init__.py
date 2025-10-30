@@ -4,22 +4,36 @@
 """LLM provider implementations for multiple vendors.
 
 This module provides a unified interface for working with different LLM providers
-(Anthropic Claude, OpenAI GPT, Google Gemini) with consistent APIs and error handling.
+with consistent APIs, error handling, and flexible routing.
 
 Supported Providers:
-    - Anthropic Claude (Haiku, Sonnet, Opus)
-    - OpenAI GPT (GPT-3.5, GPT-4, GPT-4 Turbo)
-    - Google Gemini (Gemini Pro, Gemini Flash)
+    - Anthropic Claude (direct API) - Haiku, Sonnet, Opus
+    - AWS Bedrock - Claude models via AWS infrastructure
+    - Google Vertex AI - Claude models via Google Cloud
+    - OpenAI GPT - GPT-3.5, GPT-4, GPT-4o, o1
+    - Google Gemini - Gemini Pro, Gemini Flash
+    - Mock - Testing provider with zero cost
+
+Provider Routing:
+    Three-tier routing logic:
+    1. Explicit prefix: bedrock:claude-sonnet, vertex:claude-opus
+    2. Enabled providers: Automatically routes to enabled cloud providers
+    3. Fallback: Direct Anthropic API
 
 Example:
-    >>> from pm_prompt_toolkit.providers import ClaudeProvider
-    >>> provider = ClaudeProvider(model="claude-sonnet")
+    >>> from pm_prompt_toolkit.providers import get_provider
+    >>> # Explicit provider selection
+    >>> provider = get_provider("bedrock:claude-sonnet-4-5")
+    >>> # Automatic routing to enabled provider
+    >>> provider = get_provider("claude-sonnet")
     >>> result = provider.classify("We need SSO integration")
     >>> print(result.category, result.confidence)
     feature_request 0.96
+    >>> print(result.provider_metadata)
+    {'provider': 'bedrock', 'region': 'us-east-1', ...}
 
 Security:
-    All providers use API keys from environment variables.
+    All providers use credentials from environment variables.
     Never hardcode credentials.
 """
 
@@ -27,18 +41,27 @@ from pm_prompt_toolkit.providers.base import (
     ClassificationResult,
     LLMProvider,
     ProviderMetrics,
+    SignalCategory,
 )
+from pm_prompt_toolkit.providers.bedrock import BedrockProvider
 from pm_prompt_toolkit.providers.claude import ClaudeProvider
-from pm_prompt_toolkit.providers.factory import get_provider
+from pm_prompt_toolkit.providers.factory import ConfigurationError, get_provider
 from pm_prompt_toolkit.providers.gemini import GeminiProvider
+from pm_prompt_toolkit.providers.mock import MockProvider
 from pm_prompt_toolkit.providers.openai import OpenAIProvider
+from pm_prompt_toolkit.providers.vertex import VertexProvider
 
 __all__ = [
+    "BedrockProvider",
     "ClassificationResult",
     "ClaudeProvider",
+    "ConfigurationError",
     "GeminiProvider",
     "LLMProvider",
+    "MockProvider",
     "OpenAIProvider",
     "ProviderMetrics",
+    "SignalCategory",
+    "VertexProvider",
     "get_provider",
 ]

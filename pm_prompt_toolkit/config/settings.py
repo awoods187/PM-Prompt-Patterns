@@ -39,6 +39,16 @@ class Settings(BaseSettings):
         anthropic_api_key: Anthropic API key for Claude models
         openai_api_key: OpenAI API key for GPT models
         google_api_key: Google API key for Gemini models
+        enable_bedrock: Enable AWS Bedrock provider
+        enable_vertex: Enable Google Vertex AI provider
+        enable_openai: Enable OpenAI provider
+        aws_access_key_id: AWS Access Key ID for Bedrock
+        aws_secret_access_key: AWS Secret Access Key for Bedrock
+        aws_session_token: AWS Session Token (optional, for temporary credentials)
+        aws_region: AWS region for Bedrock API
+        gcp_project_id: GCP Project ID for Vertex AI
+        gcp_region: GCP region for Vertex AI
+        gcp_credentials_path: Path to GCP service account credentials JSON
         default_model: Default LLM model to use
         enable_prompt_caching: Whether to enable prompt caching for cost savings
         enable_cost_tracking: Whether to track API costs
@@ -87,6 +97,70 @@ class Settings(BaseSettings):
         default=None,
         description="Google API key for Gemini models",
         alias="GOOGLE_API_KEY",
+    )
+
+    # ========================================================================
+    # Provider Enable Flags
+    # ========================================================================
+    enable_bedrock: bool = Field(
+        default=False,
+        description="Enable AWS Bedrock provider for Claude models",
+    )
+
+    enable_vertex: bool = Field(
+        default=False,
+        description="Enable Google Vertex AI provider for Claude models",
+    )
+
+    enable_openai: bool = Field(
+        default=False,
+        description="Enable OpenAI provider for GPT models",
+    )
+
+    # ========================================================================
+    # AWS Bedrock Configuration
+    # ========================================================================
+    aws_access_key_id: Optional[str] = Field(
+        default=None,
+        description="AWS Access Key ID for Bedrock",
+        alias="AWS_ACCESS_KEY_ID",
+    )
+
+    aws_secret_access_key: Optional[str] = Field(
+        default=None,
+        description="AWS Secret Access Key for Bedrock",
+        alias="AWS_SECRET_ACCESS_KEY",
+    )
+
+    aws_session_token: Optional[str] = Field(
+        default=None,
+        description="AWS Session Token for temporary credentials",
+        alias="AWS_SESSION_TOKEN",
+    )
+
+    aws_region: str = Field(
+        default="us-east-1",
+        description="AWS region for Bedrock API",
+    )
+
+    # ========================================================================
+    # Google Vertex AI Configuration
+    # ========================================================================
+    gcp_project_id: Optional[str] = Field(
+        default=None,
+        description="GCP Project ID for Vertex AI",
+        alias="GCP_PROJECT_ID",
+    )
+
+    gcp_region: str = Field(
+        default="us-central1",
+        description="GCP region for Vertex AI",
+    )
+
+    gcp_credentials_path: Optional[str] = Field(
+        default=None,
+        description="Path to GCP service account credentials JSON file",
+        alias="GCP_CREDENTIALS_PATH",
     )
 
     # ========================================================================
@@ -240,6 +314,66 @@ class Settings(BaseSettings):
         self.get_api_key(provider)  # Will raise if not configured
         logger.debug(f"{provider} provider is properly configured")
 
+    def validate_bedrock_config(self) -> None:
+        """Validate that AWS Bedrock is properly configured.
+
+        Raises:
+            ValueError: If Bedrock is enabled but credentials are missing
+
+        Example:
+            >>> settings = get_settings()
+            >>> settings.validate_bedrock_config()
+            # Raises ValueError if enable_bedrock=True but credentials missing
+        """
+        if not self.enable_bedrock:
+            return
+
+        if not self.aws_access_key_id or not self.aws_secret_access_key:
+            raise ValueError(
+                "AWS Bedrock is enabled but credentials are missing. "
+                "Please set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in your .env file. "
+                "See .env.example for configuration template."
+            )
+
+        logger.debug(f"AWS Bedrock provider is properly configured (region={self.aws_region})")
+
+    def validate_vertex_config(self) -> None:
+        """Validate that Google Vertex AI is properly configured.
+
+        Raises:
+            ValueError: If Vertex is enabled but configuration is missing
+
+        Example:
+            >>> settings = get_settings()
+            >>> settings.validate_vertex_config()
+            # Raises ValueError if enable_vertex=True but config missing
+        """
+        if not self.enable_vertex:
+            return
+
+        if not self.gcp_project_id:
+            raise ValueError(
+                "Google Vertex AI is enabled but GCP_PROJECT_ID is missing. "
+                "Please set GCP_PROJECT_ID in your .env file. "
+                "See .env.example for configuration template."
+            )
+
+        # Credentials path is optional if using default credentials
+        # (e.g., from gcloud CLI or service account in GCE/GKE)
+        if self.gcp_credentials_path:
+            import os
+
+            if not os.path.exists(self.gcp_credentials_path):
+                raise ValueError(
+                    f"GCP credentials file not found: {self.gcp_credentials_path}. "
+                    "Please verify the path in GCP_CREDENTIALS_PATH."
+                )
+
+        logger.debug(
+            f"Google Vertex AI provider is properly configured "
+            f"(project={self.gcp_project_id}, region={self.gcp_region})"
+        )
+
 
 @lru_cache
 def get_settings() -> Settings:
@@ -272,7 +406,11 @@ def get_settings() -> Settings:
     configured_providers = []
     if settings.anthropic_api_key:
         configured_providers.append("anthropic")
-    if settings.openai_api_key:
+    if settings.enable_bedrock and settings.aws_access_key_id:
+        configured_providers.append("bedrock")
+    if settings.enable_vertex and settings.gcp_project_id:
+        configured_providers.append("vertex")
+    if settings.enable_openai and settings.openai_api_key:
         configured_providers.append("openai")
     if settings.google_api_key:
         configured_providers.append("google")
