@@ -60,8 +60,10 @@ class GeminiProvider(LLMProvider):
         """
         super().__init__(model=model, enable_caching=enable_caching)
         raise NotImplementedError(
+            f"Gemini provider for {model} is not yet implemented. "
             "Gemini provider not yet implemented. "
-            "Use ClaudeProvider instead. "
+            "Use Claude models for now (ClaudeProvider). "
+            "See TODO.md for planned implementation. "
             "Contributions welcome - see CONTRIBUTING.md"
         )
 

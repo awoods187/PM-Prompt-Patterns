@@ -25,7 +25,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +69,7 @@ class ClassificationResult:
         cached_tokens: Number of tokens that were cached (if applicable)
         model: Model name used for classification
         timestamp: When the classification was performed
+        provider_metadata: Provider-specific metadata (provider, region, model_id, etc.)
 
     Example:
         >>> result = ClassificationResult(
@@ -91,6 +92,7 @@ class ClassificationResult:
     cached_tokens: int = 0
     model: str = ""
     timestamp: datetime = field(default_factory=datetime.now)
+    provider_metadata: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         """Validate classification result after initialization.
@@ -106,7 +108,7 @@ class ClassificationResult:
         if self.latency_ms < 0:
             raise ValueError(f"Latency cannot be negative, got {self.latency_ms}")
 
-    def to_dict(self) -> dict[str, object]:
+    def to_dict(self) -> Dict[str, object]:
         """Convert result to dictionary for serialization.
 
         Returns:
@@ -132,6 +134,7 @@ class ClassificationResult:
             "cached_tokens": self.cached_tokens,
             "model": self.model,
             "timestamp": self.timestamp.isoformat(),
+            "provider_metadata": self.provider_metadata,
         }
 
 
@@ -202,7 +205,7 @@ class ProviderMetrics:
         self.total_cached_tokens += cached_tokens
         self.total_latency_ms += latency_ms
 
-    def to_dict(self) -> dict[str, float]:
+    def to_dict(self) -> Dict[str, float]:
         """Convert metrics to dictionary.
 
         Returns:
@@ -365,6 +368,7 @@ class LLMProvider(ABC):
                 tokens_used=result.tokens_used,
                 cached_tokens=result.cached_tokens,
                 model=self.model,
+                provider_metadata=result.provider_metadata,
             )
 
             # Record metrics
