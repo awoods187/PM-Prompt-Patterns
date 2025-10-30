@@ -179,7 +179,8 @@ class MockProvider(LLMProvider):
 
         # Calculate confidence with slight deterministic variation
         # Use hash of text to add variation while keeping it deterministic
-        text_hash = int(hashlib.md5(text.encode()).hexdigest()[:8], 16)
+        # Note: MD5 used for determinism only, not security
+        text_hash = int(hashlib.md5(text.encode(), usedforsecurity=False).hexdigest()[:8], 16)
         hash_variation = (text_hash % 100) / 1000  # 0.000 to 0.099
 
         # Higher match count = higher confidence

@@ -26,7 +26,7 @@ Example:
 import json
 import logging
 from typing import Any, Dict, Optional, Tuple
-from xml.sax.saxutils import escape
+from xml.sax.saxutils import escape  # nosec B406  # Used to escape user input, not parse XML
 
 try:
     import boto3

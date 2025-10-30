@@ -20,7 +20,7 @@ Example:
 
 import logging
 from typing import Tuple
-from xml.sax.saxutils import escape
+from xml.sax.saxutils import escape  # nosec B406  # Used to escape user input, not parse XML
 
 try:
     import anthropic
