@@ -1,6 +1,6 @@
 # PM Prompt Toolkit
 
-Production-grade prompt patterns and AI model management for product teams building with Claude, GPT, and Gemini. Proven at scale: 5K+ signals/week, 95% accuracy, $0.001/signal cost.
+Production-grade prompt patterns and multi-cloud AI orchestration for product teams building with Claude, GPT, and Gemini. Now with AWS Bedrock and Google Vertex AI support. Proven at scale: 5K+ signals/week, 95% accuracy, $0.001/signal cost.
 
 ## 📊 Project Status
 
@@ -69,6 +69,55 @@ GOOGLE_API_KEY=your_key_here
 
 Keys only required for live API testing. Browse prompts without keys.
 </details>
+
+### Multi-Cloud Provider Support (New in v0.2.0)
+
+The toolkit now supports running Claude models through **AWS Bedrock** and **Google Vertex AI** in addition to direct Anthropic APIs.
+
+**Installation with cloud providers:**
+```bash
+# For AWS Bedrock support
+pip install -e ".[bedrock]"
+
+# For Google Vertex AI support
+pip install -e ".[vertex]"
+
+# For all cloud providers
+pip install -e ".[all]"
+```
+
+**Provider Configuration:**
+```bash
+# AWS Bedrock (add to .env)
+ENABLE_BEDROCK=true
+AWS_ACCESS_KEY_ID=your_key_here
+AWS_SECRET_ACCESS_KEY=your_secret_here
+AWS_REGION=us-east-1
+
+# Google Vertex AI (add to .env)
+ENABLE_VERTEX=true
+GCP_PROJECT_ID=your-project-id
+GCP_REGION=us-central1
+GCP_CREDENTIALS_PATH=/path/to/credentials.json  # Optional
+```
+
+**Usage:**
+```python
+from pm_prompt_toolkit.providers import get_provider
+
+# Explicit provider selection
+bedrock = get_provider("bedrock:claude-sonnet-4-5")
+vertex = get_provider("vertex:claude-sonnet-4-5")
+
+# Automatic routing (uses Bedrock if enabled)
+provider = get_provider("claude-sonnet-4-5")
+result = provider.classify("We need SSO integration")
+```
+
+**Benefits:**
+- **Bedrock:** Enterprise AWS infrastructure, AWS-native billing, regional data residency
+- **Vertex AI:** Google Cloud integration, GCP-native billing, unified GCP experience
+- **Fallback:** Automatically falls back to direct Anthropic API if cloud providers unavailable
 
 ---
 

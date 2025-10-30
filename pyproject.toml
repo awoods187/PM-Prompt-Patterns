@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pm-prompt-toolkit"
-version = "0.1.0"
+version = "0.2.0"
 description = "Production-grade prompt engineering toolkit for AI-native product managers"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -19,7 +19,10 @@ keywords = [
     "product-management",
     "claude",
     "gpt",
-    "gemini"
+    "gemini",
+    "bedrock",
+    "vertex-ai",
+    "multi-cloud"
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -46,6 +49,19 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# AWS Bedrock support
+bedrock = [
+    "boto3>=1.28.0",
+]
+# Google Vertex AI support
+vertex = [
+    "anthropic[vertex]>=0.18.0",
+]
+# All cloud providers
+all = [
+    "boto3>=1.28.0",
+    "anthropic[vertex]>=0.18.0",
+]
 dev = [
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
@@ -54,6 +70,7 @@ dev = [
     "ruff>=0.1.0",
     "mypy>=1.5.0",
     "pre-commit>=3.3.0",
+    "boto3>=1.28.0",  # For Bedrock testing
 ]
 test = [
     "pytest>=7.4.0",
