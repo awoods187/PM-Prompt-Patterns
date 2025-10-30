@@ -1,0 +1,86 @@
+name: Check Model Staleness
+
+on:
+  schedule:
+    # Run every Monday at midnight UTC
+    - cron: '0 0 * * 1'
+  workflow_dispatch:  # Allow manual trigger from Actions tab
+
+jobs:
+  check-staleness:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install pyyaml
+
+      - name: Check model verification dates
+        id: check
+        continue-on-error: true
+        run: |
+          python scripts/check_staleness.py
+
+      - name: Create issue if stale models found
+        if: steps.check.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Check if issue already exists
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'model-staleness'
+            });
+
+            // Don't create duplicate issues
+            if (issues.data.length > 0) {
+              console.log('Staleness issue already exists, skipping creation');
+              return;
+            }
+
+            // Create new issue
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '⚠️ Model definitions need verification',
+              body: `## Model Staleness Detected
+
+            Some model definitions have not been verified recently (90+ days).
+
+            ### Action Required
+
+            1. Review the models flagged as stale
+            2. Check official provider documentation for updates
+            3. Update model definitions following the workflow
+
+            ### How to Fix
+
+            Run the staleness check locally:
+            \`\`\`bash
+            python scripts/check_staleness.py
+            \`\`\`
+
+            Follow the update procedure in:
+            \`docs/workflows/MODEL_UPDATE_WORKFLOW.md\`
+
+            ### Provider Documentation Links
+
+            - **Anthropic Claude**: https://docs.claude.com/en/docs/about-claude/models
+            - **OpenAI GPT**: https://platform.openai.com/docs/models
+            - **Google Gemini**: https://ai.google.dev/gemini-api/docs/models/gemini
+
+            ---
+
+            This issue was automatically created by the weekly model staleness check.`,
+              labels: ['maintenance', 'model-staleness']
+            });
