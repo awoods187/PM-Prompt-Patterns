@@ -25,7 +25,7 @@ For more information, see: https://github.com/awoods187/PM-Prompt-Patterns
 from pm_prompt_toolkit.config.settings import Settings, get_settings
 from pm_prompt_toolkit.providers.base import ClassificationResult, LLMProvider
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __author__ = "Andy Woods"
 
 __all__ = [
