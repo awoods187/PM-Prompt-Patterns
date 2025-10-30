@@ -9,7 +9,6 @@ The Mock provider is critical for testing infrastructure and CI/CD pipelines.
 Tests focus on deterministic behavior, keyword matching, and zero-cost guarantees.
 """
 
-
 import pytest
 
 from pm_prompt_toolkit.providers.base import SignalCategory
