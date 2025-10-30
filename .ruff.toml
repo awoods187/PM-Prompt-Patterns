@@ -1,0 +1,4 @@
+# Ruff configuration
+[lint.per-file-ignores]
+# Ignore test-specific warnings (too broad pytest.raises, etc.)
+"tests/*" = ["PT011", "B017", "DTZ001", "S108"]

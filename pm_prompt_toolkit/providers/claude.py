@@ -246,12 +246,15 @@ category|confidence|evidence
         Returns:
             Full model identifier for API
         """
-        # Import current models from registry
-        from models.registry import CLAUDE_HAIKU, CLAUDE_OPUS, CLAUDE_SONNET
+        # Import current models from new registry
+        from ai_models import ModelRegistry
 
-        model_map = {
-            "claude-haiku": CLAUDE_HAIKU.api_identifier,
-            "claude-sonnet": CLAUDE_SONNET.api_identifier,
-            "claude-opus": CLAUDE_OPUS.api_identifier,
-        }
-        return model_map[self.model]
+        model = ModelRegistry.get(
+            f"{self.model}-4-5"
+            if "haiku" in self.model or "sonnet" in self.model
+            else f"{self.model}-4-1"
+        )
+        if model is None:
+            # Fallback for unknown models
+            raise ValueError(f"Model {self.model} not found in registry")
+        return model.api_identifier
