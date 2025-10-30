@@ -25,7 +25,7 @@ Example:
 
 import json
 import logging
-from typing import Any
+from typing import Any, Dict, Optional, Tuple
 from xml.sax.saxutils import escape
 
 try:
@@ -93,7 +93,7 @@ class BedrockProvider(LLMProvider):
         self,
         model: str = "claude-sonnet-4-5",
         enable_caching: bool = False,
-        region: str | None = None,
+        region: Optional[str] = None,
     ) -> None:
         """Initialize Bedrock provider.
 
@@ -128,7 +128,7 @@ class BedrockProvider(LLMProvider):
         self.region = region or settings.aws_region
 
         # Initialize Bedrock client
-        session_kwargs: dict[str, Any] = {
+        session_kwargs: Dict[str, Any] = {
             "aws_access_key_id": settings.aws_access_key_id,
             "aws_secret_access_key": settings.aws_secret_access_key,
             "region_name": self.region,
@@ -243,7 +243,7 @@ class BedrockProvider(LLMProvider):
 category|confidence|evidence
 </output_format>"""
 
-    def _parse_response(self, response: str) -> tuple[SignalCategory, float, str]:
+    def _parse_response(self, response: str) -> Tuple[SignalCategory, float, str]:
         """Parse Claude's response.
 
         Expected format: category|confidence|evidence

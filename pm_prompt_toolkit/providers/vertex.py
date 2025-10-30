@@ -24,7 +24,7 @@ Example:
 
 import logging
 import os
-from typing import Any
+from typing import Any, Dict, Optional, Tuple
 from xml.sax.saxutils import escape
 
 try:
@@ -96,8 +96,8 @@ class VertexProvider(LLMProvider):
         self,
         model: str = "claude-sonnet-4-5",
         enable_caching: bool = False,
-        project_id: str | None = None,
-        region: str | None = None,
+        project_id: Optional[str] = None,
+        region: Optional[str] = None,
     ) -> None:
         """Initialize Vertex AI provider.
 
@@ -186,7 +186,7 @@ class VertexProvider(LLMProvider):
         cost = self._calculate_cost(input_tokens, output_tokens)
 
         # Build provider metadata
-        provider_metadata: dict[str, Any] = {
+        provider_metadata: Dict[str, Any] = {
             "provider": "vertex",
             "model": self.model,
             "provider_model_id": self.vertex_model_id,
@@ -238,7 +238,7 @@ class VertexProvider(LLMProvider):
 category|confidence|evidence
 </output_format>"""
 
-    def _parse_response(self, response: str) -> tuple[SignalCategory, float, str]:
+    def _parse_response(self, response: str) -> Tuple[SignalCategory, float, str]:
         """Parse Claude's response.
 
         Expected format: category|confidence|evidence

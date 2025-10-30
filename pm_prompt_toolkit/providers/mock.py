@@ -19,7 +19,7 @@ Example:
 
 import hashlib
 import logging
-from typing import Any
+from typing import Any, Dict, List
 
 from pm_prompt_toolkit.providers.base import ClassificationResult, LLMProvider, SignalCategory
 
@@ -153,8 +153,8 @@ class MockProvider(LLMProvider):
         text_lower = text.lower()
 
         # Count keyword matches for each category
-        scores: dict[str, int] = {}
-        evidence_keywords: dict[str, list[str]] = {}
+        scores: Dict[str, int] = {}
+        evidence_keywords: Dict[str, List[str]] = {}
 
         for category, keywords in CLASSIFICATION_RULES.items():
             matches = []
@@ -187,7 +187,7 @@ class MockProvider(LLMProvider):
         confidence = max(confidence, 0.5)  # Minimum 0.5 confidence
 
         # Build provider metadata
-        provider_metadata: dict[str, Any] = {
+        provider_metadata: Dict[str, Any] = {
             "provider": "mock",
             "model": self.model,
             "matched_keywords": evidence_keywords.get(category.value, []),

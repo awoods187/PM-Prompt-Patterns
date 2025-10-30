@@ -19,6 +19,7 @@ Example:
 """
 
 import logging
+from typing import Tuple
 from xml.sax.saxutils import escape
 
 try:
@@ -181,7 +182,7 @@ class ClaudeProvider(LLMProvider):
 category|confidence|evidence
 </output_format>"""
 
-    def _parse_response(self, response: str) -> tuple[SignalCategory, float, str]:
+    def _parse_response(self, response: str) -> Tuple[SignalCategory, float, str]:
         """Parse Claude's response.
 
         Expected format: category|confidence|evidence
