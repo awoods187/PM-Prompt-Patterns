@@ -165,7 +165,9 @@ class ModelStalenessChecker:
                 for model in sorted(models, key=lambda m: m["days_old"] or 999, reverse=True):
                     days_str = f"{model['days_old']} days" if model["days_old"] else "NEVER"
                     print(f"\n  • {model['model_id']}")
-                    print(f"    Last verified: {model['last_verified'] or 'NEVER'} ({days_str} ago)")
+                    print(
+                        f"    Last verified: {model['last_verified'] or 'NEVER'} ({days_str} ago)"
+                    )
                     print(f"    File: {model['file']}")
                     if model["api_identifier"]:
                         print(f"    API ID: {model['api_identifier']}")
@@ -189,7 +191,9 @@ class ModelStalenessChecker:
                 print(f"\n📦 {provider.upper()}")
                 for model in sorted(models, key=lambda m: m["model_id"]):
                     days_str = f"{model['days_old']} days ago"
-                    print(f"  • {model['model_id']}: verified {model['last_verified']} ({days_str})")
+                    print(
+                        f"  • {model['model_id']}: verified {model['last_verified']} ({days_str})"
+                    )
 
         print("\n" + "=" * 80)
 

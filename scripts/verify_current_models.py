@@ -26,7 +26,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 # Add parent directory to path to import ai_models
 sys.path.insert(0, str(Path(__file__).parent.parent))
