@@ -182,6 +182,165 @@ class TestDocsFallback:
 
 
 # ============================================================================
+# API FETCHING TESTS
+# ============================================================================
+
+
+class TestAPIFetching:
+    """Test suite for Anthropic API fetching."""
+
+    @patch.dict("os.environ", {"ANTHROPIC_API_KEY": "test-api-key"})
+    @patch("anthropic.Anthropic")
+    def test_fetch_from_api_with_valid_credentials_succeeds(
+        self, mock_anthropic_class: Mock, anthropic_fetcher: AnthropicFetcher
+    ) -> None:
+        """Test successful API fetch with valid credentials."""
+        # Setup mock client
+        mock_client = Mock()
+        mock_anthropic_class.return_value = mock_client
+
+        # Execute
+        models = anthropic_fetcher.fetch_from_api()
+
+        # Verify - should get 3 models (Sonnet, Haiku, Opus)
+        assert len(models) == 3
+        assert all(isinstance(m, ModelData) for m in models)
+        model_ids = [m.model_id for m in models]
+        assert "claude-sonnet-4-5" in model_ids
+        assert "claude-haiku-4-5" in model_ids
+        assert "claude-opus-4-1" in model_ids
+
+        # Verify API was called
+        mock_anthropic_class.assert_called_once_with(api_key="test-api-key")
+
+    @patch.dict("os.environ", {}, clear=True)
+    def test_fetch_from_api_without_api_key_raises_error(
+        self, anthropic_fetcher: AnthropicFetcher
+    ) -> None:
+        """Test that missing API key raises ValueError."""
+        with pytest.raises(ValueError, match="ANTHROPIC_API_KEY not set"):
+            anthropic_fetcher.fetch_from_api()
+
+    @patch.dict("os.environ", {"ANTHROPIC_API_KEY": "test-key"})
+    def test_fetch_from_api_without_anthropic_package_raises_error(
+        self, anthropic_fetcher: AnthropicFetcher
+    ) -> None:
+        """Test that missing anthropic package raises ImportError."""
+        # Simulate import failure
+        with patch("builtins.__import__", side_effect=ImportError("No module named 'anthropic'")):
+            with pytest.raises(ImportError, match="anthropic package not installed"):
+                anthropic_fetcher.fetch_from_api()
+
+    @patch.dict("os.environ", {"ANTHROPIC_API_KEY": "test-api-key"})
+    @patch("anthropic.Anthropic")
+    def test_fetch_from_api_handles_model_failure_gracefully(
+        self, mock_anthropic_class: Mock, anthropic_fetcher: AnthropicFetcher
+    ) -> None:
+        """Test that individual model failures don't break entire fetch."""
+        # Setup mock client
+        mock_client = Mock()
+        mock_anthropic_class.return_value = mock_client
+
+        # Patch _get_model_details to fail for one model
+        with patch.object(
+            anthropic_fetcher, "_get_model_details"
+        ) as mock_get_details:
+            # First call (Sonnet) succeeds, second (Haiku) fails, third (Opus) succeeds
+            mock_get_details.side_effect = [
+                ModelData(
+                    model_id="claude-sonnet-4-5",
+                    provider="anthropic",
+                    name="Claude Sonnet 4.5",
+                    api_identifier="claude-sonnet-4-5-20250929",
+                    context_window_input=200000,
+                    context_window_output=None,
+                    knowledge_cutoff="January 2025",
+                    release_date=date(2025, 9, 29),
+                    docs_url="https://docs.claude.com/en/docs/about-claude/models",
+                    capabilities=["text_input", "text_output"],
+                    input_per_1m=3.0,
+                    output_per_1m=15.0,
+                    cost_tier="mid-tier",
+                    speed_tier="balanced",
+                ),
+                Exception("Model verification failed"),
+                ModelData(
+                    model_id="claude-opus-4-1",
+                    provider="anthropic",
+                    name="Claude Opus 4.1",
+                    api_identifier="claude-opus-4-1-20250514",
+                    context_window_input=200000,
+                    context_window_output=16000,
+                    knowledge_cutoff="August 2024",
+                    release_date=date(2025, 5, 14),
+                    docs_url="https://docs.claude.com/en/docs/about-claude/models",
+                    capabilities=["text_input", "text_output"],
+                    input_per_1m=15.0,
+                    output_per_1m=75.0,
+                    cost_tier="premium",
+                    speed_tier="thorough",
+                ),
+            ]
+
+            models = anthropic_fetcher.fetch_from_api()
+
+            # Should return only the 2 successful models
+            assert len(models) == 2
+            assert models[0].model_id == "claude-sonnet-4-5"
+            assert models[1].model_id == "claude-opus-4-1"
+
+    @patch.dict("os.environ", {"ANTHROPIC_API_KEY": "test-api-key"})
+    @patch("anthropic.Anthropic")
+    def test_get_model_details_with_valid_specs(
+        self, mock_anthropic_class: Mock, anthropic_fetcher: AnthropicFetcher
+    ) -> None:
+        """Test that _get_model_details creates correct ModelData."""
+        mock_client = Mock()
+        mock_anthropic_class.return_value = mock_client
+
+        base_info = {
+            "model_id": "claude-sonnet-4-5",
+            "api_identifier": "claude-sonnet-4-5-20250929",
+            "name": "Claude Sonnet 4.5",
+        }
+
+        model_data = anthropic_fetcher._get_model_details(
+            mock_client, "claude-sonnet-4-5-20250929", base_info
+        )
+
+        assert model_data is not None
+        assert model_data.model_id == "claude-sonnet-4-5"
+        assert model_data.name == "Claude Sonnet 4.5"
+        assert model_data.api_identifier == "claude-sonnet-4-5-20250929"
+        assert model_data.provider == "anthropic"
+        assert model_data.source == "anthropic_api"
+        assert model_data.context_window_input == 200000
+        assert model_data.cache_write_per_1m is not None
+        assert model_data.cache_read_per_1m is not None
+
+    @patch.dict("os.environ", {"ANTHROPIC_API_KEY": "test-api-key"})
+    @patch("anthropic.Anthropic")
+    def test_get_model_details_with_missing_specs_returns_none(
+        self, mock_anthropic_class: Mock, anthropic_fetcher: AnthropicFetcher
+    ) -> None:
+        """Test that _get_model_details returns None for unknown models."""
+        mock_client = Mock()
+        mock_anthropic_class.return_value = mock_client
+
+        base_info = {
+            "model_id": "unknown-model",
+            "api_identifier": "unknown-model-v1",
+            "name": "Unknown Model",
+        }
+
+        model_data = anthropic_fetcher._get_model_details(
+            mock_client, "unknown-model-v1", base_info
+        )
+
+        assert model_data is None
+
+
+# ============================================================================
 # MAIN FETCH METHOD TESTS
 # ============================================================================
 
@@ -209,6 +368,42 @@ class TestMainFetchMethod:
         assert "claude-sonnet-4-5" in model_ids
         assert "claude-haiku-4-5" in model_ids
         assert "claude-opus-4-1" in model_ids
+
+    @patch.dict("os.environ", {"ANTHROPIC_API_KEY": "test-api-key"})
+    def test_fetch_models_falls_back_on_api_failure(
+        self, anthropic_fetcher: AnthropicFetcher, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        """Test that fetch_models falls back to docs when API fails."""
+        import logging
+
+        caplog.set_level(logging.WARNING)
+
+        # Patch fetch_from_api to fail
+        with patch.object(
+            anthropic_fetcher, "fetch_from_api", side_effect=Exception("API Error")
+        ):
+            models = anthropic_fetcher.fetch_models()
+
+            # Should get models from docs fallback
+            assert len(models) > 0
+            assert all(m.source == "anthropic_docs" for m in models)
+            assert "API fetch failed" in caplog.text
+            assert "Falling back to docs parsing" in caplog.text
+
+    @patch.dict("os.environ", {"ANTHROPIC_API_KEY": "test-api-key"})
+    @patch("anthropic.Anthropic")
+    def test_fetch_models_prefers_api_when_available(
+        self, mock_anthropic_class: Mock, anthropic_fetcher: AnthropicFetcher
+    ) -> None:
+        """Test that fetch_models tries API first when key available."""
+        mock_client = Mock()
+        mock_anthropic_class.return_value = mock_client
+
+        models = anthropic_fetcher.fetch_models()
+
+        # Should attempt API call
+        assert len(models) > 0
+        mock_anthropic_class.assert_called_once()
 
 
 # ============================================================================
