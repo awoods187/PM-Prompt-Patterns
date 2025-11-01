@@ -590,3 +590,120 @@ class TestEndToEndWorkflow:
         assert result is True
         mock_create_pr.assert_called_once()
         mock_auto_merge.assert_called_once_with("https://github.com/test/repo/pull/1")
+
+    @patch("scripts.model_updater.main.PRCreator.create_pr")
+    @patch("scripts.model_updater.main.ModelUpdater._fetch_all_models")
+    @patch("scripts.model_updater.main.ModelUpdater._load_current_models")
+    def test_pr_creation_failure_is_logged_but_continues(
+        self,
+        mock_load: Mock,
+        mock_fetch: Mock,
+        mock_create_pr: Mock,
+        temp_repo_root: Path,
+        caplog: pytest.LogCaptureFixture,
+    ) -> None:
+        """Test that PR creation failure is logged but run succeeds."""
+        import logging
+
+        caplog.set_level(logging.ERROR)
+
+        # Setup: model with changes
+        mock_fetch.return_value = [
+            ModelData(
+                model_id="test-model",
+                provider="test",
+                name="Test Model",
+                api_identifier="test-v1",
+                context_window_input=100000,
+                context_window_output=4096,
+                knowledge_cutoff="Jan 2025",
+                release_date=date(2025, 1, 1),
+                docs_url="https://example.com",
+                capabilities=["text_input", "text_output"],
+                input_per_1m=2.0,
+                output_per_1m=6.0,
+                cost_tier="mid-tier",
+                speed_tier="balanced",
+            )
+        ]
+
+        mock_load.return_value = {
+            "test-model": {
+                "model_id": "test-model",
+                "provider": "test",
+                "metadata": {"context_window_input": 100000},
+                "pricing": {"input_per_1m": 1.0, "output_per_1m": 3.0},
+                "capabilities": ["text_input"],
+            }
+        }
+
+        # PR creation fails
+        mock_create_pr.side_effect = Exception("GitHub API error")
+
+        # Also need to suppress the change report to avoid comparison issues
+        with patch("scripts.model_updater.main.ChangeDetector"):
+            updater = ModelUpdater(temp_repo_root, dry_run=False)
+            result = updater.run(create_pr=True)
+
+        # Should return False since exception was raised
+        assert result is False
+        assert "Model update failed" in caplog.text
+
+    @patch("scripts.model_updater.main.PRCreator.create_pr")
+    @patch("scripts.model_updater.main.PRCreator.enable_auto_merge")
+    @patch("scripts.model_updater.main.ModelUpdater._fetch_all_models")
+    @patch("scripts.model_updater.main.ModelUpdater._load_current_models")
+    def test_auto_merge_failure_is_logged(
+        self,
+        mock_load: Mock,
+        mock_fetch: Mock,
+        mock_auto_merge: Mock,
+        mock_create_pr: Mock,
+        temp_repo_root: Path,
+        caplog: pytest.LogCaptureFixture,
+    ) -> None:
+        """Test that auto-merge failure is logged."""
+        import logging
+
+        caplog.set_level(logging.ERROR)
+
+        # Setup model with changes
+        mock_fetch.return_value = [
+            ModelData(
+                model_id="test-model",
+                provider="test",
+                name="Test Model",
+                api_identifier="test-v1",
+                context_window_input=100000,
+                context_window_output=4096,
+                knowledge_cutoff="Jan 2025",
+                release_date=date(2025, 1, 1),
+                docs_url="https://example.com",
+                capabilities=["text_input", "text_output"],
+                input_per_1m=2.0,
+                output_per_1m=6.0,
+                cost_tier="mid-tier",
+                speed_tier="balanced",
+            )
+        ]
+
+        mock_load.return_value = {
+            "test-model": {
+                "model_id": "test-model",
+                "provider": "test",
+                "metadata": {"context_window_input": 100000},
+                "pricing": {"input_per_1m": 1.0, "output_per_1m": 3.0},
+                "capabilities": ["text_input"],
+            }
+        }
+
+        mock_create_pr.return_value = "https://github.com/test/repo/pull/1"
+        mock_auto_merge.side_effect = Exception("Auto-merge not enabled")
+
+        # Suppress change report to avoid comparison issues
+        with patch("scripts.model_updater.main.ChangeDetector"):
+            updater = ModelUpdater(temp_repo_root, dry_run=False)
+            result = updater.run(create_pr=True)
+
+        assert result is False
+        assert "Model update failed" in caplog.text
