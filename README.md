@@ -71,53 +71,93 @@ GOOGLE_API_KEY=your_key_here
 Keys only required for live API testing. Browse prompts without keys.
 </details>
 
-### Multi-Cloud Provider Support (New in v0.2.0)
+### Multi-Provider Support (New in v0.2.0)
 
-The toolkit now supports running Claude models through **AWS Bedrock** and **Google Vertex AI** in addition to direct Anthropic APIs.
+The toolkit supports **6 AI providers** with intelligent routing and cost optimization:
 
-**Installation with cloud providers:**
+**Supported Providers:**
+- **Anthropic Claude** (direct API) - Haiku, Sonnet, Opus
+- **AWS Bedrock** - Claude models via AWS infrastructure
+- **Google Vertex AI** - Claude models via Google Cloud
+- **OpenAI** - GPT-4o, GPT-4o-mini, GPT-4-turbo
+- **Google Gemini** - Gemini 2.5 Pro, Flash, Flash Lite
+- **Mock Provider** - Zero-cost testing provider
+
+**Installation:**
 ```bash
-# For AWS Bedrock support
+# Base installation (Anthropic Claude + Mock)
+pip install -e .
+
+# With AWS Bedrock support
 pip install -e ".[bedrock]"
 
-# For Google Vertex AI support
+# With Google Vertex AI support
 pip install -e ".[vertex]"
 
-# For all cloud providers
+# With OpenAI support
+pip install -e ".[openai]"
+
+# With Google Gemini support
+pip install -e ".[gemini]"
+
+# With all providers
 pip install -e ".[all]"
 ```
 
-**Provider Configuration:**
+**Provider Configuration (.env file):**
 ```bash
-# AWS Bedrock (add to .env)
+# Anthropic Claude (direct API)
+ANTHROPIC_API_KEY=your_key_here
+
+# AWS Bedrock
 ENABLE_BEDROCK=true
 AWS_ACCESS_KEY_ID=your_key_here
 AWS_SECRET_ACCESS_KEY=your_secret_here
 AWS_REGION=us-east-1
 
-# Google Vertex AI (add to .env)
+# Google Vertex AI
 ENABLE_VERTEX=true
 GCP_PROJECT_ID=your-project-id
 GCP_REGION=us-central1
 GCP_CREDENTIALS_PATH=/path/to/credentials.json  # Optional
+
+# OpenAI
+ENABLE_OPENAI=true
+OPENAI_API_KEY=sk-your_key_here
+OPENAI_ORG_ID=org-your_org_here  # Optional
+
+# Google Gemini
+GOOGLE_API_KEY=your_key_here
 ```
 
-**Usage:**
+**Usage Examples:**
 ```python
 from pm_prompt_toolkit.providers import get_provider
 
-# Explicit provider selection
+# Explicit provider selection with prefix
+claude = get_provider("anthropic:claude-sonnet-4-5")
 bedrock = get_provider("bedrock:claude-sonnet-4-5")
 vertex = get_provider("vertex:claude-sonnet-4-5")
+openai = get_provider("openai:gpt-4o")
+gemini = get_provider("gemini:gemini-2-5-pro")
 
-# Automatic routing (uses Bedrock if enabled)
-provider = get_provider("claude-sonnet-4-5")
+# Automatic routing (Claude models prefer Bedrock if enabled)
+provider = get_provider("claude-sonnet-4-5")  # Uses Bedrock if enabled
 result = provider.classify("We need SSO integration")
+
+# Direct model routing
+openai_provider = get_provider("gpt-4o")  # Routes to OpenAI if enabled
+gemini_provider = get_provider("gemini-2-5-flash")  # Routes to Gemini
+
+# Mock provider for testing (zero cost)
+mock = get_provider("mock:claude-sonnet")
 ```
 
-**Benefits:**
+**Provider Benefits:**
 - **Bedrock:** Enterprise AWS infrastructure, AWS-native billing, regional data residency
 - **Vertex AI:** Google Cloud integration, GCP-native billing, unified GCP experience
+- **OpenAI:** Advanced function calling, structured outputs, multimodal
+- **Gemini:** 2M token context (Pro), ultra-low cost (Flash Lite), context caching
 - **Fallback:** Automatically falls back to direct Anthropic API if cloud providers unavailable
 
 ---

@@ -127,33 +127,46 @@ class TestGetProviderOpenAI:
 
 
 class TestGetProviderGemini:
-    """Test get_provider with Gemini models (not yet implemented)."""
+    """Test get_provider with Gemini models (now implemented)."""
 
-    def test_get_provider_gemini_pro_raises_not_implemented(self):
-        """Test get_provider raises NotImplementedError for Gemini Pro."""
-        with pytest.raises(NotImplementedError) as exc_info:
-            get_provider("gemini-pro")
+    @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
+    def test_get_provider_gemini_pro(self, mock_gemini_provider):
+        """Test get_provider returns GeminiProvider for Gemini 2.5 Pro."""
+        from pm_prompt_toolkit.providers.gemini import GeminiProvider
 
-        error_msg = str(exc_info.value)
-        assert "Gemini provider for gemini-pro is not yet implemented" in error_msg
-        assert "Use Claude models for now" in error_msg
-        assert "TODO.md" in error_msg
+        mock_instance = MagicMock(spec=GeminiProvider)
+        mock_gemini_provider.return_value = mock_instance
 
-    def test_get_provider_gemini_flash_raises_not_implemented(self):
-        """Test get_provider raises NotImplementedError for Gemini Flash."""
-        with pytest.raises(NotImplementedError) as exc_info:
-            get_provider("gemini-flash")
+        result = get_provider("gemini-2-5-pro")
 
-        error_msg = str(exc_info.value)
-        assert "Gemini provider for gemini-flash is not yet implemented" in error_msg
+        mock_gemini_provider.assert_called_once_with(model="gemini-2-5-pro", enable_caching=True)
+        assert result == mock_instance
 
-    def test_get_provider_gemini_case_insensitive(self):
+    @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
+    def test_get_provider_gemini_flash(self, mock_gemini_provider):
+        """Test get_provider returns GeminiProvider for Gemini 2.5 Flash."""
+        from pm_prompt_toolkit.providers.gemini import GeminiProvider
+
+        mock_instance = MagicMock(spec=GeminiProvider)
+        mock_gemini_provider.return_value = mock_instance
+
+        result = get_provider("gemini-2-5-flash")
+
+        mock_gemini_provider.assert_called_once_with(model="gemini-2-5-flash", enable_caching=True)
+        assert result == mock_instance
+
+    @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
+    def test_get_provider_gemini_case_insensitive(self, mock_gemini_provider):
         """Test Gemini model detection is case-insensitive."""
-        with pytest.raises(NotImplementedError):
-            get_provider("GEMINI-PRO")
+        from pm_prompt_toolkit.providers.gemini import GeminiProvider
 
-        with pytest.raises(NotImplementedError):
-            get_provider("Gemini-Flash")
+        mock_instance = MagicMock(spec=GeminiProvider)
+        mock_gemini_provider.return_value = mock_instance
+
+        # Uppercase should work
+        get_provider("GEMINI-2-5-FLASH")
+        # Will be normalized to lowercase by factory
+        assert mock_gemini_provider.called
 
 
 class TestGetProviderUnknownModel:

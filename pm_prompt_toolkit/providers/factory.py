@@ -166,7 +166,15 @@ def get_provider(
             )
 
     # Check for Gemini models
-    gemini_models = ["gemini-pro", "gemini-flash", "gemini-1.5", "gemini-2.0"]
+    gemini_models = [
+        "gemini-2-5-pro",
+        "gemini-2-5-flash",
+        "gemini-2-5-flash-lite",
+        "gemini-pro",
+        "gemini-flash",
+        "gemini-1.5",
+        "gemini-2.0",
+    ]
     if any(model_normalized in m for m in gemini_models) or model_normalized.startswith("gemini"):
         logger.info(f"Routing Gemini model '{model_normalized}' to Gemini provider")
         return GeminiProvider(model=model_normalized, enable_caching=enable_caching)
