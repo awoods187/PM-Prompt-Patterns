@@ -6,8 +6,6 @@ This file recognizes the individuals and organizations who have contributed to P
 
 **Andy Woods** - [@awoods187](https://github.com/awoods187)
 - Project creator and primary maintainer
-- Product Manager with 8+ years building B2B infrastructure products
-- Production AI systems processing 10K+ signals weekly
 - [LinkedIn](https://linkedin.com/in/andrew-woods-pm) | [GitHub](https://github.com/awoods187)
 
 ## Contributors
@@ -152,7 +150,7 @@ https://github.com/awoods187/PM-Prompt-Patterns (MIT License)
 
 All contributions to this project are made under the [MIT License](./LICENSE).
 
-See [CONTENT_LICENSE.md](./CONTENT_LICENSE.md) for clarifications on prompt licensing and generated content.
+See [content_license.md](./content_license.md) for clarifications on prompt licensing and generated content.
 
 ---
 

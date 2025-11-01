@@ -1,0 +1,135 @@
+# Mock Future Models for Testing
+# This file contains hypothetical future models to test the update system
+
+# Hypothetical Claude Sonnet 5
+- schema_version: "1.0.0"
+  model_id: "claude-sonnet-5"
+  provider: "anthropic"
+  name: "Claude Sonnet 5"
+  api_identifier: "claude-sonnet-5-20260301"
+
+  metadata:
+    context_window_input: 500000
+    context_window_output: null
+    knowledge_cutoff: "December 2025"
+    release_date: "2026-03-01"
+    last_verified: "2026-03-01"
+    docs_url: "https://docs.claude.com/en/docs/about-claude/models"
+
+  capabilities:
+    - text_input
+    - text_output
+    - function_calling
+    - vision
+    - audio_input
+    - large_context
+    - prompt_caching
+    - streaming
+    - json_mode
+
+  pricing:
+    input_per_1m: 5.00
+    output_per_1m: 25.00
+    cache_write_per_1m: 6.25
+    cache_read_per_1m: 0.50
+
+  optimization:
+    recommended_for:
+      - "Advanced reasoning tasks"
+      - "Multi-step workflows"
+      - "Extended context analysis"
+    best_practices:
+      - "Leverage 500k context window"
+      - "Use prompt caching extensively"
+      - "Enable audio input for multimodal tasks"
+    cost_tier: "premium"
+    speed_tier: "balanced"
+
+  notes: "HYPOTHETICAL MODEL for testing. Extended capabilities including audio input."
+
+# Hypothetical GPT-5
+- schema_version: "1.0.0"
+  model_id: "gpt-5"
+  provider: "openai"
+  name: "GPT-5"
+  api_identifier: "gpt-5-2026-01-15"
+
+  metadata:
+    context_window_input: 256000
+    context_window_output: 32768
+    knowledge_cutoff: "October 2025"
+    release_date: "2026-01-15"
+    last_verified: "2026-01-15"
+    docs_url: "https://platform.openai.com/docs/models/gpt-5"
+
+  capabilities:
+    - text_input
+    - text_output
+    - function_calling
+    - vision
+    - audio_input
+    - audio_output
+    - large_context
+    - streaming
+    - json_mode
+
+  pricing:
+    input_per_1m: 10.00
+    output_per_1m: 40.00
+
+  optimization:
+    recommended_for:
+      - "Complex reasoning"
+      - "Multimodal applications"
+      - "Advanced function calling"
+    best_practices:
+      - "Use for most demanding tasks"
+      - "Leverage extended context"
+      - "Enable multimodal capabilities"
+    cost_tier: "premium"
+    speed_tier: "thorough"
+
+  notes: "HYPOTHETICAL MODEL for testing. Next-generation GPT with extended capabilities."
+
+# Hypothetical Gemini 3 Pro
+- schema_version: "1.0.0"
+  model_id: "gemini-3-pro"
+  provider: "google"
+  name: "Gemini 3 Pro"
+  api_identifier: "gemini-3-pro-latest"
+
+  metadata:
+    context_window_input: 5000000
+    context_window_output: 16384
+    knowledge_cutoff: "December 2025"
+    release_date: "2026-04-01"
+    last_verified: "2026-04-01"
+    docs_url: "https://ai.google.dev/gemini-api/docs/models/gemini"
+
+  capabilities:
+    - text_input
+    - text_output
+    - function_calling
+    - vision
+    - audio_input
+    - large_context
+    - streaming
+    - json_mode
+
+  pricing:
+    input_per_1m: 3.00
+    output_per_1m: 12.00
+
+  optimization:
+    recommended_for:
+      - "Massive context analysis"
+      - "Document processing at scale"
+      - "Multimodal reasoning"
+    best_practices:
+      - "Leverage 5M token context"
+      - "Use for large document analysis"
+      - "Enable function calling"
+    cost_tier: "mid-tier"
+    speed_tier: "balanced"
+
+  notes: "HYPOTHETICAL MODEL for testing. 5M token context window for extreme document analysis."

@@ -1,0 +1,60 @@
+# Model Source Configuration
+# Defines where to fetch model information from for each provider
+
+anthropic:
+  name: "Anthropic"
+  docs_url: "https://docs.claude.com/en/docs/about-claude/models"
+  api_available: false  # No public models list endpoint yet
+  pricing_url: "https://www.anthropic.com/pricing"
+  notes: "Uses static specs updated from official docs"
+
+openai:
+  name: "OpenAI"
+  docs_url: "https://platform.openai.com/docs/models"
+  api_available: true
+  api_endpoint: "https://api.openai.com/v1/models"
+  pricing_url: "https://openai.com/api/pricing"
+  notes: "API provides model list but not full specs"
+
+google:
+  name: "Google"
+  docs_url: "https://ai.google.dev/gemini-api/docs/models/gemini"
+  api_available: true
+  api_method: "google.generativeai.list_models()"
+  pricing_url: "https://ai.google.dev/pricing"
+  notes: "API lists models with basic info"
+
+bedrock:
+  name: "AWS Bedrock"
+  docs_url: "https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html"
+  api_available: true
+  api_method: "boto3.client('bedrock').list_foundation_models()"
+  pricing_url: "https://aws.amazon.com/bedrock/pricing/"
+  notes: "Requires AWS credentials; models vary by region"
+
+vertex:
+  name: "Google Vertex AI"
+  docs_url: "https://cloud.google.com/vertex-ai/docs/generative-ai/learn/models"
+  api_available: true
+  api_method: "anthropic.AnthropicVertex()"
+  pricing_url: "https://cloud.google.com/vertex-ai/pricing"
+  notes: "Requires GCP credentials; Claude models via Anthropic Vertex SDK"
+
+# Update schedule
+schedule:
+  frequency: "weekly"  # weekly, biweekly, monthly
+  day: "Sunday"
+  time: "02:00 UTC"
+
+# Validation settings
+validation:
+  strict_mode: false  # If true, fail on warnings
+  allow_future_dates: true
+  max_future_years: 2
+
+# Auto-merge settings
+auto_merge:
+  enabled: true
+  require_tests_pass: true
+  require_approvals: 0  # 0 for automation
+  strategy: "squash"  # squash, merge, rebase

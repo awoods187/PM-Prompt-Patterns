@@ -25,4 +25,4 @@ Check back soon or [contribute](../CONTRIBUTING.md)!
 - **GPT-4**: JSON mode (guaranteed valid JSON) + function calling
 - **Gemini**: Markdown for reports
 
-See [PROMPT_DESIGN_PRINCIPLES.md](../PROMPT_DESIGN_PRINCIPLES.md#output-structure-design) and [MODEL_OPTIMIZATION_GUIDE.md](../MODEL_OPTIMIZATION_GUIDE.md) for examples.
+See [prompt_design_principles.md](../prompt_design_principles.md#output-structure-design) and [MODEL_OPTIMIZATION_GUIDE.md](../MODEL_OPTIMIZATION_GUIDE.md) for examples.

@@ -27,4 +27,4 @@ Check back soon or [contribute](../CONTRIBUTING.md)!
 - **5-shot**: High accuracy requirements (our sweet spot for classification)
 - **10+ shot**: Specialized domains, unusual patterns
 
-See [PROMPT_DESIGN_PRINCIPLES.md](../PROMPT_DESIGN_PRINCIPLES.md#few-shot-learning-patterns) for detailed examples and production metrics.
+See [prompt_design_principles.md](../prompt_design_principles.md#few-shot-learning-patterns) for detailed examples and production metrics.

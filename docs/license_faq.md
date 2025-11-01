@@ -305,7 +305,7 @@ See SECURITY.md (if available) for details.
 
 **Q:** Can I use these prompts in research papers?
 
-**A:** Yes. Please cite using the BibTeX format in [ATTRIBUTION.md](./ATTRIBUTION.md#citation).
+**A:** Yes. Please cite using the BibTeX format in [attribution.md](./attribution.md#citation).
 
 ## Still Have Questions?
 
@@ -313,7 +313,7 @@ See SECURITY.md (if available) for details.
 
 1. **Check existing docs:**
    - [README.md](./README.md) - Project overview
-   - [CONTENT_LICENSE.md](./CONTENT_LICENSE.md) - Detailed licensing info
+   - [content_license.md](./content_license.md) - Detailed licensing info
    - [CONTRIBUTING.md](./CONTRIBUTING.md) - Contribution guidelines
 
 2. **Open an issue:**
@@ -330,7 +330,7 @@ See SECURITY.md (if available) for details.
 The MIT License itself won't change (it's a standard license), but we welcome:
 - Suggestions for clarifications in docs
 - Questions about specific scenarios
-- Improvements to CONTENT_LICENSE.md or this FAQ
+- Improvements to content_license.md or this FAQ
 
 Open an issue with your suggestion!
 
@@ -356,6 +356,6 @@ Open an issue with your suggestion!
 - ❌ Give attribution (appreciated though!)
 - ❌ Ask permission
 
-**Last Updated:** January 2025
+**Last Updated:** November 2025
 
 **Not legal advice.** This FAQ provides general guidance on the MIT License. Consult a lawyer for specific legal questions.
