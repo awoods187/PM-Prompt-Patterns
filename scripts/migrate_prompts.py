@@ -19,7 +19,7 @@ import argparse
 import re
 import shutil
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 
 class PromptMigrator:
@@ -90,27 +90,27 @@ class PromptMigrator:
 
             # Move/copy original to base variant
             shutil.copy2(prompt_file, base_file)
-            self.log(f"  ✓ Created base variant: prompt.md")
+            self.log("  ✓ Created base variant: prompt.md")
 
             # Generate provider-specific variants
             self._generate_claude_variant(original_content, claude_file, metadata)
-            self.log(f"  ✓ Created Claude variant: prompt.claude.md")
+            self.log("  ✓ Created Claude variant: prompt.claude.md")
 
             self._generate_openai_variant(original_content, openai_file, metadata)
-            self.log(f"  ✓ Created OpenAI variant: prompt.openai.md")
+            self.log("  ✓ Created OpenAI variant: prompt.openai.md")
 
             self._generate_gemini_variant(original_content, gemini_file, metadata)
-            self.log(f"  ✓ Created Gemini variant: prompt.gemini.md")
+            self.log("  ✓ Created Gemini variant: prompt.gemini.md")
 
             # Generate README
             self._generate_readme(readme_file, metadata)
-            self.log(f"  ✓ Created README.md")
+            self.log("  ✓ Created README.md")
 
             # Delete original file
             prompt_file.unlink()
-            self.log(f"  ✓ Removed original file")
+            self.log("  ✓ Removed original file")
         else:
-            self.log(f"  [DRY RUN] Would create:")
+            self.log("  [DRY RUN] Would create:")
             self.log(f"    - {base_file.relative_to(self.prompts_dir)}")
             self.log(f"    - {claude_file.relative_to(self.prompts_dir)}")
             self.log(f"    - {openai_file.relative_to(self.prompts_dir)}")
