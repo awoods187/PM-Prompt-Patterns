@@ -289,6 +289,23 @@ class TestYAMLFileUpdates:
         assert "provider: test" in content
         assert "New Model" in content
 
+    def test_update_yaml_files_handles_write_errors(
+        self, temp_repo_root: Path, sample_model_data: ModelData, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        """Test that YAML write errors are logged but don't crash."""
+        import logging
+
+        caplog.set_level(logging.ERROR)
+
+        updater = ModelUpdater(temp_repo_root, dry_run=False)
+
+        # Mock yaml.dump to raise an exception
+        with patch("yaml.dump", side_effect=Exception("Write error")):
+            # Should not raise, but log error
+            updater._update_yaml_files([sample_model_data])
+
+            assert "Failed to write" in caplog.text
+
     def test_update_yaml_files_updates_existing_files(
         self, temp_repo_root: Path
     ) -> None:
@@ -590,6 +607,58 @@ class TestEndToEndWorkflow:
         assert result is True
         mock_create_pr.assert_called_once()
         mock_auto_merge.assert_called_once_with("https://github.com/test/repo/pull/1")
+
+    @patch("scripts.model_updater.main.PRCreator.create_pr")
+    @patch("scripts.model_updater.main.ModelUpdater._fetch_all_models")
+    @patch("scripts.model_updater.main.ModelUpdater._load_current_models")
+    def test_pr_creation_returns_none_returns_false(
+        self,
+        mock_load: Mock,
+        mock_fetch: Mock,
+        mock_create_pr: Mock,
+        temp_repo_root: Path,
+    ) -> None:
+        """Test that when create_pr returns None, run() returns False."""
+        # Setup model with changes
+        mock_fetch.return_value = [
+            ModelData(
+                model_id="test-model",
+                provider="test",
+                name="Test Model",
+                api_identifier="test-v1",
+                context_window_input=100000,
+                context_window_output=4096,
+                knowledge_cutoff="Jan 2025",
+                release_date=date(2025, 1, 1),
+                docs_url="https://example.com",
+                capabilities=["text_input", "text_output"],
+                input_per_1m=2.0,
+                output_per_1m=6.0,
+                cost_tier="mid-tier",
+                speed_tier="balanced",
+            )
+        ]
+
+        mock_load.return_value = {
+            "test-model": {
+                "model_id": "test-model",
+                "provider": "test",
+                "metadata": {
+                    "context_window_input": 100000,
+                    "context_window_output": 4096,
+                },
+                "pricing": {"input_per_1m": 1.0, "output_per_1m": 3.0},
+                "capabilities": ["text_input"],
+            }
+        }
+
+        # PR creation returns None (failure)
+        mock_create_pr.return_value = None
+
+        updater = ModelUpdater(temp_repo_root, dry_run=False)
+        result = updater.run(create_pr=True)
+
+        assert result is False
 
     @patch("scripts.model_updater.main.PRCreator.create_pr")
     @patch("scripts.model_updater.main.ModelUpdater._fetch_all_models")
