@@ -549,7 +549,7 @@ Tested on 10,000 customer signals (support tickets, feedback, feature requests):
    - 95% accuracy at $3/10K with Sonnet (caching enabled)
    - 92% accuracy at $1/10K with Haiku (caching enabled)
 
-2. **Gemini Flash Lite = Best Volume Economics**
+2. **Gemini 2.5 Flash Lite = Best Volume Economics**
    - 87% accuracy at $1/10K
    - 10x throughput of competitors
    - Ideal for >100K daily volume

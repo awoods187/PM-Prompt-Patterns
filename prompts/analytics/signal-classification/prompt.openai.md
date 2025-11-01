@@ -2,7 +2,7 @@
 
 **Category**: Analytics / Classification
 **Complexity**: 🟡 Moderate
-**Model Compatibility**: GPT-4o, GPT-4o-mini, GPT-4-turbo
+**Model Compatibility**: GPT-4o, GPT-4o-mini, gpt-4o
 
 ## OpenAI-Specific Optimizations
 

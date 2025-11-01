@@ -110,12 +110,12 @@ class TestGetProviderOpenAI:
         assert "OpenAI provider for gpt-3.5 is not enabled" in error_msg
 
     def test_get_provider_gpt4_turbo_raises_configuration_error(self):
-        """Test get_provider raises ConfigurationError for GPT-4 Turbo when not enabled."""
+        """Test get_provider raises ConfigurationError for GPT-4o when not enabled."""
         with pytest.raises(ConfigurationError) as exc_info:
-            get_provider("gpt-4-turbo")
+            get_provider("gpt-4o")
 
         error_msg = str(exc_info.value)
-        assert "OpenAI provider for gpt-4-turbo is not enabled" in error_msg
+        assert "OpenAI provider for gpt-4o is not enabled" in error_msg
 
     def test_get_provider_openai_case_insensitive(self):
         """Test OpenAI model detection is case-insensitive."""

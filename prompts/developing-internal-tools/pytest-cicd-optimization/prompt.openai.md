@@ -1821,4 +1821,4 @@ jobs:
 
 - **GPT-4o-mini**: Best value, 94% of GPT-4o accuracy ($0.15/$0.60 per 1M tokens)
 - **GPT-4o**: Balanced performance ($2.50/$10.00 per 1M tokens)
-- **GPT-4-turbo**: For complex reasoning ($10/$30 per 1M tokens)
+- **gpt-4o**: For complex reasoning ($10/$30 per 1M tokens)

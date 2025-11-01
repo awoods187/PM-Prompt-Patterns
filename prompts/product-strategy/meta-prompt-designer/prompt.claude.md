@@ -373,7 +373,7 @@ def design_prompt(use_case_description: str) -> Dict:
     """
 
     response = client.messages.create(
-        model="claude-sonnet-4-5-20250929",  # Latest Claude 3.5 Sonnet
+        model="claude-sonnet-4-5-20250929",  # Latest Claude Sonnet 4.5
         max_tokens=8000,
         temperature=0,  # Deterministic for consistency
         messages=[{
@@ -457,7 +457,7 @@ def two_window_workflow():
     """
 
     response = client.messages.create(
-        model="claude-sonnet-4-5-20250929",  # Latest Claude 3.5 Sonnet
+        model="claude-sonnet-4-5-20250929",  # Latest Claude Sonnet 4.5
         max_tokens=4000,
         messages=[{
             "role": "user",
@@ -619,7 +619,7 @@ def design_prompt_gpt4(use_case: str) -> Dict:
     Design prompts that are self-documenting and follow industry best practices."""
 
     response = client.chat.completions.create(
-        model="gpt-4o",  # Latest GPT-4o (replaces gpt-4-turbo)
+        model="gpt-4o",  # Latest GPT-4o (replaces gpt-4o)
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"Design a production-ready prompt for this use case:\n\n{use_case}"}
@@ -727,7 +727,7 @@ if __name__ == "__main__":
 ```
 
 **Performance**:
-- Design quality: 92% first-try success (GPT-4 Turbo)
+- Design quality: 92% first-try success (GPT-4o)
 - Structured output: 100% valid (guaranteed by schema)
 - Cost: ~$0.03-0.10 per prompt design
 - Time: ~10-20 seconds per prompt
@@ -976,7 +976,7 @@ def interactive_prompt_designer():
                 print("\n🔍 Testing prompt...")
 
                 response = client.messages.create(
-                    model="claude-sonnet-4-5-20250929",  # Latest Claude 3.5 Sonnet
+                    model="claude-sonnet-4-5-20250929",  # Latest Claude Sonnet 4.5
                     max_tokens=4000,
                     messages=[{
                         "role": "user",

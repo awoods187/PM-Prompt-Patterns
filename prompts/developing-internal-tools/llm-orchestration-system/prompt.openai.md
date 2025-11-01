@@ -380,7 +380,7 @@ providers:
     api_key: "${ANTHROPIC_API_KEY}"
     fallback_models:
       - "claude-opus-4-20250514"
-      - "claude-3-sonnet-20240229"
+      - "claude-sonnet-4-5"
 
   bedrock:
     region_name: "us-east-1"
@@ -388,7 +388,7 @@ providers:
     # aws_access_key_id: "${AWS_ACCESS_KEY_ID}"
     # aws_secret_access_key: "${AWS_SECRET_ACCESS_KEY}"
     fallback_models:
-      - "anthropic.claude-3-sonnet-20240229-v1:0"
+      - "anthropic.claude-sonnet-4-5-v1:0"
       - "amazon.titan-text-express-v1"
 
   vertex:
@@ -397,13 +397,13 @@ providers:
     # Optional: If not provided, uses Application Default Credentials
     # credentials_path: "${GOOGLE_APPLICATION_CREDENTIALS}"
     fallback_models:
-      - "gemini-pro"
-      - "gemini-1.5-flash"
+      - "gemini-2-5-pro"
+      - "gemini-2-5-flash"
 
   gemini:
     api_key: "${GEMINI_API_KEY}"
     fallback_models:
-      - "gemini-pro"
+      - "gemini-2-5-pro"
 
 cost_tracking:
   enabled: true
@@ -564,19 +564,19 @@ class CostTracker:
         "anthropic": {
             "claude-opus-4-20250514": {"input": 15.0, "output": 75.0},
             "claude-sonnet-4-20250514": {"input": 3.0, "output": 15.0},
-            "claude-3-opus-20240229": {"input": 15.0, "output": 75.0},
-            "claude-3-sonnet-20240229": {"input": 3.0, "output": 15.0},
-            "claude-3-haiku-20240307": {"input": 0.25, "output": 1.25},
+            "claude-opus-4-1": {"input": 15.0, "output": 75.0},
+            "claude-sonnet-4-5": {"input": 3.0, "output": 15.0},
+            "claude-haiku-4-5": {"input": 0.25, "output": 1.25},
         },
         "gemini": {
-            "gemini-pro": {"input": 0.50, "output": 1.50},
+            "gemini-2-5-pro": {"input": 0.50, "output": 1.50},
             "gemini-pro-vision": {"input": 0.50, "output": 1.50},
         },
         "bedrock": {
             # Anthropic Claude on Bedrock (us-east-1 pricing)
-            "anthropic.claude-3-opus-20240229-v1:0": {"input": 15.0, "output": 75.0},
-            "anthropic.claude-3-sonnet-20240229-v1:0": {"input": 3.0, "output": 15.0},
-            "anthropic.claude-3-haiku-20240307-v1:0": {"input": 0.25, "output": 1.25},
+            "anthropic.claude-opus-4-1-v1:0": {"input": 15.0, "output": 75.0},
+            "anthropic.claude-sonnet-4-5-v1:0": {"input": 3.0, "output": 15.0},
+            "anthropic.claude-haiku-4-5-v1:0": {"input": 0.25, "output": 1.25},
             # Amazon Titan
             "amazon.titan-text-express-v1": {"input": 0.80, "output": 1.60},
             "amazon.titan-text-lite-v1": {"input": 0.30, "output": 0.40},
@@ -591,9 +591,9 @@ class CostTracker:
             "meta.llama2-70b-chat-v1": {"input": 1.95, "output": 2.56},
         },
         "vertex": {
-            "gemini-pro": {"input": 0.50, "output": 1.50},
-            "gemini-1.5-pro": {"input": 3.50, "output": 10.50},
-            "gemini-1.5-flash": {"input": 0.35, "output": 1.05},
+            "gemini-2-5-pro": {"input": 0.50, "output": 1.50},
+            "gemini-2-5-pro": {"input": 3.50, "output": 10.50},
+            "gemini-2-5-flash": {"input": 0.35, "output": 1.05},
             "gemini-pro-vision": {"input": 0.50, "output": 1.50},
         }
     }
@@ -1355,7 +1355,7 @@ import pandas as pd
 configs = [
     ("openai", "gpt-4"),
     ("openai", "gpt-4o-mini"),
-    ("anthropic", "claude-3-sonnet-20240229"),
+    ("anthropic", "claude-sonnet-4-5"),
 ]
 
 results = []
@@ -1387,7 +1387,7 @@ print(df.sort_values("cost"))
 # Output:
 #     provider                          model      cost  cost_per_request
 # 1    openai              gpt-4o-mini   0.42          0.0042
-# 2  anthropic  claude-3-sonnet-20240229   1.85          0.0185
+# 2  anthropic  claude-sonnet-4-5   1.85          0.0185
 # 0    openai                      gpt-4   6.30          0.0630
 ```
 
@@ -1418,7 +1418,7 @@ providers:
     api_key: "${ANTHROPIC_API_KEY}"
     fallback_models:
       - "claude-opus-4-20250514"
-      - "claude-3-sonnet-20240229"  # Fallback to cheaper
+      - "claude-sonnet-4-5"  # Fallback to cheaper
 
 cost_tracking:
   enabled: true
@@ -1831,4 +1831,4 @@ After implementing this system, you should achieve:
 
 - **GPT-4o-mini**: Best value, 94% of GPT-4o accuracy ($0.15/$0.60 per 1M tokens)
 - **GPT-4o**: Balanced performance ($2.50/$10.00 per 1M tokens)
-- **GPT-4-turbo**: For complex reasoning ($10/$30 per 1M tokens)
+- **gpt-4o**: For complex reasoning ($10/$30 per 1M tokens)

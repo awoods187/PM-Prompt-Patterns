@@ -86,7 +86,7 @@ class TestPromptRegistry:
         assert "claude" in prompt.lower() or "<" in prompt
 
     def test_auto_detect_provider_from_gemini_model(self):
-        """Test auto-detection of Gemini provider from model name."""
+        """Test auto-detection of Gemini 2.5 Provider from model name."""
         prompt = PromptRegistry.get_prompt(
             "analytics/signal-classification", model="gemini-2-5-flash"
         )
@@ -155,7 +155,7 @@ class TestProviderDetection:
         [
             ("gpt-4o", "openai"),
             ("gpt-4o-mini", "openai"),
-            ("gpt-4-turbo", "openai"),
+            ("gpt-4o", "openai"),
             ("claude-sonnet-4-5", "claude"),
             ("claude-haiku", "claude"),
             ("claude-opus", "claude"),

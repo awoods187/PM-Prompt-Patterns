@@ -172,8 +172,8 @@ BASE PROMPT (model-agnostic):
 
 TARGET MODELS:
 - Claude Sonnet (Anthropic)
-- GPT-4 Turbo (OpenAI)
-- Gemini Pro (Google)
+- GPT-4o (OpenAI)
+- Gemini 2.5 Pro (Google)
 
 Please provide:
 1. Analysis of which model would perform best on this task
@@ -209,8 +209,8 @@ I need to adapt this extraction prompt for different providers, but DON'T execut
 
 TARGET MODELS:
 - Claude Sonnet (primary)
-- GPT-4 Turbo (fallback)
-- Gemini Pro (for very long feedback)
+- GPT-4o (fallback)
+- Gemini 2.5 Pro (for very long feedback)
 
 Please provide optimized versions for each provider leveraging their strengths.
 

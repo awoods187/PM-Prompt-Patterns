@@ -10,7 +10,7 @@ Supported Providers:
     - Anthropic Claude (direct API) - Haiku, Sonnet, Opus (fully implemented)
     - AWS Bedrock - Claude models via AWS infrastructure (fully implemented)
     - Google Vertex AI - Claude models via Google Cloud (fully implemented)
-    - OpenAI GPT - GPT-4o, GPT-4o-mini, GPT-4-turbo (fully implemented)
+    - OpenAI GPT - GPT-4o, GPT-4o-mini, gpt-4o (fully implemented)
     - Google Gemini - Gemini 2.5 Pro, Flash, Flash Lite (fully implemented)
     - Mock - Testing provider with zero cost (fully implemented)
 

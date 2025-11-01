@@ -4,7 +4,7 @@
 """
 Tests for providers/gemini.py
 
-Tests Gemini provider implementation including initialization, classification,
+Tests Gemini 2.5 Provider implementation including initialization, classification,
 JSON parsing, cost calculation with caching, and error handling.
 """
 
@@ -50,7 +50,7 @@ class TestGeminiProviderInitialization:
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
     def test_init_successful_flash(self, mock_settings, mock_genai):
-        """Test successful initialization with Gemini Flash model."""
+        """Test successful initialization with Gemini 2.5 Flash model."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_model = MagicMock()
         mock_genai.GenerativeModel.return_value = mock_model
@@ -66,7 +66,7 @@ class TestGeminiProviderInitialization:
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
     def test_init_successful_pro(self, mock_settings, mock_genai):
-        """Test successful initialization with Gemini Pro model."""
+        """Test successful initialization with Gemini 2.5 Pro model."""
         mock_settings.return_value.get_api_key.return_value = "ai-test"
         mock_model = MagicMock()
         mock_genai.GenerativeModel.return_value = mock_model

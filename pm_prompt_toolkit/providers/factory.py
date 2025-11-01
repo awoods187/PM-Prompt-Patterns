@@ -153,7 +153,7 @@ def get_provider(
         return ClaudeProvider(model=model_normalized, enable_caching=enable_caching)
 
     # Check for OpenAI models
-    openai_models = ["gpt-4", "gpt-4o", "gpt-4o-mini", "gpt-3.5", "gpt-4-turbo", "o1", "o1-mini"]
+    openai_models = ["gpt-4", "gpt-4o", "gpt-4o-mini", "gpt-3.5", "gpt-4o", "o1", "o1-mini"]
     if any(model_normalized in m for m in openai_models) or model_normalized.startswith("gpt"):
         if settings.enable_openai:
             logger.info(f"Routing OpenAI model '{model_normalized}' to OpenAI provider")
@@ -170,20 +170,20 @@ def get_provider(
         "gemini-2-5-pro",
         "gemini-2-5-flash",
         "gemini-2-5-flash-lite",
-        "gemini-pro",
-        "gemini-flash",
+        "gemini-2-5-pro",
+        "gemini-2-5-flash",
         "gemini-1.5",
         "gemini-2.0",
     ]
     if any(model_normalized in m for m in gemini_models) or model_normalized.startswith("gemini"):
-        logger.info(f"Routing Gemini model '{model_normalized}' to Gemini provider")
+        logger.info(f"Routing Gemini model '{model_normalized}' to Gemini 2.5 Provider")
         return GeminiProvider(model=model_normalized, enable_caching=enable_caching)
 
     # Unknown model
     raise ValueError(
         f"Unknown model: {model}. "
         f"Supported models: Claude (claude-haiku, claude-sonnet, claude-opus), "
-        f"OpenAI (gpt-4, gpt-4o, gpt-4o-mini, gpt-4-turbo), "
+        f"OpenAI (gpt-4, gpt-4o, gpt-4o-mini, gpt-4o), "
         f"Gemini (gemini-2-5-pro, gemini-2-5-flash, gemini-2-5-flash-lite). "
         f"See README.md for full list and setup instructions."
     )
@@ -249,9 +249,9 @@ def _get_provider_by_prefix(
         logger.info(f"Using OpenAI provider for model '{model_name}' (explicit prefix)")
         return OpenAIProvider(model=model_name, enable_caching=enable_caching)
 
-    # Handle Gemini provider
+    # Handle Gemini 2.5 Provider
     if prefix_lower == "gemini":
-        logger.info(f"Using Gemini provider for model '{model_name}' (explicit prefix)")
+        logger.info(f"Using Gemini 2.5 Provider for model '{model_name}' (explicit prefix)")
         return GeminiProvider(model=model_name, enable_caching=enable_caching)
 
     # Unknown provider prefix

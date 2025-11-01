@@ -1472,7 +1472,7 @@ class TestPaymentProcessor:
 | **Claude Haiku** | 200K | $0.05 | Fast | 75-85% | Good | Misses edge cases |
 | **Claude Sonnet** | 200K | $0.10-0.30 | Medium | 80-95% | Excellent | **Recommended** |
 | **Claude Opus** | 200K | $0.50-1.00 | Slow | 90-98% | Exceptional | Overkill for most |
-| **GPT-4 Turbo** | 128K | $0.20-0.50 | Medium | 75-90% | Very Good | Good structured output |
+| **GPT-4o** | 128K | $0.20-0.50 | Medium | 75-90% | Very Good | Good structured output |
 | **GPT-4o** | 128K | $0.10-0.25 | Fast | 70-85% | Good | Fast iteration |
 | **Gemini Pro 1.5** | 2M | $0.08-0.20 | Medium | 70-85% | Good | Large modules |
 
@@ -1655,4 +1655,4 @@ def test_token_valid_within_one_hour():
 
 - **GPT-4o-mini**: Best value, 94% of GPT-4o accuracy ($0.15/$0.60 per 1M tokens)
 - **GPT-4o**: Balanced performance ($2.50/$10.00 per 1M tokens)
-- **GPT-4-turbo**: For complex reasoning ($10/$30 per 1M tokens)
+- **gpt-4o**: For complex reasoning ($10/$30 per 1M tokens)

@@ -9,7 +9,7 @@
 - **Context Caching**: 90% cost reduction on repeated prompts
 - **2M Token Context**: Process 1000+ signals in single request
 - **JSON Schema**: Native structured output validation
-- **Best Models**: Gemini Flash Lite (ultra-low cost), Flash (balanced), Pro (accuracy)
+- **Best Models**: Gemini 2.5 Flash Lite (ultra-low cost), Flash (balanced), Pro (accuracy)
 
 ## System Instruction (Cacheable)
 

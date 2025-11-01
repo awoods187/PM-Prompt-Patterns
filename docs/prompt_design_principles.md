@@ -540,7 +540,7 @@ START: What are you building?
 │  │  └─→ Gemini Pro 2M context ($0.04/call)
 │  │
 │  └─ Long document analysis?
-│     └─→ Claude (200K) or GPT-4 Turbo (128K)
+│     └─→ Claude (200K) or GPT-4o (128K)
 │
 └─ Creative/technical writing?
    │
@@ -556,13 +556,13 @@ START: What are you building?
 | Task                       | Recommended Model    | Why                                     | Cost    |
 |----------------------------|----------------------|-----------------------------------------|---------|
 | **Simple classification**  | Haiku, GPT-3.5       | Fast, cheap, good enough                | $0.0003 |
-| **Complex classification** | Sonnet, GPT-4 Turbo  | Better reasoning, still reasonable cost | $0.002  |
-| **Data extraction**        | Haiku, Gemini Flash  | Fast, structured outputs                | $0.0003 |
+| **Complex classification** | Sonnet, GPT-4o  | Better reasoning, still reasonable cost | $0.002  |
+| **Data extraction**        | Haiku, Gemini 2.5 Flash  | Fast, structured outputs                | $0.0003 |
 | **Summarization**          | Sonnet, GPT-3.5      | Good comprehension, decent writing      | $0.002  |
-| **Analysis & insights**    | Sonnet, GPT-4 Turbo  | Strong reasoning                        | $0.003  |
+| **Analysis & insights**    | Sonnet, GPT-4o  | Strong reasoning                        | $0.003  |
 | **Creative writing**       | Opus, GPT-4          | Nuanced, high quality                   | $0.015  |
-| **Code generation**        | Sonnet, GPT-4 Turbo  | Good technical understanding            | $0.003  |
-| **Massive context**        | Gemini Pro, Claude   | 1M-2M tokens                            | $0.04   |
+| **Code generation**        | Sonnet, GPT-4o  | Good technical understanding            | $0.003  |
+| **Massive context**        | Gemini 2.5 Pro, Claude   | 1M-2M tokens                            | $0.04   |
 
 ### When to Use Multiple Models in Series
 

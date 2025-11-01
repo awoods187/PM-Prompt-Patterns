@@ -269,7 +269,7 @@ def analyze_ai_patterns(text: str) -> dict:
     """Analyze text for AI writing patterns using Claude."""
 
     response = client.messages.create(
-        model="claude-sonnet-4-5-20250929",  # Latest Claude 3.5 Sonnet
+        model="claude-sonnet-4-5-20250929",  # Latest Claude Sonnet 4.5
         max_tokens=4000,
         messages=[{
             "role": "user",
@@ -369,7 +369,7 @@ def analyze_ai_patterns_gpt4(text: str) -> dict:
     """Analyze text for AI writing patterns using GPT-4."""
 
     response = client.chat.completions.create(
-        model="gpt-4o",  # Latest GPT-4o (replaces gpt-4-turbo)
+        model="gpt-4o",  # Latest GPT-4o (replaces gpt-4o)
         response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
@@ -389,7 +389,7 @@ for instance in result["instances"]:
 ```
 
 **Performance**:
-- Accuracy: ~92% pattern detection (GPT-4 Turbo)
+- Accuracy: ~92% pattern detection (GPT-4o)
 - Cost: ~$0.020-0.040 per 1000-word document
 - Latency: ~3-5s for typical blog post
 
@@ -644,8 +644,8 @@ def analyze_with_context(text: str, content_type: str) -> dict:
 | **Claude Haiku** | ~2,000 | $0.001 | 85% | Fast, misses subtle patterns |
 | **Claude Sonnet** | ~3,000 | $0.015 | 95% | Best balance |
 | **Claude Opus** | ~3,500 | $0.070 | 97% | Highest quality, expensive |
-| **GPT-4 Turbo** | ~3,000 | $0.025 | 92% | Good structured output |
-| **Gemini Pro** | ~2,500 | $0.004 | 88% | Budget option |
+| **GPT-4o** | ~3,000 | $0.025 | 92% | Good structured output |
+| **Gemini 2.5 Pro** | ~2,500 | $0.004 | 88% | Budget option |
 
 **Recommended**: Claude Sonnet for production use (best accuracy/cost balance)
 
@@ -703,4 +703,4 @@ def analyze_with_context(text: str, content_type: str) -> dict:
 
 - **GPT-4o-mini**: Best value, 94% of GPT-4o accuracy ($0.15/$0.60 per 1M tokens)
 - **GPT-4o**: Balanced performance ($2.50/$10.00 per 1M tokens)
-- **GPT-4-turbo**: For complex reasoning ($10/$30 per 1M tokens)
+- **gpt-4o**: For complex reasoning ($10/$30 per 1M tokens)

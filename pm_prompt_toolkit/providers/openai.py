@@ -37,7 +37,6 @@ logger = logging.getLogger(__name__)
 OPENAI_MODEL_IDS = {
     "gpt-4o": "gpt-4o-2024-08-06",
     "gpt-4o-mini": "gpt-4o-mini-2024-07-18",
-    "gpt-4-turbo": "gpt-4-turbo-2024-04-09",
 }
 
 # OpenAI pricing (per 1M tokens) - Input/Output
@@ -45,7 +44,6 @@ OPENAI_MODEL_IDS = {
 OPENAI_PRICING = {
     "gpt-4o-2024-08-06": (2.50, 10.00),
     "gpt-4o-mini-2024-07-18": (0.15, 0.60),
-    "gpt-4-turbo-2024-04-09": (10.00, 30.00),
 }
 
 
@@ -61,7 +59,6 @@ class OpenAIProvider(LLMProvider):
     Supported Models:
         - gpt-4o: Latest flagship model ($2.50/$10.00 per 1M tokens)
         - gpt-4o-mini: Efficient model for simple tasks ($0.15/$0.60 per 1M tokens)
-        - gpt-4-turbo: High-capability turbo model ($10.00/$30.00 per 1M tokens)
 
     Example:
         >>> provider = OpenAIProvider(model="gpt-4o", enable_caching=True)
@@ -82,7 +79,7 @@ class OpenAIProvider(LLMProvider):
         """Initialize OpenAI provider.
 
         Args:
-            model: OpenAI model to use ('gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo')
+            model: OpenAI model to use ('gpt-4o', 'gpt-4o-mini')
             enable_caching: Enable caching (Note: OpenAI doesn't have built-in caching like Claude)
             organization: Optional OpenAI organization ID
 

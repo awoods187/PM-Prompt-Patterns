@@ -194,19 +194,19 @@ result = provider.classify(prompt, text=signal)
 - Budget allows ($0.70/1K)
 - Complex signal types
 
-### Choose Gemini Flash Lite if:
+### Choose Gemini 2.5 Flash Lite if:
 - Ultra-high volume (100K+ signals/day)
 - Cost is critical ($0.10/1K)
 - Can tolerate slightly lower accuracy (88%)
 - Real-time processing not required
 
-### Choose Gemini Flash if:
+### Choose Gemini 2.5 Flash if:
 - Very high volume (10K+ signals/day)
 - Good accuracy needed (91%)
 - Want to leverage caching ($0.05/1K cached)
 - Can batch signals together
 
-### Choose Gemini Pro if:
+### Choose Gemini 2.5 Pro if:
 - High accuracy with Gemini (94%)
 - Need 2M context for batch processing
 - Want caching benefits
@@ -217,7 +217,7 @@ result = provider.classify(prompt, text=signal)
 ### For High-Volume Production
 
 ```python
-# Use Gemini Flash with caching for best economics
+# Use Gemini 2.5 Flash with caching for best economics
 from ai_models import get_prompt
 import google.generativeai as genai
 

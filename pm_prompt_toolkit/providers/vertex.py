@@ -41,24 +41,24 @@ logger = logging.getLogger(__name__)
 # Maps our simplified names to Vertex AI's model identifiers
 VERTEX_MODEL_IDS = {
     # Claude 4.5 models
-    "claude-sonnet-4-5": "claude-3-5-sonnet-v2@20241022",
+    "claude-sonnet-4-5": "claude-sonnet-4-5-v2@20241022",
     # Claude 4 models
-    "claude-sonnet-4": "claude-3-5-sonnet@20240620",
-    "claude-opus-4-1": "claude-3-opus@20240229",
-    "claude-opus-4": "claude-3-opus@20240229",
+    "claude-sonnet-4": "claude-sonnet-4-5@20240620",
+    "claude-opus-4-1": "claude-opus-4-1@20240229",
+    "claude-opus-4": "claude-opus-4-1@20240229",
     # Claude 3.5 models (backward compatibility)
-    "claude-sonnet": "claude-3-5-sonnet-v2@20241022",
-    "claude-haiku": "claude-3-5-haiku@20241022",
-    "claude-opus": "claude-3-opus@20240229",
+    "claude-sonnet": "claude-sonnet-4-5-v2@20241022",
+    "claude-haiku": "claude-haiku-4-5@20241022",
+    "claude-opus": "claude-opus-4-1@20240229",
 }
 
 # Vertex AI pricing (per 1M tokens) - Input/Output
 # Last verified: 2025-01-28
 VERTEX_PRICING = {
-    "claude-3-5-sonnet-v2@20241022": (3.0, 15.0),
-    "claude-3-5-sonnet@20240620": (3.0, 15.0),
-    "claude-3-opus@20240229": (15.0, 75.0),
-    "claude-3-5-haiku@20241022": (1.0, 5.0),
+    "claude-sonnet-4-5-v2@20241022": (3.0, 15.0),
+    "claude-sonnet-4-5@20240620": (3.0, 15.0),
+    "claude-opus-4-1@20240229": (15.0, 75.0),
+    "claude-haiku-4-5@20241022": (1.0, 5.0),
 }
 
 

@@ -826,7 +826,7 @@ Provide:
 Output as JSON."""
 
 response = client.messages.create(
-    model="claude-3-sonnet-20240229",
+    model="claude-sonnet-4-5",
     messages=[{"role": "user", "content": analysis_prompt}]
 )
 ```
@@ -837,7 +837,7 @@ response = client.messages.create(
   "prompt_id": "660e8400-e29b-41d4-a716-446655440001",
   "prompt_content": "Analyze this customer feedback data:\n\n{feedback_data}\n\nProvide:\n1. Sentiment analysis (positive/negative/neutral percentages)\n2. Top 5 themes mentioned\n3. Actionable recommendations\n\nOutput as JSON.",
   "purpose": "Analyze customer feedback with sentiment and theme extraction",
-  "model": "claude-3-sonnet",
+  "model": "claude-sonnet-4-5",
   "location": {
     "file": "notebooks/customer_analysis.ipynb",
     "line_start": 5,

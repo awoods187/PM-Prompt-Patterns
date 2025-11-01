@@ -1,7 +1,7 @@
 # Copyright (c) 2025 Andy Woods
 # Licensed under the MIT License (see LICENSE file)
 
-"""Google Gemini provider implementation.
+"""Google Gemini 2.5 Provider implementation.
 
 This module provides integration with Google's Gemini models (Gemini 2.5 Pro, Flash)
 with support for massive context windows, multimodal capabilities, and context caching.
@@ -58,7 +58,7 @@ GEMINI_CACHE_PRICING = {
 
 
 class GeminiProvider(LLMProvider):
-    """Google Gemini provider with massive context and multimodal support.
+    """Google Gemini 2.5 Provider with massive context and multimodal support.
 
     This provider implements Gemini-specific features including:
         - 2M token context window (Pro) or 1M (Flash)
@@ -87,7 +87,7 @@ class GeminiProvider(LLMProvider):
         model: str = "gemini-2-5-flash",
         enable_caching: bool = True,
     ) -> None:
-        """Initialize Gemini provider.
+        """Initialize Gemini 2.5 Provider.
 
         Args:
             model: Gemini model to use ('gemini-2-5-pro', 'gemini-2-5-flash', 'gemini-2-5-flash-lite')
@@ -134,7 +134,7 @@ class GeminiProvider(LLMProvider):
             generation_config=generation_config,  # type: ignore[arg-type]
         )
 
-        logger.info(f"Gemini provider initialized: model={model}, model_id={self.gemini_model_id}")
+        logger.info(f"Gemini 2.5 Provider initialized: model={model}, model_id={self.gemini_model_id}")
 
     def _classify_impl(self, text: str, prompt: str) -> ClassificationResult:
         """Classify using Gemini with JSON mode for structured output.

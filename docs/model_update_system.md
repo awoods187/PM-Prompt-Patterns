@@ -989,7 +989,7 @@ PM-Prompt-Patterns/
 │       ├── openai/
 │       │   ├── gpt-4o.yaml
 │       │   ├── gpt-4o-mini.yaml
-│       │   └── gpt-3-5-turbo.yaml
+│       │   └── gpt-4o-mini.yaml
 │       └── google/
 │           ├── gemini-2-5-pro.yaml
 │           ├── gemini-2-5-flash.yaml
@@ -1051,7 +1051,7 @@ claude-opus-4-1-20251101  (Nov 2025)
 ```
 gpt-4o              (Latest GPT-4 optimized)
 gpt-4o-mini         (Smaller, faster version)
-gpt-4-turbo         (Previous generation)
+gpt-4o         (Previous generation)
 gpt-3.5-turbo       (Legacy but still supported)
 ```
 

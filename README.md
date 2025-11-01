@@ -79,7 +79,7 @@ The toolkit supports **6 AI providers** with intelligent routing and cost optimi
 - **Anthropic Claude** (direct API) - Haiku, Sonnet, Opus
 - **AWS Bedrock** - Claude models via AWS infrastructure
 - **Google Vertex AI** - Claude models via Google Cloud
-- **OpenAI** - GPT-4o, GPT-4o-mini, GPT-4-turbo
+- **OpenAI** - GPT-4o, GPT-4o-mini, gpt-4o
 - **Google Gemini** - Gemini 2.5 Pro, Flash, Flash Lite
 - **Mock Provider** - Zero-cost testing provider
 
@@ -192,7 +192,7 @@ if has_vision("gpt-4o"):
 from ai_models import ModelRegistry
 
 budget_models = ModelRegistry.filter_by_cost_tier("budget")
-# Returns: Haiku 4.5, GPT-4o mini, Gemini Flash
+# Returns: Haiku 4.5, GPT-4o mini, Gemini 2.5 Flash
 ```
 
 **Advanced Examples:** [API Documentation](./docs/api-examples.md) | [Production Architecture](./examples/epic-categorization/)

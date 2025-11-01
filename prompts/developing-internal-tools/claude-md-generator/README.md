@@ -218,8 +218,8 @@ save_file(".claude/CLAUDE.md", claude_md)
 | Model | Cost/1M | Best For | Generation Cost |
 |-------|---------|----------|-----------------|
 | **gemini-2.0-flash-exp** | $0/$0 (free!) | Experimentation, high-volume | $0 |
-| **gemini-1.5-flash** | $0.075/$0.30 | Production, balanced | $0.0015 |
-| **gemini-1.5-pro** | $1.25/$5.00 | Large context, quality | $0.005 |
+| **gemini-2-5-flash** | $0.075/$0.30 | Production, balanced | $0.0015 |
+| **gemini-2-5-pro** | $1.25/$5.00 | Large context, quality | $0.005 |
 
 ### Claude Models
 
@@ -238,7 +238,7 @@ save_file(".claude/CLAUDE.md", claude_md)
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  Need to analyze huge codebase (>100K LOC)?                 │
-│  → Gemini 1.5 Pro (2M context)                              │
+│  → Gemini 2.5 Pro (2M context)                              │
 │                                                              │
 │  Generating 50+ files? Want them all free?                  │
 │  → Gemini 2.0 Flash Exp (experimental, free)                │
@@ -294,7 +294,7 @@ For detailed optimization strategies:
 
 1. **Start Free**: Use `gemini-2.0-flash-exp` for experimentation (it's free!)
 2. **Batch Smart**: Generate 10-50 CLAUDE.md files with GPT-4o-mini in one go
-3. **Cache Context**: With Gemini Pro, cache your codebase analysis for 74% savings
+3. **Cache Context**: With Gemini 2.5 Pro, cache your codebase analysis for 74% savings
 4. **Iterate Cheap**: Refine prompts with free/cheap models before using premium
 5. **Mix & Match**: Use Gemini to generate, Claude to refine, GPT to batch-produce
 

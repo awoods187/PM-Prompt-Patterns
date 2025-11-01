@@ -193,7 +193,7 @@ class TestCapabilities:
         assert has_prompt_caching("claude-haiku-4-5")
 
     def test_gemini_flash_lite_limited_capabilities(self):
-        """Gemini Flash-Lite should have limited capabilities (free tier)."""
+        """Gemini 2.5 Flash-Lite should have limited capabilities (free tier)."""
         model = ModelRegistry.get("gemini-2-5-flash-lite")
         assert model.has_capability(ModelCapability.VISION)
         assert not model.has_capability(ModelCapability.FUNCTION_CALLING)

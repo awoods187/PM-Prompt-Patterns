@@ -171,7 +171,7 @@ class TestHasAllCapabilities:
 
     def test_has_all_capabilities_returns_false_when_some_missing(self):
         """Test returns False when model missing some capabilities."""
-        # Gemini Flash-Lite has limited capabilities
+        # Gemini 2.5 Flash-Lite has limited capabilities
         result = CapabilityValidator.has_all_capabilities(
             "gemini-2-5-flash-lite",
             [

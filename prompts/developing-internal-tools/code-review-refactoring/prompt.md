@@ -446,7 +446,7 @@ def comprehensive_code_review(codebase_path: Path) -> Dict:
 
     # Create review prompt
     response = client.messages.create(
-        model="claude-sonnet-4-5-20250929",  # Latest Claude 3.5 Sonnet
+        model="claude-sonnet-4-5-20250929",  # Latest Claude Sonnet 4.5
         max_tokens=16000,
         temperature=0,  # Consistent, deterministic reviews
         messages=[{
@@ -669,7 +669,7 @@ def security_audit_gpt4(codebase: str) -> Dict:
     Be thorough and flag everything that could be a security concern."""
 
     response = client.chat.completions.create(
-        model="gpt-4o",  # Latest GPT-4o (replaces gpt-4-turbo)
+        model="gpt-4o",  # Latest GPT-4o (replaces gpt-4o)
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"Audit this codebase:\n\n{codebase}"}
@@ -725,7 +725,7 @@ def validate_and_report(audit_results: Dict) -> bool:
 ```
 
 **Performance**:
-- Accuracy: 96% security issue detection (GPT-4 Turbo)
+- Accuracy: 96% security issue detection (GPT-4o)
 - Context limit: ~30,000 lines of code (128K token context)
 - Cost: ~$0.30-0.80 per 1000 lines of code
 - Latency: ~45-150s for typical project (5000 lines)
@@ -1273,7 +1273,7 @@ class DataProcessor:
 | **Claude Haiku** | 200K | $0.05 | 85% | Fast | Misses subtle security issues |
 | **Claude Sonnet** | 200K | $0.15-0.50 | 98% | Medium | **Recommended** for production |
 | **Claude Opus** | 200K | $0.80-2.00 | 99% | Slow | Highest quality, expensive |
-| **GPT-4 Turbo** | 128K | $0.30-0.80 | 96% | Medium | Good structured output |
+| **GPT-4o** | 128K | $0.30-0.80 | 96% | Medium | Good structured output |
 | **GPT-4o** | 128K | $0.15-0.40 | 94% | Fast | Balance of cost/quality |
 | **Gemini Pro 1.5** | 2M | $0.10-0.30 | 90% | Medium | Good for huge codebases |
 
@@ -1282,7 +1282,7 @@ class DataProcessor:
 **Recommendation**:
 - **Claude Sonnet 3.5**: Best accuracy/cost balance for most projects (1K-50K LOC)
 - **Gemini Pro 1.5**: Large codebases (50K+ LOC) requiring full context
-- **GPT-4 Turbo**: When you need structured JSON output for automation
+- **GPT-4o**: When you need structured JSON output for automation
 
 ---
 

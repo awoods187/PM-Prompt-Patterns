@@ -500,23 +500,23 @@ class TestGeminiRouting:
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
     def test_gemini_pro_routes_to_gemini_provider(self, mock_gemini, mock_get_settings):
-        """Test that Gemini Pro routes to GeminiProvider."""
+        """Test that Gemini 2.5 Pro routes to GeminiProvider."""
         # Arrange
         mock_get_settings.return_value = Mock()
         # GeminiProvider raises NotImplementedError in __init__
-        mock_gemini.side_effect = NotImplementedError("Gemini provider not yet implemented")
+        mock_gemini.side_effect = NotImplementedError("Gemini 2.5 Provider not yet implemented")
 
         # Act & Assert
         with pytest.raises(NotImplementedError):
-            get_provider("gemini-pro")
+            get_provider("gemini-2-5-pro")
 
     @pytest.mark.parametrize(
         "model",
         [
-            "gemini-pro",
-            "gemini-flash",
+            "gemini-2-5-pro",
+            "gemini-2-5-flash",
             "gemini-1.5",
-            "GEMINI-PRO",  # Case insensitive
+            "gemini-2-5-pro",  # Case insensitive
         ],
     )
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
@@ -713,5 +713,5 @@ class TestAdditionalCoverage:
             get_provider("gemini:gemini-2-5-pro")
 
         # Assert
-        assert "Using Gemini provider" in caplog.text
+        assert "Using Gemini 2.5 Provider" in caplog.text
         assert "explicit prefix" in caplog.text
