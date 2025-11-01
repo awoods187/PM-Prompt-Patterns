@@ -60,7 +60,9 @@ class GoogleFetcher(BaseFetcher):
         models = []
         for model_info in available_models:
             # Extract base model name
-            model_name = model_info.name.split("/")[-1] if "/" in model_info.name else model_info.name
+            model_name = (
+                model_info.name.split("/")[-1] if "/" in model_info.name else model_info.name
+            )
 
             # Check if this is one of our target models
             for target_id in target_model_ids:

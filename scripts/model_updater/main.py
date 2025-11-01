@@ -29,7 +29,7 @@ from typing import Any
 
 import yaml
 
-from scripts.model_updater.change_detector import ChangeDetector, ChangeReport
+from scripts.model_updater.change_detector import ChangeDetector
 from scripts.model_updater.fetchers.anthropic_fetcher import AnthropicFetcher
 from scripts.model_updater.fetchers.base_fetcher import ModelData
 from scripts.model_updater.fetchers.google_fetcher import GoogleFetcher
@@ -102,7 +102,9 @@ class ModelUpdater:
                 model_id for model_id, result in validation_results.items() if not result.is_valid
             ]
             if invalid_models:
-                logger.error(f"Validation failed for {len(invalid_models)} models: {invalid_models}")
+                logger.error(
+                    f"Validation failed for {len(invalid_models)} models: {invalid_models}"
+                )
                 # Continue with valid models only
                 fetched_models = [
                     m for m in fetched_models if validation_results[m.model_id].is_valid

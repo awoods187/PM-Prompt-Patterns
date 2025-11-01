@@ -5,7 +5,6 @@
 
 from datetime import date
 
-import pytest
 
 from scripts.model_updater.fetchers.anthropic_fetcher import AnthropicFetcher
 from scripts.model_updater.fetchers.base_fetcher import ModelData

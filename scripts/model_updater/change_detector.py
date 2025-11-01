@@ -233,7 +233,7 @@ class ChangeDetector:
                     field="input_per_1m",
                     old_value=current_pricing.get("input_per_1m"),
                     new_value=fetched.input_per_1m,
-                    description=f"Input pricing changed",
+                    description="Input pricing changed",
                 )
             )
 
@@ -245,7 +245,7 @@ class ChangeDetector:
                     field="output_per_1m",
                     old_value=current_pricing.get("output_per_1m"),
                     new_value=fetched.output_per_1m,
-                    description=f"Output pricing changed",
+                    description="Output pricing changed",
                 )
             )
 
@@ -258,7 +258,7 @@ class ChangeDetector:
                     field="cache_write_per_1m",
                     old_value=current_pricing.get("cache_write_per_1m"),
                     new_value=fetched.cache_write_per_1m,
-                    description=f"Cache write pricing changed",
+                    description="Cache write pricing changed",
                 )
             )
 
@@ -270,7 +270,7 @@ class ChangeDetector:
                     field="cache_read_per_1m",
                     old_value=current_pricing.get("cache_read_per_1m"),
                     new_value=fetched.cache_read_per_1m,
-                    description=f"Cache read pricing changed",
+                    description="Cache read pricing changed",
                 )
             )
 
@@ -284,7 +284,7 @@ class ChangeDetector:
                     field="context_window_input",
                     old_value=current_metadata.get("context_window_input"),
                     new_value=fetched.context_window_input,
-                    description=f"Input context window changed",
+                    description="Input context window changed",
                 )
             )
 
@@ -296,7 +296,7 @@ class ChangeDetector:
                     field="context_window_output",
                     old_value=current_metadata.get("context_window_output"),
                     new_value=fetched.context_window_output,
-                    description=f"Output context window changed",
+                    description="Output context window changed",
                 )
             )
 
@@ -340,7 +340,7 @@ class ChangeDetector:
                     field="knowledge_cutoff",
                     old_value=current_metadata.get("knowledge_cutoff"),
                     new_value=fetched.knowledge_cutoff,
-                    description=f"Knowledge cutoff updated",
+                    description="Knowledge cutoff updated",
                 )
             )
 
@@ -353,7 +353,7 @@ class ChangeDetector:
                     field="api_identifier",
                     old_value=current.get("api_identifier"),
                     new_value=fetched.api_identifier,
-                    description=f"API identifier updated",
+                    description="API identifier updated",
                 )
             )
 

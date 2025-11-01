@@ -4,11 +4,13 @@
 """Anthropic Claude model fetcher."""
 
 import os
-import re
 from datetime import date
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from scripts.model_updater.fetchers.base_fetcher import BaseFetcher, ModelData
+
+if TYPE_CHECKING:
+    import anthropic
 
 
 class AnthropicFetcher(BaseFetcher):
@@ -90,9 +92,7 @@ class AnthropicFetcher(BaseFetcher):
                 if model_data:
                     models.append(model_data)
             except Exception as e:
-                self.logger.warning(
-                    f"Failed to fetch {model_info['model_id']}: {e}. Skipping."
-                )
+                self.logger.warning(f"Failed to fetch {model_info['model_id']}: {e}. Skipping.")
 
         return models
 

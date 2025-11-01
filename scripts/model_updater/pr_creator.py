@@ -4,7 +4,6 @@
 """GitHub Pull Request creation automation."""
 
 import logging
-import os
 import subprocess
 from datetime import datetime
 from typing import Optional
@@ -225,9 +224,7 @@ class PRCreator:
         ]
 
         if changelog.removed_models:
-            body_parts.append(
-                f"- ⚠️ Deprecated models: {len(changelog.removed_models)}"
-            )
+            body_parts.append(f"- ⚠️ Deprecated models: {len(changelog.removed_models)}")
 
         body_parts.extend(
             [
@@ -279,7 +276,7 @@ class PRCreator:
         if summary_parts:
             summary = f"feat: Auto-update models ({', '.join(summary_parts)} changes)"
         else:
-            summary = f"chore: Auto-update model definitions"
+            summary = "chore: Auto-update model definitions"
 
         body_parts = [
             summary,

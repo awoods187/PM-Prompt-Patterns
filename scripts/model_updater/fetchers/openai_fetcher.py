@@ -47,8 +47,9 @@ class OpenAIFetcher(BaseFetcher):
 
         client = OpenAI(api_key=api_key)
 
-        # Get list of models
-        models_response = client.models.list()
+        # Note: OpenAI API provides model list but not detailed specs
+        # We use static specs and verify model exists via API
+        _models_list = client.models.list()  # Verify API connection
 
         # Filter for GPT-4o models (our current focus)
         target_models = ["gpt-4o", "gpt-4o-mini"]
@@ -56,8 +57,8 @@ class OpenAIFetcher(BaseFetcher):
 
         for model_id in target_models:
             try:
-                # Get model details
-                model_obj = client.models.retrieve(model_id)
+                # Verify model exists
+                _model_info = client.models.retrieve(model_id)
 
                 # Get specs from static knowledge (API doesn't provide full specs)
                 specs = self._get_static_model_specs(model_id)

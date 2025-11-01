@@ -118,7 +118,9 @@ def test_validate_invalid_tier(validator: ModelValidator, valid_model: ModelData
     assert any("Invalid cost_tier" in e for e in result.errors)
 
 
-def test_validate_suspiciously_high_price(validator: ModelValidator, valid_model: ModelData) -> None:
+def test_validate_suspiciously_high_price(
+    validator: ModelValidator, valid_model: ModelData
+) -> None:
     """Test warning for suspiciously high price."""
     valid_model.input_per_1m = 999.0
     valid_model.output_per_1m = 1200.0  # Also increase output to avoid another warning

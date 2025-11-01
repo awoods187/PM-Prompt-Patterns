@@ -162,23 +162,15 @@ class ModelValidator:
         """Validate pricing values."""
         # Input pricing
         if model.input_per_1m < self.MIN_PRICE_PER_1M:
-            result.errors.append(
-                f"input_per_1m must be non-negative, got {model.input_per_1m}"
-            )
+            result.errors.append(f"input_per_1m must be non-negative, got {model.input_per_1m}")
         elif model.input_per_1m > self.MAX_PRICE_PER_1M:
-            result.warnings.append(
-                f"input_per_1m (${model.input_per_1m}) seems unusually high"
-            )
+            result.warnings.append(f"input_per_1m (${model.input_per_1m}) seems unusually high")
 
         # Output pricing
         if model.output_per_1m < self.MIN_PRICE_PER_1M:
-            result.errors.append(
-                f"output_per_1m must be non-negative, got {model.output_per_1m}"
-            )
+            result.errors.append(f"output_per_1m must be non-negative, got {model.output_per_1m}")
         elif model.output_per_1m > self.MAX_PRICE_PER_1M:
-            result.warnings.append(
-                f"output_per_1m (${model.output_per_1m}) seems unusually high"
-            )
+            result.warnings.append(f"output_per_1m (${model.output_per_1m}) seems unusually high")
 
         # Output should typically cost more than input
         if model.output_per_1m < model.input_per_1m:
@@ -194,9 +186,7 @@ class ModelValidator:
                     f"cache_write_per_1m must be non-negative, got {model.cache_write_per_1m}"
                 )
             elif model.cache_write_per_1m < model.input_per_1m:
-                result.warnings.append(
-                    "cache_write_per_1m should typically be >= input_per_1m"
-                )
+                result.warnings.append("cache_write_per_1m should typically be >= input_per_1m")
 
         if model.cache_read_per_1m is not None:
             if model.cache_read_per_1m < self.MIN_PRICE_PER_1M:
@@ -204,9 +194,7 @@ class ModelValidator:
                     f"cache_read_per_1m must be non-negative, got {model.cache_read_per_1m}"
                 )
             elif model.cache_read_per_1m > model.input_per_1m:
-                result.warnings.append(
-                    "cache_read_per_1m should typically be < input_per_1m"
-                )
+                result.warnings.append("cache_read_per_1m should typically be < input_per_1m")
 
     def _validate_capabilities(self, model: ModelData, result: ValidationResult) -> None:
         """Validate capabilities."""
@@ -239,15 +227,11 @@ class ModelValidator:
 
         # Sanity check: budget models should have lower pricing
         if model.cost_tier == "budget" and model.input_per_1m > 1.0:
-            result.warnings.append(
-                f"Budget model has high input price (${model.input_per_1m})"
-            )
+            result.warnings.append(f"Budget model has high input price (${model.input_per_1m})")
 
         # Premium models should have higher pricing
         if model.cost_tier == "premium" and model.input_per_1m < 5.0:
-            result.warnings.append(
-                f"Premium model has low input price (${model.input_per_1m})"
-            )
+            result.warnings.append(f"Premium model has low input price (${model.input_per_1m})")
 
     def _validate_dates(self, model: ModelData, result: ValidationResult) -> None:
         """Validate date fields."""
@@ -255,9 +239,7 @@ class ModelValidator:
 
         # Release date validation
         if model.release_date.year < self.MIN_RELEASE_YEAR:
-            result.errors.append(
-                f"release_date ({model.release_date}) is too far in the past"
-            )
+            result.errors.append(f"release_date ({model.release_date}) is too far in the past")
 
         # Check if release date is too far in future
         max_future_date = date(today.year + self.MAX_FUTURE_YEARS, 12, 31)
@@ -271,7 +253,7 @@ class ModelValidator:
         """Validate URL formats."""
         if model.docs_url:
             if not model.docs_url.startswith(("http://", "https://")):
-                result.errors.append(f"docs_url must start with http:// or https://")
+                result.errors.append("docs_url must start with http:// or https://")
 
     def validate_batch(self, models: list[ModelData]) -> dict[str, ValidationResult]:
         """Validate multiple models.
@@ -291,15 +273,11 @@ class ModelValidator:
         valid = sum(1 for r in results.values() if r.is_valid)
         invalid = total - valid
 
-        self.logger.info(
-            f"Batch validation complete: {valid}/{total} valid, {invalid} invalid"
-        )
+        self.logger.info(f"Batch validation complete: {valid}/{total} valid, {invalid} invalid")
 
         return results
 
-    def get_validation_summary(
-        self, results: dict[str, ValidationResult]
-    ) -> dict[str, Any]:
+    def get_validation_summary(self, results: dict[str, ValidationResult]) -> dict[str, Any]:
         """Get summary statistics from validation results.
 
         Args:

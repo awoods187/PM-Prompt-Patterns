@@ -3,7 +3,6 @@
 
 """AWS Bedrock model fetcher."""
 
-from datetime import date
 from typing import Optional
 
 from scripts.model_updater.fetchers.base_fetcher import BaseFetcher, ModelData
@@ -48,15 +47,14 @@ class BedrockFetcher(BaseFetcher):
             List of ModelData objects
         """
         try:
-            import boto3
+            import boto3  # noqa: F401
         except ImportError:
             raise ImportError("boto3 package not installed")
 
         # This would require AWS credentials configuration
         # Commenting out for now as it's complex to set up
         raise NotImplementedError(
-            "Bedrock API fetching requires AWS credentials. "
-            "Use static specs for now."
+            "Bedrock API fetching requires AWS credentials. " "Use static specs for now."
         )
 
         # Future implementation:

@@ -141,9 +141,7 @@ class BaseFetcher(ABC):
             cached_time, cached_data = self._cache[cache_key]
             age = (datetime.now() - cached_time).total_seconds()
             if age < self.cache_ttl:
-                self.logger.info(
-                    f"Using cached data for {self.provider_name} (age: {age:.0f}s)"
-                )
+                self.logger.info(f"Using cached data for {self.provider_name} (age: {age:.0f}s)")
                 return cached_data
 
         self.logger.info(f"Fetching fresh data for {self.provider_name}")
@@ -175,9 +173,7 @@ class BaseFetcher(ABC):
         Raises:
             NotImplementedError: If provider doesn't support docs parsing
         """
-        raise NotImplementedError(
-            f"{self.provider_name} does not support documentation parsing"
-        )
+        raise NotImplementedError(f"{self.provider_name} does not support documentation parsing")
 
     def validate_model_data(self, model: ModelData) -> tuple[bool, list[str]]:
         """Validate model data for sanity checks.
@@ -204,9 +200,7 @@ class BaseFetcher(ABC):
         if model.context_window_input <= 0:
             errors.append(f"Invalid context_window_input: {model.context_window_input}")
         if model.context_window_input > 10_000_000:
-            errors.append(
-                f"Suspiciously large context_window_input: {model.context_window_input}"
-            )
+            errors.append(f"Suspiciously large context_window_input: {model.context_window_input}")
 
         # Pricing validation
         if model.input_per_1m < 0:
