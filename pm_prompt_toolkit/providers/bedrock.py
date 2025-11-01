@@ -31,7 +31,7 @@ from xml.sax.saxutils import escape  # nosec B406  # Used to escape user input, 
 try:
     import boto3
 except ImportError:
-    boto3 = None  # type: ignore[assignment]
+    boto3 = None
 
 from pm_prompt_toolkit.config import get_settings
 from pm_prompt_toolkit.providers.base import ClassificationResult, LLMProvider, SignalCategory

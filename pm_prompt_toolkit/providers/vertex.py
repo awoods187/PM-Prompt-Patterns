@@ -24,13 +24,15 @@ Example:
 
 import logging
 import os
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple, cast
 from xml.sax.saxutils import escape  # nosec B406  # Used to escape user input, not parse XML
 
 try:
     from anthropic import AnthropicVertex
+    from anthropic.types import TextBlock
 except ImportError:
     AnthropicVertex = None  # type: ignore[assignment, misc]
+    TextBlock = None  # type: ignore[assignment, misc]
 
 from pm_prompt_toolkit.config import get_settings
 from pm_prompt_toolkit.providers.base import ClassificationResult, LLMProvider, SignalCategory
@@ -134,6 +136,10 @@ class VertexProvider(LLMProvider):
         self.project_id = project_id or settings.gcp_project_id
         self.region = region or settings.gcp_region
 
+        # Validate that project_id is set (validate_vertex_config ensures this)
+        assert self.project_id is not None, "GCP project_id must be configured"
+        assert self.region is not None, "GCP region must be configured"
+
         # Set credentials if path is provided
         if settings.gcp_credentials_path:
             os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = settings.gcp_credentials_path
@@ -177,7 +183,7 @@ class VertexProvider(LLMProvider):
         )
 
         # Extract classification from response
-        result_text = response.content[0].text
+        result_text = cast(TextBlock, response.content[0]).text
         category, confidence, evidence = self._parse_response(result_text)
 
         # Calculate cost
