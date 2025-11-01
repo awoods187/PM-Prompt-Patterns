@@ -10,14 +10,12 @@ Priority: HIGH - Close coverage gap
 """
 
 from datetime import date
-from pathlib import Path
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
 
 from scripts.model_updater.fetchers.anthropic_fetcher import AnthropicFetcher
 from scripts.model_updater.fetchers.base_fetcher import ModelData
-
 
 # ============================================================================
 # FIXTURES
@@ -104,9 +102,7 @@ class TestStaticModelSpecs:
         assert len(specs["recommended_for"]) > 0
         assert isinstance(specs["recommended_for"], list)
 
-    def test_static_specs_include_best_practices(
-        self, anthropic_fetcher: AnthropicFetcher
-    ) -> None:
+    def test_static_specs_include_best_practices(self, anthropic_fetcher: AnthropicFetcher) -> None:
         """Test that specs include best practices."""
         specs = anthropic_fetcher._get_static_model_specs("claude-haiku-4-5")
 
@@ -123,9 +119,7 @@ class TestStaticModelSpecs:
 class TestDocsFallback:
     """Test suite for docs-based fallback fetching."""
 
-    def test_fetch_from_docs_returns_all_models(
-        self, anthropic_fetcher: AnthropicFetcher
-    ) -> None:
+    def test_fetch_from_docs_returns_all_models(self, anthropic_fetcher: AnthropicFetcher) -> None:
         """Test that fetch_from_docs returns all supported models."""
         models = anthropic_fetcher.fetch_from_docs()
 
@@ -242,9 +236,7 @@ class TestAPIFetching:
         mock_anthropic_class.return_value = mock_client
 
         # Patch _get_model_details to fail for one model
-        with patch.object(
-            anthropic_fetcher, "_get_model_details"
-        ) as mock_get_details:
+        with patch.object(anthropic_fetcher, "_get_model_details") as mock_get_details:
             # First call (Sonnet) succeeds, second (Haiku) fails, third (Opus) succeeds
             mock_get_details.side_effect = [
                 ModelData(
@@ -348,9 +340,7 @@ class TestAPIFetching:
 class TestMainFetchMethod:
     """Test suite for main fetch_models() method."""
 
-    def test_fetch_models_uses_docs_by_default(
-        self, anthropic_fetcher: AnthropicFetcher
-    ) -> None:
+    def test_fetch_models_uses_docs_by_default(self, anthropic_fetcher: AnthropicFetcher) -> None:
         """Test that fetch_models uses docs (API not yet available)."""
         models = anthropic_fetcher.fetch_models()
 
@@ -379,9 +369,7 @@ class TestMainFetchMethod:
         caplog.set_level(logging.WARNING)
 
         # Patch fetch_from_api to fail
-        with patch.object(
-            anthropic_fetcher, "fetch_from_api", side_effect=Exception("API Error")
-        ):
+        with patch.object(anthropic_fetcher, "fetch_from_api", side_effect=Exception("API Error")):
             models = anthropic_fetcher.fetch_models()
 
             # Should get models from docs fallback
@@ -414,9 +402,7 @@ class TestMainFetchMethod:
 class TestEdgeCases:
     """Test suite for edge cases and error handling."""
 
-    def test_provider_name_returns_anthropic(
-        self, anthropic_fetcher: AnthropicFetcher
-    ) -> None:
+    def test_provider_name_returns_anthropic(self, anthropic_fetcher: AnthropicFetcher) -> None:
         """Test that provider_name property returns correct value."""
         assert anthropic_fetcher.provider_name == "anthropic"
 
@@ -454,9 +440,7 @@ class TestEdgeCases:
     ) -> None:
         """Test that fetch_from_docs skips models with missing specs."""
         # Patch to simulate missing spec
-        with patch.object(
-            anthropic_fetcher, "_get_static_model_specs"
-        ) as mock_get_specs:
+        with patch.object(anthropic_fetcher, "_get_static_model_specs") as mock_get_specs:
             mock_get_specs.return_value = None
 
             models = anthropic_fetcher.fetch_from_docs()
@@ -474,9 +458,7 @@ class TestEdgeCases:
             assert "function_calling" in model.capabilities
             assert "vision" in model.capabilities
 
-    def test_all_models_have_prompt_caching(
-        self, anthropic_fetcher: AnthropicFetcher
-    ) -> None:
+    def test_all_models_have_prompt_caching(self, anthropic_fetcher: AnthropicFetcher) -> None:
         """Test that all models have prompt caching pricing."""
         models = anthropic_fetcher.fetch_from_docs()
 
@@ -506,9 +488,7 @@ class TestEdgeCases:
         assert sonnet.cost_tier == "mid-tier"
         assert opus.cost_tier == "premium"
 
-    def test_all_models_have_200k_context(
-        self, anthropic_fetcher: AnthropicFetcher
-    ) -> None:
+    def test_all_models_have_200k_context(self, anthropic_fetcher: AnthropicFetcher) -> None:
         """Test that all Claude models have 200k input context window."""
         models = anthropic_fetcher.fetch_from_docs()
 
@@ -527,9 +507,7 @@ class TestEdgeCases:
         assert sonnet.speed_tier == "balanced"
         assert any("Production" in rec for rec in sonnet.recommended_for)
 
-    def test_haiku_is_fastest_model(
-        self, anthropic_fetcher: AnthropicFetcher
-    ) -> None:
+    def test_haiku_is_fastest_model(self, anthropic_fetcher: AnthropicFetcher) -> None:
         """Test that Haiku is marked as fastest model."""
         models = anthropic_fetcher.fetch_from_docs()
 

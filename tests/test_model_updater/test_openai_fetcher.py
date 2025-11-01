@@ -10,14 +10,12 @@ Priority: HIGH - API integration, error handling
 """
 
 from datetime import date
-from pathlib import Path
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
 
 from scripts.model_updater.fetchers.base_fetcher import ModelData
 from scripts.model_updater.fetchers.openai_fetcher import OpenAIFetcher
-
 
 # ============================================================================
 # FIXTURES
@@ -100,9 +98,7 @@ class TestStaticModelSpecs:
 
         assert specs is None
 
-    def test_static_specs_include_recommended_for(
-        self, openai_fetcher: OpenAIFetcher
-    ) -> None:
+    def test_static_specs_include_recommended_for(self, openai_fetcher: OpenAIFetcher) -> None:
         """Test that specs include recommended use cases."""
         specs = openai_fetcher._get_static_model_specs("gpt-4o")
 
@@ -110,9 +106,7 @@ class TestStaticModelSpecs:
         assert len(specs["recommended_for"]) > 0
         assert isinstance(specs["recommended_for"], list)
 
-    def test_static_specs_include_best_practices(
-        self, openai_fetcher: OpenAIFetcher
-    ) -> None:
+    def test_static_specs_include_best_practices(self, openai_fetcher: OpenAIFetcher) -> None:
         """Test that specs include best practices."""
         specs = openai_fetcher._get_static_model_specs("gpt-4o-mini")
 
@@ -223,9 +217,7 @@ class TestAPIFetching:
         real_specs = openai_fetcher._get_static_model_specs("gpt-4o-mini")
 
         # Patch _get_static_model_specs to return None for one model
-        with patch.object(
-            openai_fetcher, "_get_static_model_specs"
-        ) as mock_get_specs:
+        with patch.object(openai_fetcher, "_get_static_model_specs") as mock_get_specs:
             mock_get_specs.side_effect = [
                 None,  # gpt-4o has no specs
                 real_specs,  # gpt-4o-mini has specs
@@ -279,9 +271,7 @@ class TestAPIFetching:
 class TestDocsFallback:
     """Test suite for docs-based fallback fetching."""
 
-    def test_fetch_from_docs_returns_all_models(
-        self, openai_fetcher: OpenAIFetcher
-    ) -> None:
+    def test_fetch_from_docs_returns_all_models(self, openai_fetcher: OpenAIFetcher) -> None:
         """Test that fetch_from_docs returns all supported models."""
         models = openai_fetcher.fetch_from_docs()
 
@@ -290,9 +280,7 @@ class TestDocsFallback:
         assert "gpt-4o" in model_ids
         assert "gpt-4o-mini" in model_ids
 
-    def test_fetch_from_docs_creates_valid_model_data(
-        self, openai_fetcher: OpenAIFetcher
-    ) -> None:
+    def test_fetch_from_docs_creates_valid_model_data(self, openai_fetcher: OpenAIFetcher) -> None:
         """Test that docs-based models have all required fields."""
         models = openai_fetcher.fetch_from_docs()
 
@@ -365,9 +353,7 @@ class TestMainFetchMethod:
         assert "Falling back to docs parsing" in caplog.text
 
     @patch.dict("os.environ", {"OPENAI_API_KEY": "test-api-key"})
-    def test_fetch_models_falls_back_on_import_error(
-        self, openai_fetcher: OpenAIFetcher
-    ) -> None:
+    def test_fetch_models_falls_back_on_import_error(self, openai_fetcher: OpenAIFetcher) -> None:
         """Test fallback when OpenAI package not installed."""
         # Simulate import error by patching the import
         with patch("builtins.__import__", side_effect=ImportError("No module named 'openai'")):
@@ -386,9 +372,7 @@ class TestMainFetchMethod:
 class TestEdgeCases:
     """Test suite for edge cases and error handling."""
 
-    def test_provider_name_returns_openai(
-        self, openai_fetcher: OpenAIFetcher
-    ) -> None:
+    def test_provider_name_returns_openai(self, openai_fetcher: OpenAIFetcher) -> None:
         """Test that provider_name property returns correct value."""
         assert openai_fetcher.provider_name == "openai"
 
@@ -409,9 +393,7 @@ class TestEdgeCases:
         # Should return empty list
         assert models == []
 
-    def test_static_specs_have_consistent_structure(
-        self, openai_fetcher: OpenAIFetcher
-    ) -> None:
+    def test_static_specs_have_consistent_structure(self, openai_fetcher: OpenAIFetcher) -> None:
         """Test that all static specs follow the same structure."""
         required_keys = {
             "name",
@@ -441,9 +423,7 @@ class TestEdgeCases:
     ) -> None:
         """Test that fetch_from_docs skips models with missing specs."""
         # Patch to simulate missing spec
-        with patch.object(
-            openai_fetcher, "_get_static_model_specs"
-        ) as mock_get_specs:
+        with patch.object(openai_fetcher, "_get_static_model_specs") as mock_get_specs:
             mock_get_specs.return_value = None
 
             models = openai_fetcher.fetch_from_docs()

@@ -11,15 +11,12 @@ Priority: CRITICAL - Main orchestrator, business logic
 
 from datetime import date
 from pathlib import Path
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
 
-from scripts.model_updater.change_detector import ChangeReport
 from scripts.model_updater.fetchers.base_fetcher import ModelData
 from scripts.model_updater.main import ModelUpdater
-from scripts.model_updater.validator import ValidationResult
-
 
 # ============================================================================
 # FIXTURES
@@ -204,9 +201,7 @@ class TestModelFetching:
         assert len(models) == 1
         assert models[0].model_id == "working-model"
 
-    def test_fetch_all_models_returns_empty_on_all_failures(
-        self, temp_repo_root: Path
-    ) -> None:
+    def test_fetch_all_models_returns_empty_on_all_failures(self, temp_repo_root: Path) -> None:
         """Test that empty list is returned when all fetchers fail."""
         failing_fetcher = Mock()
         failing_fetcher.provider_name = "failing"
@@ -238,9 +233,7 @@ class TestModelLoading:
         assert models["test-model"]["provider"] == "test"
         assert models["test-model"]["name"] == "Test Model"
 
-    def test_load_current_models_handles_missing_directory(
-        self, tmp_path: Path
-    ) -> None:
+    def test_load_current_models_handles_missing_directory(self, tmp_path: Path) -> None:
         """Test graceful handling when definitions directory doesn't exist."""
         updater = ModelUpdater(tmp_path)
 
@@ -306,9 +299,7 @@ class TestYAMLFileUpdates:
 
             assert "Failed to write" in caplog.text
 
-    def test_update_yaml_files_updates_existing_files(
-        self, temp_repo_root: Path
-    ) -> None:
+    def test_update_yaml_files_updates_existing_files(self, temp_repo_root: Path) -> None:
         """Test that existing YAML files are updated."""
         # Create model with updated data
         updated_model = ModelData(
@@ -333,9 +324,7 @@ class TestYAMLFileUpdates:
 
         updater._update_yaml_files([updated_model])
 
-        yaml_file = (
-            temp_repo_root / "ai_models" / "definitions" / "test" / "test-model.yaml"
-        )
+        yaml_file = temp_repo_root / "ai_models" / "definitions" / "test" / "test-model.yaml"
         content = yaml_file.read_text()
 
         assert "context_window_input: 200000" in content
@@ -411,9 +400,7 @@ class TestMainRunWorkflow:
         assert result is False
 
     @patch("scripts.model_updater.main.ModelUpdater._fetch_all_models")
-    def test_run_handles_validation_failures(
-        self, mock_fetch: Mock, temp_repo_root: Path
-    ) -> None:
+    def test_run_handles_validation_failures(self, mock_fetch: Mock, temp_repo_root: Path) -> None:
         """Test that invalid models are filtered out but run continues."""
         # Return model with invalid data
         mock_fetch.return_value = [
@@ -465,9 +452,7 @@ class TestGitHubOutput:
             content = output_file.read_text()
             assert "test_var=test_value\n" in content
 
-    def test_set_github_output_handles_missing_env_gracefully(
-        self, temp_repo_root: Path
-    ) -> None:
+    def test_set_github_output_handles_missing_env_gracefully(self, temp_repo_root: Path) -> None:
         """Test that missing GITHUB_OUTPUT env var is handled gracefully."""
         with patch.dict("os.environ", {}, clear=True):
             updater = ModelUpdater(temp_repo_root)
@@ -484,9 +469,7 @@ class TestErrorHandling:
     """Test suite for error handling."""
 
     @patch("scripts.model_updater.main.ModelUpdater._fetch_all_models")
-    def test_run_handles_exception_gracefully(
-        self, mock_fetch: Mock, temp_repo_root: Path
-    ) -> None:
+    def test_run_handles_exception_gracefully(self, mock_fetch: Mock, temp_repo_root: Path) -> None:
         """Test that exceptions in run are caught and logged."""
         mock_fetch.side_effect = Exception("Unexpected error")
 

@@ -43,9 +43,10 @@ python -c "from ai_models import get_model; print(get_model('claude-sonnet-4-5')
 ```
 
 **Next Steps by Role:**
-- **New to prompts?** → [Design Principles](./PROMPT_DESIGN_PRINCIPLES.md)
+- **New to prompts?** → [Design Principles](./docs/PROMPT_DESIGN_PRINCIPLES.md)
 - **Optimizing costs?** → [Model Selection Guide](#-model-selection-guide)
 - **Building production systems?** → [Epic Categorization Example](./examples/epic-categorization/)
+- **Understanding the codebase?** → [Project Structure](./docs/PROJECT_STRUCTURE.md)
 
 ---
 
@@ -252,7 +253,7 @@ PM-Prompt-Patterns/
 
 **Team:** Product Infrastructure
 **Issues:** [GitHub Issues](https://github.com/awoods187/PM-Prompt-Patterns/issues)
-**Contributions:** [CONTRIBUTING.md](./CONTRIBUTING.md) | [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+**Contributions:** [CONTRIBUTING.md](./.github/CONTRIBUTING.md) | [CODE_OF_CONDUCT.md](./.github/CODE_OF_CONDUCT.md)
 **Response Time:** Best effort (open source project)
 
 **Getting Help:**
@@ -282,7 +283,7 @@ PM-Prompt-Patterns/
 ## 🎓 Learning Resources
 
 **Fundamentals** (Start here):
-1. [Prompt Design Principles](./PROMPT_DESIGN_PRINCIPLES.md) - Core patterns
+1. [Prompt Design Principles](./docs/PROMPT_DESIGN_PRINCIPLES.md) - Core patterns
 2. [Model Optimization Guide](./MODEL_OPTIMIZATION_GUIDE.md) - Provider techniques
 3. [Cost Optimization](./docs/cost-optimization.md) - ROI strategies
 
@@ -309,11 +310,11 @@ We welcome production-tested contributions with real metrics:
 - ✅ Tests included (97 existing tests for reference)
 
 **Process:**
-1. Review [CONTRIBUTING.md](./CONTRIBUTING.md)
+1. Review [CONTRIBUTING.md](./.github/CONTRIBUTING.md)
 2. Sign commits with DCO: `git commit -s`
 3. Submit PR using [template](./.github/pull_request_template.md)
 
-**Recognition:** All contributors listed in [ATTRIBUTION.md](./ATTRIBUTION.md).
+**Recognition:** All contributors listed in [ATTRIBUTION.md](./docs/ATTRIBUTION.md).
 
 ---
 
@@ -329,7 +330,9 @@ We welcome production-tested contributions with real metrics:
 
 ## 🔗 Quick Links
 
-**Getting Started:** [Design Principles](./PROMPT_DESIGN_PRINCIPLES.md) → [Model Guide](./MODEL_OPTIMIZATION_GUIDE.md) → [Examples](./examples/)
+**Getting Started:** [Design Principles](./docs/PROMPT_DESIGN_PRINCIPLES.md) → [Model Guide](./MODEL_OPTIMIZATION_GUIDE.md) → [Examples](./examples/)
+
+**Repository Structure:** [Project Structure Guide](./docs/PROJECT_STRUCTURE.md) | [Changelog](./CHANGELOG.md)
 **Developer API:** [ai_models Package](./docs/api-examples.md) | [Migration Guide](./MIGRATION_GUIDE.md)
 **CI/CD:** [Workflows](./.github/workflows/) | [Run Tests](./scripts/run_tests.sh)
 **Model Registry:** [Definitions](./ai_models/definitions/) | [Pricing](./ai_models/pricing.py)

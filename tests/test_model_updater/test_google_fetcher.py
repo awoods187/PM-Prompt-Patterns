@@ -10,14 +10,12 @@ Priority: HIGH - API integration, error handling
 """
 
 from datetime import date
-from pathlib import Path
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
 
 from scripts.model_updater.fetchers.base_fetcher import ModelData
 from scripts.model_updater.fetchers.google_fetcher import GoogleFetcher
-
 
 # ============================================================================
 # FIXTURES
@@ -116,9 +114,7 @@ class TestStaticModelSpecs:
 
         assert specs is None
 
-    def test_static_specs_include_recommended_for(
-        self, google_fetcher: GoogleFetcher
-    ) -> None:
+    def test_static_specs_include_recommended_for(self, google_fetcher: GoogleFetcher) -> None:
         """Test that specs include recommended use cases."""
         specs = google_fetcher._get_static_model_specs("gemini-2-5-flash")
 
@@ -126,9 +122,7 @@ class TestStaticModelSpecs:
         assert len(specs["recommended_for"]) > 0
         assert isinstance(specs["recommended_for"], list)
 
-    def test_static_specs_include_best_practices(
-        self, google_fetcher: GoogleFetcher
-    ) -> None:
+    def test_static_specs_include_best_practices(self, google_fetcher: GoogleFetcher) -> None:
         """Test that specs include best practices."""
         specs = google_fetcher._get_static_model_specs("gemini-2-5-pro")
 
@@ -189,7 +183,9 @@ class TestAPIFetching:
     ) -> None:
         """Test that missing google-generativeai package raises ImportError."""
         # Simulate import failure
-        with patch("builtins.__import__", side_effect=ImportError("No module named 'google.generativeai'")):
+        with patch(
+            "builtins.__import__", side_effect=ImportError("No module named 'google.generativeai'")
+        ):
             with pytest.raises(ImportError, match="google-generativeai package not installed"):
                 google_fetcher.fetch_from_api()
 
@@ -312,9 +308,7 @@ class TestAPIFetching:
 class TestDocsFallback:
     """Test suite for docs-based fallback fetching."""
 
-    def test_fetch_from_docs_returns_all_models(
-        self, google_fetcher: GoogleFetcher
-    ) -> None:
+    def test_fetch_from_docs_returns_all_models(self, google_fetcher: GoogleFetcher) -> None:
         """Test that fetch_from_docs returns all supported models."""
         models = google_fetcher.fetch_from_docs()
 
@@ -324,9 +318,7 @@ class TestDocsFallback:
         assert "gemini-2-5-flash" in model_ids
         assert "gemini-2-5-pro" in model_ids
 
-    def test_fetch_from_docs_creates_valid_model_data(
-        self, google_fetcher: GoogleFetcher
-    ) -> None:
+    def test_fetch_from_docs_creates_valid_model_data(self, google_fetcher: GoogleFetcher) -> None:
         """Test that docs-based models have all required fields."""
         models = google_fetcher.fetch_from_docs()
 
@@ -356,9 +348,7 @@ class TestDocsFallback:
 
         assert "Using static model specifications" in caplog.text
 
-    def test_fetch_from_docs_preserves_model_order(
-        self, google_fetcher: GoogleFetcher
-    ) -> None:
+    def test_fetch_from_docs_preserves_model_order(self, google_fetcher: GoogleFetcher) -> None:
         """Test that models are returned in expected order."""
         models = google_fetcher.fetch_from_docs()
 
@@ -413,12 +403,12 @@ class TestMainFetchMethod:
         assert "Falling back to docs parsing" in caplog.text
 
     @patch.dict("os.environ", {"GOOGLE_API_KEY": "test-api-key"})
-    def test_fetch_models_falls_back_on_import_error(
-        self, google_fetcher: GoogleFetcher
-    ) -> None:
+    def test_fetch_models_falls_back_on_import_error(self, google_fetcher: GoogleFetcher) -> None:
         """Test fallback when google-generativeai package not installed."""
         # Simulate import error
-        with patch("builtins.__import__", side_effect=ImportError("No module named 'google.generativeai'")):
+        with patch(
+            "builtins.__import__", side_effect=ImportError("No module named 'google.generativeai'")
+        ):
             models = google_fetcher.fetch_models()
 
             # Should fall back to docs
@@ -453,15 +443,11 @@ class TestMainFetchMethod:
 class TestEdgeCases:
     """Test suite for edge cases and error handling."""
 
-    def test_provider_name_returns_google(
-        self, google_fetcher: GoogleFetcher
-    ) -> None:
+    def test_provider_name_returns_google(self, google_fetcher: GoogleFetcher) -> None:
         """Test that provider_name property returns correct value."""
         assert google_fetcher.provider_name == "google"
 
-    def test_static_specs_have_consistent_structure(
-        self, google_fetcher: GoogleFetcher
-    ) -> None:
+    def test_static_specs_have_consistent_structure(self, google_fetcher: GoogleFetcher) -> None:
         """Test that all static specs follow the same structure."""
         required_keys = {
             "name",
@@ -495,9 +481,7 @@ class TestEdgeCases:
     ) -> None:
         """Test that fetch_from_docs skips models with missing specs."""
         # Patch to simulate missing spec
-        with patch.object(
-            google_fetcher, "_get_static_model_specs"
-        ) as mock_get_specs:
+        with patch.object(google_fetcher, "_get_static_model_specs") as mock_get_specs:
             mock_get_specs.return_value = None
 
             models = google_fetcher.fetch_from_docs()
@@ -526,9 +510,7 @@ class TestEdgeCases:
         assert len(models) > 0
         assert any("gemini-2-5-flash" in m.model_id for m in models)
 
-    def test_all_models_have_large_context_capability(
-        self, google_fetcher: GoogleFetcher
-    ) -> None:
+    def test_all_models_have_large_context_capability(self, google_fetcher: GoogleFetcher) -> None:
         """Test that all Gemini 2.5 models advertise large_context capability."""
         models = google_fetcher.fetch_from_docs()
 
@@ -536,9 +518,7 @@ class TestEdgeCases:
             assert "large_context" in model.capabilities
             assert model.context_window_input >= 1000000  # At least 1M tokens
 
-    def test_model_pricing_reflects_capability_tiers(
-        self, google_fetcher: GoogleFetcher
-    ) -> None:
+    def test_model_pricing_reflects_capability_tiers(self, google_fetcher: GoogleFetcher) -> None:
         """Test that pricing aligns with model capabilities."""
         models = google_fetcher.fetch_from_docs()
 
