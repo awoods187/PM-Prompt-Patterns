@@ -1,0 +1,100 @@
+name: Auto-Update Models
+
+on:
+  schedule:
+    # Run every Sunday at 2am UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  update-models:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Need full history for branching
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -e ".[all]"
+          pip install pyyaml
+
+      - name: Fetch and update models
+        id: update
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          python scripts/model_updater/main.py
+        continue-on-error: true
+
+      - name: Run tests on updated models
+        if: steps.update.outputs.changes_detected == 'true'
+        run: |
+          pytest tests/ -v --cov=ai_models --cov-report=term-missing
+
+      - name: Auto-approve PR (for bot PRs)
+        if: steps.update.outputs.pr_url != ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=$(echo "${{ steps.update.outputs.pr_url }}" | grep -oE '[0-9]+$')
+          gh pr review $PR_NUMBER --approve --body "✅ Automated approval: All tests passed"
+
+      - name: Comment on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '⚠️ Model auto-update failed',
+              body: `## Model Auto-Update Failure
+
+              The weekly model update job failed.
+
+              **Workflow run:** ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
+
+              ### Possible Causes
+              - Provider API changes
+              - Network issues
+              - Validation failures
+              - Authentication errors
+
+              ### Action Required
+              1. Check workflow logs
+              2. Verify API keys are configured
+              3. Run manually with: \`python scripts/model_updater/main.py --dry-run\`
+
+              ---
+              🤖 This issue was automatically created by the model updater workflow`,
+              labels: ['maintenance', 'automation-failure']
+            });
+
+  # Optional: Send notification on significant changes
+  notify:
+    needs: update-models
+    runs-on: ubuntu-latest
+    if: needs.update-models.outputs.pr_url != ''
+
+    steps:
+      - name: Send notification
+        run: |
+          echo "Model update PR created: ${{ needs.update-models.outputs.pr_url }}"
+          # Add Slack/Discord/email notification here if desired

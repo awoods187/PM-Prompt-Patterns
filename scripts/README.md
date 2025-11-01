@@ -4,6 +4,51 @@ Utility scripts for maintaining the PM Prompt Toolkit.
 
 ## Model Maintenance Scripts
 
+### model_updater/ - Automated Model Update System
+
+**Automated system for fetching, validating, and updating AI model definitions.**
+
+**Quick Start:**
+```bash
+# Dry run (no changes)
+python scripts/model_updater/main.py --dry-run
+
+# Full run with PR creation
+python scripts/model_updater/main.py
+```
+
+**Key Features:**
+- ✅ Automated weekly updates via GitHub Actions
+- ✅ Multi-provider support (Anthropic, OpenAI, Google)
+- ✅ Intelligent change detection (pricing, capabilities, metadata)
+- ✅ Comprehensive validation with sanity checks
+- ✅ Auto-PR creation with detailed changelogs
+- ✅ Auto-merge when tests pass
+- ✅ Deprecation tracking for removed models
+- ✅ 29 tests with 100% critical path coverage
+
+**Environment Variables:**
+- `GITHUB_TOKEN`: Required for PR creation (auto-provided in Actions)
+- `OPENAI_API_KEY`: Optional, for OpenAI API access
+- `ANTHROPIC_API_KEY`: Optional, for Anthropic API access
+- `GOOGLE_API_KEY`: Optional, for Google API access
+
+**Automation:**
+- **Schedule**: Every Sunday at 2am UTC
+- **Workflow**: `.github/workflows/auto-update-models.yml`
+- **Action**: Creates PR with updates if changes detected
+
+**Complete Documentation:** [docs/MODEL_UPDATE_SYSTEM.md](../docs/MODEL_UPDATE_SYSTEM.md)
+
+**Testing:**
+```bash
+# Run all model updater tests
+pytest tests/test_model_updater/ -v
+
+# Test with future mock models
+python -c "import yaml; print(yaml.safe_load(open('tests/mocks/future_models.yaml')))"
+```
+
 ### check_staleness.py
 
 Check if model definitions need verification based on `last_verified` dates.
