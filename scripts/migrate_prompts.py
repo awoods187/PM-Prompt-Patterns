@@ -507,7 +507,9 @@ Browse more prompts in the [prompts directory](../../).
         for prompt_file in prompts:
             try:
                 if skip_existing and self._is_multi_provider_dir(prompt_file.parent):
-                    self.log(f"Skipping (already migrated): {prompt_file.relative_to(self.prompts_dir)}")
+                    self.log(
+                        f"Skipping (already migrated): {prompt_file.relative_to(self.prompts_dir)}"
+                    )
                     stats["skipped"] += 1
                     continue
 
