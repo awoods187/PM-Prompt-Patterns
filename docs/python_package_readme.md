@@ -567,7 +567,7 @@ MIT License - see [LICENSE](../LICENSE) for details.
 
 ---
 
-**Built with ❤️ for AI-native product managers**
+**Built for AI-native product managers**
 
 **Last Updated:** 2025-11-01
 **Version:** 0.2.0

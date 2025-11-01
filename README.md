@@ -197,6 +197,37 @@ budget_models = ModelRegistry.filter_by_cost_tier("budget")
 
 **Advanced Examples:** [API Documentation](./docs/api-examples.md) | [Production Architecture](./examples/epic-categorization/)
 
+### Provider-Optimized Prompts ✨ NEW
+
+The toolkit now includes **provider-specific prompt optimizations** for Claude, OpenAI, and Gemini:
+
+```python
+from ai_models import get_prompt, get_model
+
+# Automatically select best prompt variant for your model
+model = get_model("gpt-4o")
+prompt = get_prompt("analytics/signal-classification", model=model.id)
+
+# Or explicitly choose a provider optimization
+claude_prompt = get_prompt("analytics/signal-classification", provider="claude")
+openai_prompt = get_prompt("analytics/signal-classification", provider="openai")
+gemini_prompt = get_prompt("analytics/signal-classification", provider="gemini")
+```
+
+**Provider-Specific Features:**
+
+| Provider | Key Optimizations | Best For | Cost/1K Operations |
+|----------|-------------------|----------|-------------------|
+| **Claude** | XML tags, chain-of-thought | Complex reasoning, accuracy | $1-3 |
+| **OpenAI** | Function calling, JSON mode | Structured output, integration | $0.20-0.70 |
+| **Gemini** | 2M context, caching | High volume, batch processing | $0.10-0.30 |
+
+**Available Prompts:**
+- [**Signal Classification**](./prompts/analytics/signal-classification/) - Categorize customer feedback (5 categories, 90%+ accuracy)
+- More coming soon...
+
+[→ Learn more about provider-optimized prompts](./docs/provider-specific-prompts.md)
+
 ---
 
 ## 🤖 Model Selection Guide
