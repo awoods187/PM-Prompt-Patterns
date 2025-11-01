@@ -237,7 +237,7 @@ from pm_prompt_toolkit.providers import get_provider
 # Force specific provider
 claude_provider = get_provider("claude:claude-sonnet-4-5")
 gpt_provider = get_provider("openai:gpt-4o")
-gemini_provider = get_provider("google:gemini-2.0-flash-exp")
+gemini_provider = get_provider("google:gemini-2-5-flash")
 
 # Use AWS Bedrock (requires configuration)
 bedrock_provider = get_provider("bedrock:claude-sonnet-4-5")
@@ -340,12 +340,12 @@ for model in models:
 ```
 
 **Available models:**
-- `claude-haiku-4-0`
+- `claude-haiku-4-5`
 - `claude-sonnet-4-5`
-- `claude-opus-4-0`
+- `claude-opus-4-1`
 - `gpt-4o`
 - `gpt-4o-mini`
-- `gemini-2.0-flash-exp`
+- `gemini-2-5-flash`
 - `gemini-2.5-pro`
 
 #### 5. Tests Failing

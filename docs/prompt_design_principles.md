@@ -47,13 +47,13 @@ Feedback: {input}
 
 #### When to Use Different Shot Counts
 
-| Shot Count | Use Case | Example |
-|------------|----------|---------|
-| **0-shot** | Model has strong priors (summarization, translation) | "Summarize this in 2 sentences" |
-| **1-shot** | Simple tasks, output format clarification | Classification with one example |
-| **3-shot** | Complex tasks, demonstrate edge cases | Nuanced categorization |
-| **5-shot** | High accuracy requirements, show variation | Production classification (our default) |
-| **10+ shot** | Specialized domains, unusual patterns | Medical coding, legal analysis |
+| Shot Count   | Use Case                                              | Example                                  |
+|--------------|-------------------------------------------------------|------------------------------------------|
+| **0-shot**   | Model has strong priors (summarization, translation)  | "Summarize this in 2 sentences"          |
+| **1-shot**   | Simple tasks, output format clarification             | Classification with one example          |
+| **3-shot**   | Complex tasks, demonstrate edge cases                 | Nuanced categorization                   |
+| **5-shot**   | High accuracy requirements, show variation            | Production classification (our default)  |
+| **10+ shot** | Specialized domains, unusual patterns                 | Medical coding, legal analysis           |
 
 #### Example: Progressive Few-Shot
 
@@ -465,13 +465,13 @@ User input → Queue → Batch processor (every 30s or 100 signals)
 
 **Common errors and solutions**:
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| **Validation error** | Malformed JSON/XML output | Retry with explicit format reminder |
-| **Rate limit** | Too many requests | Exponential backoff, model fallback |
-| **Timeout** | Large input, slow model | Chunk input, use faster model |
-| **Low confidence** | Ambiguous input | Escalate to better model, or human review |
-| **Unexpected category** | Model hallucination | Validate against allowed categories |
+| Error                   | Cause                       | Solution                                  |
+|-------------------------|-----------------------------|-------------------------------------------|
+| **Validation error**    | Malformed JSON/XML output   | Retry with explicit format reminder       |
+| **Rate limit**          | Too many requests           | Exponential backoff, model fallback       |
+| **Timeout**             | Large input, slow model     | Chunk input, use faster model             |
+| **Low confidence**      | Ambiguous input             | Escalate to better model, or human review |
+| **Unexpected category** | Model hallucination         | Validate against allowed categories       |
 
 **Production pattern**:
 ```python
@@ -553,16 +553,16 @@ START: What are you building?
 
 ### Task-to-Model Mapping
 
-| Task | Recommended Model | Why | Cost |
-|------|------------------|-----|------|
-| **Simple classification** | Haiku, GPT-3.5 | Fast, cheap, good enough | $0.0003 |
-| **Complex classification** | Sonnet, GPT-4 Turbo | Better reasoning, still reasonable cost | $0.002 |
-| **Data extraction** | Haiku, Gemini Flash | Fast, structured outputs | $0.0003 |
-| **Summarization** | Sonnet, GPT-3.5 | Good comprehension, decent writing | $0.002 |
-| **Analysis & insights** | Sonnet, GPT-4 Turbo | Strong reasoning | $0.003 |
-| **Creative writing** | Opus, GPT-4 | Nuanced, high quality | $0.015 |
-| **Code generation** | Sonnet, GPT-4 Turbo | Good technical understanding | $0.003 |
-| **Massive context** | Gemini Pro, Claude | 1M-2M tokens | $0.04 |
+| Task                       | Recommended Model    | Why                                     | Cost    |
+|----------------------------|----------------------|-----------------------------------------|---------|
+| **Simple classification**  | Haiku, GPT-3.5       | Fast, cheap, good enough                | $0.0003 |
+| **Complex classification** | Sonnet, GPT-4 Turbo  | Better reasoning, still reasonable cost | $0.002  |
+| **Data extraction**        | Haiku, Gemini Flash  | Fast, structured outputs                | $0.0003 |
+| **Summarization**          | Sonnet, GPT-3.5      | Good comprehension, decent writing      | $0.002  |
+| **Analysis & insights**    | Sonnet, GPT-4 Turbo  | Strong reasoning                        | $0.003  |
+| **Creative writing**       | Opus, GPT-4          | Nuanced, high quality                   | $0.015  |
+| **Code generation**        | Sonnet, GPT-4 Turbo  | Good technical understanding            | $0.003  |
+| **Massive context**        | Gemini Pro, Claude   | 1M-2M tokens                            | $0.04   |
 
 ### When to Use Multiple Models in Series
 
@@ -685,14 +685,14 @@ Human review: 5% sample
 
 **Example evolution** (our signal classification system):
 
-| Version | Accuracy | Cost | Key Change |
-|---------|----------|------|------------|
-| **v1.0** | 82% | $0.015 | Basic Opus classification |
-| **v2.0** | 87% | $0.004 | Added 5-shot examples, moved to Sonnet |
-| **v2.5** | 89% | $0.002 | Added chain-of-thought for low confidence |
-| **v3.0** | 92% | $0.0008 | Hybrid keyword + Haiku + Sonnet |
-| **v3.1** | 93% | $0.0006 | Prompt caching, optimized examples |
-| **v3.2** | 95% | $0.001 | Improved edge case handling, batch processing |
+| Version  | Accuracy | Cost    | Key Change                                    |
+|----------|----------|---------|-----------------------------------------------|
+| **v1.0** | 82%      | $0.015  | Basic Opus classification                     |
+| **v2.0** | 87%      | $0.004  | Added 5-shot examples, moved to Sonnet        |
+| **v2.5** | 89%      | $0.002  | Added chain-of-thought for low confidence     |
+| **v3.0** | 92%      | $0.0008 | Hybrid keyword + Haiku + Sonnet               |
+| **v3.1** | 93%      | $0.0006 | Prompt caching, optimized examples            |
+| **v3.2** | 95%      | $0.001  | Improved edge case handling, batch processing |
 
 **Each version required**:
 - Test set validation (500 examples)

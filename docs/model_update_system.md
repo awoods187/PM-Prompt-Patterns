@@ -1067,7 +1067,7 @@ gpt-3.5-turbo       (Legacy but still supported)
 ```
 gemini-2.5-pro             (Latest production)
 gemini-2.5-flash           (Fast version)
-gemini-2.0-flash-exp       (Experimental)
+gemini-2-5-flash       (Experimental)
 ```
 
 ---

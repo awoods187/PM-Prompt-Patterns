@@ -116,12 +116,12 @@ print(f"Cost for request: ${cost:.4f}")
 ```
 
 **Available models:**
-- `claude-haiku-4-0` (budget, fast)
+- `claude-haiku-4-5` (budget, fast)
 - `claude-sonnet-4-5` (balanced, recommended)
-- `claude-opus-4-0` (premium, highest quality)
+- `claude-opus-4-1` (premium, highest quality)
 - `gpt-4o` (provider not implemented yet)
 - `gpt-4o-mini` (provider not implemented yet)
-- `gemini-2.0-flash-exp` (provider not implemented yet)
+- `gemini-2-5-flash` (provider not implemented yet)
 - `gemini-2.5-pro` (provider not implemented yet)
 
 ### 2. Using Providers for Classification
@@ -170,7 +170,7 @@ print(f"Category: {result.category}")
 from ai_models import get_model, calculate_cost
 
 # Compare costs across models
-models_to_compare = ["claude-haiku-4-0", "claude-sonnet-4-5", "claude-opus-4-0"]
+models_to_compare = ["claude-haiku-4-5", "claude-sonnet-4-5", "claude-opus-4-1"]
 
 print("Cost comparison for 1M input + 100K output tokens:")
 for model_id in models_to_compare:
@@ -189,7 +189,7 @@ for model_id in models_to_compare:
 ```python
 from pm_prompt_toolkit.providers import get_provider
 
-provider = get_provider("claude:claude-haiku-4-0")  # Use cheapest model
+provider = get_provider("claude:claude-haiku-4-5")  # Use cheapest model
 
 signals = [
     "We need SSO integration",
@@ -289,7 +289,7 @@ ai_models/
 - 🤝 Contributions welcome! See [CONTRIBUTING.md](../.github/CONTRIBUTING.md)
 
 **Google Gemini Provider:**
-- ✅ Model definitions exist in registry (gemini-2.0-flash-exp, gemini-2.5-pro)
+- ✅ Model definitions exist in registry (gemini-2-5-flash, gemini-2.5-pro)
 - ❌ Provider implementation raises `NotImplementedError`
 - 📝 Planned features: Gemini Pro, Gemini Flash, 1M+ token context
 - 🤝 Contributions welcome! See [CONTRIBUTING.md](../.github/CONTRIBUTING.md)
