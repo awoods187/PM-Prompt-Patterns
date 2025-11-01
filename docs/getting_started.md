@@ -243,7 +243,7 @@ gemini_provider = get_provider("google:gemini-2.0-flash-exp")
 bedrock_provider = get_provider("bedrock:claude-sonnet-4-5")
 ```
 
-**See:** [Provider Documentation](./PYTHON_PACKAGE_README.md#providers)
+**See:** [Provider Documentation](./python_package_readme.md#providers)
 
 ### 3. Production Examples
 
@@ -256,9 +256,9 @@ Study our complete production systems:
 
 ### 4. Learn Advanced Techniques
 
-- [Prompt Design Principles](./PROMPT_DESIGN_PRINCIPLES.md)
-- [Cost Optimization](./cost-optimization.md)
-- [Quality Evaluation](./quality-evaluation.md)
+- [Prompt Design Principles](./prompt_design_principles.md)
+- [Cost Optimization](./cost_optimization.md)
+- [Quality Evaluation](./quality_evaluation.md)
 
 ### 5. Integrate into Your Project
 
@@ -405,8 +405,8 @@ open htmlcov/index.html
 
 ### Documentation
 - [README.md](../README.md) - Project overview
-- [PROMPT_DESIGN_PRINCIPLES.md](./PROMPT_DESIGN_PRINCIPLES.md) - Core patterns
-- [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - Codebase organization
+- [prompt_design_principles.md](./prompt_design_principles.md) - Core patterns
+- [project_structure.md](./project_structure.md) - Codebase organization
 - [CHANGELOG.md](../CHANGELOG.md) - Version history
 
 ### Support
@@ -430,7 +430,7 @@ You're ready to move on when you can:
 - ✅ Classify text using a provider
 - ✅ Understand the cost breakdown
 
-**Ready?** Continue to [Advanced Techniques](./advanced-techniques.md) →
+**Ready?** Continue to [Advanced Techniques](./advanced_techniques.md) →
 
 ---
 

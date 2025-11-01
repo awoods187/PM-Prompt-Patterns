@@ -852,10 +852,10 @@ open htmlcov/index.html
 
 ## Related Documentation
 
-- [Advanced Techniques](./advanced-techniques.md) - Production patterns
-- [Cost Optimization](./cost-optimization.md) - ROI and metrics
-- [Model Update System](./MODEL_UPDATE_SYSTEM.md) - Automated validation
-- [Getting Started](./getting-started.md) - Development setup
+- [Advanced Techniques](./advanced_techniques.md) - Production patterns
+- [Cost Optimization](./cost_optimization.md) - ROI and metrics
+- [Model Update System](./model_update_system.md) - Automated validation
+- [Getting Started](./getting_started.md) - Development setup
 
 ---
 

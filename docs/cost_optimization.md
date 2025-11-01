@@ -1091,9 +1091,9 @@ With all techniques implemented:
 
 ## Related Documentation
 
-- [Advanced Techniques](./advanced-techniques.md) - Implementation details
-- [PYTHON_PACKAGE_README.md](./PYTHON_PACKAGE_README.md) - Usage guide
-- [Quality Evaluation](./quality-evaluation.md) - Measuring quality vs cost trade-offs
+- [Advanced Techniques](./advanced_techniques.md) - Implementation details
+- [python_package_readme.md](./python_package_readme.md) - Usage guide
+- [Quality Evaluation](./quality_evaluation.md) - Measuring quality vs cost trade-offs
 
 ---
 

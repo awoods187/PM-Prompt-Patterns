@@ -48,17 +48,17 @@ PM-Prompt-Patterns/
 │   └── model_sources.yaml     # Model source configuration for updater
 │
 ├── docs/                       # Documentation
-│   ├── advanced-techniques.md # Advanced prompt engineering techniques
-│   ├── cost-optimization.md   # Cost optimization strategies
-│   ├── getting-started.md     # Getting started guide
-│   ├── quality-evaluation.md  # Quality evaluation frameworks
-│   ├── MODEL_UPDATE_SYSTEM.md # Model update system documentation
-│   ├── ATTRIBUTION.md         # Attribution and credits
-│   ├── CONTENT_LICENSE.md     # Content licensing information
-│   ├── LICENSE_FAQ.md         # License FAQ
-│   ├── PROMPT_DESIGN_PRINCIPLES.md  # Prompt design principles
-│   ├── PYTHON_PACKAGE_README.md     # Python package documentation
-│   ├── PROJECT_STRUCTURE.md   # This file
+│   ├── advanced_techniques.md # Advanced prompt engineering techniques
+│   ├── cost_optimization.md   # Cost optimization strategies
+│   ├── getting_started.md     # Getting started guide
+│   ├── quality_evaluation.md  # Quality evaluation frameworks
+│   ├── model_update_system.md # Model update system documentation
+│   ├── attribution.md         # Attribution and credits
+│   ├── content_license.md     # Content licensing information
+│   ├── license_faq.md         # License FAQ
+│   ├── prompt_design_principles.md  # Prompt design principles
+│   ├── python_package_readme.md     # Python package documentation
+│   ├── project_structure.md   # This file
 │   └── workflows/             # Workflow documentation
 │       └── MODEL_UPDATE_WORKFLOW.md
 │
@@ -388,7 +388,7 @@ twine upload dist/*      # Upload to PyPI
 ✅ **DO:**
 - Document all public APIs
 - Include usage examples
-- Maintain this PROJECT_STRUCTURE.md
+- Maintain this project_structure.md
 - Update README when adding features
 - Link between related documents
 
@@ -423,11 +423,11 @@ twine upload dist/*      # Upload to PyPI
 - Moved `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` to `.github/`
 - Moved `TODO.md` to `.github/ROADMAP.md`
 - Moved documentation files to `docs/`:
-  - `ATTRIBUTION.md`
-  - `CONTENT_LICENSE.md`
-  - `LICENSE_FAQ.md`
-  - `PROMPT_DESIGN_PRINCIPLES.md`
-  - `PYTHON_PACKAGE_README.md`
+  - `attribution.md`
+  - `content_license.md`
+  - `license_faq.md`
+  - `prompt_design_principles.md`
+  - `python_package_readme.md`
 - Added missing `__init__.py` files:
   - `ai_models/definitions/__init__.py`
   - `ai_models/definitions/anthropic/__init__.py`

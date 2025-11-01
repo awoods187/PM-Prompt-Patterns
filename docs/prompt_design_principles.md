@@ -893,15 +893,15 @@ File: `templates/meta-prompting.md`
 ## Related Documentation
 
 **Core Guides:**
-- [Advanced Techniques](./advanced-techniques.md) - Production patterns, provider optimization, meta-prompting
-- [Cost Optimization](./cost-optimization.md) - Model cascading, prompt caching, ROI calculations
-- [Quality Evaluation](./quality-evaluation.md) - Testing methodologies, validation, CI/CD quality gates
-- [Model Update System](./MODEL_UPDATE_SYSTEM.md) - Automated model validation and updates
+- [Advanced Techniques](./advanced_techniques.md) - Production patterns, provider optimization, meta-prompting
+- [Cost Optimization](./cost_optimization.md) - Model cascading, prompt caching, ROI calculations
+- [Quality Evaluation](./quality_evaluation.md) - Testing methodologies, validation, CI/CD quality gates
+- [Model Update System](./model_update_system.md) - Automated model validation and updates
 
 **Getting Started:**
-- [Getting Started Guide](./getting-started.md) - Installation and first steps
-- [Python Package README](./PYTHON_PACKAGE_README.md) - API usage and examples
-- [Project Structure](./PROJECT_STRUCTURE.md) - Repository organization
+- [Getting Started Guide](./getting_started.md) - Installation and first steps
+- [Python Package README](./python_package_readme.md) - API usage and examples
+- [Project Structure](./project_structure.md) - Repository organization
 
 **Advanced Topics:**
 - [Meta-Prompt Designer](../prompts/product-strategy/meta-prompt-designer.md) - Designing better prompts with AI

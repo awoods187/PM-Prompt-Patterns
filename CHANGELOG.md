@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Comprehensive `docs/PROJECT_STRUCTURE.md` documenting repository organization
+- Comprehensive `docs/project_structure.md` documenting repository organization
 - Missing `__init__.py` files for proper Python package structure:
   - `ai_models/definitions/__init__.py`
   - `ai_models/definitions/anthropic/__init__.py`
@@ -25,11 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **Repository structure reorganization** - Professional organization following Python best practices
   - Moved documentation files to `docs/`:
-    - `ATTRIBUTION.md` → `docs/ATTRIBUTION.md`
-    - `CONTENT_LICENSE.md` → `docs/CONTENT_LICENSE.md`
-    - `LICENSE_FAQ.md` → `docs/LICENSE_FAQ.md`
-    - `PROMPT_DESIGN_PRINCIPLES.md` → `docs/PROMPT_DESIGN_PRINCIPLES.md`
-    - `PYTHON_PACKAGE_README.md` → `docs/PYTHON_PACKAGE_README.md`
+    - `attribution.md` → `docs/attribution.md`
+    - `content_license.md` → `docs/content_license.md`
+    - `license_faq.md` → `docs/license_faq.md`
+    - `prompt_design_principles.md` → `docs/prompt_design_principles.md`
+    - `python_package_readme.md` → `docs/python_package_readme.md`
   - Moved GitHub files to `.github/`:
     - `SECURITY.md` → `.github/SECURITY.md`
     - `CONTRIBUTING.md` → `.github/CONTRIBUTING.md`
@@ -172,11 +172,11 @@ First production-ready release of the PM Prompt Patterns toolkit.
 | `CONTRIBUTING.md` | `.github/CONTRIBUTING.md` |
 | `CODE_OF_CONDUCT.md` | `.github/CODE_OF_CONDUCT.md` |
 | `TODO.md` | `.github/ROADMAP.md` |
-| `ATTRIBUTION.md` | `docs/ATTRIBUTION.md` |
-| `CONTENT_LICENSE.md` | `docs/CONTENT_LICENSE.md` |
-| `LICENSE_FAQ.md` | `docs/LICENSE_FAQ.md` |
-| `PROMPT_DESIGN_PRINCIPLES.md` | `docs/PROMPT_DESIGN_PRINCIPLES.md` |
-| `PYTHON_PACKAGE_README.md` | `docs/PYTHON_PACKAGE_README.md` |
+| `attribution.md` | `docs/attribution.md` |
+| `content_license.md` | `docs/content_license.md` |
+| `license_faq.md` | `docs/license_faq.md` |
+| `prompt_design_principles.md` | `docs/prompt_design_principles.md` |
+| `python_package_readme.md` | `docs/python_package_readme.md` |
 
 **No code changes required** - Python imports and functionality unchanged.
 

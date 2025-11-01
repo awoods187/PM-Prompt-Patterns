@@ -24,35 +24,35 @@ This document tracks the status of all documentation files in `/docs` and relate
 
 | File | Status | Last Updated | Notes |
 |------|--------|--------------|-------|
-| **docs/getting-started.md** | ✅ Complete | 2025-11-01 | Comprehensive beginner guide with tested examples, installation, troubleshooting |
-| **docs/PROJECT_STRUCTURE.md** | ✅ Complete | 2025-11-01 | Auto-generated, accurate, comprehensive |
+| **docs/getting_started.md** | ✅ Complete | 2025-11-01 | Comprehensive beginner guide with tested examples, installation, troubleshooting |
+| **docs/project_structure.md** | ✅ Complete | 2025-11-01 | Auto-generated, accurate, comprehensive |
 | **CHANGELOG.md** | ✅ Complete | 2025-11-01 | Following Keep a Changelog format |
 
 ### ⚠️ Needs Significant Updates
 
 | File | Current State | Issues | Priority |
 |------|---------------|--------|----------|
-| **docs/advanced-techniques.md** | 🚧 Placeholder | "Coming soon" stub, links to TODO.md | HIGH |
-| **docs/cost-optimization.md** | 🚧 Placeholder | "Coming soon" stub, links to TODO.md | HIGH |
-| **docs/quality-evaluation.md** | 🚧 Placeholder | "Coming soon" stub, links to TODO.md | MEDIUM |
-| **docs/PYTHON_PACKAGE_README.md** | ⚠️ Partial | Outdated provider references, incomplete examples | HIGH |
-| **docs/PROMPT_DESIGN_PRINCIPLES.md** | ⚠️ Partial | Exists but may need concrete code examples | MEDIUM |
-| **docs/MODEL_UPDATE_SYSTEM.md** | ⚠️ Unknown | Needs verification against actual implementation | MEDIUM |
+| **docs/advanced_techniques.md** | 🚧 Placeholder | "Coming soon" stub, links to TODO.md | HIGH |
+| **docs/cost_optimization.md** | 🚧 Placeholder | "Coming soon" stub, links to TODO.md | HIGH |
+| **docs/quality_evaluation.md** | 🚧 Placeholder | "Coming soon" stub, links to TODO.md | MEDIUM |
+| **docs/python_package_readme.md** | ⚠️ Partial | Outdated provider references, incomplete examples | HIGH |
+| **docs/prompt_design_principles.md** | ⚠️ Partial | Exists but may need concrete code examples | MEDIUM |
+| **docs/model_update_system.md** | ⚠️ Unknown | Needs verification against actual implementation | MEDIUM |
 | **docs/workflows/MODEL_UPDATE_WORKFLOW.md** | ⚠️ Unknown | Needs verification against actual GitHub workflows | MEDIUM |
 
 ### ✅ Legal/Attribution (Verify Only)
 
 | File | Status | Action Needed |
 |------|--------|---------------|
-| **docs/ATTRIBUTION.md** | ✅ Review | Verify completeness |
-| **docs/CONTENT_LICENSE.md** | ✅ Review | Verify consistency with LICENSE |
-| **docs/LICENSE_FAQ.md** | ✅ Review | Verify accuracy |
+| **docs/attribution.md** | ✅ Review | Verify completeness |
+| **docs/content_license.md** | ✅ Review | Verify consistency with LICENSE |
+| **docs/license_faq.md** | ✅ Review | Verify accuracy |
 
 ---
 
 ## Detailed Status
 
-### 1. getting-started.md ✅
+### 1. getting_started.md ✅
 
 **Status:** Complete
 **Last Updated:** 2025-11-01
@@ -76,7 +76,7 @@ python examples/basic_example.py  # ✅ Runs successfully
 
 ---
 
-### 2. advanced-techniques.md 🚧
+### 2. advanced_techniques.md 🚧
 
 **Status:** Placeholder only
 **Last Updated:** Unknown (pre-reorganization)
@@ -113,7 +113,7 @@ See [TODO.md](../TODO.md) for planned content.
 
 ---
 
-### 3. cost-optimization.md 🚧
+### 3. cost_optimization.md 🚧
 
 **Status:** Placeholder only
 **Last Updated:** Unknown (pre-reorganization)
@@ -146,7 +146,7 @@ Topics to be covered:
 
 ---
 
-### 4. quality-evaluation.md 🚧
+### 4. quality_evaluation.md 🚧
 
 **Status:** Placeholder only
 **Last Updated:** Unknown (pre-reorganization)
@@ -177,7 +177,7 @@ Topics to be covered:
 
 ---
 
-### 5. PYTHON_PACKAGE_README.md ⚠️
+### 5. python_package_readme.md ⚠️
 
 **Status:** Partially outdated
 **Last Updated:** Unknown (pre-reorganization)
@@ -214,7 +214,7 @@ pm_prompt_toolkit/providers/
 
 ---
 
-### 6. PROMPT_DESIGN_PRINCIPLES.md ⚠️
+### 6. prompt_design_principles.md ⚠️
 
 **Status:** Exists, needs verification
 **Last Updated:** Unknown
@@ -230,7 +230,7 @@ pm_prompt_toolkit/providers/
 
 ---
 
-### 7. MODEL_UPDATE_SYSTEM.md ⚠️
+### 7. model_update_system.md ⚠️
 
 **Status:** Unknown, needs verification
 **Last Updated:** Unknown
@@ -262,7 +262,7 @@ pm_prompt_toolkit/providers/
 
 ---
 
-### 9. ATTRIBUTION.md ✅ (Needs Verification)
+### 9. attribution.md ✅ (Needs Verification)
 
 **Status:** Likely complete
 **Action:** Verify all third-party dependencies are attributed
@@ -276,14 +276,14 @@ pip list | grep -E "anthropic|openai|google|pydantic|boto3"
 
 ---
 
-### 10. CONTENT_LICENSE.md ✅ (Needs Verification)
+### 10. content_license.md ✅ (Needs Verification)
 
 **Status:** Likely complete
 **Action:** Verify consistency with LICENSE file
 
 ---
 
-### 11. LICENSE_FAQ.md ✅ (Needs Verification)
+### 11. license_faq.md ✅ (Needs Verification)
 
 **Status:** Likely complete
 **Action:** Verify accuracy of license interpretation
@@ -296,9 +296,9 @@ pip list | grep -E "anthropic|openai|google|pydantic|boto3"
 
 | Old Link | New Link | Files Affected |
 |----------|----------|----------------|
-| `../TODO.md` | `../.github/ROADMAP.md` | advanced-techniques.md, cost-optimization.md, quality-evaluation.md |
+| `../TODO.md` | `../.github/ROADMAP.md` | advanced_techniques.md, cost_optimization.md, quality_evaluation.md |
 | `../CONTRIBUTING.md` | `../.github/CONTRIBUTING.md` | Multiple docs |
-| `../PROMPT_DESIGN_PRINCIPLES.md` | `./PROMPT_DESIGN_PRINCIPLES.md` | Various docs |
+| `../prompt_design_principles.md` | `./prompt_design_principles.md` | Various docs |
 
 **Action:** Search and replace in all docs:
 ```bash
@@ -311,15 +311,15 @@ find docs -name "*.md" -exec sed -i '' 's|\.\./CONTRIBUTING\.md|../.github/CONTR
 ## Validation Checklist
 
 ### Code Examples
-- [x] getting-started.md examples tested
-- [ ] PYTHON_PACKAGE_README.md examples tested
+- [x] getting_started.md examples tested
+- [ ] python_package_readme.md examples tested
 - [ ] All template examples verified
 - [ ] Prompt examples in prompts/ documented
 
 ### Links
 - [ ] All internal links validated
 - [ ] All external links checked
-- [ ] File paths verified against PROJECT_STRUCTURE.md
+- [ ] File paths verified against project_structure.md
 
 ### Consistency
 - [ ] Version numbers consistent across docs
@@ -332,22 +332,22 @@ find docs -name "*.md" -exec sed -i '' 's|\.\./CONTRIBUTING\.md|../.github/CONTR
 
 ### Immediate Actions (This Session)
 
-1. ✅ **getting-started.md** - COMPLETE
+1. ✅ **getting_started.md** - COMPLETE
 2. 🔄 **Fix broken links** in remaining docs (TODO.md → ROADMAP.md)
-3. 📝 **PYTHON_PACKAGE_README.md** - Remove "coming soon", add working examples
+3. 📝 **python_package_readme.md** - Remove "coming soon", add working examples
 4. 📝 **Create documentation status tracking** (this file)
 
 ### High Priority (Next Session)
 
-1. **advanced-techniques.md** - Document actual techniques from codebase
-2. **cost-optimization.md** - Add real metrics and examples
-3. **PYTHON_PACKAGE_README.md** - Complete provider documentation
+1. **advanced_techniques.md** - Document actual techniques from codebase
+2. **cost_optimization.md** - Add real metrics and examples
+3. **python_package_readme.md** - Complete provider documentation
 
 ### Medium Priority
 
-1. **quality-evaluation.md** - Document testing approach
-2. **MODEL_UPDATE_SYSTEM.md** - Verify against implementation
-3. **PROMPT_DESIGN_PRINCIPLES.md** - Add concrete examples
+1. **quality_evaluation.md** - Document testing approach
+2. **model_update_system.md** - Verify against implementation
+3. **prompt_design_principles.md** - Add concrete examples
 
 ### Low Priority
 
@@ -401,8 +401,8 @@ A documentation file is considered complete when:
 ## Change Log
 
 ### 2025-11-01
-- ✅ Created DOCUMENTATION_STATUS.md
-- ✅ Completed getting-started.md (0% → 100%)
+- ✅ Created documentation_status.md
+- ✅ Completed getting_started.md (0% → 100%)
 - ✅ Fixed CI linting issues (Black, Ruff)
 - ✅ Audited all /docs files for placeholders
 - 🔍 Identified 8 files needing updates

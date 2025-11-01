@@ -27,4 +27,4 @@ Chain-of-thought is most effective for:
 
 **Trade-off**: 2-3x token cost for improved accuracy on complex tasks.
 
-See [PROMPT_DESIGN_PRINCIPLES.md](../PROMPT_DESIGN_PRINCIPLES.md#chain-of-thought-reasoning) for basic patterns.
+See [prompt_design_principles.md](../prompt_design_principles.md#chain-of-thought-reasoning) for basic patterns.

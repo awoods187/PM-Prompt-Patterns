@@ -538,18 +538,18 @@ MIT License - see [LICENSE](../LICENSE) for details.
 ## 🔗 Related Documentation
 
 ### Package Documentation
-- [Getting Started Guide](./getting-started.md) - Beginner's guide
-- [Project Structure](./PROJECT_STRUCTURE.md) - Repository organization
+- [Getting Started Guide](./getting_started.md) - Beginner's guide
+- [Project Structure](./project_structure.md) - Repository organization
 - [API Documentation](./api/) - (Coming soon)
 
 ### Guides & Best Practices
-- [Prompt Design Principles](./PROMPT_DESIGN_PRINCIPLES.md) - Core patterns
-- [Advanced Techniques](./advanced-techniques.md) - Production patterns
-- [Cost Optimization](./cost-optimization.md) - ROI strategies
-- [Quality Evaluation](./quality-evaluation.md) - Testing methodologies
+- [Prompt Design Principles](./prompt_design_principles.md) - Core patterns
+- [Advanced Techniques](./advanced_techniques.md) - Production patterns
+- [Cost Optimization](./cost_optimization.md) - ROI strategies
+- [Quality Evaluation](./quality_evaluation.md) - Testing methodologies
 
 ### System Documentation
-- [Model Update System](./MODEL_UPDATE_SYSTEM.md) - Automated model updates
+- [Model Update System](./model_update_system.md) - Automated model updates
 - [Security Policy](../.github/SECURITY.md) - Vulnerability reporting
 
 ### Project Information

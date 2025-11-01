@@ -220,28 +220,28 @@ This document tracks planned enhancements and community requests for the AI PM T
 
 ## Phase 6: Documentation & Education
 
-### Getting Started Guide (docs/getting-started.md)
+### Getting Started Guide (docs/getting_started.md)
 - [ ] Complete beginner's guide
 - [ ] Environment setup
 - [ ] First prompt walkthrough
 - [ ] Testing and iteration
 - [ ] Deploying to production
 
-### Advanced Techniques (docs/advanced-techniques.md)
+### Advanced Techniques (docs/advanced_techniques.md)
 - [ ] Prompt engineering theory
 - [ ] Attention mechanisms and how to leverage
 - [ ] Temperature and sampling strategies
 - [ ] Token optimization deep dive
 - [ ] Production monitoring and alerting
 
-### Cost Optimization (docs/cost-optimization.md)
+### Cost Optimization (docs/cost_optimization.md)
 - [ ] Complete cost optimization guide
 - [ ] Caching strategies in depth
 - [ ] Batching and async processing
 - [ ] Model cascading patterns
 - [ ] ROI calculation frameworks
 
-### Quality Evaluation (docs/quality-evaluation.md)
+### Quality Evaluation (docs/quality_evaluation.md)
 - [ ] Building test datasets
 - [ ] Accuracy measurement methodologies
 - [ ] Human evaluation frameworks
@@ -300,7 +300,7 @@ This document tracks planned enhancements and community requests for the AI PM T
    - Executive reporting
    - Feature request analysis
 
-3. **Create getting-started.md**
+3. **Create getting_started.md**
    - Beginner-friendly walkthrough
    - First prompt tutorial
    - Testing and iteration guide
@@ -361,7 +361,7 @@ This document tracks planned enhancements and community requests for the AI PM T
 **High Priority** (Next 30 days):
 1. Complete remaining template files
 2. Add 1-2 more production examples
-3. Create getting-started.md
+3. Create getting_started.md
 4. Add model-specific guides (at least 3)
 
 **Medium Priority** (Next 90 days):

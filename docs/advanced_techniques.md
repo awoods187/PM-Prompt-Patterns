@@ -210,10 +210,10 @@ The provider abstraction pattern enables switching between LLM vendors (Claude, 
                     │ extends
        ┌────────────┼────────────┬────────────┐
        │            │            │            │
-┌──────▼─────┐ ┌───▼────┐ ┌─────▼─────┐ ┌───▼─────┐
-│   Claude   │ │Bedrock │ │  Vertex   │ │  Mock   │
-│ Provider   │ │Provider│ │ Provider  │ │Provider │
-└────────────┘ └────────┘ └───────────┘ └─────────┘
+┌──────▼─────┐  ┌───▼────┐ ┌─────▼─────┐  ┌───▼─────┐
+│   Claude   │  │Bedrock │ │  Vertex   │  │  Mock   │
+│ Provider   │  │Provider│ │ Provider  │  │Provider │
+└────────────┘  └────────┘ └───────────┘  └─────────┘
 ```
 
 ### Base Class Contract
@@ -372,13 +372,13 @@ except ConfigurationError as e:
 
 ### Why Multi-Cloud?
 
-| Use Case | Provider | Reason |
-|----------|----------|--------|
-| AWS infrastructure | Bedrock | VPC access, IAM integration |
-| GCP infrastructure | Vertex AI | Same cloud, lower latency |
-| Development | Anthropic | Simplest setup |
-| Cost optimization | Bedrock | Potential volume discounts |
-| Compliance | Vertex/Bedrock | Data residency requirements |
+| Use Case            | Provider        | Reason                       |
+|---------------------|-----------------|------------------------------|
+| AWS infrastructure  | Bedrock         | VPC access, IAM integration  |
+| GCP infrastructure  | Vertex AI       | Same cloud, lower latency    |
+| Development         | Anthropic       | Simplest setup               |
+| Cost optimization   | Bedrock         | Potential volume discounts   |
+| Compliance          | Vertex/Bedrock  | Data residency requirements  |
 
 ---
 
@@ -514,14 +514,14 @@ concise_prompt = """<task>Classify this customer signal</task>
 
 ### Cost Optimization Summary
 
-| Technique | Avg Savings | Complexity | When to Use |
-|-----------|-------------|------------|-------------|
-| Keyword filtering | 70% | Low | High-volume classification |
-| Model cascading | 60-85% | Medium | Variable complexity inputs |
-| Prompt caching | 70-90% | Low | Repeated prompts |
-| Batch processing | 40-60% | Low | High throughput |
-| Prompt optimization | 50-80% | Medium | All scenarios |
-| Budget models | 60-95% | Low | Simple tasks |
+| Technique           | Avg Savings | Complexity | When to Use                |
+|---------------------|-------------|------------|----------------------------|
+| Keyword filtering   | 70%         | Low        | High-volume classification |
+| Model cascading     | 60-85%      | Medium     | Variable complexity inputs |
+| Prompt caching      | 70-90%      | Low        | Repeated prompts           |
+| Batch processing    | 40-60%      | Low        | High throughput            |
+| Prompt optimization | 50-80%      | Medium     | All scenarios              |
+| Budget models       | 60-95%      | Low        | Simple tasks               |
 
 ---
 
@@ -700,11 +700,11 @@ print(execution_response.content[0].text)
 
 ### Production Metrics
 
-| Approach | Design Time | Quality Score | First-Try Success |
-|----------|-------------|---------------|-------------------|
-| Manual (ad-hoc) | 2-4 hours | 60-75% | 40% |
-| Manual (structured) | 3-5 hours | 80-90% | 65% |
-| **Meta-prompt** | **5-15 min** | **90-95%** | **85%** |
+| Approach            | Design Time  | Quality Score | First-Try Success |
+|---------------------|--------------|---------------|-------------------|
+| Manual (ad-hoc)     | 2-4 hours    | 60-75%        | 40%               |
+| Manual (structured) | 3-5 hours    | 80-90%        | 65%               |
+| **Meta-prompt**     | **5-15 min** | **90-95%**    | **85%**           |
 
 ### Benefits
 
@@ -1080,10 +1080,10 @@ This toolkit implements production-grade advanced techniques:
 
 ### Related Documentation
 
-- [Cost Optimization Guide](./cost-optimization.md) - Detailed ROI strategies
-- [Quality Evaluation](./quality-evaluation.md) - Testing methodologies
-- [PROMPT_DESIGN_PRINCIPLES.md](../PROMPT_DESIGN_PRINCIPLES.md) - Core patterns
-- [PYTHON_PACKAGE_README.md](./PYTHON_PACKAGE_README.md) - Usage guide
+- [Cost Optimization Guide](./cost_optimization.md) - Detailed ROI strategies
+- [Quality Evaluation](./quality_evaluation.md) - Testing methodologies
+- [prompt_design_principles.md](../prompt_design_principles.md) - Core patterns
+- [python_package_readme.md](./python_package_readme.md) - Usage guide
 
 ---
 

@@ -64,7 +64,7 @@ This is not a collection of toy examples. Every contribution should meet our **p
 
 Before contributing, familiarize yourself with:
 - [README.md](./README.md) - Repository philosophy
-- [PROMPT_DESIGN_PRINCIPLES.md](./PROMPT_DESIGN_PRINCIPLES.md) - Core patterns
+- [prompt_design_principles.md](./prompt_design_principles.md) - Core patterns
 - [examples/signal-classification](./examples/signal-classification/) - Quality bar example
 
 ### Step 2: Open an Issue First

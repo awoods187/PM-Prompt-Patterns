@@ -43,10 +43,10 @@ python -c "from ai_models import get_model; print(get_model('claude-sonnet-4-5')
 ```
 
 **Next Steps by Role:**
-- **New to prompts?** → [Design Principles](./docs/PROMPT_DESIGN_PRINCIPLES.md)
+- **New to prompts?** → [Design Principles](./docs/prompt_design_principles.md)
 - **Optimizing costs?** → [Model Selection Guide](#-model-selection-guide)
 - **Building production systems?** → [Epic Categorization Example](./examples/epic-categorization/)
-- **Understanding the codebase?** → [Project Structure](./docs/PROJECT_STRUCTURE.md)
+- **Understanding the codebase?** → [Project Structure](./docs/project_structure.md)
 
 ---
 
@@ -274,7 +274,7 @@ PM-Prompt-Patterns/
 | Dependencies | Weekly (Dependabot) | Continuous |
 | Prompts | Ad-hoc | As contributed |
 
-**Model Update Process:** Automated weekly staleness checks via GitHub Actions. See [Model Update Workflow](./docs/workflows/MODEL_UPDATE_WORKFLOW.md) for manual update procedures.
+**Model Update Process:** Automated weekly staleness checks via GitHub Actions. See [Model Update System](./docs/model_update_system.md) for manual update procedures.
 
 **Deprecation Policy:** 90-day notice for breaking changes. See [CHANGELOG.md](./CHANGELOG.md).
 
@@ -283,13 +283,13 @@ PM-Prompt-Patterns/
 ## 🎓 Learning Resources
 
 **Fundamentals** (Start here):
-1. [Prompt Design Principles](./docs/PROMPT_DESIGN_PRINCIPLES.md) - Core patterns
+1. [Prompt Design Principles](./docs/prompt_design_principles.md) - Core patterns
 2. [Model Optimization Guide](./MODEL_OPTIMIZATION_GUIDE.md) - Provider techniques
-3. [Cost Optimization](./docs/cost-optimization.md) - ROI strategies
+3. [Cost Optimization](./docs/cost_optimization.md) - ROI strategies
 
 **Production Systems:**
 - [Epic Categorization Example](./examples/epic-categorization/) - End-to-end architecture
-- [Quality Evaluation](./docs/quality-evaluation.md) - Testing methodology
+- [Quality Evaluation](./docs/quality_evaluation.md) - Testing methodology
 - [Meta-Prompting](./templates/meta-prompting.md) - Iterative improvement
 
 **Migration:**
@@ -314,7 +314,7 @@ We welcome production-tested contributions with real metrics:
 2. Sign commits with DCO: `git commit -s`
 3. Submit PR using [template](./.github/pull_request_template.md)
 
-**Recognition:** All contributors listed in [ATTRIBUTION.md](./docs/ATTRIBUTION.md).
+**Recognition:** All contributors listed in [ATTRIBUTION.md](./docs/attribution.md).
 
 ---
 
@@ -324,15 +324,15 @@ We welcome production-tested contributions with real metrics:
 
 **TL;DR:** Use freely in commercial products, no attribution required (appreciated).
 
-**Details:** [LICENSE](./LICENSE) | [LICENSE_FAQ.md](./LICENSE_FAQ.md) | [CONTENT_LICENSE.md](./CONTENT_LICENSE.md)
+**Details:** [LICENSE](./LICENSE) | [LICENSE_FAQ.md](./docs/license_faq.md) | [CONTENT_LICENSE.md](./docs/content_license.md)
 
 ---
 
 ## 🔗 Quick Links
 
-**Getting Started:** [Design Principles](./docs/PROMPT_DESIGN_PRINCIPLES.md) → [Model Guide](./MODEL_OPTIMIZATION_GUIDE.md) → [Examples](./examples/)
+**Getting Started:** [Design Principles](./docs/prompt_design_principles.md) → [Model Guide](./MODEL_OPTIMIZATION_GUIDE.md) → [Examples](./examples/)
 
-**Repository Structure:** [Project Structure Guide](./docs/PROJECT_STRUCTURE.md) | [Changelog](./CHANGELOG.md)
+**Repository Structure:** [Project Structure Guide](./docs/project_structure.md) | [Changelog](./CHANGELOG.md)
 **Developer API:** [ai_models Package](./docs/api-examples.md) | [Migration Guide](./MIGRATION_GUIDE.md)
 **CI/CD:** [Workflows](./.github/workflows/) | [Run Tests](./scripts/run_tests.sh)
 **Model Registry:** [Definitions](./ai_models/definitions/) | [Pricing](./ai_models/pricing.py)

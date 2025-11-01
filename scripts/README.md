@@ -38,7 +38,7 @@ python scripts/model_updater/main.py
 - **Workflow**: `.github/workflows/auto-update-models.yml`
 - **Action**: Creates PR with updates if changes detected
 
-**Complete Documentation:** [docs/MODEL_UPDATE_SYSTEM.md](../docs/MODEL_UPDATE_SYSTEM.md)
+**Complete Documentation:** [docs/model_update_system.md](../docs/model_update_system.md)
 
 **Testing:**
 ```bash

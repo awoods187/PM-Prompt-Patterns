@@ -96,7 +96,7 @@ Test code (`tests/`) is licensed under MIT. Use test patterns freely in your own
 
 ## Questions?
 
-See [LICENSE_FAQ.md](./LICENSE_FAQ.md) for common questions about licensing.
+See [license_faq.md](./license_faq.md) for common questions about licensing.
 
 For specific licensing questions, open an issue or contact the maintainer.
 

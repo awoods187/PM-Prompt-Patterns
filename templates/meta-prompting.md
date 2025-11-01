@@ -816,6 +816,6 @@ Categories: feature_request, bug_report, churn_risk
 - Iterate based on results
 
 **Related**:
-- [PROMPT_DESIGN_PRINCIPLES.md](../PROMPT_DESIGN_PRINCIPLES.md) for core patterns
+- [prompt_design_principles.md](../prompt_design_principles.md) for core patterns
 - [MODEL_OPTIMIZATION_GUIDE.md](../MODEL_OPTIMIZATION_GUIDE.md) for provider-specific techniques
 - [examples/signal-classification](../examples/signal-classification/) for complete production system

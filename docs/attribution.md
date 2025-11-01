@@ -150,7 +150,7 @@ https://github.com/awoods187/PM-Prompt-Patterns (MIT License)
 
 All contributions to this project are made under the [MIT License](./LICENSE).
 
-See [CONTENT_LICENSE.md](./CONTENT_LICENSE.md) for clarifications on prompt licensing and generated content.
+See [content_license.md](./content_license.md) for clarifications on prompt licensing and generated content.
 
 ---
 

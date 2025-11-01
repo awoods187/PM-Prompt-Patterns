@@ -363,9 +363,9 @@ Files that may need updates:
 | File | What to Update |
 |------|----------------|
 | **README.md** | Model comparison table |
-| **docs/PYTHON_PACKAGE_README.md** | Available models list |
-| **docs/cost-optimization.md** | Pricing examples if changed |
-| **docs/advanced-techniques.md** | Model references in examples |
+| **docs/python_package_readme.md** | Available models list |
+| **docs/cost_optimization.md** | Pricing examples if changed |
+| **docs/advanced_techniques.md** | Model references in examples |
 
 ### Step 6: Create Verification Report
 
@@ -834,7 +834,7 @@ claude_models = [
 
 # 5. Update documentation
 # - README.md model comparison table
-# - PYTHON_PACKAGE_README.md
+# - python_package_readme.md
 
 # 6. Test and commit
 pytest tests/
@@ -918,7 +918,7 @@ Before committing manual updates:
 - [ ] Tested model endpoints (if API keys available)
 - [ ] Updated factory routing (if new models added)
 - [ ] Updated README.md model table (if needed)
-- [ ] Updated PYTHON_PACKAGE_README.md (if needed)
+- [ ] Updated python_package_readme.md (if needed)
 - [ ] Verified no hardcoded old identifiers remain
 - [ ] All tests passing (`pytest tests/` shows 507 passing)
 - [ ] Committed with descriptive message
@@ -1017,7 +1017,7 @@ PM-Prompt-Patterns/
 ├── .github/workflows/
 │   └── auto-update-models.yml         # Weekly automation
 └── docs/
-    └── MODEL_UPDATE_SYSTEM.md         # This document
+    └── model_update_system.md         # This document
 ```
 
 ---
