@@ -32,6 +32,14 @@ bedrock:
   pricing_url: "https://aws.amazon.com/bedrock/pricing/"
   notes: "Requires AWS credentials; models vary by region"
 
+vertex:
+  name: "Google Vertex AI"
+  docs_url: "https://cloud.google.com/vertex-ai/docs/generative-ai/learn/models"
+  api_available: true
+  api_method: "anthropic.AnthropicVertex()"
+  pricing_url: "https://cloud.google.com/vertex-ai/pricing"
+  notes: "Requires GCP credentials; Claude models via Anthropic Vertex SDK"
+
 # Update schedule
 schedule:
   frequency: "weekly"  # weekly, biweekly, monthly

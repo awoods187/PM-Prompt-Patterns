@@ -127,7 +127,7 @@ class TestModelUpdaterInitialization:
         assert updater.repo_root == temp_repo_root
         assert updater.dry_run is False
         assert updater.definitions_dir == temp_repo_root / "ai_models" / "definitions"
-        assert len(updater.fetchers) == 3  # Anthropic, OpenAI, Google
+        assert len(updater.fetchers) == 5  # Anthropic, OpenAI, Google, Bedrock, Vertex
 
     def test_init_with_dry_run_mode_sets_flag(self, temp_repo_root: Path) -> None:
         """Test that dry_run mode is properly configured."""

@@ -32,8 +32,10 @@ import yaml
 from scripts.model_updater.change_detector import ChangeDetector
 from scripts.model_updater.fetchers.anthropic_fetcher import AnthropicFetcher
 from scripts.model_updater.fetchers.base_fetcher import ModelData
+from scripts.model_updater.fetchers.bedrock_fetcher import BedrockFetcher
 from scripts.model_updater.fetchers.google_fetcher import GoogleFetcher
 from scripts.model_updater.fetchers.openai_fetcher import OpenAIFetcher
+from scripts.model_updater.fetchers.vertex_fetcher import VertexFetcher
 from scripts.model_updater.pr_creator import PRCreator
 from scripts.model_updater.validator import ModelValidator
 
@@ -64,6 +66,8 @@ class ModelUpdater:
             AnthropicFetcher(),
             OpenAIFetcher(),
             GoogleFetcher(),
+            BedrockFetcher(),
+            VertexFetcher(),
         ]
         self.change_detector = ChangeDetector()
         self.validator = ModelValidator()
