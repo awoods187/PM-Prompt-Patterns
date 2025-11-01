@@ -2,7 +2,7 @@
 
 **Complexity**: 🔴 Advanced
 **Category**: Stakeholder Communication / Executive Presentations
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-4 | ✅ Gemini Pro
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-4 | ✅ Gemini 2.5 Pro
 
 ## Overview
 

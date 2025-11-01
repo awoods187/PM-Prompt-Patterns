@@ -1,0 +1,54 @@
+# GPT-4.1 mini Model Definition
+# Last verified: 2025-11-01
+# Source: https://platform.openai.com/docs/models
+
+schema_version: "1.0.0"
+model_id: "gpt-4.1-mini"
+provider: "openai"
+name: "GPT-4.1 mini"
+api_identifier: "gpt-4.1-mini-2025-04"
+
+metadata:
+  context_window_input: 128000
+  context_window_output: 16384
+  knowledge_cutoff: "April 2025"
+  release_date: "2025-04-01"
+  last_verified: "2025-11-01"
+  docs_url: "https://platform.openai.com/docs/models/gpt-4.1-mini"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - streaming
+  - json_mode
+  - code_generation
+  - tool_use
+
+pricing:
+  input_per_1m: 0.15
+  output_per_1m: 0.60
+
+optimization:
+  recommended_for:
+    - "Fast coding model (replaced GPT-4o mini)"
+    - "Budget-friendly code generation"
+    - "High-volume coding tasks"
+    - "Tool use and function calling"
+    - "Structured outputs for APIs"
+    - "Simple to moderate coding tasks"
+    - "Real-time code assistance"
+  best_practices:
+    - "Excellent for budget-conscious coding applications"
+    - "Fast small model specialized for code"
+    - "Use function calling for tool integration"
+    - "Set temperature=0 for deterministic code"
+    - "Use JSON mode for structured outputs"
+    - "Batch requests for cost efficiency"
+    - "Ideal replacement for GPT-4o mini"
+  cost_tier: "budget"
+  speed_tier: "fast"
+
+notes: "Fast coding model that replaced GPT-4o mini. Released April 2025. 128k context window."

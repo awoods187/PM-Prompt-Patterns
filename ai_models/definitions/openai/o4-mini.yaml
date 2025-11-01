@@ -1,0 +1,55 @@
+# o4-mini Model Definition
+# Last verified: 2025-11-01
+# Source: https://platform.openai.com/docs/models
+
+schema_version: "1.0.0"
+model_id: "o4-mini"
+provider: "openai"
+name: "o4-mini"
+api_identifier: "o4-mini-2025-04-16"
+
+metadata:
+  context_window_input: 128000
+  context_window_output: 16384
+  knowledge_cutoff: "April 2025"
+  release_date: "2025-04-16"
+  last_verified: "2025-11-01"
+  docs_url: "https://platform.openai.com/docs/models/o4-mini"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - streaming
+  - json_mode
+  - advanced_reasoning
+  - tool_use
+  - visual_reasoning
+
+pricing:
+  input_per_1m: 1.00
+  output_per_1m: 4.00
+
+optimization:
+  recommended_for:
+    - "Fast, cost-efficient reasoning"
+    - "Math and coding tasks"
+    - "Visual reasoning (think with images)"
+    - "Sketches, diagrams, low-quality images"
+    - "Higher usage limits than o3"
+    - "Budget-friendly reasoning tasks"
+    - "Real-time reasoning applications"
+  best_practices:
+    - "Can 'think with images' - analyzes sketches, diagrams, low-quality images"
+    - "Higher usage limits than o3 models"
+    - "Excellent for math and coding reasoning"
+    - "Use for cost-effective reasoning at scale"
+    - "Leverage visual reasoning for diagram analysis"
+    - "Set appropriate max_tokens for reasoning chains"
+    - "Ideal for high-volume reasoning workloads"
+  cost_tier: "budget"
+  speed_tier: "fast"
+
+notes: "Fast, cost-efficient reasoning with visual thinking capability. Released April 16, 2025. Can analyze images during reasoning."

@@ -9,7 +9,7 @@ The factory router implements three-tier routing logic (explicit prefix → enab
 Tests focus on routing correctness, provider selection, configuration validation, and edge cases.
 """
 
-from unittest.mock import Mock, patch
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 
@@ -434,28 +434,37 @@ class TestOpenAIRouting:
     """Test suite for OpenAI model routing."""
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_gpt4_with_openai_disabled_raises_not_implemented(self, mock_get_settings):
-        """Test that GPT-4 with OpenAI disabled raises NotImplementedError."""
+    def test_gpt4_with_openai_disabled_raises_configuration_error(self, mock_get_settings):
+        """Test that GPT-4 with OpenAI disabled raises ConfigurationError."""
         # Arrange
         mock_settings = Mock()
         mock_settings.enable_openai = False
         mock_get_settings.return_value = mock_settings
 
         # Act & Assert
-        with pytest.raises(NotImplementedError, match="OpenAI provider"):
+        with pytest.raises(ConfigurationError, match="OpenAI provider"):
             get_provider("gpt-4")
 
+    @patch("pm_prompt_toolkit.providers.factory.OpenAIProvider")
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_gpt4_with_openai_enabled_routes_to_openai(self, mock_get_settings):
-        """Test that GPT-4 routes to OpenAI when enabled (raises NotImplementedError)."""
+    def test_gpt4_with_openai_enabled_routes_to_openai(
+        self, mock_get_settings, mock_openai_provider
+    ):
+        """Test that GPT-4o routes to OpenAI when enabled."""
         # Arrange
         mock_settings = Mock()
         mock_settings.enable_openai = True
         mock_get_settings.return_value = mock_settings
 
-        # Act & Assert - OpenAIProvider __init__ will raise NotImplementedError
-        with pytest.raises(NotImplementedError, match="OpenAI provider not yet implemented"):
-            get_provider("gpt-4")
+        mock_instance = MagicMock()
+        mock_openai_provider.return_value = mock_instance
+
+        # Act
+        result = get_provider("gpt-4o")
+
+        # Assert
+        mock_openai_provider.assert_called_once_with(model="gpt-4o", enable_caching=True)
+        assert result == mock_instance
 
     @pytest.mark.parametrize(
         "model",
@@ -476,7 +485,7 @@ class TestOpenAIRouting:
         mock_get_settings.return_value = mock_settings
 
         # Act & Assert
-        with pytest.raises(NotImplementedError, match="OpenAI provider"):
+        with pytest.raises(ConfigurationError, match="OpenAI provider"):
             get_provider(model)
 
 
@@ -491,23 +500,23 @@ class TestGeminiRouting:
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
     def test_gemini_pro_routes_to_gemini_provider(self, mock_gemini, mock_get_settings):
-        """Test that Gemini Pro routes to GeminiProvider."""
+        """Test that Gemini 2.5 Pro routes to GeminiProvider."""
         # Arrange
         mock_get_settings.return_value = Mock()
         # GeminiProvider raises NotImplementedError in __init__
-        mock_gemini.side_effect = NotImplementedError("Gemini provider not yet implemented")
+        mock_gemini.side_effect = NotImplementedError("Gemini 2.5 Provider not yet implemented")
 
         # Act & Assert
         with pytest.raises(NotImplementedError):
-            get_provider("gemini-pro")
+            get_provider("gemini-2-5-pro")
 
     @pytest.mark.parametrize(
         "model",
         [
-            "gemini-pro",
-            "gemini-flash",
+            "gemini-2-5-pro",
+            "gemini-2-5-flash",
             "gemini-1.5",
-            "GEMINI-PRO",  # Case insensitive
+            "gemini-2-5-pro",  # Case insensitive
         ],
     )
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
@@ -662,8 +671,11 @@ class TestGetProviderByPrefix:
 class TestAdditionalCoverage:
     """Tests to cover remaining factory.py lines."""
 
+    @patch("pm_prompt_toolkit.providers.factory.OpenAIProvider")
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_openai_prefix_with_enabled_logs_message(self, mock_get_settings, caplog):
+    def test_openai_prefix_with_enabled_logs_message(
+        self, mock_get_settings, mock_openai_provider, caplog
+    ):
         """Test that OpenAI prefix with enabled provider logs info message."""
         # Arrange
         import logging
@@ -672,19 +684,20 @@ class TestAdditionalCoverage:
         mock_settings.enable_openai = True
         mock_get_settings.return_value = mock_settings
 
+        mock_instance = MagicMock()
+        mock_openai_provider.return_value = mock_instance
+
         # Act
         with caplog.at_level(logging.INFO):
-            try:
-                get_provider("openai:gpt-4")
-            except NotImplementedError:
-                pass  # Expected - OpenAI not implemented
+            get_provider("openai:gpt-4o")
 
         # Assert
         assert "Using OpenAI provider" in caplog.text
         assert "explicit prefix" in caplog.text
 
+    @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_gemini_prefix_logs_message(self, mock_get_settings, caplog):
+    def test_gemini_prefix_logs_message(self, mock_get_settings, mock_gemini_provider, caplog):
         """Test that Gemini prefix logs info message."""
         # Arrange
         import logging
@@ -692,13 +705,13 @@ class TestAdditionalCoverage:
         mock_settings = Mock()
         mock_get_settings.return_value = mock_settings
 
+        mock_instance = MagicMock()
+        mock_gemini_provider.return_value = mock_instance
+
         # Act
         with caplog.at_level(logging.INFO):
-            try:
-                get_provider("gemini:gemini-pro")
-            except NotImplementedError:
-                pass  # Expected - Gemini not implemented
+            get_provider("gemini:gemini-2-5-pro")
 
         # Assert
-        assert "Using Gemini provider" in caplog.text
+        assert "Using Gemini 2.5 Provider" in caplog.text
         assert "explicit prefix" in caplog.text

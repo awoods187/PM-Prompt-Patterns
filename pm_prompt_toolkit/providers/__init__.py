@@ -7,12 +7,12 @@ This module provides a unified interface for working with different LLM provider
 with consistent APIs, error handling, and flexible routing.
 
 Supported Providers:
-    - Anthropic Claude (direct API) - Haiku, Sonnet, Opus
-    - AWS Bedrock - Claude models via AWS infrastructure
-    - Google Vertex AI - Claude models via Google Cloud
-    - OpenAI GPT - GPT-3.5, GPT-4, GPT-4o, o1
-    - Google Gemini - Gemini Pro, Gemini Flash
-    - Mock - Testing provider with zero cost
+    - Anthropic Claude (direct API) - Haiku, Sonnet, Opus (fully implemented)
+    - AWS Bedrock - Claude models via AWS infrastructure (fully implemented)
+    - Google Vertex AI - Claude models via Google Cloud (fully implemented)
+    - OpenAI GPT - GPT-4o, GPT-4o-mini, gpt-4o (fully implemented)
+    - Google Gemini - Gemini 2.5 Pro, Flash, Flash Lite (fully implemented)
+    - Mock - Testing provider with zero cost (fully implemented)
 
 Provider Routing:
     Three-tier routing logic:

@@ -51,7 +51,7 @@ class TestModelRegistry:
         assert all(m.provider == "anthropic" for m in anthropic_models)
 
         openai_models = ModelRegistry.get_by_provider("openai")
-        assert len(openai_models) == 2
+        assert len(openai_models) == 8  # Updated for new OpenAI model lineup (Nov 2025)
 
         google_models = ModelRegistry.get_by_provider("google")
         assert len(google_models) == 3
@@ -193,7 +193,7 @@ class TestCapabilities:
         assert has_prompt_caching("claude-haiku-4-5")
 
     def test_gemini_flash_lite_limited_capabilities(self):
-        """Gemini Flash-Lite should have limited capabilities (free tier)."""
+        """Gemini 2.5 Flash-Lite should have limited capabilities (free tier)."""
         model = ModelRegistry.get("gemini-2-5-flash-lite")
         assert model.has_capability(ModelCapability.VISION)
         assert not model.has_capability(ModelCapability.FUNCTION_CALLING)

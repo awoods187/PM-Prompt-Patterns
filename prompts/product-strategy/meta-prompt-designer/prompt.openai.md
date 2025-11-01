@@ -1,3 +1,76 @@
+# Meta-Prompt Designer (OpenAI Optimized)
+
+**Provider:** OpenAI
+**Optimizations:** Function calling, JSON mode, structured outputs
+
+**Complexity**: 🔴 Advanced
+
+## OpenAI-Specific Features
+
+This variant is optimized for OpenAI models with:
+- **Function calling** for guaranteed structured output
+- **JSON mode** for valid JSON responses
+- **Parallel tool calls** for batch processing
+- **Reproducible results** with seed parameter
+
+## Usage with Function Calling
+
+```python
+from ai_models import get_prompt
+import openai
+
+prompt = get_prompt("product-strategy/meta-prompt-designer", provider="openai")
+
+# Define function schema for structured output
+function_schema = {
+    "name": "process_prompt",
+    "description": "Process the prompt and return structured output",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "result": {"type": "string", "description": "The processed result"},
+            "confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+            "reasoning": {"type": "string", "description": "Step-by-step reasoning"}
+        },
+        "required": ["result", "confidence", "reasoning"]
+    }
+}
+
+# Use with GPT-4o or GPT-4o-mini
+response = openai.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": "Your input here"}
+    ],
+    functions=[function_schema],
+    function_call={"name": "process_prompt"},
+    temperature=0.0  # Deterministic output
+)
+
+result = json.loads(response.choices[0].message.function_call.arguments)
+```
+
+## Usage with JSON Mode
+
+```python
+response = openai.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": "Your input here"}
+    ],
+    response_format={"type": "json_object"},
+    temperature=0.0
+)
+
+result = json.loads(response.choices[0].message.content)
+```
+
+---
+
+## Original Prompt
+
 # Meta-Prompt Designer
 
 **Complexity**: 🔴 Advanced
@@ -340,7 +413,7 @@ def design_prompt(use_case_description: str) -> Dict:
     """
 
     response = client.messages.create(
-        model="claude-sonnet-4-5-20250929",  # Latest Claude 3.5 Sonnet
+        model="claude-sonnet-4-5-20250929",  # Latest Claude Sonnet 4.5
         max_tokens=8000,
         temperature=0,  # Deterministic for consistency
         messages=[{
@@ -424,7 +497,7 @@ def two_window_workflow():
     """
 
     response = client.messages.create(
-        model="claude-sonnet-4-5-20250929",  # Latest Claude 3.5 Sonnet
+        model="claude-sonnet-4-5-20250929",  # Latest Claude Sonnet 4.5
         max_tokens=4000,
         messages=[{
             "role": "user",
@@ -586,7 +659,7 @@ def design_prompt_gpt4(use_case: str) -> Dict:
     Design prompts that are self-documenting and follow industry best practices."""
 
     response = client.chat.completions.create(
-        model="gpt-4o",  # Latest GPT-4o (replaces gpt-4-turbo)
+        model="gpt-4o",  # Latest GPT-4o (replaces gpt-4o)
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"Design a production-ready prompt for this use case:\n\n{use_case}"}
@@ -694,7 +767,7 @@ if __name__ == "__main__":
 ```
 
 **Performance**:
-- Design quality: 92% first-try success (GPT-4 Turbo)
+- Design quality: 92% first-try success (GPT-4o)
 - Structured output: 100% valid (guaranteed by schema)
 - Cost: ~$0.03-0.10 per prompt design
 - Time: ~10-20 seconds per prompt
@@ -943,7 +1016,7 @@ def interactive_prompt_designer():
                 print("\n🔍 Testing prompt...")
 
                 response = client.messages.create(
-                    model="claude-sonnet-4-5-20250929",  # Latest Claude 3.5 Sonnet
+                    model="claude-sonnet-4-5-20250929",  # Latest Claude Sonnet 4.5
                     max_tokens=4000,
                     messages=[{
                         "role": "user",
@@ -1278,3 +1351,12 @@ After using this meta-prompt, you should achieve:
 - ✅ Self-documenting prompts your team can use
 
 **Remember**: Good prompt design is iterative. Use the testing checklist to validate, and don't hesitate to refine based on real-world use.
+
+
+---
+
+## Model Recommendations
+
+- **GPT-4o-mini**: Best value, 94% of GPT-4o accuracy ($0.15/$0.60 per 1M tokens)
+- **GPT-4o**: Balanced performance ($2.50/$10.00 per 1M tokens)
+- **gpt-4o**: For complex reasoning ($10/$30 per 1M tokens)

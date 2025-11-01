@@ -31,7 +31,7 @@ from xml.sax.saxutils import escape  # nosec B406  # Used to escape user input, 
 try:
     import boto3
 except ImportError:
-    boto3 = None  # type: ignore[assignment]
+    boto3 = None
 
 from pm_prompt_toolkit.config import get_settings
 from pm_prompt_toolkit.providers.base import ClassificationResult, LLMProvider, SignalCategory
@@ -42,24 +42,24 @@ logger = logging.getLogger(__name__)
 # Maps our simplified names to Bedrock's full model identifiers
 BEDROCK_MODEL_IDS = {
     # Claude 4.5 models
-    "claude-sonnet-4-5": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+    "claude-sonnet-4-5": "anthropic.claude-sonnet-4-5-v2:0",
     # Claude 4 models
-    "claude-sonnet-4": "anthropic.claude-3-5-sonnet-20240620-v1:0",
-    "claude-opus-4-1": "anthropic.claude-3-opus-20240229-v1:0",
-    "claude-opus-4": "anthropic.claude-3-opus-20240229-v1:0",
+    "claude-sonnet-4": "anthropic.claude-sonnet-4-5-v1:0",
+    "claude-opus-4-1": "anthropic.claude-opus-4-1-v1:0",
+    "claude-opus-4": "anthropic.claude-opus-4-1-v1:0",
     # Claude 3.5 models (backward compatibility)
-    "claude-sonnet": "anthropic.claude-3-5-sonnet-20241022-v2:0",
-    "claude-haiku": "anthropic.claude-3-5-haiku-20241022-v1:0",
-    "claude-opus": "anthropic.claude-3-opus-20240229-v1:0",
+    "claude-sonnet": "anthropic.claude-sonnet-4-5-v2:0",
+    "claude-haiku": "anthropic.claude-haiku-4-5-v1:0",
+    "claude-opus": "anthropic.claude-opus-4-1-v1:0",
 }
 
 # Bedrock pricing (per 1M tokens) - Input/Output
 # Last verified: 2025-01-28
 BEDROCK_PRICING = {
-    "anthropic.claude-3-5-sonnet-20241022-v2:0": (3.0, 15.0),
-    "anthropic.claude-3-5-sonnet-20240620-v1:0": (3.0, 15.0),
-    "anthropic.claude-3-opus-20240229-v1:0": (15.0, 75.0),
-    "anthropic.claude-3-5-haiku-20241022-v1:0": (1.0, 5.0),
+    "anthropic.claude-sonnet-4-5-v2:0": (3.0, 15.0),
+    "anthropic.claude-sonnet-4-5-v1:0": (3.0, 15.0),
+    "anthropic.claude-opus-4-1-v1:0": (15.0, 75.0),
+    "anthropic.claude-haiku-4-5-v1:0": (1.0, 5.0),
 }
 
 

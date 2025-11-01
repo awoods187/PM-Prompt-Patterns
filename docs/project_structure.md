@@ -79,7 +79,7 @@ PM-Prompt-Patterns/
 │   │   ├── base.py           # Base provider interface
 │   │   ├── claude.py         # Anthropic Claude provider
 │   │   ├── openai.py         # OpenAI GPT provider
-│   │   ├── gemini.py         # Google Gemini provider
+│   │   ├── gemini.py         # Google Gemini 2.5 Provider
 │   │   ├── bedrock.py        # AWS Bedrock provider
 │   │   ├── vertex.py         # Google Vertex AI provider
 │   │   ├── mock.py           # Mock provider for testing

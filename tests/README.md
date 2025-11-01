@@ -96,8 +96,8 @@ test_example_files_no_deprecated_identifiers PASSED
 ❌ DEPRECATED MODELS FOUND IN PYTHON CODE:
 
 pm_prompt_toolkit/providers/claude.py:
-  Line 227: claude-3-5-sonnet-20241022
-    > "claude-sonnet": "claude-3-5-sonnet-20241022",
+  Line 227: claude-sonnet-4-5
+    > "claude-sonnet": "claude-sonnet-4-5",
     Use: Use CLAUDE_SONNET_4_5 instead
 
 Fix: Import from models.registry instead:
@@ -386,7 +386,7 @@ export GOOGLE_API_KEY="your-key"
 **Fix**: Update to use registry:
 ```python
 # OLD (fails)
-model = "claude-3-5-sonnet-20241022"
+model = "claude-sonnet-4-5"
 
 # NEW (passes)
 from models.registry import CLAUDE_SONNET

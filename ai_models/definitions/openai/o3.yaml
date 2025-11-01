@@ -1,0 +1,55 @@
+# o3 Model Definition
+# Last verified: 2025-11-01
+# Source: https://platform.openai.com/docs/models
+
+schema_version: "1.0.0"
+model_id: "o3"
+provider: "openai"
+name: "o3"
+api_identifier: "o3-2025-04-16"
+
+metadata:
+  context_window_input: 128000
+  context_window_output: 16384
+  knowledge_cutoff: "April 2025"
+  release_date: "2025-04-16"
+  last_verified: "2025-11-01"
+  docs_url: "https://platform.openai.com/docs/models/o3"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - streaming
+  - json_mode
+  - advanced_reasoning
+  - tool_use
+  - scientific_analysis
+
+pricing:
+  input_per_1m: 10.00
+  output_per_1m: 40.00
+
+optimization:
+  recommended_for:
+    - "Advanced reasoning and complex analysis"
+    - "Scientific problems and research"
+    - "Mathematical reasoning"
+    - "Multi-step problem solving"
+    - "Full tool access for complex workflows"
+    - "High-stakes decisions requiring thorough analysis"
+    - "Edge cases and ambiguous scenarios"
+  best_practices:
+    - "Most capable reasoning model before GPT-5"
+    - "Full tool access for complex workflows"
+    - "Excels at scientific and mathematical reasoning"
+    - "Use for high-value, complex reasoning tasks"
+    - "Leverage function calling for multi-tool workflows"
+    - "Set higher max_tokens for complex reasoning chains"
+    - "Ideal for problems requiring deep analysis"
+  cost_tier: "premium"
+  speed_tier: "thorough"
+
+notes: "Advanced reasoning model with full tool access. Released April 16, 2025. Most capable reasoning before GPT-5."

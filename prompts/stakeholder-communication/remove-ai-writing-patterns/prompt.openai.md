@@ -1,3 +1,76 @@
+# Remove AI Writing Patterns (OpenAI Optimized)
+
+**Provider:** OpenAI
+**Optimizations:** Function calling, JSON mode, structured outputs
+
+**Complexity**: 🟡 Intermediate
+
+## OpenAI-Specific Features
+
+This variant is optimized for OpenAI models with:
+- **Function calling** for guaranteed structured output
+- **JSON mode** for valid JSON responses
+- **Parallel tool calls** for batch processing
+- **Reproducible results** with seed parameter
+
+## Usage with Function Calling
+
+```python
+from ai_models import get_prompt
+import openai
+
+prompt = get_prompt("stakeholder-communication/remove-ai-writing-patterns", provider="openai")
+
+# Define function schema for structured output
+function_schema = {
+    "name": "process_prompt",
+    "description": "Process the prompt and return structured output",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "result": {"type": "string", "description": "The processed result"},
+            "confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+            "reasoning": {"type": "string", "description": "Step-by-step reasoning"}
+        },
+        "required": ["result", "confidence", "reasoning"]
+    }
+}
+
+# Use with GPT-4o or GPT-4o-mini
+response = openai.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": "Your input here"}
+    ],
+    functions=[function_schema],
+    function_call={"name": "process_prompt"},
+    temperature=0.0  # Deterministic output
+)
+
+result = json.loads(response.choices[0].message.function_call.arguments)
+```
+
+## Usage with JSON Mode
+
+```python
+response = openai.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": "Your input here"}
+    ],
+    response_format={"type": "json_object"},
+    temperature=0.0
+)
+
+result = json.loads(response.choices[0].message.content)
+```
+
+---
+
+## Original Prompt
+
 # Remove AI Writing Patterns
 
 **Complexity**: 🟡 Intermediate
@@ -196,7 +269,7 @@ def analyze_ai_patterns(text: str) -> dict:
     """Analyze text for AI writing patterns using Claude."""
 
     response = client.messages.create(
-        model="claude-sonnet-4-5-20250929",  # Latest Claude 3.5 Sonnet
+        model="claude-sonnet-4-5-20250929",  # Latest Claude Sonnet 4.5
         max_tokens=4000,
         messages=[{
             "role": "user",
@@ -296,7 +369,7 @@ def analyze_ai_patterns_gpt4(text: str) -> dict:
     """Analyze text for AI writing patterns using GPT-4."""
 
     response = client.chat.completions.create(
-        model="gpt-4o",  # Latest GPT-4o (replaces gpt-4-turbo)
+        model="gpt-4o",  # Latest GPT-4o (replaces gpt-4o)
         response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
@@ -316,7 +389,7 @@ for instance in result["instances"]:
 ```
 
 **Performance**:
-- Accuracy: ~92% pattern detection (GPT-4 Turbo)
+- Accuracy: ~92% pattern detection (GPT-4o)
 - Cost: ~$0.020-0.040 per 1000-word document
 - Latency: ~3-5s for typical blog post
 
@@ -571,8 +644,8 @@ def analyze_with_context(text: str, content_type: str) -> dict:
 | **Claude Haiku** | ~2,000 | $0.001 | 85% | Fast, misses subtle patterns |
 | **Claude Sonnet** | ~3,000 | $0.015 | 95% | Best balance |
 | **Claude Opus** | ~3,500 | $0.070 | 97% | Highest quality, expensive |
-| **GPT-4 Turbo** | ~3,000 | $0.025 | 92% | Good structured output |
-| **Gemini Pro** | ~2,500 | $0.004 | 88% | Budget option |
+| **GPT-4o** | ~3,000 | $0.025 | 92% | Good structured output |
+| **Gemini 2.5 Pro** | ~2,500 | $0.004 | 88% | Budget option |
 
 **Recommended**: Claude Sonnet for production use (best accuracy/cost balance)
 
@@ -622,3 +695,12 @@ def analyze_with_context(text: str, content_type: str) -> dict:
 2. Specify content type (technical docs vs blog post)
 3. Review suggested changes manually (don't auto-apply all)
 4. Run iteratively on heavily AI-generated content
+
+
+---
+
+## Model Recommendations
+
+- **GPT-4o-mini**: Best value, 94% of GPT-4o accuracy ($0.15/$0.60 per 1M tokens)
+- **GPT-4o**: Balanced performance ($2.50/$10.00 per 1M tokens)
+- **gpt-4o**: For complex reasoning ($10/$30 per 1M tokens)

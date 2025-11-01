@@ -13,7 +13,7 @@ import pytest
 
 from pm_prompt_toolkit.providers.base import LLMProvider
 from pm_prompt_toolkit.providers.claude import ClaudeProvider
-from pm_prompt_toolkit.providers.factory import get_provider
+from pm_prompt_toolkit.providers.factory import ConfigurationError, get_provider
 
 
 class TestGetProviderClaude:
@@ -89,71 +89,84 @@ class TestGetProviderClaude:
 
 
 class TestGetProviderOpenAI:
-    """Test get_provider with OpenAI models (not yet implemented)."""
+    """Test get_provider with OpenAI models when not enabled."""
 
-    def test_get_provider_gpt4_raises_not_implemented(self):
-        """Test get_provider raises NotImplementedError for GPT-4."""
-        with pytest.raises(NotImplementedError) as exc_info:
+    def test_get_provider_gpt4_raises_configuration_error(self):
+        """Test get_provider raises ConfigurationError for GPT-4 when not enabled."""
+        with pytest.raises(ConfigurationError) as exc_info:
             get_provider("gpt-4")
 
         error_msg = str(exc_info.value)
-        assert "OpenAI provider for gpt-4 is not yet implemented" in error_msg
-        assert "Use Claude models for now" in error_msg
-        assert "TODO.md" in error_msg
+        assert "OpenAI provider for gpt-4 is not enabled" in error_msg
+        assert "ENABLE_OPENAI=true" in error_msg
+        assert "OPENAI_API_KEY" in error_msg
 
-    def test_get_provider_gpt35_raises_not_implemented(self):
-        """Test get_provider raises NotImplementedError for GPT-3.5."""
-        with pytest.raises(NotImplementedError) as exc_info:
+    def test_get_provider_gpt35_raises_configuration_error(self):
+        """Test get_provider raises ConfigurationError for GPT-3.5 when not enabled."""
+        with pytest.raises(ConfigurationError) as exc_info:
             get_provider("gpt-3.5")
 
         error_msg = str(exc_info.value)
-        assert "OpenAI provider for gpt-3.5 is not yet implemented" in error_msg
+        assert "OpenAI provider for gpt-3.5 is not enabled" in error_msg
 
-    def test_get_provider_gpt4_turbo_raises_not_implemented(self):
-        """Test get_provider raises NotImplementedError for GPT-4 Turbo."""
-        with pytest.raises(NotImplementedError) as exc_info:
-            get_provider("gpt-4-turbo")
+    def test_get_provider_gpt4_turbo_raises_configuration_error(self):
+        """Test get_provider raises ConfigurationError for GPT-4o when not enabled."""
+        with pytest.raises(ConfigurationError) as exc_info:
+            get_provider("gpt-4o")
 
         error_msg = str(exc_info.value)
-        assert "OpenAI provider for gpt-4-turbo is not yet implemented" in error_msg
+        assert "OpenAI provider for gpt-4o is not enabled" in error_msg
 
     def test_get_provider_openai_case_insensitive(self):
         """Test OpenAI model detection is case-insensitive."""
-        with pytest.raises(NotImplementedError):
+        with pytest.raises(ConfigurationError):
             get_provider("GPT-4")
 
-        with pytest.raises(NotImplementedError):
+        with pytest.raises(ConfigurationError):
             get_provider("Gpt-3.5")
 
 
 class TestGetProviderGemini:
-    """Test get_provider with Gemini models (not yet implemented)."""
+    """Test get_provider with Gemini models (now implemented)."""
 
-    def test_get_provider_gemini_pro_raises_not_implemented(self):
-        """Test get_provider raises NotImplementedError for Gemini Pro."""
-        with pytest.raises(NotImplementedError) as exc_info:
-            get_provider("gemini-pro")
+    @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
+    def test_get_provider_gemini_pro(self, mock_gemini_provider):
+        """Test get_provider returns GeminiProvider for Gemini 2.5 Pro."""
+        from pm_prompt_toolkit.providers.gemini import GeminiProvider
 
-        error_msg = str(exc_info.value)
-        assert "Gemini provider for gemini-pro is not yet implemented" in error_msg
-        assert "Use Claude models for now" in error_msg
-        assert "TODO.md" in error_msg
+        mock_instance = MagicMock(spec=GeminiProvider)
+        mock_gemini_provider.return_value = mock_instance
 
-    def test_get_provider_gemini_flash_raises_not_implemented(self):
-        """Test get_provider raises NotImplementedError for Gemini Flash."""
-        with pytest.raises(NotImplementedError) as exc_info:
-            get_provider("gemini-flash")
+        result = get_provider("gemini-2-5-pro")
 
-        error_msg = str(exc_info.value)
-        assert "Gemini provider for gemini-flash is not yet implemented" in error_msg
+        mock_gemini_provider.assert_called_once_with(model="gemini-2-5-pro", enable_caching=True)
+        assert result == mock_instance
 
-    def test_get_provider_gemini_case_insensitive(self):
+    @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
+    def test_get_provider_gemini_flash(self, mock_gemini_provider):
+        """Test get_provider returns GeminiProvider for Gemini 2.5 Flash."""
+        from pm_prompt_toolkit.providers.gemini import GeminiProvider
+
+        mock_instance = MagicMock(spec=GeminiProvider)
+        mock_gemini_provider.return_value = mock_instance
+
+        result = get_provider("gemini-2-5-flash")
+
+        mock_gemini_provider.assert_called_once_with(model="gemini-2-5-flash", enable_caching=True)
+        assert result == mock_instance
+
+    @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
+    def test_get_provider_gemini_case_insensitive(self, mock_gemini_provider):
         """Test Gemini model detection is case-insensitive."""
-        with pytest.raises(NotImplementedError):
-            get_provider("GEMINI-PRO")
+        from pm_prompt_toolkit.providers.gemini import GeminiProvider
 
-        with pytest.raises(NotImplementedError):
-            get_provider("Gemini-Flash")
+        mock_instance = MagicMock(spec=GeminiProvider)
+        mock_gemini_provider.return_value = mock_instance
+
+        # Uppercase should work
+        get_provider("GEMINI-2-5-FLASH")
+        # Will be normalized to lowercase by factory
+        assert mock_gemini_provider.called
 
 
 class TestGetProviderUnknownModel:
@@ -179,32 +192,38 @@ class TestGetProviderUnknownModel:
         assert "Unknown model:" in error_msg
 
     def test_get_provider_invalid_model_shows_planned_models(self):
-        """Test error message includes planned models."""
+        """Test error message includes supported models."""
         with pytest.raises(ValueError) as exc_info:
             get_provider("invalid-model")
 
         error_msg = str(exc_info.value)
         assert "gpt-4" in error_msg
-        assert "gpt-3.5" in error_msg
-        assert "gemini-pro" in error_msg
-        assert "gemini-flash" in error_msg
-        assert "TODO.md" in error_msg
+        assert "gpt-4o" in error_msg
+        assert "gemini-2-5" in error_msg
+        assert "claude-haiku" in error_msg
+        assert "README.md" in error_msg
 
     def test_get_provider_similar_but_invalid_model(self):
         """Test models that are close to valid but not exact."""
-        # Close to valid but not exact
+        # Close to valid but not exact - these raise ValueError
         invalid_models = [
             "claude",
             "claude-haiku-3",
             "sonnet",
             "claude-sonnet-3-5",
-            "gpt",
-            "gemini",
         ]
 
         for model in invalid_models:
-            with pytest.raises((ValueError, NotImplementedError)):
+            with pytest.raises(ValueError):
                 get_provider(model)
+
+        # "gpt" triggers ConfigurationError (OpenAI not enabled)
+        with pytest.raises(ConfigurationError):
+            get_provider("gpt")
+
+        # "gemini" gets routed to GeminiProvider which raises ValueError for unsupported model
+        with pytest.raises(ValueError, match="Unsupported Gemini model"):
+            get_provider("gemini")
 
 
 class TestGetProviderReturnType:

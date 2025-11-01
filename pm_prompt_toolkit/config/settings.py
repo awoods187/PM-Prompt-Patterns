@@ -172,8 +172,8 @@ class Settings(BaseSettings):
         "claude-opus",
         "gpt-4",
         "gpt-3.5",
-        "gemini-pro",
-        "gemini-flash",
+        "gemini-2-5-pro",
+        "gemini-2-5-flash",
     ] = Field(
         default="claude-sonnet",
         description="Default model to use for LLM operations",

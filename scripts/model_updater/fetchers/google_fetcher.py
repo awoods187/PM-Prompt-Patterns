@@ -58,6 +58,8 @@ class GoogleFetcher(BaseFetcher):
         ]
 
         models = []
+        seen_model_ids = set()  # Track already-added models to avoid duplicates
+
         for model_info in available_models:
             # Extract base model name
             model_name = (
@@ -67,6 +69,10 @@ class GoogleFetcher(BaseFetcher):
             # Check if this is one of our target models
             for target_id in target_model_ids:
                 if target_id in model_name or model_name.startswith("gemini-2.5"):
+                    # Skip if we've already added this model (deduplication)
+                    if target_id in seen_model_ids:
+                        break
+
                     # Get specs from static knowledge
                     specs = self._get_static_model_specs(target_id)
                     if specs:
@@ -92,6 +98,7 @@ class GoogleFetcher(BaseFetcher):
                                 source="google_api",
                             )
                         )
+                        seen_model_ids.add(target_id)
                     break
 
         # If no models found via API, fall back to static specs

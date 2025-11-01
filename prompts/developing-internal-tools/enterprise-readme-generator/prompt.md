@@ -2,7 +2,7 @@
 
 **Complexity**: 🟡 Intermediate
 **Category**: Technical Documentation / Developer Experience
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-4 | ✅ Gemini Pro
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-4 | ✅ Gemini 2.5 Pro
 
 ## Overview
 

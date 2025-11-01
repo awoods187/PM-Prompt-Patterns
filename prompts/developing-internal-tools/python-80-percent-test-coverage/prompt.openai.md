@@ -1,3 +1,76 @@
+# Python 80% Test Coverage Achievement (OpenAI Optimized)
+
+**Provider:** OpenAI
+**Optimizations:** Function calling, JSON mode, structured outputs
+
+**Complexity**: 🔴 Advanced
+
+## OpenAI-Specific Features
+
+This variant is optimized for OpenAI models with:
+- **Function calling** for guaranteed structured output
+- **JSON mode** for valid JSON responses
+- **Parallel tool calls** for batch processing
+- **Reproducible results** with seed parameter
+
+## Usage with Function Calling
+
+```python
+from ai_models import get_prompt
+import openai
+
+prompt = get_prompt("developing-internal-tools/python-80-percent-test-coverage", provider="openai")
+
+# Define function schema for structured output
+function_schema = {
+    "name": "process_prompt",
+    "description": "Process the prompt and return structured output",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "result": {"type": "string", "description": "The processed result"},
+            "confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+            "reasoning": {"type": "string", "description": "Step-by-step reasoning"}
+        },
+        "required": ["result", "confidence", "reasoning"]
+    }
+}
+
+# Use with GPT-4o or GPT-4o-mini
+response = openai.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": "Your input here"}
+    ],
+    functions=[function_schema],
+    function_call={"name": "process_prompt"},
+    temperature=0.0  # Deterministic output
+)
+
+result = json.loads(response.choices[0].message.function_call.arguments)
+```
+
+## Usage with JSON Mode
+
+```python
+response = openai.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": "Your input here"}
+    ],
+    response_format={"type": "json_object"},
+    temperature=0.0
+)
+
+result = json.loads(response.choices[0].message.content)
+```
+
+---
+
+## Original Prompt
+
 # Python 80% Test Coverage Achievement
 
 **Complexity**: 🔴 Advanced
@@ -1399,7 +1472,7 @@ class TestPaymentProcessor:
 | **Claude Haiku** | 200K | $0.05 | Fast | 75-85% | Good | Misses edge cases |
 | **Claude Sonnet** | 200K | $0.10-0.30 | Medium | 80-95% | Excellent | **Recommended** |
 | **Claude Opus** | 200K | $0.50-1.00 | Slow | 90-98% | Exceptional | Overkill for most |
-| **GPT-4 Turbo** | 128K | $0.20-0.50 | Medium | 75-90% | Very Good | Good structured output |
+| **GPT-4o** | 128K | $0.20-0.50 | Medium | 75-90% | Very Good | Good structured output |
 | **GPT-4o** | 128K | $0.10-0.25 | Fast | 70-85% | Good | Fast iteration |
 | **Gemini Pro 1.5** | 2M | $0.08-0.20 | Medium | 70-85% | Good | Large modules |
 
@@ -1574,3 +1647,12 @@ def test_token_valid_within_one_hour():
 - Manual equivalent: 2-8 hours per module
 
 **Time savings: 80-90% compared to manual test writing**
+
+
+---
+
+## Model Recommendations
+
+- **GPT-4o-mini**: Best value, 94% of GPT-4o accuracy ($0.15/$0.60 per 1M tokens)
+- **GPT-4o**: Balanced performance ($2.50/$10.00 per 1M tokens)
+- **gpt-4o**: For complex reasoning ($10/$30 per 1M tokens)

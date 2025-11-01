@@ -209,7 +209,7 @@ class TestAPIFetching:
             all_models.append(mock_model)
 
         # Other models (should be filtered out)
-        for name in ["models/gemini-1.5-pro", "models/text-bison-001"]:
+        for name in ["models/gemini-2-5-pro", "models/text-bison-001"]:
             mock_model = Mock()
             mock_model.name = name
             all_models.append(mock_model)

@@ -1,3 +1,76 @@
+# Code Review & Refactoring for Open Source (OpenAI Optimized)
+
+**Provider:** OpenAI
+**Optimizations:** Function calling, JSON mode, structured outputs
+
+**Complexity**: 🔴 Advanced
+
+## OpenAI-Specific Features
+
+This variant is optimized for OpenAI models with:
+- **Function calling** for guaranteed structured output
+- **JSON mode** for valid JSON responses
+- **Parallel tool calls** for batch processing
+- **Reproducible results** with seed parameter
+
+## Usage with Function Calling
+
+```python
+from ai_models import get_prompt
+import openai
+
+prompt = get_prompt("developing-internal-tools/code-review-refactoring", provider="openai")
+
+# Define function schema for structured output
+function_schema = {
+    "name": "process_prompt",
+    "description": "Process the prompt and return structured output",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "result": {"type": "string", "description": "The processed result"},
+            "confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+            "reasoning": {"type": "string", "description": "Step-by-step reasoning"}
+        },
+        "required": ["result", "confidence", "reasoning"]
+    }
+}
+
+# Use with GPT-4o or GPT-4o-mini
+response = openai.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": "Your input here"}
+    ],
+    functions=[function_schema],
+    function_call={"name": "process_prompt"},
+    temperature=0.0  # Deterministic output
+)
+
+result = json.loads(response.choices[0].message.function_call.arguments)
+```
+
+## Usage with JSON Mode
+
+```python
+response = openai.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": "Your input here"}
+    ],
+    response_format={"type": "json_object"},
+    temperature=0.0
+)
+
+result = json.loads(response.choices[0].message.content)
+```
+
+---
+
+## Original Prompt
+
 # Code Review & Refactoring for Open Source
 
 **Complexity**: 🔴 Advanced
@@ -446,7 +519,7 @@ def comprehensive_code_review(codebase_path: Path) -> Dict:
 
     # Create review prompt
     response = client.messages.create(
-        model="claude-sonnet-4-5-20250929",  # Latest Claude 3.5 Sonnet
+        model="claude-sonnet-4-5-20250929",  # Latest Claude Sonnet 4.5
         max_tokens=16000,
         temperature=0,  # Consistent, deterministic reviews
         messages=[{
@@ -669,7 +742,7 @@ def security_audit_gpt4(codebase: str) -> Dict:
     Be thorough and flag everything that could be a security concern."""
 
     response = client.chat.completions.create(
-        model="gpt-4o",  # Latest GPT-4o (replaces gpt-4-turbo)
+        model="gpt-4o",  # Latest GPT-4o (replaces gpt-4o)
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"Audit this codebase:\n\n{codebase}"}
@@ -725,7 +798,7 @@ def validate_and_report(audit_results: Dict) -> bool:
 ```
 
 **Performance**:
-- Accuracy: 96% security issue detection (GPT-4 Turbo)
+- Accuracy: 96% security issue detection (GPT-4o)
 - Context limit: ~30,000 lines of code (128K token context)
 - Cost: ~$0.30-0.80 per 1000 lines of code
 - Latency: ~45-150s for typical project (5000 lines)
@@ -1273,7 +1346,7 @@ class DataProcessor:
 | **Claude Haiku** | 200K | $0.05 | 85% | Fast | Misses subtle security issues |
 | **Claude Sonnet** | 200K | $0.15-0.50 | 98% | Medium | **Recommended** for production |
 | **Claude Opus** | 200K | $0.80-2.00 | 99% | Slow | Highest quality, expensive |
-| **GPT-4 Turbo** | 128K | $0.30-0.80 | 96% | Medium | Good structured output |
+| **GPT-4o** | 128K | $0.30-0.80 | 96% | Medium | Good structured output |
 | **GPT-4o** | 128K | $0.15-0.40 | 94% | Fast | Balance of cost/quality |
 | **Gemini Pro 1.5** | 2M | $0.10-0.30 | 90% | Medium | Good for huge codebases |
 
@@ -1282,7 +1355,7 @@ class DataProcessor:
 **Recommendation**:
 - **Claude Sonnet 3.5**: Best accuracy/cost balance for most projects (1K-50K LOC)
 - **Gemini Pro 1.5**: Large codebases (50K+ LOC) requiring full context
-- **GPT-4 Turbo**: When you need structured JSON output for automation
+- **GPT-4o**: When you need structured JSON output for automation
 
 ---
 
@@ -1405,3 +1478,12 @@ def chunk_codebase(path: Path, chunk_size: int = 10) -> List[List[Path]]:
 - [ ] Team reviewed [NEEDS DISCUSSION] items
 
 **Estimated effort**: 4-16 hours depending on codebase size and current quality.
+
+
+---
+
+## Model Recommendations
+
+- **GPT-4o-mini**: Best value, 94% of GPT-4o accuracy ($0.15/$0.60 per 1M tokens)
+- **GPT-4o**: Balanced performance ($2.50/$10.00 per 1M tokens)
+- **gpt-4o**: For complex reasoning ($10/$30 per 1M tokens)
