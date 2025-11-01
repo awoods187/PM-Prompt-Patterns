@@ -7,6 +7,8 @@ Tests for multi-provider prompt registry.
 Tests prompt loading, provider selection, and variant management.
 """
 
+from unittest.mock import patch
+
 import pytest
 
 from ai_models import PromptRegistry, get_prompt, list_prompts, list_variants
@@ -246,3 +248,97 @@ class TestPromptMetadata:
 
             # Should have some form of example or usage guidance
             assert "example" in prompt.lower() or "usage" in prompt.lower()
+
+
+class TestEdgeCases:
+    """Test edge cases and error conditions."""
+
+    def test_list_variants_for_nonexistent_prompt(self):
+        """Test list_variants returns empty dict for non-existent prompt."""
+        variants = PromptRegistry.list_variants("nonexistent-prompt")
+        assert variants == {}
+
+    def test_has_provider_variant_for_nonexistent_prompt(self):
+        """Test has_provider_variant returns False for non-existent prompt."""
+        assert not PromptRegistry.has_provider_variant("nonexistent-prompt", "claude")
+
+    def test_resolve_prompt_path_with_md_extension(self):
+        """Test that .md extension is stripped from prompt name."""
+        # If someone accidentally includes .md, it should still work
+        prompt = PromptRegistry.get_prompt("analytics/signal-classification.md")
+        assert prompt is not None
+        assert "FEATURE_REQUEST" in prompt
+
+    def test_fallback_to_base_when_provider_variant_missing(self):
+        """Test fallback to base prompt when provider variant doesn't exist."""
+        # Request a provider that doesn't have a variant
+        prompt = PromptRegistry.get_prompt(
+            "analytics/signal-classification", provider="nonexistent-provider"
+        )
+        # Should fall back to base prompt
+        assert prompt is not None
+        assert "Customer Signal Classification" in prompt
+
+    def test_auto_detect_with_unknown_model_uses_base(self):
+        """Test that unknown model names fall back to base prompt."""
+        prompt = PromptRegistry.get_prompt(
+            "analytics/signal-classification", model="unknown-model-xyz"
+        )
+        # Should use base prompt since provider can't be detected
+        assert prompt is not None
+        assert "Customer Signal Classification" in prompt
+
+    def test_list_prompts_is_sorted(self):
+        """Test that list_prompts returns sorted list."""
+        prompts = PromptRegistry.list_prompts()
+        assert prompts == sorted(prompts)
+
+    def test_get_prompt_with_provider_prefers_provider_variant(self):
+        """Test that specifying provider loads provider variant, not base."""
+        claude_prompt = PromptRegistry.get_prompt(
+            "analytics/signal-classification", provider="claude"
+        )
+        base_prompt = PromptRegistry.get_prompt("analytics/signal-classification")
+
+        # Claude variant should be different from base
+        # (it has XML tags and chain-of-thought instructions)
+        assert claude_prompt != base_prompt
+        assert "<classification_task>" in claude_prompt
+
+    def test_prompt_path_resolution_case_sensitivity(self):
+        """Test that prompt path resolution works correctly."""
+        # This tests the _resolve_prompt_path method
+        path = PromptRegistry._resolve_prompt_path("analytics/signal-classification")
+        assert path is not None
+        assert path.exists()
+        assert path.is_dir()
+
+    def test_prompt_path_resolution_returns_none_for_invalid(self):
+        """Test that invalid prompt path returns None."""
+        path = PromptRegistry._resolve_prompt_path("invalid/nonexistent/path")
+        assert path is None
+
+    def test_error_when_directory_exists_but_no_prompt_files(self, tmp_path):
+        """Test error when prompt directory exists but has no .md files."""
+        # Create a temporary prompt directory structure
+        test_prompts_dir = tmp_path / "prompts"
+        test_prompts_dir.mkdir()
+        test_dir = test_prompts_dir / "test-empty"
+        test_dir.mkdir()
+
+        # Create a non-prompt file to ensure directory isn't empty
+        (test_dir / "README.txt").write_text("This is not a prompt file")
+
+        # Temporarily override PROMPTS_DIR
+        with patch.object(PromptRegistry, "PROMPTS_DIR", test_prompts_dir):
+            with pytest.raises(FileNotFoundError, match="No prompt files found"):
+                PromptRegistry.get_prompt("test-empty")
+
+    def test_list_prompts_when_no_prompts_dir(self, tmp_path):
+        """Test list_prompts returns empty list when PROMPTS_DIR doesn't exist."""
+        non_existent_dir = tmp_path / "nonexistent"
+
+        # Temporarily override PROMPTS_DIR to non-existent directory
+        with patch.object(PromptRegistry, "PROMPTS_DIR", non_existent_dir):
+            prompts = PromptRegistry.list_prompts()
+            assert prompts == []
