@@ -95,8 +95,9 @@ def get_provider(
     if not model or not model.strip():
         raise ValueError(
             f"Unknown model: {model}. "
-            f"Supported models: claude-haiku, claude-sonnet, claude-opus. "
-            f"Planned: gpt-4, gpt-3.5, gemini-pro, gemini-flash (see TODO.md)"
+            f"Supported models: claude-haiku, claude-sonnet, claude-opus, "
+            f"gpt-4, gpt-4o, gpt-4o-mini, gemini-2-5-pro, gemini-2-5-flash. "
+            f"See README.md for full list and setup instructions."
         )
 
     # Tier 1: Check for explicit provider prefix
@@ -158,11 +159,10 @@ def get_provider(
             logger.info(f"Routing OpenAI model '{model_normalized}' to OpenAI provider")
             return OpenAIProvider(model=model_normalized, enable_caching=enable_caching)
         else:
-            # For backward compatibility with tests, raise NotImplementedError
-            raise NotImplementedError(
-                f"OpenAI provider for {model} is not yet implemented. "
-                "Use Claude models for now. "
-                "See TODO.md for planned implementation."
+            raise ConfigurationError(
+                f"OpenAI provider for {model} is not enabled. "
+                f"To use OpenAI models, set ENABLE_OPENAI=true and OPENAI_API_KEY in your .env file. "
+                f"See README.md for setup instructions."
             )
 
     # Check for Gemini models
@@ -182,8 +182,10 @@ def get_provider(
     # Unknown model
     raise ValueError(
         f"Unknown model: {model}. "
-        f"Supported models: claude-haiku, claude-sonnet, claude-opus. "
-        f"Planned: gpt-4, gpt-3.5, gemini-pro, gemini-flash (see TODO.md)"
+        f"Supported models: Claude (claude-haiku, claude-sonnet, claude-opus), "
+        f"OpenAI (gpt-4, gpt-4o, gpt-4o-mini, gpt-4-turbo), "
+        f"Gemini (gemini-2-5-pro, gemini-2-5-flash, gemini-2-5-flash-lite). "
+        f"See README.md for full list and setup instructions."
     )
 
 

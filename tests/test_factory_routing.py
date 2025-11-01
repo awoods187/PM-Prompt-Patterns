@@ -434,15 +434,15 @@ class TestOpenAIRouting:
     """Test suite for OpenAI model routing."""
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_gpt4_with_openai_disabled_raises_not_implemented(self, mock_get_settings):
-        """Test that GPT-4 with OpenAI disabled raises NotImplementedError."""
+    def test_gpt4_with_openai_disabled_raises_configuration_error(self, mock_get_settings):
+        """Test that GPT-4 with OpenAI disabled raises ConfigurationError."""
         # Arrange
         mock_settings = Mock()
         mock_settings.enable_openai = False
         mock_get_settings.return_value = mock_settings
 
         # Act & Assert
-        with pytest.raises(NotImplementedError, match="OpenAI provider"):
+        with pytest.raises(ConfigurationError, match="OpenAI provider"):
             get_provider("gpt-4")
 
     @patch("pm_prompt_toolkit.providers.factory.OpenAIProvider")
@@ -485,7 +485,7 @@ class TestOpenAIRouting:
         mock_get_settings.return_value = mock_settings
 
         # Act & Assert
-        with pytest.raises(NotImplementedError, match="OpenAI provider"):
+        with pytest.raises(ConfigurationError, match="OpenAI provider"):
             get_provider(model)
 
 

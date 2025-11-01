@@ -13,7 +13,7 @@ import pytest
 
 from pm_prompt_toolkit.providers.base import LLMProvider
 from pm_prompt_toolkit.providers.claude import ClaudeProvider
-from pm_prompt_toolkit.providers.factory import get_provider
+from pm_prompt_toolkit.providers.factory import ConfigurationError, get_provider
 
 
 class TestGetProviderClaude:
@@ -89,40 +89,40 @@ class TestGetProviderClaude:
 
 
 class TestGetProviderOpenAI:
-    """Test get_provider with OpenAI models (not yet implemented)."""
+    """Test get_provider with OpenAI models when not enabled."""
 
-    def test_get_provider_gpt4_raises_not_implemented(self):
-        """Test get_provider raises NotImplementedError for GPT-4."""
-        with pytest.raises(NotImplementedError) as exc_info:
+    def test_get_provider_gpt4_raises_configuration_error(self):
+        """Test get_provider raises ConfigurationError for GPT-4 when not enabled."""
+        with pytest.raises(ConfigurationError) as exc_info:
             get_provider("gpt-4")
 
         error_msg = str(exc_info.value)
-        assert "OpenAI provider for gpt-4 is not yet implemented" in error_msg
-        assert "Use Claude models for now" in error_msg
-        assert "TODO.md" in error_msg
+        assert "OpenAI provider for gpt-4 is not enabled" in error_msg
+        assert "ENABLE_OPENAI=true" in error_msg
+        assert "OPENAI_API_KEY" in error_msg
 
-    def test_get_provider_gpt35_raises_not_implemented(self):
-        """Test get_provider raises NotImplementedError for GPT-3.5."""
-        with pytest.raises(NotImplementedError) as exc_info:
+    def test_get_provider_gpt35_raises_configuration_error(self):
+        """Test get_provider raises ConfigurationError for GPT-3.5 when not enabled."""
+        with pytest.raises(ConfigurationError) as exc_info:
             get_provider("gpt-3.5")
 
         error_msg = str(exc_info.value)
-        assert "OpenAI provider for gpt-3.5 is not yet implemented" in error_msg
+        assert "OpenAI provider for gpt-3.5 is not enabled" in error_msg
 
-    def test_get_provider_gpt4_turbo_raises_not_implemented(self):
-        """Test get_provider raises NotImplementedError for GPT-4 Turbo."""
-        with pytest.raises(NotImplementedError) as exc_info:
+    def test_get_provider_gpt4_turbo_raises_configuration_error(self):
+        """Test get_provider raises ConfigurationError for GPT-4 Turbo when not enabled."""
+        with pytest.raises(ConfigurationError) as exc_info:
             get_provider("gpt-4-turbo")
 
         error_msg = str(exc_info.value)
-        assert "OpenAI provider for gpt-4-turbo is not yet implemented" in error_msg
+        assert "OpenAI provider for gpt-4-turbo is not enabled" in error_msg
 
     def test_get_provider_openai_case_insensitive(self):
         """Test OpenAI model detection is case-insensitive."""
-        with pytest.raises(NotImplementedError):
+        with pytest.raises(ConfigurationError):
             get_provider("GPT-4")
 
-        with pytest.raises(NotImplementedError):
+        with pytest.raises(ConfigurationError):
             get_provider("Gpt-3.5")
 
 
@@ -192,32 +192,38 @@ class TestGetProviderUnknownModel:
         assert "Unknown model:" in error_msg
 
     def test_get_provider_invalid_model_shows_planned_models(self):
-        """Test error message includes planned models."""
+        """Test error message includes supported models."""
         with pytest.raises(ValueError) as exc_info:
             get_provider("invalid-model")
 
         error_msg = str(exc_info.value)
         assert "gpt-4" in error_msg
-        assert "gpt-3.5" in error_msg
-        assert "gemini-pro" in error_msg
-        assert "gemini-flash" in error_msg
-        assert "TODO.md" in error_msg
+        assert "gpt-4o" in error_msg
+        assert "gemini-2-5" in error_msg
+        assert "claude-haiku" in error_msg
+        assert "README.md" in error_msg
 
     def test_get_provider_similar_but_invalid_model(self):
         """Test models that are close to valid but not exact."""
-        # Close to valid but not exact
+        # Close to valid but not exact - these raise ValueError
         invalid_models = [
             "claude",
             "claude-haiku-3",
             "sonnet",
             "claude-sonnet-3-5",
-            "gpt",
-            "gemini",
         ]
 
         for model in invalid_models:
-            with pytest.raises((ValueError, NotImplementedError)):
+            with pytest.raises(ValueError):
                 get_provider(model)
+
+        # "gpt" triggers ConfigurationError (OpenAI not enabled)
+        with pytest.raises(ConfigurationError):
+            get_provider("gpt")
+
+        # "gemini" gets routed to GeminiProvider which raises ValueError for unsupported model
+        with pytest.raises(ValueError, match="Unsupported Gemini model"):
+            get_provider("gemini")
 
 
 class TestGetProviderReturnType:
