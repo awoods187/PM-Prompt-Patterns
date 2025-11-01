@@ -521,7 +521,7 @@ START: What are you building?
 ├─ High-volume classification (>1000/day)?
 │  │
 │  ├─ Simple categories, high accuracy not critical?
-│  │  └─→ Haiku or GPT-3.5 ($0.0003/signal)
+│  │  └─→ Haiku or GPT-5 mini ($0.0003/signal)
 │  │
 │  └─ Complex categories, high accuracy required?
 │     └─→ Haiku + Sonnet cascade ($0.0008/signal avg)
@@ -532,7 +532,7 @@ START: What are you building?
 │  │  └─→ Sonnet with chain-of-thought ($0.002-0.005/task)
 │  │
 │  └─ Highest quality needed?
-│     └─→ Opus or GPT-4 ($0.015-0.030/task)
+│     └─→ Opus or o3 ($0.015-0.030/task)
 │
 ├─ Massive context needed (>100K tokens)?
 │  │
@@ -540,28 +540,28 @@ START: What are you building?
 │  │  └─→ Gemini Pro 2M context ($0.04/call)
 │  │
 │  └─ Long document analysis?
-│     └─→ Claude (200K) or GPT-4o (128K)
+│     └─→ Claude (200K) or GPT-5 (256K)
 │
 └─ Creative/technical writing?
    │
    ├─ High quality, nuanced?
-   │  └─→ Opus or GPT-4 ($0.015-0.030/task)
+   │  └─→ Opus or GPT-5 ($0.015-0.030/task)
    │
    └─ Good enough, fast?
-      └─→ Sonnet or GPT-3.5 ($0.002-0.005/task)
+      └─→ Sonnet or GPT-5 mini ($0.002-0.005/task)
 ```
 
 ### Task-to-Model Mapping
 
 | Task                       | Recommended Model    | Why                                     | Cost    |
 |----------------------------|----------------------|-----------------------------------------|---------|
-| **Simple classification**  | Haiku, GPT-3.5       | Fast, cheap, good enough                | $0.0003 |
-| **Complex classification** | Sonnet, GPT-4o  | Better reasoning, still reasonable cost | $0.002  |
+| **Simple classification**  | Haiku, GPT-5 mini       | Fast, cheap, good enough                | $0.0003 |
+| **Complex classification** | Sonnet, GPT-5  | Better reasoning, still reasonable cost | $0.002  |
 | **Data extraction**        | Haiku, Gemini 2.5 Flash  | Fast, structured outputs                | $0.0003 |
-| **Summarization**          | Sonnet, GPT-3.5      | Good comprehension, decent writing      | $0.002  |
-| **Analysis & insights**    | Sonnet, GPT-4o  | Strong reasoning                        | $0.003  |
-| **Creative writing**       | Opus, GPT-4          | Nuanced, high quality                   | $0.015  |
-| **Code generation**        | Sonnet, GPT-4o  | Good technical understanding            | $0.003  |
+| **Summarization**          | Sonnet, GPT-5 mini      | Good comprehension, decent writing      | $0.002  |
+| **Analysis & insights**    | Sonnet, GPT-5  | Strong reasoning, auto-routing          | $0.003  |
+| **Creative writing**       | Opus, GPT-5          | Nuanced, high quality                   | $0.015  |
+| **Code generation**        | Sonnet, GPT-4.1  | Specialized for coding, tools           | $0.003  |
 | **Massive context**        | Gemini 2.5 Pro, Claude   | 1M-2M tokens                            | $0.04   |
 
 ### When to Use Multiple Models in Series

@@ -79,7 +79,7 @@ The toolkit supports **6 AI providers** with intelligent routing and cost optimi
 - **Anthropic Claude** (direct API) - Haiku, Sonnet, Opus
 - **AWS Bedrock** - Claude models via AWS infrastructure
 - **Google Vertex AI** - Claude models via Google Cloud
-- **OpenAI** - GPT-4o, GPT-4o-mini, gpt-4o
+- **OpenAI** - GPT-5 (all variants), GPT-4.1, o3, o4-mini, GPT-4o
 - **Google Gemini** - Gemini 2.5 Pro, Flash, Flash Lite
 - **Mock Provider** - Zero-cost testing provider
 
@@ -138,7 +138,7 @@ from pm_prompt_toolkit.providers import get_provider
 claude = get_provider("anthropic:claude-sonnet-4-5")
 bedrock = get_provider("bedrock:claude-sonnet-4-5")
 vertex = get_provider("vertex:claude-sonnet-4-5")
-openai = get_provider("openai:gpt-4o")
+openai = get_provider("openai:gpt-5")  # GPT-5 flagship with auto-routing
 gemini = get_provider("gemini:gemini-2-5-pro")
 
 # Automatic routing (Claude models prefer Bedrock if enabled)
@@ -146,7 +146,7 @@ provider = get_provider("claude-sonnet-4-5")  # Uses Bedrock if enabled
 result = provider.classify("We need SSO integration")
 
 # Direct model routing
-openai_provider = get_provider("gpt-4o")  # Routes to OpenAI if enabled
+openai_provider = get_provider("gpt-5")  # Routes to OpenAI if enabled (auto-routing Instant/Thinking)
 gemini_provider = get_provider("gemini-2-5-flash")  # Routes to Gemini
 
 # Mock provider for testing (zero cost)
@@ -170,7 +170,7 @@ mock = get_provider("mock:claude-sonnet")
 from ai_models import get_model, has_vision, has_prompt_caching
 
 # Get model specifications
-model = get_model("claude-sonnet-4-5")
+model = get_model("gpt-5")  # GPT-5 flagship
 print(f"Context: {model.metadata.context_window_input:,} tokens")
 print(f"Cost: ${model.pricing.input_per_1m}/M input tokens")
 
@@ -182,7 +182,7 @@ cost = model.calculate_cost(
 )
 
 # Validate capabilities before API calls
-if has_vision("gpt-4o"):
+if has_vision("gpt-5"):  # GPT-5 has vision capabilities
     process_image()
 ```
 
@@ -192,7 +192,7 @@ if has_vision("gpt-4o"):
 from ai_models import ModelRegistry
 
 budget_models = ModelRegistry.filter_by_cost_tier("budget")
-# Returns: Haiku 4.5, GPT-4o mini, Gemini 2.5 Flash
+# Returns: Haiku 4.5, GPT-5 mini, GPT-4.1 mini, Gemini 2.5 Flash
 ```
 
 **Advanced Examples:** [API Documentation](./docs/api-examples.md) | [Production Architecture](./examples/epic-categorization/)
@@ -209,7 +209,7 @@ prompts = list_prompts()
 # Returns: ['analytics/signal-classification', 'developing-internal-tools/claude-md-generator', ...]
 
 # Automatically select best prompt variant for your model
-model = get_model("gpt-4o")
+model = get_model("gpt-5")  # GPT-5 default model
 prompt = get_prompt("analytics/signal-classification", model=model.id)
 
 # Or explicitly choose a provider optimization
@@ -223,7 +223,7 @@ gemini_prompt = get_prompt("stakeholder-communication/executive-deck-review", pr
 | Provider | Key Optimizations | Best For | Cost/1K Operations |
 |----------|-------------------|----------|-------------------|
 | **Claude** | XML tags, chain-of-thought, caching | Complex reasoning, accuracy | $1-15 |
-| **OpenAI** | Function calling, JSON mode, parallel tools | Structured output, integration | $0.15-10 |
+| **OpenAI** | Auto-routing modes, reasoning (o3/o4), function calling, JSON mode | Coding (4.1), reasoning (o3), general tasks (GPT-5) | $0.15-40 |
 | **Gemini** | 2M context, caching, batch processing | High volume, cost optimization | $0.038-5 |
 
 **All 13 Prompts Available:**
@@ -247,8 +247,13 @@ Choose the right model for your workload:
 | **Claude Haiku 4.5** | $1/$5 | 200K | High-volume classification | 70% |
 | **Claude Sonnet 4.5** | $3/$15 | 200K | Production workhorse | 25% |
 | **Claude Opus 4.1** | $15/$75 | 200K | High-stakes decisions | 5% |
-| **GPT-4o** | $2.5/$10 | 128K | Multimodal, function calling | Specific |
-| **GPT-4o mini** | $0.15/$0.60 | 128K | Budget alternative | Budget |
+| **GPT-5** | $3/$12 | 256K | Flagship auto-routing (Instant/Thinking modes) | Default |
+| **GPT-5 mini** | $0.20/$0.80 | 128K | Fast, efficient GPT-5 variant | Budget |
+| **GPT-4.1** | $2.5/$10 | 200K | Specialized for coding, precise instructions | Coding |
+| **GPT-4.1 mini** | $0.15/$0.60 | 128K | Fast coding model, replaced 4o-mini | Budget coding |
+| **o3** | $10/$40 | 128K | Advanced reasoning, full tool access | Complex reasoning |
+| **o4-mini** | $1/$4 | 128K | Fast, cost-efficient reasoning | Math/coding |
+| **GPT-4o** | $2.5/$10 | 128K | Multimodal specialist (voice, vision) | Multimodal |
 | **Gemini 2.5 Pro** | $1.25/$5 | 2M | Massive context analysis | Large docs |
 | **Gemini 2.5 Flash** | $0.075/$0.30 | 1M | Speed-critical apps | Real-time |
 

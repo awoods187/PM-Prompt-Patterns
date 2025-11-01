@@ -96,9 +96,7 @@ class ReferenceUpdater:
         Returns:
             UpdateResults with summary of updates
         """
-        logger.info(
-            f"{'[DRY RUN] ' if self.dry_run else ''}Updating {len(file_paths)} files"
-        )
+        logger.info(f"{'[DRY RUN] ' if self.dry_run else ''}Updating {len(file_paths)} files")
 
         for file_path in file_paths:
             self.update_file(file_path)
@@ -146,7 +144,10 @@ class ReferenceUpdater:
                     changes_shown += 1
 
             if changes_shown < len([o for o, u in zip(original_lines, updated_lines) if o != u]):
-                remaining = len([o for o, u in zip(original_lines, updated_lines) if o != u]) - changes_shown
+                remaining = (
+                    len([o for o, u in zip(original_lines, updated_lines) if o != u])
+                    - changes_shown
+                )
                 preview.append(f"  ... and {remaining} more changes")
 
             return "\n".join(preview)

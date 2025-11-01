@@ -43,26 +43,28 @@ class ChangeReporter:
 
         # Files by type
         if results.files_by_type:
-            report_lines.extend([
-                "## Files Scanned by Type",
-                "",
-            ])
+            report_lines.extend(
+                [
+                    "## Files Scanned by Type",
+                    "",
+                ]
+            )
             for file_type, count in sorted(results.files_by_type.items()):
                 report_lines.append(f"- {file_type}: {count} files")
             report_lines.append("")
 
         # Outdated references by pattern
         if results.references_by_pattern:
-            report_lines.extend([
-                "## Outdated References by Pattern",
-                "",
-                "| Pattern | Count |",
-                "|---------|-------|",
-            ])
+            report_lines.extend(
+                [
+                    "## Outdated References by Pattern",
+                    "",
+                    "| Pattern | Count |",
+                    "|---------|-------|",
+                ]
+            )
             sorted_patterns = sorted(
-                results.references_by_pattern.items(),
-                key=lambda x: x[1],
-                reverse=True
+                results.references_by_pattern.items(), key=lambda x: x[1], reverse=True
             )
             for pattern, count in sorted_patterns[:20]:  # Top 20
                 # Escape pipes in pattern for markdown table
@@ -72,16 +74,16 @@ class ChangeReporter:
 
         # Top files needing updates
         if results.references_by_file:
-            report_lines.extend([
-                "## Top Files Requiring Updates",
-                "",
-                "| File | References |",
-                "|------|------------|",
-            ])
+            report_lines.extend(
+                [
+                    "## Top Files Requiring Updates",
+                    "",
+                    "| File | References |",
+                    "|------|------------|",
+                ]
+            )
             sorted_files = sorted(
-                results.references_by_file.items(),
-                key=lambda x: len(x[1]),
-                reverse=True
+                results.references_by_file.items(), key=lambda x: len(x[1]), reverse=True
             )
             for file_path, refs in sorted_files[:15]:  # Top 15
                 rel_path = file_path.relative_to(file_path.parents[len(file_path.parents) - 1])
@@ -89,8 +91,7 @@ class ChangeReporter:
             report_lines.append("")
 
         # Category breakdown
-        scanner = None  # Would need scanner instance to get this
-        # For now, categorize manually
+        # Categorize files by type
         categories: Dict[str, List[Path]] = {
             "Python files": [],
             "Markdown docs": [],
@@ -126,16 +127,16 @@ class ChangeReporter:
                 category_ref_counts[category] = (len(files), total_refs)
 
         if category_ref_counts:
-            report_lines.extend([
-                "## Outdated References by Category",
-                "",
-                "| Category | Files | References |",
-                "|----------|-------|------------|",
-            ])
+            report_lines.extend(
+                [
+                    "## Outdated References by Category",
+                    "",
+                    "| Category | Files | References |",
+                    "|----------|-------|------------|",
+                ]
+            )
             for category, (file_count, ref_count) in sorted(
-                category_ref_counts.items(),
-                key=lambda x: x[1][1],
-                reverse=True
+                category_ref_counts.items(), key=lambda x: x[1][1], reverse=True
             ):
                 report_lines.append(f"| {category} | {file_count} | {ref_count} |")
             report_lines.append("")
@@ -151,9 +152,7 @@ class ChangeReporter:
 
     @staticmethod
     def generate_update_report(
-        update_results: UpdateResults,
-        scan_results: ScanResults,
-        output_path: Path | None = None
+        update_results: UpdateResults, scan_results: ScanResults, output_path: Path | None = None
     ) -> str:
         """Generate report from update results.
 
@@ -171,22 +170,26 @@ class ChangeReporter:
             "## Update Summary",
             f"- **Files updated**: {update_results.files_updated:,}",
             f"- **Total references updated**: {update_results.total_updates:,}",
-            f"- **Update success rate**: {(update_results.files_updated / scan_results.files_with_references * 100):.1f}%" if scan_results.files_with_references > 0 else "N/A",
+            (
+                f"- **Update success rate**: {(update_results.files_updated / scan_results.files_with_references * 100):.1f}%"
+                if scan_results.files_with_references > 0
+                else "N/A"
+            ),
             "",
         ]
 
         # Updates by pattern
         if update_results.updates_by_pattern:
-            report_lines.extend([
-                "## Updates by Model Transition",
-                "",
-                "| Transition | Count |",
-                "|------------|-------|",
-            ])
+            report_lines.extend(
+                [
+                    "## Updates by Model Transition",
+                    "",
+                    "| Transition | Count |",
+                    "|------------|-------|",
+                ]
+            )
             sorted_updates = sorted(
-                update_results.updates_by_pattern.items(),
-                key=lambda x: x[1],
-                reverse=True
+                update_results.updates_by_pattern.items(), key=lambda x: x[1], reverse=True
             )
             for pattern, count in sorted_updates[:20]:
                 pattern_escaped = pattern.replace("|", "\\|")
@@ -195,21 +198,25 @@ class ChangeReporter:
 
         # Errors if any
         if update_results.failed_files:
-            report_lines.extend([
-                "## Errors",
-                "",
-                f"Failed to update {len(update_results.failed_files)} files:",
-                "",
-            ])
+            report_lines.extend(
+                [
+                    "## Errors",
+                    "",
+                    f"Failed to update {len(update_results.failed_files)} files:",
+                    "",
+                ]
+            )
             for file_path in update_results.failed_files:
                 report_lines.append(f"- `{file_path}`")
             report_lines.append("")
 
             if update_results.errors:
-                report_lines.extend([
-                    "### Error Details",
-                    "",
-                ])
+                report_lines.extend(
+                    [
+                        "### Error Details",
+                        "",
+                    ]
+                )
                 for error in update_results.errors:
                     report_lines.append(f"- {error}")
                 report_lines.append("")
@@ -225,9 +232,7 @@ class ChangeReporter:
 
     @staticmethod
     def generate_combined_report(
-        scan_results: ScanResults,
-        update_results: UpdateResults,
-        output_path: Path | None = None
+        scan_results: ScanResults, update_results: UpdateResults, output_path: Path | None = None
     ) -> str:
         """Generate combined scan and update report.
 

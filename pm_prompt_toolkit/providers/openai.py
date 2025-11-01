@@ -3,8 +3,9 @@
 
 """OpenAI GPT provider implementation.
 
-This module provides integration with OpenAI's GPT models (GPT-4o, GPT-4o-mini)
-with support for function calling, JSON mode, and vision capabilities.
+This module provides integration with OpenAI's GPT models including GPT-5, GPT-4.1,
+o-series reasoning models, and GPT-4o with support for function calling, JSON mode,
+vision capabilities, and advanced reasoning.
 
 Security:
     API key is loaded from environment variable OPENAI_API_KEY.
@@ -12,7 +13,7 @@ Security:
 
 Example:
     >>> from pm_prompt_toolkit.providers import OpenAIProvider
-    >>> provider = OpenAIProvider(model="gpt-4o")
+    >>> provider = OpenAIProvider(model="gpt-5")
     >>> result = provider.classify("We need SSO integration")
     >>> print(result.category, result.confidence)
     feature_request 0.96
@@ -35,33 +36,81 @@ logger = logging.getLogger(__name__)
 # Model ID mapping for OpenAI
 # Maps our simplified names to OpenAI's model identifiers
 OPENAI_MODEL_IDS = {
+    # GPT-5 family (released August 7, 2025) - flagship with auto-routing
+    "gpt-5": "gpt-5-2025-08-07",
+    "gpt-5-mini": "gpt-5-mini-2025-08-07",
+    "gpt-5-nano": "gpt-5-nano-2025-08-07",
+    "gpt-5-pro": "gpt-5-pro-2025-08-07",
+    # GPT-4.1 family (available since April 2025) - specialized for coding
+    "gpt-4.1": "gpt-4.1-2025-04",
+    "gpt-4.1-mini": "gpt-4.1-mini-2025-04",
+    # o-series reasoning models (released April 16, 2025)
+    "o3": "o3-2025-04-16",
+    "o3-pro": "o3-pro-2025-04-16",
+    "o4-mini": "o4-mini-2025-04-16",
+    "o4-mini-high": "o4-mini-high-2025-04-16",
+    # GPT-4o (still available) - multimodal specialist
     "gpt-4o": "gpt-4o-2024-08-06",
-    "gpt-4o-mini": "gpt-4o-mini-2024-07-18",
+    # Deprecated models (kept for backwards compatibility)
+    "gpt-4o-mini": "gpt-4o-mini-2024-07-18",  # Replaced by gpt-4.1-mini
 }
 
 # OpenAI pricing (per 1M tokens) - Input/Output
-# Last verified: 2025-01-28
+# Last verified: 2025-11-01
 OPENAI_PRICING = {
+    # GPT-5 family pricing
+    "gpt-5-2025-08-07": (3.00, 12.00),
+    "gpt-5-mini-2025-08-07": (0.20, 0.80),
+    "gpt-5-nano-2025-08-07": (0.10, 0.40),
+    "gpt-5-pro-2025-08-07": (15.00, 60.00),
+    # GPT-4.1 family pricing
+    "gpt-4.1-2025-04": (2.50, 10.00),
+    "gpt-4.1-mini-2025-04": (0.15, 0.60),
+    # o-series reasoning models pricing
+    "o3-2025-04-16": (10.00, 40.00),
+    "o3-pro-2025-04-16": (20.00, 80.00),
+    "o4-mini-2025-04-16": (1.00, 4.00),
+    "o4-mini-high-2025-04-16": (1.50, 6.00),
+    # GPT-4o pricing (still available)
     "gpt-4o-2024-08-06": (2.50, 10.00),
+    # Deprecated models
     "gpt-4o-mini-2024-07-18": (0.15, 0.60),
 }
 
 
 class OpenAIProvider(LLMProvider):
-    """OpenAI GPT provider with JSON mode and function calling support.
+    """OpenAI GPT provider with JSON mode, function calling, and reasoning support.
 
     This provider implements OpenAI-specific optimizations including:
         - JSON mode for structured outputs
         - Function calling capabilities
         - Vision support for multimodal inputs
+        - Advanced reasoning (o-series models)
+        - Auto-routing between Instant/Thinking modes (GPT-5)
         - Efficient token usage with precise prompts
 
     Supported Models:
-        - gpt-4o: Latest flagship model ($2.50/$10.00 per 1M tokens)
-        - gpt-4o-mini: Efficient model for simple tasks ($0.15/$0.60 per 1M tokens)
+        **GPT-5 Family (Released August 7, 2025):**
+        - gpt-5: Flagship with auto-routing ($3.00/$12.00 per 1M tokens)
+        - gpt-5-mini: Fast, efficient variant ($0.20/$0.80 per 1M tokens)
+        - gpt-5-nano: Ultra-efficient variant ($0.10/$0.40 per 1M tokens)
+        - gpt-5-pro: Extended reasoning ($15.00/$60.00 per 1M tokens)
+
+        **GPT-4.1 Family (Available since April 2025):**
+        - gpt-4.1: Specialized for coding, tools ($2.50/$10.00 per 1M tokens)
+        - gpt-4.1-mini: Fast coding model ($0.15/$0.60 per 1M tokens)
+
+        **o-series Reasoning Models (Released April 16, 2025):**
+        - o3: Advanced reasoning, full tool access ($10.00/$40.00 per 1M tokens)
+        - o3-pro: Highest-capability reasoning ($20.00/$80.00 per 1M tokens)
+        - o4-mini: Fast, cost-efficient reasoning ($1.00/$4.00 per 1M tokens)
+        - o4-mini-high: Enhanced o4-mini ($1.50/$6.00 per 1M tokens)
+
+        **GPT-4o (Still available):**
+        - gpt-4o: Multimodal specialist for voice/vision ($2.50/$10.00 per 1M tokens)
 
     Example:
-        >>> provider = OpenAIProvider(model="gpt-4o", enable_caching=True)
+        >>> provider = OpenAIProvider(model="gpt-5", enable_caching=True)
         >>> result = provider.classify("Dashboard broken, getting 500 errors")
         >>> assert result.category == SignalCategory.BUG_REPORT
         >>> assert result.cost < 0.001
@@ -72,14 +121,19 @@ class OpenAIProvider(LLMProvider):
 
     def __init__(
         self,
-        model: str = "gpt-4o",
+        model: str = "gpt-5",
         enable_caching: bool = False,
         organization: Optional[str] = None,
     ) -> None:
         """Initialize OpenAI provider.
 
         Args:
-            model: OpenAI model to use ('gpt-4o', 'gpt-4o-mini')
+            model: OpenAI model to use. Supported models:
+                - GPT-5 family: 'gpt-5', 'gpt-5-mini', 'gpt-5-nano', 'gpt-5-pro'
+                - GPT-4.1 family: 'gpt-4.1', 'gpt-4.1-mini'
+                - o-series: 'o3', 'o3-pro', 'o4-mini', 'o4-mini-high'
+                - GPT-4o: 'gpt-4o' (multimodal specialist)
+                - Deprecated: 'gpt-4o-mini' (use 'gpt-4.1-mini' instead)
             enable_caching: Enable caching (Note: OpenAI doesn't have built-in caching like Claude)
             organization: Optional OpenAI organization ID
 
@@ -272,9 +326,9 @@ Respond with JSON only."""
         pricing = OPENAI_PRICING.get(self.openai_model_id)
         if not pricing:
             logger.warning(
-                f"No pricing found for {self.openai_model_id}, using default GPT-4o pricing"
+                f"No pricing found for {self.openai_model_id}, using default GPT-5 pricing"
             )
-            pricing = (2.50, 10.00)
+            pricing = (3.00, 12.00)
 
         input_price, output_price = pricing
 

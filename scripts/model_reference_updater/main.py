@@ -106,8 +106,7 @@ Examples:
 
         # Generate and display scan report
         scan_report = ChangeReporter.generate_scan_report(
-            scan_results,
-            output_path=args.report_dir / "scan_results.md"
+            scan_results, output_path=args.report_dir / "scan_results.md"
         )
         print("\n" + scan_report + "\n")
 
@@ -127,9 +126,7 @@ Examples:
 
         # Generate and display update report
         update_report = ChangeReporter.generate_update_report(
-            update_results,
-            scan_results,
-            output_path=args.report_dir / "update_results.md"
+            update_results, scan_results, output_path=args.report_dir / "update_results.md"
         )
         print("\n" + update_report + "\n")
 

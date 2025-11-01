@@ -1,19 +1,23 @@
-# GPT-4o Mini Model Definition
-# Last verified: 2025-10-25
+# GPT-4o Mini Model Definition (DEPRECATED)
+# Last verified: 2025-11-01
 # Source: https://platform.openai.com/docs/models
+# Status: DEPRECATED - Replaced by GPT-4.1 mini
 
 schema_version: "1.0.0"
 model_id: "gpt-4o-mini"
 provider: "openai"
 name: "GPT-4o Mini"
 api_identifier: "gpt-4o-mini-2024-07-18"
+deprecated: true
+replacement: "gpt-4.1-mini"
 
 metadata:
   context_window_input: 128000
   context_window_output: 16384
   knowledge_cutoff: "October 2023"
   release_date: "2024-07-18"
-  last_verified: "2025-10-25"
+  last_verified: "2025-11-01"
+  deprecation_date: "2025-04-01"
   docs_url: "https://platform.openai.com/docs/models/gpt-4o-mini"
 
 capabilities:
@@ -31,20 +35,13 @@ pricing:
 
 optimization:
   recommended_for:
-    - "High-volume classification"
-    - "Cost-sensitive applications"
-    - "Fast response requirements"
-    - "Simple reasoning tasks"
-    - "Data extraction and parsing"
-    - "Customer support automation"
+    - "DEPRECATED: Use gpt-4.1-mini instead"
+    - "Legacy applications only"
   best_practices:
-    - "Excellent price-to-performance ratio"
-    - "Use for tasks that don't need GPT-4o power"
-    - "Great for rapid prototyping"
-    - "Ideal for >10k requests/day"
-    - "Use JSON mode for structured data"
-    - "Cascade from Mini to 4o for complex cases"
+    - "MIGRATE TO GPT-4.1 mini for new applications"
+    - "GPT-4.1 mini offers same pricing with better coding performance"
+    - "Existing applications should plan migration"
   cost_tier: "budget"
   speed_tier: "fast"
 
-notes: "Affordable, intelligent small model. 60%+ cheaper than GPT-4o while maintaining strong performance."
+notes: "DEPRECATED: Replaced by GPT-4.1 mini (April 2025). Use gpt-4.1-mini for new applications - same pricing, better performance for coding tasks."

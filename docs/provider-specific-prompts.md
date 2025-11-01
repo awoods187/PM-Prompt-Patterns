@@ -203,7 +203,7 @@ classification_function = {
 }
 
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-5-mini",  # Fast, efficient GPT-5 variant
     messages=[
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": signal}
@@ -221,7 +221,7 @@ result = json.loads(response.choices[0].message.function_call.arguments)
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-5-mini",  # Efficient for JSON structured outputs
     messages=[
         {"role": "system", "content": system_prompt + "\n\nRespond with valid JSON only."},
         {"role": "user", "content": signal}
@@ -241,7 +241,7 @@ result = json.loads(response.choices[0].message.content)
 tools = [{"type": "function", "function": classification_function}]
 
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-5",  # GPT-5 handles parallel tools efficiently
     messages=[
         {"role": "system", "content": "Classify these signals"},
         {"role": "user", "content": "\n".join(f"{i}. {s}" for i, s in enumerate(signals))}
@@ -262,7 +262,7 @@ results = [
 ```python
 # Same inputs + same seed = same output
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-5-mini",  # Reproducible outputs for testing
     messages=messages,
     temperature=0.0,
     seed=42  # Fixed seed for testing/validation
@@ -270,8 +270,13 @@ response = client.chat.completions.create(
 ```
 
 **Best Models:**
-- **GPT-4o-mini**: 94% of GPT-4o accuracy at 94% lower cost ($0.15/$0.60 per 1M)
-- **GPT-4o**: Best for complex reasoning ($2.50/$10.00 per 1M)
+- **GPT-5**: Flagship with auto-routing (Instant/Thinking modes) ($3/$12 per 1M)
+- **GPT-5 mini**: Efficient variant, great balance ($0.20/$0.80 per 1M)
+- **GPT-4.1**: Specialized for coding and tool use ($2.50/$10.00 per 1M)
+- **GPT-4.1 mini**: Fast coding model, replaced 4o-mini ($0.15/$0.60 per 1M)
+- **o3**: Advanced reasoning with full tool access ($10/$40 per 1M)
+- **o4-mini**: Fast, cost-efficient reasoning ($1/$4 per 1M)
+- **GPT-4o**: Multimodal specialist (voice, vision, low-latency) ($2.50/$10.00 per 1M)
 
 ---
 
@@ -419,21 +424,32 @@ def select_gemini_model(daily_volume: int, latency_sensitive: bool):
 - Need guaranteed JSON schema compliance
 - Function calling for downstream integration
 - API-first architectures
+- GPT-5/4.1 excel at structured outputs
 
-✅ **Batch Processing**
+✅ **Coding Tasks**
+- GPT-4.1 and GPT-4.1 mini specialized for code generation
+- Precise instruction following for web development
+- Long context without reasoning overhead
+
+✅ **Complex Reasoning**
+- o3/o3-pro for scientific problems, advanced analysis
+- o4-mini/o4-mini-high for math, coding, visual reasoning
+- Can "think with images" (sketches, diagrams, low-quality images)
+
+✅ **General-Purpose Tasks**
+- GPT-5 auto-routes between Instant (fast) and Thinking (complex) modes
+- Default choice for most tasks with highest quality
+- GPT-5 Instant updated October 2025 with improved mental health support
+
+✅ **Batch Processing & Reproducibility**
 - Parallel tool calls (50-100 signals/call)
-- High throughput needed
-- Existing OpenAI infrastructure
-
-✅ **Reproducibility Needed**
-- Testing/validation workflows
 - Deterministic outputs (seed parameter)
-- A/B testing prompt variations
+- High throughput with existing infrastructure
 
 ❌ **Avoid OpenAI For:**
-- Very large context (>100K tokens)
-- Budget-critical applications
-- When caching would help
+- Very large context (>200K tokens - use Gemini 2M context)
+- Ultra-budget applications (Gemini Flash Lite is cheaper)
+- When caching would save significant cost (Claude's 90% discount)
 
 ### Use Gemini When:
 
@@ -472,7 +488,7 @@ def classify_with_cascading(signal: str):
 
     if result.confidence < 0.7:
         # Escalate to mid-tier
-        result = gpt_4o_mini.classify(signal)
+        result = gpt_5_mini.classify(signal)  # GPT-5 mini for better reasoning
 
     if result.confidence < 0.85:
         # Final escalation to highest accuracy
@@ -482,9 +498,9 @@ def classify_with_cascading(signal: str):
 
 # Cost breakdown for 10K signals:
 # - 80% resolved by Flash Lite @ $0.10 = $0.08
-# - 15% escalate to GPT-4o-mini @ $0.20 = $0.03
+# - 15% escalate to GPT-5 mini @ $0.25 = $0.04
 # - 5% escalate to Claude Sonnet @ $3.00 = $0.15
-# Total: $0.26 vs $3.00 if all used Claude
+# Total: $0.27 vs $3.00 if all used Claude
 # Savings: 91%
 ```
 
@@ -534,12 +550,16 @@ Tested on 10,000 customer signals (support tickets, feedback, feature requests):
 | Provider | Model | Accuracy | p95 Latency | Cost/10K | Notes |
 |----------|-------|----------|-------------|----------|-------|
 | Gemini | Flash Lite | 87% | 0.4s | $1.00 | Best cost |
-| OpenAI | GPT-4o-mini | 90% | 0.6s | $2.00 | Best balance |
+| OpenAI | GPT-5 mini | 91% | 0.5s | $2.50 | Fast GPT-5 variant |
+| OpenAI | GPT-4.1 mini | 90% | 0.6s | $2.00 | Coding specialist |
 | Gemini | Flash | 91% | 0.7s | $2.00 | High volume |
 | Claude | Haiku 4.5 | 92% | 1.0s | $10.00 | No caching |
 | Claude | Haiku 4.5 | 92% | 1.0s | $1.00 | With caching |
-| OpenAI | GPT-4o | 93% | 1.0s | $7.00 | Mid-tier |
+| OpenAI | GPT-5 | 94% | 0.9s | $7.50 | Auto-routing Instant/Thinking |
+| OpenAI | GPT-4.1 | 93% | 1.0s | $7.00 | Coding, tool use |
+| OpenAI | o4-mini | 95% | 1.2s | $12.50 | Fast reasoning |
 | Gemini | Pro | 94% | 1.3s | $3.00 | High accuracy |
+| OpenAI | o3 | 96% | 1.5s | $125.00 | Advanced reasoning |
 | Claude | Sonnet 4.5 | 95% | 1.2s | $30.00 | No caching |
 | Claude | Sonnet 4.5 | 95% | 1.2s | $3.00 | With caching |
 
@@ -554,9 +574,10 @@ Tested on 10,000 customer signals (support tickets, feedback, feature requests):
    - 10x throughput of competitors
    - Ideal for >100K daily volume
 
-3. **GPT-4o-mini = Best Balance**
+3. **GPT-4.1 mini = Best Balance for Coding**
    - 90% accuracy at $2/10K
    - No caching needed
+   - Specialized for coding and tool use
    - Reliable JSON output
 
 ---

@@ -8,7 +8,7 @@ throughout the codebase, including outdated patterns that need migration.
 """
 
 import re
-from typing import Dict, List, Pattern, Tuple
+from typing import List, Pattern, Tuple
 
 # ============================================================================
 # CURRENT MODELS (Source of Truth from ai_models/definitions/)

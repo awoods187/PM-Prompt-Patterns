@@ -134,7 +134,9 @@ class GeminiProvider(LLMProvider):
             generation_config=generation_config,  # type: ignore[arg-type]
         )
 
-        logger.info(f"Gemini 2.5 Provider initialized: model={model}, model_id={self.gemini_model_id}")
+        logger.info(
+            f"Gemini 2.5 Provider initialized: model={model}, model_id={self.gemini_model_id}"
+        )
 
     def _classify_impl(self, text: str, prompt: str) -> ClassificationResult:
         """Classify using Gemini with JSON mode for structured output.

@@ -51,7 +51,7 @@ class TestModelRegistry:
         assert all(m.provider == "anthropic" for m in anthropic_models)
 
         openai_models = ModelRegistry.get_by_provider("openai")
-        assert len(openai_models) == 2
+        assert len(openai_models) == 8  # Updated for new OpenAI model lineup (Nov 2025)
 
         google_models = ModelRegistry.get_by_provider("google")
         assert len(google_models) == 3

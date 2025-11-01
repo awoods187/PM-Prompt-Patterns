@@ -10,7 +10,7 @@ model references that need to be updated.
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Set
+from typing import Dict, List
 
 from scripts.model_reference_updater import patterns
 
@@ -55,9 +55,7 @@ class ScanResults:
 
         # Track by pattern
         pattern_key = f"{ref.matched_text} → {ref.replacement}"
-        self.references_by_pattern[pattern_key] = (
-            self.references_by_pattern.get(pattern_key, 0) + 1
-        )
+        self.references_by_pattern[pattern_key] = self.references_by_pattern.get(pattern_key, 0) + 1
 
 
 class ReferenceScanner:
@@ -164,9 +162,7 @@ class ReferenceScanner:
         Returns:
             List of (file_path, reference_count) tuples
         """
-        file_counts = [
-            (path, len(refs)) for path, refs in self.results.references_by_file.items()
-        ]
+        file_counts = [(path, len(refs)) for path, refs in self.results.references_by_file.items()]
         return sorted(file_counts, key=lambda x: x[1], reverse=True)[:limit]
 
     def get_references_by_category(self) -> Dict[str, List[Path]]:

@@ -340,13 +340,12 @@ for model in models:
 ```
 
 **Available models:**
-- `claude-haiku-4-5`
-- `claude-sonnet-4-5`
-- `claude-opus-4-1`
-- `gpt-4o`
-- `gpt-4o-mini`
-- `gemini-2-5-flash`
-- `gemini-2.5-pro`
+- Claude: `claude-haiku-4-5`, `claude-sonnet-4-5`, `claude-opus-4-1`
+- GPT-5: `gpt-5`, `gpt-5-mini`, `gpt-5-nano`, `gpt-5-pro`
+- GPT-4.1: `gpt-4.1`, `gpt-4.1-mini`
+- o-series: `o3`, `o3-pro`, `o4-mini`, `o4-mini-high`
+- GPT-4o: `gpt-4o` (multimodal specialist)
+- Gemini: `gemini-2-5-flash`, `gemini-2-5-pro`, `gemini-2-5-flash-lite`
 
 #### 5. Tests Failing
 
