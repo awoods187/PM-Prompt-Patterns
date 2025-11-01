@@ -197,36 +197,44 @@ budget_models = ModelRegistry.filter_by_cost_tier("budget")
 
 **Advanced Examples:** [API Documentation](./docs/api-examples.md) | [Production Architecture](./examples/epic-categorization/)
 
-### Provider-Optimized Prompts ✨ NEW
+### Provider-Optimized Prompts ✨ ALL PROMPTS MIGRATED
 
-The toolkit now includes **provider-specific prompt optimizations** for Claude, OpenAI, and Gemini:
+**All 13 production prompts** now have **provider-specific optimizations** for Claude, OpenAI, and Gemini:
 
 ```python
-from ai_models import get_prompt, get_model
+from ai_models import get_prompt, get_model, list_prompts
+
+# See all available prompts
+prompts = list_prompts()
+# Returns: ['analytics/signal-classification', 'developing-internal-tools/claude-md-generator', ...]
 
 # Automatically select best prompt variant for your model
 model = get_model("gpt-4o")
 prompt = get_prompt("analytics/signal-classification", model=model.id)
 
 # Or explicitly choose a provider optimization
-claude_prompt = get_prompt("analytics/signal-classification", provider="claude")
-openai_prompt = get_prompt("analytics/signal-classification", provider="openai")
-gemini_prompt = get_prompt("analytics/signal-classification", provider="gemini")
+claude_prompt = get_prompt("developing-internal-tools/code-review-refactoring", provider="claude")
+openai_prompt = get_prompt("product-strategy/meta-prompt-designer", provider="openai")
+gemini_prompt = get_prompt("stakeholder-communication/executive-deck-review", provider="gemini")
 ```
 
 **Provider-Specific Features:**
 
 | Provider | Key Optimizations | Best For | Cost/1K Operations |
 |----------|-------------------|----------|-------------------|
-| **Claude** | XML tags, chain-of-thought | Complex reasoning, accuracy | $1-3 |
-| **OpenAI** | Function calling, JSON mode | Structured output, integration | $0.20-0.70 |
-| **Gemini** | 2M context, caching | High volume, batch processing | $0.10-0.30 |
+| **Claude** | XML tags, chain-of-thought, caching | Complex reasoning, accuracy | $1-15 |
+| **OpenAI** | Function calling, JSON mode, parallel tools | Structured output, integration | $0.15-10 |
+| **Gemini** | 2M context, caching, batch processing | High volume, cost optimization | $0.038-5 |
 
-**Available Prompts:**
-- [**Signal Classification**](./prompts/analytics/signal-classification/) - Categorize customer feedback (5 categories, 90%+ accuracy)
-- More coming soon...
+**All 13 Prompts Available:**
+- **Analytics:** [signal-classification](./prompts/analytics/signal-classification/)
+- **Development:** [claude-md-generator](./prompts/developing-internal-tools/claude-md-generator/), [code-review-refactoring](./prompts/developing-internal-tools/code-review-refactoring/), [enterprise-readme-generator](./prompts/developing-internal-tools/enterprise-readme-generator/), [github-actions-python-cicd](./prompts/developing-internal-tools/github-actions-python-cicd/), [llm-orchestration-system](./prompts/developing-internal-tools/llm-orchestration-system/), [prompt-extraction-cataloging](./prompts/developing-internal-tools/prompt-extraction-cataloging/), [pytest-cicd-optimization](./prompts/developing-internal-tools/pytest-cicd-optimization/), [python-80-percent-test-coverage](./prompts/developing-internal-tools/python-80-percent-test-coverage/)
+- **Strategy:** [meta-prompt-designer](./prompts/product-strategy/meta-prompt-designer/), [opus-code-execution-pattern](./prompts/product-strategy/opus-code-execution-pattern/)
+- **Communication:** [executive-deck-review](./prompts/stakeholder-communication/executive-deck-review/), [remove-ai-writing-patterns](./prompts/stakeholder-communication/remove-ai-writing-patterns/)
 
-[→ Learn more about provider-optimized prompts](./docs/provider-specific-prompts.md)
+**Total:** 13 prompts × 4 variants (base + Claude + OpenAI + Gemini) = **52 optimized prompt variants**
+
+[→ Learn more about provider-optimized prompts](./docs/provider-specific-prompts.md) | [→ Migration tool](./scripts/migrate_prompts.py)
 
 ---
 
