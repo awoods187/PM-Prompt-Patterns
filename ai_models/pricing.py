@@ -19,7 +19,7 @@ Example:
 from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 import yaml
 
@@ -43,8 +43,8 @@ class Pricing:
     output_per_1m: float
     cache_write_per_1m: Optional[float] = None
     cache_read_per_1m: Optional[float] = None
-    effective_date: date = None
-    verified_date: date = None
+    effective_date: Optional[date] = None
+    verified_date: Optional[date] = None
 
     def calculate_cost(
         self,
@@ -85,9 +85,9 @@ class Pricing:
 
         return input_cost + cache_cost + output_cost
 
-    def to_dict(self) -> dict[str, float]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary representation."""
-        result = {
+        result: dict[str, Any] = {
             "model_id": self.model_id,
             "input_per_1m": self.input_per_1m,
             "output_per_1m": self.output_per_1m,
@@ -247,8 +247,7 @@ class PricingService:
         return self._pricing_cache.copy()
 
     def clear_cache(self) -> None:
-        """Clear the LRU cache and reload pricing."""
-        self.get_pricing.cache_clear()
+        """Clear the cache and reload pricing."""
         self._pricing_cache.clear()
         self._load_all_pricing()
 

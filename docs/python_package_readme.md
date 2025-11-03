@@ -288,10 +288,10 @@ ai_models/
 - 📝 Planned features: GPT-4o, JSON mode, function calling
 - 🤝 Contributions welcome! See [CONTRIBUTING.md](../.github/CONTRIBUTING.md)
 
-**Google Gemini Provider:**
+**Google Gemini 2.5 Provider:**
 - ✅ Model definitions exist in registry (gemini-2-5-flash, gemini-2.5-pro)
 - ❌ Provider implementation raises `NotImplementedError`
-- 📝 Planned features: Gemini Pro, Gemini Flash, 1M+ token context
+- 📝 Planned features: Gemini 2.5 Pro, Gemini 2.5 Flash, 1M+ token context
 - 🤝 Contributions welcome! See [CONTRIBUTING.md](../.github/CONTRIBUTING.md)
 
 **Workaround:**
@@ -520,7 +520,7 @@ for model in models:
 
 We welcome contributions! Especially for:
 
-- 🎯 **High Priority:** Implementing OpenAI and Gemini providers
+- 🎯 **High Priority:** Implementing OpenAI and Gemini 2.5 Providers
 - 📊 **Medium Priority:** Adding cost optimization utilities
 - 🧪 **Medium Priority:** Expanding test coverage
 - 📚 **Low Priority:** Adding more examples and documentation
@@ -567,7 +567,7 @@ MIT License - see [LICENSE](../LICENSE) for details.
 
 ---
 
-**Built with ❤️ for AI-native product managers**
+**Built for AI-native product managers**
 
 **Last Updated:** 2025-11-01
 **Version:** 0.2.0

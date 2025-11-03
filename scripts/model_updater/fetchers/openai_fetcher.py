@@ -178,7 +178,7 @@ class OpenAIFetcher(BaseFetcher):
                 ],
                 "best_practices": [
                     "Use for high-throughput scenarios",
-                    "Good replacement for GPT-3.5 Turbo",
+                    "Good replacement for GPT-4o Mini",
                     "Leverage vision for image tasks at lower cost",
                     "Batch similar requests for efficiency",
                     "Enable streaming for responsiveness",

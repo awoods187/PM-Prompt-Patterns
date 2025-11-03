@@ -19,13 +19,15 @@ Example:
 """
 
 import logging
-from typing import Tuple
+from typing import Tuple, cast
 from xml.sax.saxutils import escape  # nosec B406  # Used to escape user input, not parse XML
 
 try:
     import anthropic
+    from anthropic.types import TextBlock
 except ImportError:
     anthropic = None  # type: ignore[assignment]
+    TextBlock = None  # type: ignore[assignment, misc]
 
 from pm_prompt_toolkit.config import get_settings
 from pm_prompt_toolkit.providers.base import ClassificationResult, LLMProvider, SignalCategory
@@ -129,7 +131,7 @@ class ClaudeProvider(LLMProvider):
         )
 
         # Parse response
-        result_text = response.content[0].text
+        result_text = cast(TextBlock, response.content[0]).text
         category, confidence, evidence = self._parse_response(result_text)
 
         # Calculate cost

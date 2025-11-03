@@ -34,12 +34,12 @@ This guide covers cost optimization strategies actually implemented in this tool
 
 ### Achieved Results
 
-| Metric | Before Optimization | After Optimization | Improvement |
-|--------|---------------------|-------------------|-------------|
-| **Average cost/request** | $0.0008 | $0.00012 | **85% reduction** |
-| **Monthly API costs** (1.5M requests) | $1,200 | $180 | **$1,020 savings** |
-| **Accuracy** | 92% | 94% | **+2% quality** |
-| **P95 latency** | 450ms | 320ms | **29% faster** |
+| Metric                                | Before Optimization | After Optimization | Improvement        |
+|---------------------------------------|---------------------|--------------------|--------------------|
+| **Average cost/request**              | $0.0008             | $0.00012           | **85% reduction**  |
+| **Monthly API costs** (1.5M requests) | $1,200              | $180               | **$1,020 savings** |
+| **Accuracy**                          | 92%                 | 94%                | **+2% quality**    |
+| **P95 latency**                       | 450ms               | 320ms              | **29% faster**     |
 
 ### Cost Breakdown by Technique
 
@@ -329,12 +329,12 @@ full_prompt = f"{static_prompt}\n\n{dynamic_signal}"
 
 ### Cache Performance Metrics
 
-| Scenario | Requests | Cache Hit Rate | Cost Without | Cost With | Savings |
-|----------|----------|----------------|--------------|-----------|---------|
-| Support tickets | 10,000 | 92% | $84 | $21 | 75% |
-| Feature requests | 5,000 | 88% | $42 | $13 | 69% |
-| Sales signals | 3,000 | 95% | $25 | $6.50 | 74% |
-| **Total** | **18,000** | **91%** | **$151** | **$40.50** | **73%** |
+| Scenario         | Requests   | Cache Hit Rate | Cost Without | Cost With  | Savings |
+|------------------|------------|----------------|--------------|------------|---------|
+| Support tickets  | 10,000     | 92%            | $84          | $21        | 75%     |
+| Feature requests | 5,000      | 88%            | $42          | $13        | 69%     |
+| Sales signals    | 3,000      | 95%            | $25          | $6.50      | 74%     |
+| **Total**        | **18,000** | **91%**        | **$151**     | **$40.50** | **73%** |
 
 ### Cache Optimization Tips
 
@@ -395,12 +395,12 @@ PREMIUM TIER:
 
 ### Task-to-Tier Mapping
 
-| Task Type | Recommended Tier | Example Use Cases |
-|-----------|------------------|-------------------|
-| **Simple classification** | Budget (Haiku) | Spam detection, sentiment analysis, keyword extraction |
-| **Structured extraction** | Balanced (Sonnet) | JSON parsing, multi-field extraction, summarization |
-| **Complex reasoning** | Balanced (Sonnet) | Customer intent, root cause analysis, recommendations |
-| **Novel/ambiguous tasks** | Premium (Opus) | Strategic analysis, creative writing, edge cases |
+| Task Type                 | Recommended Tier  | Example Use Cases                                        |
+|---------------------------|-------------------|----------------------------------------------------------|
+| **Simple classification** | Budget (Haiku)    | Spam detection, sentiment analysis, keyword extraction   |
+| **Structured extraction** | Balanced (Sonnet) | JSON parsing, multi-field extraction, summarization      |
+| **Complex reasoning**     | Balanced (Sonnet) | Customer intent, root cause analysis, recommendations    |
+| **Novel/ambiguous tasks** | Premium (Opus)    | Strategic analysis, creative writing, edge cases         |
 
 ### Cost Impact by Tier
 
@@ -798,13 +798,13 @@ for signal in signals:
 
 ### Key Metrics to Track
 
-| Metric | Target | Alert Threshold | Action |
-|--------|--------|----------------|--------|
-| Daily cost | <$100 | 80% ($80) | Throttle non-critical requests |
-| Average cost | <$0.0005 | >$0.0010 | Review model selection |
-| Cache hit rate | >85% | <70% | Check cache configuration |
-| P95 latency | <500ms | >1000ms | Consider faster models |
-| Error rate | <0.1% | >1% | Investigate provider issues |
+| Metric         | Target    | Alert Threshold | Action                           |
+|----------------|-----------|-----------------|----------------------------------|
+| Daily cost     | <$100     | 80% ($80)       | Throttle non-critical requests   |
+| Average cost   | <$0.0005  | >$0.0010        | Review model selection           |
+| Cache hit rate | >85%      | <70%            | Check cache configuration        |
+| P95 latency    | <500ms    | >1000ms         | Consider faster models           |
+| Error rate     | <0.1%     | >1%             | Investigate provider issues      |
 
 ---
 
@@ -904,13 +904,13 @@ Annual Net Benefit:    ${results['annual_net_benefit']:.2f}/year
 
 ### ROI Decision Matrix
 
-| Monthly LLM Cost | Hours Saved | ROI | Recommendation |
-|------------------|-------------|-----|----------------|
-| <$100 | Any | High | ✅ Implement |
-| $100-$500 | >10 hours | >1000% | ✅ Implement |
-| $500-$1000 | >40 hours | >400% | ✅ Implement |
-| $1000-$5000 | >200 hours | >500% | ⚠️ Evaluate closely |
-| >$5000 | >1000 hours | >200% | ⚠️ Consider alternatives |
+| Monthly LLM Cost | Hours Saved | ROI     | Recommendation           |
+|------------------|-------------|---------|--------------------------|
+| <$100            | Any         | High    | ✅ Implement             |
+| $100-$500        | >10 hours   | >1000%  | ✅ Implement             |
+| $500-$1000       | >40 hours   | >400%   | ✅ Implement             |
+| $1000-$5000      | >200 hours  | >500%   | ⚠️ Evaluate closely      |
+| >$5000           | >1000 hours | >200%   | ⚠️ Consider alternatives |
 
 ---
 
@@ -934,12 +934,12 @@ Annual Net Benefit:    ${results['annual_net_benefit']:.2f}/year
 
 **Results:**
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Monthly cost | $8,325 (333 hrs × $25) | $180 (LLM) + $425 (17 hrs human) | 93% reduction |
-| Time to categorize | 2 min avg | <1 sec (automated) | 99.9% faster |
-| Categorization accuracy | 85% | 94% | +9 percentage points |
-| Customer satisfaction | 7.2/10 | 8.9/10 | +24% |
+| Metric                  | Before                 | After                            | Improvement          |
+|-------------------------|------------------------|----------------------------------|----------------------|
+| Monthly cost            | $8,325 (333 hrs × $25) | $180 (LLM) + $425 (17 hrs human) | 93% reduction        |
+| Time to categorize      | 2 min avg              | <1 sec (automated)               | 99.9% faster         |
+| Categorization accuracy | 85%                    | 94%                              | +9 percentage points |
+| Customer satisfaction   | 7.2/10                 | 8.9/10                           | +24%                 |
 
 **ROI:**
 - Monthly savings: $7,720
@@ -966,21 +966,21 @@ Annual Net Benefit:    ${results['annual_net_benefit']:.2f}/year
 
 **Cost Breakdown:**
 
-| Component | Model | Requests | Cost |
-|-----------|-------|----------|------|
-| Classification | Haiku | 5,000 | $10 |
-| Feature extraction | Sonnet | 1,500 | $30 |
-| Impact analysis | Sonnet | 500 | $10 |
-| **Total** | | **7,000** | **$50** |
+| Component          | Model  | Requests  | Cost    |
+|--------------------|--------|-----------|---------|
+| Classification     | Haiku  | 5,000     | $10     |
+| Feature extraction | Sonnet | 1,500     | $30     |
+| Impact analysis    | Sonnet | 500       | $10     |
+| **Total**          |        | **7,000** | **$50** |
 
 **Results:**
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Monthly cost | $8,350 (167 hrs × $50) | $50 (LLM) + $500 (10 hrs PM) | 94% reduction |
-| Processing time | 2 weeks | 1 day | 93% faster |
-| Features identified | 200 | 450 | 125% more |
-| Prioritization accuracy | 65% | 88% | +35% |
+| Metric                  | Before                 | After                        | Improvement   |
+|-------------------------|------------------------|------------------------------|---------------|
+| Monthly cost            | $8,350 (167 hrs × $50) | $50 (LLM) + $500 (10 hrs PM) | 94% reduction |
+| Processing time         | 2 weeks                | 1 day                        | 93% faster    |
+| Features identified     | 200                    | 450                          | 125% more     |
+| Prioritization accuracy | 65%                    | 88%                          | +35%          |
 
 **ROI:**
 - Monthly savings: $7,800
@@ -1005,21 +1005,21 @@ Annual Net Benefit:    ${results['annual_net_benefit']:.2f}/year
 
 **Cost Optimization:**
 
-| Technique | Savings |
-|-----------|---------|
-| Keyword filtering | 60% of signals (free) |
-| Prompt caching | 85% cache hit rate |
-| Haiku for simple signals | 30% cheaper model |
-| **Total monthly cost** | **$65** |
+| Technique                | Savings               |
+|--------------------------|-----------------------|
+| Keyword filtering        | 60% of signals (free) |
+| Prompt caching           | 85% cache hit rate    |
+| Haiku for simple signals | 30% cheaper model     |
+| **Total monthly cost**   | **$65**               |
 
 **Results:**
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Monthly cost | $6,000 (100 hrs × $60) | $65 (LLM) + $600 (10 hrs) | 89% reduction |
-| Opportunities identified | 80 | 240 | 200% more |
-| Churn prevented | 5 accounts | 18 accounts | 260% more |
-| Revenue impact | $0 | $450K/year retained revenue | Huge |
+| Metric                   | Before                 | After                       | Improvement                 |
+|--------------------------|------------------------|-----------------------------|-----------------------------|
+| Monthly cost             | $6,000 (100 hrs × $60) | $65 (LLM) + $600 (10 hrs)  | 89% reduction                |
+| Opportunities identified | 80                     | 240                         | 200% more                   |
+| Churn prevented          | 5 accounts             | 18 accounts                 | 260% more                   |
+| Revenue impact           | $0                     | $450K/year retained revenue | Huge                        |
 
 **ROI:**
 - Monthly savings: $5,335
@@ -1032,15 +1032,15 @@ Annual Net Benefit:    ${results['annual_net_benefit']:.2f}/year
 
 ### Cost Optimization Techniques Ranked by Impact
 
-| Rank | Technique | Avg Savings | Complexity | Recommendation |
-|------|-----------|-------------|------------|----------------|
-| 1 | **Model Cascading** | 60-85% | Medium | ✅ Implement first for high volume |
-| 2 | **Prompt Caching** | 70-90% | Low | ✅ Enable by default |
-| 3 | **Keyword Filtering** | 0-70% | Low | ✅ Add for common patterns |
-| 4 | **Budget-Tier Selection** | 40-75% | Low | ✅ Use cheaper models when possible |
-| 5 | **Prompt Optimization** | 30-80% | Medium | ⚠️ Apply to high-volume prompts |
-| 6 | **Batch Processing** | 20-50% | Low | ✅ Use for batch jobs |
-| 7 | **Multi-Cloud** | 10-30% | High | ⚠️ Only at scale (>$10K/month) |
+| Rank | Technique                 | Avg Savings | Complexity | Recommendation                      |
+|------|---------------------------|-------------|------------|-------------------------------------|
+| 1    | **Model Cascading**       | 60-85%      | Medium     | ✅ Implement first for high volume  |
+| 2    | **Prompt Caching**        | 70-90%      | Low        | ✅ Enable by default                |
+| 3    | **Keyword Filtering**     | 0-70%       | Low        | ✅ Add for common patterns          |
+| 4    | **Budget-Tier Selection** | 40-75%      | Low        | ✅ Use cheaper models when possible |
+| 5    | **Prompt Optimization**   | 30-80%      | Medium     | ⚠️ Apply to high-volume prompts     |
+| 6    | **Batch Processing**      | 20-50%      | Low        | ✅ Use for batch jobs               |
+| 7    | **Multi-Cloud**           | 10-30%      | High       | ⚠️ Only at scale (>$10K/month)      |
 
 ### Implementation Priority
 
@@ -1068,13 +1068,13 @@ Annual Net Benefit:    ${results['annual_net_benefit']:.2f}/year
 
 With all techniques implemented:
 
-| Metric | Typical Results |
-|--------|----------------|
-| **Overall cost reduction** | 75-85% |
-| **Quality improvement** | 0-5% (sometimes better) |
-| **Latency improvement** | 20-40% (cheaper models often faster) |
-| **ROI** | 1,000-15,000% |
-| **Payback period** | <1 month |
+| Metric                     | Typical Results                      |
+|----------------------------|--------------------------------------|
+| **Overall cost reduction** | 75-85%                               |
+| **Quality improvement**    | 0-5% (sometimes better)              |
+| **Latency improvement**    | 20-40% (cheaper models often faster) |
+| **ROI**                    | 1,000-15,000%                        |
+| **Payback period**         | <1 month                             |
 
 ---
 
