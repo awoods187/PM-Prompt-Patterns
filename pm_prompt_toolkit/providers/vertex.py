@@ -24,13 +24,15 @@ Example:
 
 import logging
 import os
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple, cast
 from xml.sax.saxutils import escape  # nosec B406  # Used to escape user input, not parse XML
 
 try:
     from anthropic import AnthropicVertex
+    from anthropic.types import TextBlock
 except ImportError:
     AnthropicVertex = None  # type: ignore[assignment, misc]
+    TextBlock = None  # type: ignore[assignment, misc]
 
 from pm_prompt_toolkit.config import get_settings
 from pm_prompt_toolkit.providers.base import ClassificationResult, LLMProvider, SignalCategory
@@ -41,24 +43,24 @@ logger = logging.getLogger(__name__)
 # Maps our simplified names to Vertex AI's model identifiers
 VERTEX_MODEL_IDS = {
     # Claude 4.5 models
-    "claude-sonnet-4-5": "claude-3-5-sonnet-v2@20241022",
+    "claude-sonnet-4-5": "claude-sonnet-4-5-v2@20241022",
     # Claude 4 models
-    "claude-sonnet-4": "claude-3-5-sonnet@20240620",
-    "claude-opus-4-1": "claude-3-opus@20240229",
-    "claude-opus-4": "claude-3-opus@20240229",
+    "claude-sonnet-4": "claude-sonnet-4-5@20240620",
+    "claude-opus-4-1": "claude-opus-4-1@20240229",
+    "claude-opus-4": "claude-opus-4-1@20240229",
     # Claude 3.5 models (backward compatibility)
-    "claude-sonnet": "claude-3-5-sonnet-v2@20241022",
-    "claude-haiku": "claude-3-5-haiku@20241022",
-    "claude-opus": "claude-3-opus@20240229",
+    "claude-sonnet": "claude-sonnet-4-5-v2@20241022",
+    "claude-haiku": "claude-haiku-4-5@20241022",
+    "claude-opus": "claude-opus-4-1@20240229",
 }
 
 # Vertex AI pricing (per 1M tokens) - Input/Output
 # Last verified: 2025-01-28
 VERTEX_PRICING = {
-    "claude-3-5-sonnet-v2@20241022": (3.0, 15.0),
-    "claude-3-5-sonnet@20240620": (3.0, 15.0),
-    "claude-3-opus@20240229": (15.0, 75.0),
-    "claude-3-5-haiku@20241022": (1.0, 5.0),
+    "claude-sonnet-4-5-v2@20241022": (3.0, 15.0),
+    "claude-sonnet-4-5@20240620": (3.0, 15.0),
+    "claude-opus-4-1@20240229": (15.0, 75.0),
+    "claude-haiku-4-5@20241022": (1.0, 5.0),
 }
 
 
@@ -134,6 +136,10 @@ class VertexProvider(LLMProvider):
         self.project_id = project_id or settings.gcp_project_id
         self.region = region or settings.gcp_region
 
+        # Validate that project_id is set (validate_vertex_config ensures this)
+        assert self.project_id is not None, "GCP project_id must be configured"
+        assert self.region is not None, "GCP region must be configured"
+
         # Set credentials if path is provided
         if settings.gcp_credentials_path:
             os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = settings.gcp_credentials_path
@@ -177,7 +183,7 @@ class VertexProvider(LLMProvider):
         )
 
         # Extract classification from response
-        result_text = response.content[0].text
+        result_text = cast(TextBlock, response.content[0]).text
         category, confidence, evidence = self._parse_response(result_text)
 
         # Calculate cost

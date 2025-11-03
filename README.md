@@ -71,53 +71,93 @@ GOOGLE_API_KEY=your_key_here
 Keys only required for live API testing. Browse prompts without keys.
 </details>
 
-### Multi-Cloud Provider Support (New in v0.2.0)
+### Multi-Provider Support (New in v0.2.0)
 
-The toolkit now supports running Claude models through **AWS Bedrock** and **Google Vertex AI** in addition to direct Anthropic APIs.
+The toolkit supports **6 AI providers** with intelligent routing and cost optimization:
 
-**Installation with cloud providers:**
+**Supported Providers:**
+- **Anthropic Claude** (direct API) - Haiku, Sonnet, Opus
+- **AWS Bedrock** - Claude models via AWS infrastructure
+- **Google Vertex AI** - Claude models via Google Cloud
+- **OpenAI** - GPT-5 (all variants), GPT-4.1, o3, o4-mini, GPT-4o
+- **Google Gemini** - Gemini 2.5 Pro, Flash, Flash Lite
+- **Mock Provider** - Zero-cost testing provider
+
+**Installation:**
 ```bash
-# For AWS Bedrock support
+# Base installation (Anthropic Claude + Mock)
+pip install -e .
+
+# With AWS Bedrock support
 pip install -e ".[bedrock]"
 
-# For Google Vertex AI support
+# With Google Vertex AI support
 pip install -e ".[vertex]"
 
-# For all cloud providers
+# With OpenAI support
+pip install -e ".[openai]"
+
+# With Google Gemini support
+pip install -e ".[gemini]"
+
+# With all providers
 pip install -e ".[all]"
 ```
 
-**Provider Configuration:**
+**Provider Configuration (.env file):**
 ```bash
-# AWS Bedrock (add to .env)
+# Anthropic Claude (direct API)
+ANTHROPIC_API_KEY=your_key_here
+
+# AWS Bedrock
 ENABLE_BEDROCK=true
 AWS_ACCESS_KEY_ID=your_key_here
 AWS_SECRET_ACCESS_KEY=your_secret_here
 AWS_REGION=us-east-1
 
-# Google Vertex AI (add to .env)
+# Google Vertex AI
 ENABLE_VERTEX=true
 GCP_PROJECT_ID=your-project-id
 GCP_REGION=us-central1
 GCP_CREDENTIALS_PATH=/path/to/credentials.json  # Optional
+
+# OpenAI
+ENABLE_OPENAI=true
+OPENAI_API_KEY=sk-your_key_here
+OPENAI_ORG_ID=org-your_org_here  # Optional
+
+# Google Gemini
+GOOGLE_API_KEY=your_key_here
 ```
 
-**Usage:**
+**Usage Examples:**
 ```python
 from pm_prompt_toolkit.providers import get_provider
 
-# Explicit provider selection
+# Explicit provider selection with prefix
+claude = get_provider("anthropic:claude-sonnet-4-5")
 bedrock = get_provider("bedrock:claude-sonnet-4-5")
 vertex = get_provider("vertex:claude-sonnet-4-5")
+openai = get_provider("openai:gpt-5")  # GPT-5 flagship with auto-routing
+gemini = get_provider("gemini:gemini-2-5-pro")
 
-# Automatic routing (uses Bedrock if enabled)
-provider = get_provider("claude-sonnet-4-5")
+# Automatic routing (Claude models prefer Bedrock if enabled)
+provider = get_provider("claude-sonnet-4-5")  # Uses Bedrock if enabled
 result = provider.classify("We need SSO integration")
+
+# Direct model routing
+openai_provider = get_provider("gpt-5")  # Routes to OpenAI if enabled (auto-routing Instant/Thinking)
+gemini_provider = get_provider("gemini-2-5-flash")  # Routes to Gemini
+
+# Mock provider for testing (zero cost)
+mock = get_provider("mock:claude-sonnet")
 ```
 
-**Benefits:**
+**Provider Benefits:**
 - **Bedrock:** Enterprise AWS infrastructure, AWS-native billing, regional data residency
 - **Vertex AI:** Google Cloud integration, GCP-native billing, unified GCP experience
+- **OpenAI:** Advanced function calling, structured outputs, multimodal
+- **Gemini:** 2M token context (Pro), ultra-low cost (Flash Lite), context caching
 - **Fallback:** Automatically falls back to direct Anthropic API if cloud providers unavailable
 
 ---
@@ -130,7 +170,7 @@ result = provider.classify("We need SSO integration")
 from ai_models import get_model, has_vision, has_prompt_caching
 
 # Get model specifications
-model = get_model("claude-sonnet-4-5")
+model = get_model("gpt-5")  # GPT-5 flagship
 print(f"Context: {model.metadata.context_window_input:,} tokens")
 print(f"Cost: ${model.pricing.input_per_1m}/M input tokens")
 
@@ -142,7 +182,7 @@ cost = model.calculate_cost(
 )
 
 # Validate capabilities before API calls
-if has_vision("gpt-4o"):
+if has_vision("gpt-5"):  # GPT-5 has vision capabilities
     process_image()
 ```
 
@@ -152,10 +192,49 @@ if has_vision("gpt-4o"):
 from ai_models import ModelRegistry
 
 budget_models = ModelRegistry.filter_by_cost_tier("budget")
-# Returns: Haiku 4.5, GPT-4o mini, Gemini Flash
+# Returns: Haiku 4.5, GPT-5 mini, GPT-4.1 mini, Gemini 2.5 Flash
 ```
 
 **Advanced Examples:** [API Documentation](./docs/api-examples.md) | [Production Architecture](./examples/epic-categorization/)
+
+### Provider-Optimized Prompts ✨ ALL PROMPTS MIGRATED
+
+**All 13 production prompts** now have **provider-specific optimizations** for Claude, OpenAI, and Gemini:
+
+```python
+from ai_models import get_prompt, get_model, list_prompts
+
+# See all available prompts
+prompts = list_prompts()
+# Returns: ['analytics/signal-classification', 'developing-internal-tools/claude-md-generator', ...]
+
+# Automatically select best prompt variant for your model
+model = get_model("gpt-5")  # GPT-5 default model
+prompt = get_prompt("analytics/signal-classification", model=model.id)
+
+# Or explicitly choose a provider optimization
+claude_prompt = get_prompt("developing-internal-tools/code-review-refactoring", provider="claude")
+openai_prompt = get_prompt("product-strategy/meta-prompt-designer", provider="openai")
+gemini_prompt = get_prompt("stakeholder-communication/executive-deck-review", provider="gemini")
+```
+
+**Provider-Specific Features:**
+
+| Provider | Key Optimizations | Best For | Cost/1K Operations |
+|----------|-------------------|----------|-------------------|
+| **Claude** | XML tags, chain-of-thought, caching | Complex reasoning, accuracy | $1-15 |
+| **OpenAI** | Auto-routing modes, reasoning (o3/o4), function calling, JSON mode | Coding (4.1), reasoning (o3), general tasks (GPT-5) | $0.15-40 |
+| **Gemini** | 2M context, caching, batch processing | High volume, cost optimization | $0.038-5 |
+
+**All 13 Prompts Available:**
+- **Analytics:** [signal-classification](./prompts/analytics/signal-classification/)
+- **Development:** [claude-md-generator](./prompts/developing-internal-tools/claude-md-generator/), [code-review-refactoring](./prompts/developing-internal-tools/code-review-refactoring/), [enterprise-readme-generator](./prompts/developing-internal-tools/enterprise-readme-generator/), [github-actions-python-cicd](./prompts/developing-internal-tools/github-actions-python-cicd/), [llm-orchestration-system](./prompts/developing-internal-tools/llm-orchestration-system/), [prompt-extraction-cataloging](./prompts/developing-internal-tools/prompt-extraction-cataloging/), [pytest-cicd-optimization](./prompts/developing-internal-tools/pytest-cicd-optimization/), [python-80-percent-test-coverage](./prompts/developing-internal-tools/python-80-percent-test-coverage/)
+- **Strategy:** [meta-prompt-designer](./prompts/product-strategy/meta-prompt-designer/), [opus-code-execution-pattern](./prompts/product-strategy/opus-code-execution-pattern/)
+- **Communication:** [executive-deck-review](./prompts/stakeholder-communication/executive-deck-review/), [remove-ai-writing-patterns](./prompts/stakeholder-communication/remove-ai-writing-patterns/)
+
+**Total:** 13 prompts × 4 variants (base + Claude + OpenAI + Gemini) = **52 optimized prompt variants**
+
+[→ Learn more about provider-optimized prompts](./docs/provider-specific-prompts.md) | [→ Migration tool](./scripts/migrate_prompts.py)
 
 ---
 
@@ -168,8 +247,13 @@ Choose the right model for your workload:
 | **Claude Haiku 4.5** | $1/$5 | 200K | High-volume classification | 70% |
 | **Claude Sonnet 4.5** | $3/$15 | 200K | Production workhorse | 25% |
 | **Claude Opus 4.1** | $15/$75 | 200K | High-stakes decisions | 5% |
-| **GPT-4o** | $2.5/$10 | 128K | Multimodal, function calling | Specific |
-| **GPT-4o mini** | $0.15/$0.60 | 128K | Budget alternative | Budget |
+| **GPT-5** | $3/$12 | 256K | Flagship auto-routing (Instant/Thinking modes) | Default |
+| **GPT-5 mini** | $0.20/$0.80 | 128K | Fast, efficient GPT-5 variant | Budget |
+| **GPT-4.1** | $2.5/$10 | 200K | Specialized for coding, precise instructions | Coding |
+| **GPT-4.1 mini** | $0.15/$0.60 | 128K | Fast coding model, replaced 4o-mini | Budget coding |
+| **o3** | $10/$40 | 128K | Advanced reasoning, full tool access | Complex reasoning |
+| **o4-mini** | $1/$4 | 128K | Fast, cost-efficient reasoning | Math/coding |
+| **GPT-4o** | $2.5/$10 | 128K | Multimodal specialist (voice, vision) | Multimodal |
 | **Gemini 2.5 Pro** | $1.25/$5 | 2M | Massive context analysis | Large docs |
 | **Gemini 2.5 Flash** | $0.075/$0.30 | 1M | Speed-critical apps | Real-time |
 

@@ -395,7 +395,7 @@ This is bad and we should fix it.
 |-------|------|-------|-------------|
 | **Claude Sonnet 4.5** | $3/M | ⚡⚡ | **RECOMMENDED**: Best for complex analysis |
 | Claude Opus 4.1 | $15/M | ⚡ | High-stakes incidents, critical decisions |
-| Gemini Pro | $1.25/M | ⚡⚡ | Large context (analyzing 100+ data points) |
+| Gemini 2.5 Pro | $1.25/M | ⚡⚡ | Large context (analyzing 100+ data points) |
 | GPT-4o | $2.50/M | ⚡⚡ | Structured hypothesis testing |
 
 **Cost Optimization**: For incident investigation:

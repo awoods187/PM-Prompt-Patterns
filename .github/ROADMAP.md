@@ -202,14 +202,14 @@ This document tracks planned enhancements and community requests for the AI PM T
 
 ### Google Gemini
 
-**Gemini Pro Guide** (model-configs/google/gemini-pro-config.md)
+**Gemini 2.5 Pro Guide** (model-configs/google/gemini-pro-config.md)
 - [ ] 2M context use cases
 - [ ] Tiered pricing optimization
 - [ ] Grounding with Google Search
 - [ ] Multi-modal capabilities
 - [ ] When to choose over Claude/GPT
 
-**Gemini Flash Guide** (model-configs/google/gemini-flash-config.md)
+**Gemini 2.5 Flash Guide** (model-configs/google/gemini-flash-config.md)
 - [ ] Speed benchmarks
 - [ ] Cost optimization strategies
 - [ ] Batch processing patterns

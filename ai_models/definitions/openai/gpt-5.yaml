@@ -1,0 +1,55 @@
+# GPT-5 Model Definition
+# Last verified: 2025-11-01
+# Source: https://platform.openai.com/docs/models
+
+schema_version: "1.0.0"
+model_id: "gpt-5"
+provider: "openai"
+name: "GPT-5"
+api_identifier: "gpt-5-2025-08-07"
+
+metadata:
+  context_window_input: 256000
+  context_window_output: 16384
+  knowledge_cutoff: "October 2025"
+  release_date: "2025-08-07"
+  last_verified: "2025-11-01"
+  docs_url: "https://platform.openai.com/docs/models/gpt-5"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - streaming
+  - json_mode
+  - auto_routing
+  - advanced_reasoning
+
+pricing:
+  input_per_1m: 3.00
+  output_per_1m: 12.00
+
+optimization:
+  recommended_for:
+    - "Default choice for most tasks"
+    - "Auto-routing between Instant (fast) and Thinking (complex) modes"
+    - "General-purpose applications with highest quality"
+    - "Complex reasoning and analysis"
+    - "Multimodal applications (text + vision)"
+    - "Function calling workflows"
+    - "Structured JSON output"
+  best_practices:
+    - "GPT-5 automatically routes to Instant mode for simple tasks and Thinking mode for complex reasoning"
+    - "Use JSON mode for guaranteed structured outputs"
+    - "Leverage function calling for tool integration"
+    - "Vision capability for image understanding"
+    - "Set max_tokens to control output costs"
+    - "Use system messages for consistent behavior"
+    - "Stream responses for better UX"
+    - "Ideal for production applications requiring best quality"
+  cost_tier: "mid-tier"
+  speed_tier: "balanced"
+
+notes: "OpenAI's flagship model with auto-routing between Instant and Thinking modes. Released August 7, 2025. 256k context window."

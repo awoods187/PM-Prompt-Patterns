@@ -1,0 +1,52 @@
+# GPT-5 mini Model Definition
+# Last verified: 2025-11-01
+# Source: https://platform.openai.com/docs/models
+
+schema_version: "1.0.0"
+model_id: "gpt-5-mini"
+provider: "openai"
+name: "GPT-5 mini"
+api_identifier: "gpt-5-mini-2025-08-07"
+
+metadata:
+  context_window_input: 128000
+  context_window_output: 16384
+  knowledge_cutoff: "October 2025"
+  release_date: "2025-08-07"
+  last_verified: "2025-11-01"
+  docs_url: "https://platform.openai.com/docs/models/gpt-5-mini"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - streaming
+  - json_mode
+
+pricing:
+  input_per_1m: 0.20
+  output_per_1m: 0.80
+
+optimization:
+  recommended_for:
+    - "Fast, efficient GPT-5 variant"
+    - "Budget-conscious applications"
+    - "High-volume classification tasks"
+    - "Simpler reasoning tasks"
+    - "Function calling for structured outputs"
+    - "JSON mode applications"
+    - "Real-time applications requiring low latency"
+  best_practices:
+    - "Excellent balance of speed, cost, and capability"
+    - "Use JSON mode for structured outputs"
+    - "Leverage function calling for tool integration"
+    - "Set temperature=0 for deterministic outputs"
+    - "Batch requests for cost efficiency"
+    - "Stream responses for better UX"
+    - "Ideal for simple to moderate complexity tasks"
+  cost_tier: "budget"
+  speed_tier: "fast"
+
+notes: "Fast, efficient GPT-5 variant. Released August 7, 2025. Great balance of cost and quality for most tasks."

@@ -1,0 +1,54 @@
+# GPT-4.1 Model Definition
+# Last verified: 2025-11-01
+# Source: https://platform.openai.com/docs/models
+
+schema_version: "1.0.0"
+model_id: "gpt-4.1"
+provider: "openai"
+name: "GPT-4.1"
+api_identifier: "gpt-4.1-2025-04"
+
+metadata:
+  context_window_input: 200000
+  context_window_output: 16384
+  knowledge_cutoff: "April 2025"
+  release_date: "2025-04-01"
+  last_verified: "2025-11-01"
+  docs_url: "https://platform.openai.com/docs/models/gpt-4.1"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - streaming
+  - json_mode
+  - code_generation
+  - tool_use
+
+pricing:
+  input_per_1m: 2.50
+  output_per_1m: 10.00
+
+optimization:
+  recommended_for:
+    - "Code generation and review"
+    - "Precise instruction following for web development"
+    - "Tool use and function calling"
+    - "API integration and structured outputs"
+    - "Long context without reasoning overhead"
+    - "Technical documentation"
+    - "Debugging and code analysis"
+  best_practices:
+    - "Specialized for coding tasks with precise instructions"
+    - "Excels at web development and technical tasks"
+    - "Use function calling for tool integration"
+    - "Leverages 200k context for large codebases"
+    - "Set temperature=0 for deterministic code generation"
+    - "Use JSON mode for structured outputs"
+    - "Ideal for code-heavy applications"
+  cost_tier: "mid-tier"
+  speed_tier: "balanced"
+
+notes: "Specialized for coding, precise instructions, and web development. Released April 2025. 200k context window."

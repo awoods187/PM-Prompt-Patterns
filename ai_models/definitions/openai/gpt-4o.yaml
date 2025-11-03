@@ -1,5 +1,5 @@
 # GPT-4o Model Definition
-# Last verified: 2025-10-25
+# Last verified: 2025-11-01
 # Source: https://platform.openai.com/docs/models
 
 schema_version: "1.0.0"
@@ -13,7 +13,7 @@ metadata:
   context_window_output: 16384
   knowledge_cutoff: "October 2023"
   release_date: "2024-08-06"
-  last_verified: "2025-10-25"
+  last_verified: "2025-11-01"
   docs_url: "https://platform.openai.com/docs/models/gpt-4o"
 
 capabilities:
@@ -21,6 +21,8 @@ capabilities:
   - text_output
   - function_calling
   - vision
+  - voice
+  - realtime_api
   - large_context
   - streaming
   - json_mode
@@ -31,20 +33,23 @@ pricing:
 
 optimization:
   recommended_for:
-    - "Multimodal applications (text + vision)"
-    - "Complex reasoning tasks"
+    - "Multimodal specialist (voice, vision, text)"
+    - "GPT-4o Realtime API for live audio"
+    - "Voice-based applications"
+    - "Vision-heavy applications"
+    - "Low-latency multimodal tasks"
     - "Function calling workflows"
     - "Structured JSON output"
-    - "General purpose API integration"
-    - "Cost-effective GPT-4 level quality"
   best_practices:
+    - "Primary use case: multimodal applications requiring voice or vision"
+    - "Use GPT-4o Realtime API for live audio applications"
+    - "Leverage vision capability for image understanding"
     - "Use JSON mode for structured outputs"
-    - "Leverage function calling for tool integration"
-    - "Vision capability for image understanding"
+    - "Function calling for tool integration"
     - "Set max_tokens to control output costs"
-    - "Use system messages for consistent behavior"
     - "Stream responses for better UX"
+    - "For general tasks, consider GPT-5 instead"
   cost_tier: "mid-tier"
   speed_tier: "balanced"
 
-notes: "OpenAI's flagship model. Good balance of capability and cost. 128k context window."
+notes: "Multimodal specialist for voice and vision. Still available alongside GPT-5. 128k context window. Best for voice/vision-heavy applications."

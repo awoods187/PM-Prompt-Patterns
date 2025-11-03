@@ -171,7 +171,7 @@ if metric_seems_unusual:
 | Model | Cost | Speed | When to Use |
 |-------|------|-------|-------------|
 | **Claude Haiku 4.5** | $1/M | ⚡⚡⚡ | **RECOMMENDED**: Fast anomaly detection |
-| **Gemini Flash** | $0.075/M | ⚡⚡⚡ | Ultra-high volume monitoring |
+| **Gemini 2.5 Flash** | $0.075/M | ⚡⚡⚡ | Ultra-high volume monitoring |
 | **GPT-4o mini** | $0.15/M | ⚡⚡⚡ | Budget monitoring with good accuracy |
 | Claude Sonnet | $3/M | ⚡⚡ | Complex pattern recognition |
 

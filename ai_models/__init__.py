@@ -34,6 +34,12 @@ from ai_models.pricing import (
     PricingService,
     get_pricing_service,
 )
+from ai_models.prompts import (
+    PromptRegistry,
+    get_prompt,
+    list_prompts,
+    list_variants,
+)
 from ai_models.registry import (
     Model,
     ModelMetadata,
@@ -64,6 +70,11 @@ __all__ = [
     "PricingService",
     "Pricing",
     "get_pricing_service",
+    # Prompts
+    "PromptRegistry",
+    "get_prompt",
+    "list_prompts",
+    "list_variants",
 ]
 
 __version__ = "1.0.0"
