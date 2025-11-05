@@ -45,6 +45,8 @@ from ai_models.registry import (
     ModelMetadata,
     ModelOptimization,
     ModelRegistry,
+    get_available_models,
+    get_latest_model,
     get_model,
     list_models,
     list_providers,
@@ -59,6 +61,8 @@ __all__ = [
     "get_model",
     "list_models",
     "list_providers",
+    "get_available_models",
+    "get_latest_model",
     # Capabilities
     "ModelCapability",
     "CapabilityValidator",

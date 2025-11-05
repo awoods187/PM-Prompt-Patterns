@@ -410,3 +410,101 @@ class TestCacheClear:
 
         caps2 = CapabilityValidator.get_capabilities("gpt-4o")
         assert caps1 == caps2
+
+
+class TestAvailabilityFiltering:
+    """Test model availability filtering by date."""
+
+    def test_get_available_models_defaults_to_today(self):
+        """Should return models available as of today."""
+        available = ModelRegistry.get_available_models()
+        assert len(available) > 0
+        # All models should have release_date <= today
+        today = date.today()
+        for model in available:
+            assert model.metadata.release_date <= today
+
+    def test_get_available_models_with_past_date(self):
+        """Should return only models released by a specific date."""
+        # August 1, 2024 - should only have gpt-4o-mini and gpt-4o
+        past_date = date(2024, 8, 1)
+        available = ModelRegistry.get_available_models(past_date)
+
+        model_ids = {m.model_id for m in available}
+        # Should include gpt-4o-mini (July 18, 2024)
+        assert "gpt-4o-mini" in model_ids
+        # Should NOT include GPT-5 (August 2025)
+        assert "gpt-5" not in model_ids
+
+    def test_get_available_models_with_future_date(self):
+        """Should return all models if date is in future."""
+        future_date = date(2026, 1, 1)
+        available = ModelRegistry.get_available_models(future_date)
+        all_models = ModelRegistry.get_all()
+        # Should get all models
+        assert len(available) == len(all_models)
+
+    def test_get_available_by_provider(self):
+        """Should filter available models by provider."""
+        # Get OpenAI models available today
+        openai_models = ModelRegistry.get_available_by_provider("openai")
+        assert len(openai_models) > 0
+        # All should be from OpenAI
+        for model in openai_models:
+            assert model.provider.lower() == "openai"
+        # All should be released
+        today = date.today()
+        for model in openai_models:
+            assert model.metadata.release_date <= today
+
+    def test_get_available_by_provider_with_past_date(self):
+        """Should get provider models available as of a date."""
+        # August 1, 2024
+        past_date = date(2024, 8, 1)
+        openai_models = ModelRegistry.get_available_by_provider("openai", past_date)
+
+        model_ids = {m.model_id for m in openai_models}
+        # Should include older models
+        assert "gpt-4o-mini" in model_ids
+        # Should NOT include newer models
+        assert "gpt-5" not in model_ids
+
+    def test_get_latest_model_openai(self):
+        """Should get the most recent OpenAI model."""
+        latest = ModelRegistry.get_latest_model("openai")
+        assert latest is not None
+        # As of Nov 2025, should be GPT-5 or GPT-5 mini (both released August 7, 2025)
+        assert latest.model_id in ["gpt-5", "gpt-5-mini"]
+        assert latest.metadata.release_date == date(2025, 8, 7)
+
+    def test_get_latest_model_anthropic(self):
+        """Should get the most recent Anthropic model."""
+        latest = ModelRegistry.get_latest_model("anthropic")
+        assert latest is not None
+        # Should be Claude Opus 4.1 (Oct 2025) or Sonnet/Haiku 4.5 (Sept 2025)
+        assert latest.model_id in ["claude-opus-4-1", "claude-sonnet-4-5", "claude-haiku-4-5"]
+
+    def test_get_latest_model_with_past_date(self):
+        """Should get latest model as of a specific date."""
+        # August 10, 2024
+        past_date = date(2024, 8, 10)
+        latest = ModelRegistry.get_latest_model("openai", past_date)
+        assert latest is not None
+        # Should be gpt-4o (August 6, 2024), not GPT-5
+        assert latest.model_id == "gpt-4o"
+
+    def test_get_latest_model_unknown_provider(self):
+        """Should return None for unknown provider."""
+        latest = ModelRegistry.get_latest_model("unknown-provider")
+        assert latest is None
+
+    def test_convenience_functions_available(self):
+        """Convenience functions should be available at module level."""
+        from ai_models import get_available_models, get_latest_model
+
+        # Test they work
+        available = get_available_models()
+        assert len(available) > 0
+
+        latest = get_latest_model("openai")
+        assert latest is not None
