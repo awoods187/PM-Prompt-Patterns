@@ -30,9 +30,9 @@ Comprehensive prompt for reviewing executive presentations through the lens of a
 
 ---
 
-## Base Prompt (Model Agnostic)
+---
 
-**Complexity**: 🔴 Advanced
+## Prompt
 
 ```
 You are a seasoned executive communication consultant who has coached hundreds of leaders preparing for high-stakes C-suite presentations. Your specialty is transforming good decks into exceptional ones by anticipating and preempting executive objections.
@@ -195,214 +195,6 @@ What each role will likely ask:
 - **Actionable**: Every critique should have a clear fix
 - **Respectful of effort**: Acknowledge what works well before identifying gaps
 ```
-
-**Performance**: Comprehensive review in 10-20 minutes, identifies 85-95% of critical issues.
-
----
-
-## Model-Specific Optimizations
-
-### Claude (Anthropic) - Multi-Perspective Analysis
-
-**Complexity**: 🔴 Advanced
-
-Claude excels at adopting multiple perspectives simultaneously and maintaining context across long presentations.
-
-```xml
-<role>
-You are an executive communication consultant specializing in high-stakes presentations.
-You have 15+ years of experience coaching leaders for board meetings, investor pitches,
-and executive reviews. Your expertise is in anticipating and neutralizing stakeholder
-objections before they derail presentations.
-</role>
-
-<task>
-Review the provided presentation deck through the lens of a skeptical executive panel
-(CEO, CFO, CRO, CPO, CTO) preparing for a 45-minute review session. Evaluate communication
-effectiveness and provide actionable feedback to maximize approval probability.
-</task>
-
-<context>
-This deck will be presented to:
-- Decision-makers with limited patience for fluff
-- Skeptics who will challenge assumptions
-- Cross-functional leaders with competing priorities
-- Executives who see dozens of presentations monthly
-
-Your review must identify what will fail in the room before it happens.
-</context>
-
-<evaluation_framework>
-
-<section id="narrative_clarity" priority="MUST">
-  <criteria>
-    <criterion name="header_effectiveness">
-      - Each header must make an assertion, not describe content
-      - Headers alone should tell the complete story
-      - Example transformation:
-        ❌ "Q3 Results" → ✅ "Q3 Revenue Beat Plan by 15% from Enterprise Growth"
-    </criterion>
-
-    <criterion name="one_slider_test">
-      - Can the entire narrative fit on ONE slide?
-      - If not, the core message lacks clarity
-      - Identify what that slide should say
-    </criterion>
-  </criteria>
-</section>
-
-<section id="executive_prioritization" priority="MUST">
-  <first_3_slides_rule>
-    - Decision ask must be in opening slides
-    - Business impact quantified upfront
-    - Supporting details come after, not before
-  </first_3_slides_rule>
-
-  <information_hierarchy>
-    - Can an exec understand this in 5 minutes?
-    - Is the "so what" explicit, not implied?
-    - Are details properly subordinated?
-  </information_hierarchy>
-</section>
-
-<section id="skeptic_proofing" priority="MUST">
-  <cro_objections>
-    Anticipate revenue leader challenges:
-    - "Assumptions are too optimistic"
-    - "This cannibalizes existing business"
-    - "Competitors will respond and neutralize this"
-    - "Market timing is wrong"
-  </cro_objections>
-
-  <cfo_objections>
-    Anticipate finance leader challenges:
-    - "ROI calculation is flawed"
-    - "Payback period is too long"
-    - "Resource requirements are understated"
-    - "Risk/reward ratio is unfavorable"
-  </cfo_objections>
-
-  <preemptive_defense>
-    - Are counterarguments addressed proactively?
-    - Is competitive context included?
-    - Are assumptions explicitly stated and defended?
-    - Are failure modes acknowledged with mitigation?
-  </preemptive_defense>
-</section>
-
-<section id="cross_functional_relevance" priority="SHOULD">
-  <executive_perspectives>
-    <cfo_lens>
-      - Financial implications clear?
-      - ROI/payback period stated?
-      - Capital efficiency addressed?
-    </cfo_lens>
-
-    <cro_lens>
-      - Revenue impact quantified?
-      - Conservative estimates used?
-      - Sales cycle implications clear?
-    </cro_lens>
-
-    <cpo_lens>
-      - Product implications addressed?
-      - Roadmap tradeoffs acknowledged?
-      - Customer impact articulated?
-    </cpo_lens>
-
-    <cto_lens>
-      - Technical constraints simplified?
-      - Implementation feasibility clear?
-      - Architecture implications stated?
-    </cto_lens>
-
-    <ceo_lens>
-      - Strategic alignment evident?
-      - Long-term vision connected?
-      - Competitive positioning clear?
-    </ceo_lens>
-  </executive_perspectives>
-</section>
-
-<section id="decision_readiness" priority="MUST">
-  <criteria>
-    - Specific asks with bounded options?
-    - Sufficient evidence for skeptical decision?
-    - Risks candidly presented with mitigation?
-    - Next steps, owners, metrics identified?
-  </criteria>
-</section>
-
-</evaluation_framework>
-
-<output_structure>
-
-<executive_summary>
-  - Overall Assessment: Ready / Minor refinement / Significant rework
-  - Core Narrative: 2-3 sentence summary
-  - Biggest Strength: What works exceptionally well
-  - Biggest Risk: What could derail presentation
-  - One-Slider: The elevator pitch slide that should exist
-</executive_summary>
-
-<slide_by_slide>
-For each slide provide:
-  - Current header
-  - Assessment: Keep / Revise / Combine / Cut
-  - Suggested header rewrite (if needed)
-  - Specific issues identified
-  - Concrete recommendations
-</slide_by_slide>
-
-<structural_recommendations>
-  - Slides to cut/combine (target: 15 max for 45 min)
-  - Resequencing for skeptical audience
-  - Missing content that will trigger questions
-</structural_recommendations>
-
-<skeptic_proofing>
-Top 5 objections with specific mitigation:
-1. [Objection] → [How to address]
-2. [Objection] → [How to address]
-...
-</skeptic_proofing>
-
-<executive_questions>
-Expected questions by role:
-  - CEO: [Question] → [Where addressed / Needs addition]
-  - CFO: [Question] → [Where addressed / Needs addition]
-  - CRO: [Question] → [Where addressed / Needs addition]
-  - CPO: [Question] → [Where addressed / Needs addition]
-  - CTO: [Question] → [Where addressed / Needs addition]
-</executive_questions>
-
-<quick_wins>
-3-5 high-impact, low-effort changes:
-- [ ] Specific action
-- [ ] Specific action
-...
-</quick_wins>
-
-<final_recommendation>
-  - Go/No-Go: [Decision]
-  - Revision Time: [Hours estimate]
-  - Success Probability: [High/Medium/Low]
-</final_recommendation>
-
-</output_structure>
-
-<presentation_context>
-{presentation_type}
-{target_decision}
-{known_stakeholder_dynamics}
-</presentation_context>
-```
-
-**Performance**:
-- Review depth: Comprehensive analysis in 10-20 minutes
-- Issue detection: 90-95% of critical problems identified
-- Actionability: 95%+ of recommendations immediately implementable
-- Cost: ~$0.20-0.40 per deck review (Sonnet 4.5)
 
 ---
 
@@ -657,85 +449,6 @@ if __name__ == "__main__":
 
 ---
 
-## Usage Examples
-
-### Example 1: Quarterly Business Review (QBR)
-
-**Input**:
-```
-Review this Q4 QBR deck for our executive team. We beat revenue plan but missed
-product delivery milestones. The CRO is supportive, but the CEO is frustrated
-about product delays.
-
-[30 slides of quarterly results, product updates, and forward-looking plans]
-```
-
-**Expected Output Focus**:
-- Emphasize connecting product delays to revenue impact (or lack thereof)
-- Preempt CEO's "why did this happen and how do we prevent it?" question
-- Frame Q4 revenue beat as validation of market demand that product must serve
-- Ensure product recovery plan is specific, not vague promises
-- Check if accountability for delays is clearly stated
-
-**Outcome**:
-- Identified that slides 1-3 buried the revenue win under product excuses
-- Recommended leading with "Q4 Revenue Beat Plan 18% Despite Product Delays"
-- Suggested adding slide 4: "Product Recovery Plan: 3 Actions with Owners & Dates"
-- Flagged that competitive context was missing (CEO will ask about market share)
-
----
-
-### Example 2: New Product Investment Request
-
-**Input**:
-```
-We're asking for $2M and 8 engineers to build a new AI feature. This deck needs
-to convince a skeptical CFO and CRO who think our core product needs more focus.
-
-[25 slides covering market opportunity, technical approach, financial projections]
-```
-
-**Expected Output Focus**:
-- Verify ROI calculation is conservative with clear payback timeline
-- Check if "why now?" is compellingly answered (market window, competitive threat)
-- Ensure resource request doesn't ignore opportunity cost to core product
-- Flag if competitive analysis is missing (CRO will ask "who else is doing this?")
-- Assess if pilot/MVP approach is offered as alternative to full $2M ask
-- Verify customer demand validation (not just "we think customers will want this")
-
-**Outcome**:
-- Caught that ROI was based on best-case assumptions (CFO would reject immediately)
-- Recommended adding conservative/base/optimistic scenarios
-- Identified missing section on "Why this doesn't hurt core product focus"
-- Suggested reframing as "$500K pilot + $1.5M scale" to reduce perceived risk
-
----
-
-### Example 3: Strategic Pivot Presentation
-
-**Input**:
-```
-We're proposing to shift from SMB to enterprise focus. This is controversial—half
-the exec team supports it, half thinks it's too risky. 60-minute deep dive.
-
-[40 slides covering market analysis, competitive positioning, transition plan]
-```
-
-**Expected Output Focus**:
-- Check if current state problems are quantified (not just "SMB is hard")
-- Verify enterprise opportunity is validated with real data, not TAM math
-- Ensure transition plan addresses "what happens to current SMB customers/revenue?"
-- Flag if risks are honestly stated (enterprise sales cycles, implementation complexity)
-- Assess if "hybrid approach" alternative is fairly evaluated
-- Verify financial modeling shows break-even timeline during transition
-- Check if org/hiring implications are clearly stated (enterprise sales team needs)
-
-**Outcome**:
-- Found that deck positioned SMB as "failure" rather than "strategic stepping stone"
-- Recommended reframing to preserve credibility of past decisions
-- Identified that customer retention plan was missing (40% of revenue at risk)
-- Suggested adding "Hybrid Model" as Option B to give decision-makers choice
-
 ---
 
 ## Quality Evaluation
@@ -782,6 +495,8 @@ Presentation succeeds:
 
 ---
 
+---
+
 ## Cost Comparison
 
 | Approach | Setup Time | Issues Caught | Success Rate | Total Time |
@@ -797,6 +512,8 @@ Presentation succeeds:
 - Approval rate improvement: +40-50 percentage points
 - Avoided delays: 2-4 weeks faster decisions
 - **Payback**: Immediate (first use)
+
+---
 
 ---
 
@@ -824,6 +541,8 @@ Presentation succeeds:
 4. **Focus on top 5 issues** - Don't try to fix everything at once
 5. **Test one-slider** - Can you summarize deck in one slide?
 6. **Rehearse objections** - Practice responding to anticipated challenges
+
+---
 
 ---
 
@@ -874,15 +593,6 @@ Apply maximum skepticism - what would a combative activist investor challenge?"
 ```
 
 ---
-
-## Version History
-
-| Version | Date | Changes | Adoption |
-|---------|------|---------|----------|
-| v1.0 | Initial | Basic executive review framework | Internal only |
-| v1.5 | +1 month | Added skeptic-proofing section | 10 teams |
-| v2.0 | +2 months | Added role-specific objections | 25 teams |
-| v2.1 | Current | Added production patterns, examples | Library release |
 
 ---
 
