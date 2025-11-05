@@ -19,7 +19,7 @@ import argparse
 import sys
 from datetime import date, datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 try:
     import yaml
@@ -43,7 +43,7 @@ class ModelStalenessChecker:
 
     def check_all_models(
         self, provider_filter: Optional[str] = None
-    ) -> Dict[str, List[Dict[str, any]]]:
+    ) -> Dict[str, List[Dict[str, Any]]]:
         """Check all model definitions.
 
         Args:
@@ -129,7 +129,7 @@ class ModelStalenessChecker:
 
         return {"stale": stale_models, "current": current_models}
 
-    def print_report(self, results: Dict[str, List[Dict[str, any]]]) -> None:
+    def print_report(self, results: Dict[str, List[Dict[str, Any]]]) -> None:
         """Print formatted staleness report.
 
         Args:
@@ -153,7 +153,7 @@ class ModelStalenessChecker:
             print("-" * 80)
 
             # Group by provider
-            by_provider = {}
+            by_provider: Dict[str, List[Dict[str, Any]]] = {}
             for model in stale:
                 provider = model["provider"]
                 if provider not in by_provider:

@@ -258,7 +258,7 @@ def test_detect_cache_pricing_change(
     report = detector.detect_changes(current_models, fetched_models)
 
     assert report.has_changes
-    cache_changes = [c for c in report.pricing_changes if "cache" in c.field]
+    cache_changes = [c for c in report.pricing_changes if "cache" in c.field]  # type: ignore[operator]
     assert len(cache_changes) == 2
 
 

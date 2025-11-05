@@ -9,6 +9,7 @@ Focuses on edge cases, error handling, and untested branches.
 
 from datetime import date
 from pathlib import Path
+from typing import Any
 from unittest.mock import Mock, mock_open, patch
 
 import pytest
@@ -22,7 +23,7 @@ from ai_models.registry import ModelMetadata, ModelOptimization
 class TestModelToDict:
     """Test Model.to_dict() serialization."""
 
-    def test_model_to_dict_complete_serialization(self):
+    def test_model_to_dict_complete_serialization(self) -> None:
         """Test that Model.to_dict() produces correct dictionary structure."""
         model = ModelRegistry.get("claude-sonnet-4-5")
         assert model is not None
@@ -59,7 +60,7 @@ class TestModelToDict:
         assert "recommended_for" in result["optimization"]
         assert "best_practices" in result["optimization"]
 
-    def test_model_to_dict_handles_empty_notes(self):
+    def test_model_to_dict_handles_empty_notes(self) -> None:
         """Test to_dict with empty notes field."""
         model = ModelRegistry.get("claude-haiku-4-5")
         assert model is not None
@@ -72,7 +73,7 @@ class TestModelToDict:
 class TestStringCapabilityConversion:
     """Test string-to-capability conversion edge cases."""
 
-    def test_has_capability_with_string_conversion(self):
+    def test_has_capability_with_string_conversion(self) -> None:
         """Test has_capability converts string to ModelCapability."""
         model = ModelRegistry.get("claude-sonnet-4-5")
         assert model is not None
@@ -85,7 +86,7 @@ class TestStringCapabilityConversion:
         with pytest.raises(ValueError):
             model.has_capability("nonexistent")
 
-    def test_filter_by_capability_with_string(self):
+    def test_filter_by_capability_with_string(self) -> None:
         """Test filter_by_capability handles string input correctly."""
         # Test with string (covers line 314-317)
         vision_models = ModelRegistry.filter_by_capability("vision")
@@ -104,7 +105,7 @@ class TestDateParsing:
     @patch("pathlib.Path.exists")
     @patch("pathlib.Path.rglob")
     @patch("builtins.open", new_callable=mock_open)
-    def test_parse_date_with_none(self, mock_file, mock_rglob, mock_exists):
+    def test_parse_date_with_none(self, mock_file: Any, mock_rglob: Any, mock_exists: Any) -> None:
         """Test _parse_date returns today when date_str is None."""
         mock_exists.return_value = True
         mock_rglob.return_value = []
@@ -118,7 +119,7 @@ class TestDateParsing:
 
     @patch("pathlib.Path.exists")
     @patch("pathlib.Path.rglob")
-    def test_parse_date_with_invalid_format(self, mock_rglob, mock_exists):
+    def test_parse_date_with_invalid_format(self, mock_rglob: Any, mock_exists: Any) -> None:
         """Test _parse_date returns today when format is invalid."""
         mock_exists.return_value = True
         mock_rglob.return_value = []
@@ -132,7 +133,7 @@ class TestDateParsing:
         result = ModelRegistry._parse_date("2025/01/01")  # Wrong separator
         assert result == date.today()
 
-    def test_parse_date_with_valid_format(self):
+    def test_parse_date_with_valid_format(self) -> None:
         """Test _parse_date correctly parses valid ISO dates."""
         result = ModelRegistry._parse_date("2025-01-15")
         assert result == date(2025, 1, 15)
@@ -143,7 +144,7 @@ class TestErrorHandling:
 
     @patch("pathlib.Path.exists")
     @patch("builtins.print")
-    def test_missing_definitions_directory_warning(self, mock_print, mock_exists):
+    def test_missing_definitions_directory_warning(self, mock_print: Any, mock_exists: Any) -> None:
         """Test warning is printed when definitions directory missing."""
         mock_exists.return_value = False
 
@@ -160,13 +161,15 @@ class TestErrorHandling:
     @patch("pathlib.Path.rglob")
     @patch("builtins.open", new_callable=mock_open)
     @patch("builtins.print")
-    def test_invalid_yaml_skipped(self, mock_print, mock_file, mock_rglob, mock_exists):
+    def test_invalid_yaml_skipped(
+        self, mock_print: Any, mock_file: Any, mock_rglob: Any, mock_exists: Any
+    ) -> None:
         """Test that YAML files without model_id are skipped."""
         mock_exists.return_value = True
 
         # Create mock YAML file path
         mock_yaml_path = Mock(spec=Path)
-        mock_yaml_path.__str__ = Mock(return_value="test.yaml")
+        mock_yaml_path.__str__ = Mock(return_value="test.yaml")  # type: ignore[method-assign]
         mock_rglob.return_value = [mock_yaml_path]
 
         # Mock YAML content without model_id
@@ -183,12 +186,14 @@ class TestErrorHandling:
     @patch("pathlib.Path.rglob")
     @patch("builtins.open", new_callable=mock_open)
     @patch("builtins.print")
-    def test_yaml_load_error_handling(self, mock_print, mock_file, mock_rglob, mock_exists):
+    def test_yaml_load_error_handling(
+        self, mock_print: Any, mock_file: Any, mock_rglob: Any, mock_exists: Any
+    ) -> None:
         """Test error handling when YAML loading fails."""
         mock_exists.return_value = True
 
         mock_yaml_path = Mock(spec=Path)
-        mock_yaml_path.__str__ = Mock(return_value="bad.yaml")
+        mock_yaml_path.__str__ = Mock(return_value="bad.yaml")  # type: ignore[method-assign]
         mock_rglob.return_value = [mock_yaml_path]
 
         # Simulate YAML parsing error
@@ -204,7 +209,9 @@ class TestErrorHandling:
     @patch("pathlib.Path.exists")
     @patch("pathlib.Path.rglob")
     @patch("builtins.open", new_callable=mock_open)
-    def test_invalid_capability_ignored(self, mock_file, mock_rglob, mock_exists):
+    def test_invalid_capability_ignored(
+        self, mock_file: Any, mock_rglob: Any, mock_exists: Any
+    ) -> None:
         """Test that invalid capabilities are ignored without crashing."""
         mock_exists.return_value = True
 
@@ -244,7 +251,7 @@ pricing:
 class TestConvenienceFunctions:
     """Test module-level convenience functions."""
 
-    def test_get_model_convenience_function(self):
+    def test_get_model_convenience_function(self) -> None:
         """Test get_model convenience function."""
         # Clear cache from previous mock tests
         ModelRegistry.clear_cache()
@@ -256,7 +263,7 @@ class TestConvenienceFunctions:
         # Test non-existent model
         assert get_model("nonexistent") is None
 
-    def test_list_models_convenience_function(self):
+    def test_list_models_convenience_function(self) -> None:
         """Test list_models returns all model IDs."""
         # Clear cache from previous mock tests
         ModelRegistry.clear_cache()
@@ -269,7 +276,7 @@ class TestConvenienceFunctions:
         assert "gpt-4o" in model_ids
         assert "gemini-2-5-pro" in model_ids
 
-    def test_list_providers_convenience_function(self):
+    def test_list_providers_convenience_function(self) -> None:
         """Test list_providers returns unique providers."""
         # Clear cache from previous mock tests
         ModelRegistry.clear_cache()
@@ -286,7 +293,7 @@ class TestConvenienceFunctions:
 class TestEdgeCases:
     """Test edge cases and boundary conditions."""
 
-    def test_get_by_provider_case_insensitive(self):
+    def test_get_by_provider_case_insensitive(self) -> None:
         """Test get_by_provider is case-insensitive."""
         # Clear cache from previous mock tests
         ModelRegistry.clear_cache()
@@ -298,13 +305,13 @@ class TestEdgeCases:
         assert len(models_lower) == len(models_upper) == len(models_mixed)
         assert len(models_lower) > 0
 
-    def test_get_by_provider_empty_result(self):
+    def test_get_by_provider_empty_result(self) -> None:
         """Test get_by_provider returns empty list for unknown provider."""
         models = ModelRegistry.get_by_provider("nonexistent-provider")
         assert isinstance(models, list)
         assert len(models) == 0
 
-    def test_filter_by_capability_empty_result(self):
+    def test_filter_by_capability_empty_result(self) -> None:
         """Test filter_by_capability with capability no models have."""
         # All current models should have some capabilities,
         # but we can test the mechanism works
@@ -315,7 +322,7 @@ class TestEdgeCases:
         vision_models = ModelRegistry.filter_by_capability(ModelCapability.VISION)
         assert len(vision_models) > 0
 
-    def test_filter_by_cost_tier_all_tiers(self):
+    def test_filter_by_cost_tier_all_tiers(self) -> None:
         """Test filter_by_cost_tier covers all tiers."""
         # Clear cache from previous mock tests
         ModelRegistry.clear_cache()
@@ -333,7 +340,7 @@ class TestEdgeCases:
         total = len(budget) + len(mid_tier) + len(premium)
         assert total == len(ModelRegistry.get_all())
 
-    def test_cache_clear_reloads_models(self):
+    def test_cache_clear_reloads_models(self) -> None:
         """Test that clear_cache forces models to reload."""
         # Get initial models
         models_before = ModelRegistry.get_all()
@@ -350,7 +357,7 @@ class TestEdgeCases:
         models_after = ModelRegistry.get_all()
         assert len(models_after) == len(models_before)
 
-    def test_get_all_returns_copy(self):
+    def test_get_all_returns_copy(self) -> None:
         """Test that get_all returns a copy, not the original dict."""
         models1 = ModelRegistry.get_all()
         models2 = ModelRegistry.get_all()
@@ -367,7 +374,7 @@ class TestEdgeCases:
 class TestModelDataclasses:
     """Test dataclass behavior and immutability."""
 
-    def test_model_metadata_structure(self):
+    def test_model_metadata_structure(self) -> None:
         """Test ModelMetadata dataclass structure."""
         metadata = ModelMetadata(
             context_window_input=100000,
@@ -383,7 +390,7 @@ class TestModelDataclasses:
         assert metadata.knowledge_cutoff == "January 2025"
         assert metadata.docs_url == "https://example.com"
 
-    def test_model_optimization_defaults(self):
+    def test_model_optimization_defaults(self) -> None:
         """Test ModelOptimization default values."""
         opt = ModelOptimization()
 
@@ -392,7 +399,7 @@ class TestModelDataclasses:
         assert opt.cost_tier == "mid-tier"
         assert opt.speed_tier == "balanced"
 
-    def test_model_optimization_custom_values(self):
+    def test_model_optimization_custom_values(self) -> None:
         """Test ModelOptimization with custom values."""
         opt = ModelOptimization(
             recommended_for=["code_generation", "analysis"],
@@ -410,7 +417,7 @@ class TestModelDataclasses:
 class TestHasAllCapabilities:
     """Test Model.has_all_capabilities method."""
 
-    def test_has_all_capabilities_with_all_present(self):
+    def test_has_all_capabilities_with_all_present(self) -> None:
         """Test has_all_capabilities returns True when all are present."""
         model = ModelRegistry.get("claude-sonnet-4-5")
         assert model is not None
@@ -418,7 +425,7 @@ class TestHasAllCapabilities:
         # Test with capabilities the model has
         assert model.has_all_capabilities(["vision", "function_calling"]) is True
 
-    def test_has_all_capabilities_with_some_missing(self):
+    def test_has_all_capabilities_with_some_missing(self) -> None:
         """Test has_all_capabilities returns False when some missing."""
         model = ModelRegistry.get("gemini-2-5-flash-lite")
         assert model is not None
@@ -427,7 +434,7 @@ class TestHasAllCapabilities:
         all_caps = ["vision", "function_calling", "prompt_caching"]
         assert model.has_all_capabilities(all_caps) is False
 
-    def test_has_all_capabilities_with_enum_and_string_mix(self):
+    def test_has_all_capabilities_with_enum_and_string_mix(self) -> None:
         """Test has_all_capabilities with mixed enum/string input."""
         model = ModelRegistry.get("claude-opus-4-1")
         assert model is not None
@@ -436,7 +443,7 @@ class TestHasAllCapabilities:
         mixed = [ModelCapability.VISION, "function_calling"]
         assert model.has_all_capabilities(mixed) is True
 
-    def test_has_all_capabilities_empty_list(self):
+    def test_has_all_capabilities_empty_list(self) -> None:
         """Test has_all_capabilities with empty list returns True."""
         model = ModelRegistry.get("claude-haiku-4-5")
         assert model is not None

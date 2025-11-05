@@ -118,17 +118,17 @@ class TestStaticModelSpecs:
         """Test that specs include recommended use cases."""
         specs = google_fetcher._get_static_model_specs("gemini-2-5-flash")
 
-        assert "recommended_for" in specs
-        assert len(specs["recommended_for"]) > 0
-        assert isinstance(specs["recommended_for"], list)
+        assert "recommended_for" in specs  # type: ignore[operator]
+        assert len(specs["recommended_for"]) > 0  # type: ignore[index]
+        assert isinstance(specs["recommended_for"], list)  # type: ignore[index]
 
     def test_static_specs_include_best_practices(self, google_fetcher: GoogleFetcher) -> None:
         """Test that specs include best practices."""
         specs = google_fetcher._get_static_model_specs("gemini-2-5-pro")
 
-        assert "best_practices" in specs
-        assert len(specs["best_practices"]) > 0
-        assert isinstance(specs["best_practices"], list)
+        assert "best_practices" in specs  # type: ignore[operator]
+        assert len(specs["best_practices"]) > 0  # type: ignore[index]
+        assert isinstance(specs["best_practices"], list)  # type: ignore[index]
 
 
 # ============================================================================
@@ -328,7 +328,7 @@ class TestDocsFallback:
             assert model.name is not None
             assert model.api_identifier is not None
             assert model.context_window_input > 0
-            assert model.context_window_output > 0
+            assert model.context_window_output > 0  # type: ignore[operator]
             assert model.knowledge_cutoff is not None
             assert isinstance(model.release_date, date)
             assert model.docs_url.startswith("https://")

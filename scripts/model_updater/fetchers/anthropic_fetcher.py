@@ -264,7 +264,7 @@ class AnthropicFetcher(BaseFetcher):
             },
         }
 
-        return specs.get(model_id)
+        return specs.get(model_id)  # type: ignore[return-value]
 
     def fetch_from_docs(self) -> list[ModelData]:
         """Fetch models by parsing Anthropic documentation.

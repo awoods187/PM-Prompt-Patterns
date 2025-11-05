@@ -168,7 +168,7 @@ Examples:
         return 1
 
 
-def get_mode_description(args) -> str:
+def get_mode_description(args: argparse.Namespace) -> str:
     """Get description of the mode being run."""
     if args.scan_only:
         return "Scan only (no changes)"

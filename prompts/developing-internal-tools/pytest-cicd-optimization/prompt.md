@@ -2,7 +2,7 @@
 
 **Complexity**: 🟡 Intermediate
 **Category**: DevOps / Testing / Performance
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-4 | ✅ Gemini (large context helpful)
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-5 | ✅ Gemini (large context helpful)
 
 ## Overview
 

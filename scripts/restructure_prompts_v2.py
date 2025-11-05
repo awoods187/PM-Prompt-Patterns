@@ -405,7 +405,7 @@ def restructure_directory(prompt_dir: Path) -> None:
         f.write(gemini_content)
 
 
-def main():
+def main() -> None:
     """Main script."""
 
     repo_root = Path(__file__).parent.parent

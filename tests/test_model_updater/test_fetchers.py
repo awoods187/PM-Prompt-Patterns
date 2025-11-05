@@ -5,6 +5,8 @@
 
 from datetime import date
 
+import pytest
+
 from scripts.model_updater.fetchers.anthropic_fetcher import AnthropicFetcher
 from scripts.model_updater.fetchers.base_fetcher import ModelData
 from scripts.model_updater.fetchers.google_fetcher import GoogleFetcher
@@ -261,7 +263,7 @@ def test_base_fetcher_retry_with_backoff_success() -> None:
     # Function that fails twice then succeeds
     attempts = [0]
 
-    def flaky_function():
+    def flaky_function():  # type: ignore[no-untyped-def]
         attempts[0] += 1
         if attempts[0] < 3:
             raise Exception("Temporary failure")
@@ -277,10 +279,8 @@ def test_base_fetcher_retry_with_backoff_all_fail() -> None:
     """Test retry_with_backoff raises after all retries fail."""
     fetcher = AnthropicFetcher()
 
-    def always_fail():
+    def always_fail():  # type: ignore[no-untyped-def]
         raise ValueError("Persistent failure")
-
-    import pytest
 
     with pytest.raises(ValueError, match="Persistent failure"):
         fetcher.retry_with_backoff(always_fail, max_retries=2, initial_delay=0.01)

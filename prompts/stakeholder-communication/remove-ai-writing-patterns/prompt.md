@@ -2,7 +2,7 @@
 
 **Complexity**: 🟡 Intermediate
 **Category**: Technical Documentation
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-4 | ✅ Gemini
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-5 | ✅ Gemini
 
 ## Overview
 
@@ -219,7 +219,7 @@ The key insight: performance optimization requires understanding your bottleneck
 | **Claude Haiku** | ~2,000 | $0.001 | 85% | Fast, misses subtle patterns |
 | **Claude Sonnet** | ~3,000 | $0.015 | 95% | Best balance |
 | **Claude Opus** | ~3,500 | $0.070 | 97% | Highest quality, expensive |
-| **GPT-4o** | ~3,000 | $0.025 | 92% | Good structured output |
+| **GPT-5o** | ~3,000 | $0.025 | 92% | Good structured output |
 | **Gemini 2.5 Pro** | ~2,500 | $0.004 | 88% | Budget option |
 
 **Recommended**: Claude Sonnet for production use (best accuracy/cost balance)

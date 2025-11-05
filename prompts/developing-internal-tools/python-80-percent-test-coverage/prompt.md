@@ -2,7 +2,7 @@
 
 **Complexity**: 🔴 Advanced
 **Category**: Code Quality / Testing / Python
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-4 | ⚠️ Gemini (large context needed)
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-5 | ⚠️ Gemini (large context needed)
 
 ## Overview
 
@@ -632,15 +632,15 @@ echo "✅ Coverage check passed"
 | **Claude Haiku** | 200K | $0.05 | Fast | 75-85% | Good | Misses edge cases |
 | **Claude Sonnet** | 200K | $0.10-0.30 | Medium | 80-95% | Excellent | **Recommended** |
 | **Claude Opus** | 200K | $0.50-1.00 | Slow | 90-98% | Exceptional | Overkill for most |
-| **GPT-4o** | 128K | $0.20-0.50 | Medium | 75-90% | Very Good | Good structured output |
-| **GPT-4o** | 128K | $0.10-0.25 | Fast | 70-85% | Good | Fast iteration |
+| **GPT-5o** | 128K | $0.20-0.50 | Medium | 75-90% | Very Good | Good structured output |
+| **GPT-5o** | 128K | $0.10-0.25 | Fast | 70-85% | Good | Fast iteration |
 | **Gemini Pro 1.5** | 2M | $0.08-0.20 | Medium | 70-85% | Good | Large modules |
 
 **Module = ~100-500 lines of code**
 
 **Recommendation**:
 - **Claude Sonnet 3.5**: Best balance for most projects (comprehensive tests, good edge case coverage)
-- **GPT-4o**: Faster iteration when time is critical, acceptable quality
+- **GPT-5o**: Faster iteration when time is critical, acceptable quality
 - **Claude Opus**: Security-critical modules requiring exceptional coverage
 
 **ROI Calculation**:

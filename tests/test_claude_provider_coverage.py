@@ -19,7 +19,7 @@ class TestClaudeProviderInitialization:
     """Test ClaudeProvider initialization and validation."""
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
-    def test_init_missing_anthropic_package(self, mock_anthropic_module):
+    def test_init_missing_anthropic_package(self, mock_anthropic_module) -> None:  # type: ignore[no-untyped-def]
         """Test initialization raises ImportError when anthropic is not installed."""
         # Simulate missing anthropic package
 
@@ -32,7 +32,7 @@ class TestClaudeProviderInitialization:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_init_invalid_model(self, mock_settings, mock_anthropic):
+    def test_init_invalid_model(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test initialization raises ValueError for unsupported model."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
 
@@ -47,7 +47,7 @@ class TestClaudeProviderInitialization:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_init_successful_haiku(self, mock_settings, mock_anthropic):
+    def test_init_successful_haiku(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test successful initialization with Haiku model."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_client = MagicMock()
@@ -62,7 +62,7 @@ class TestClaudeProviderInitialization:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_init_successful_sonnet(self, mock_settings, mock_anthropic):
+    def test_init_successful_sonnet(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test successful initialization with Sonnet model (default)."""
         mock_settings.return_value.get_api_key.return_value = "sk-ant-test"
         mock_client = MagicMock()
@@ -76,7 +76,7 @@ class TestClaudeProviderInitialization:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_init_successful_opus(self, mock_settings, mock_anthropic):
+    def test_init_successful_opus(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test successful initialization with Opus model."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -88,7 +88,7 @@ class TestClaudeProviderInitialization:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_init_calls_get_api_key(self, mock_settings, mock_anthropic):
+    def test_init_calls_get_api_key(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test initialization retrieves API key from settings."""
         mock_settings.return_value.get_api_key.return_value = "sk-ant-test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -104,7 +104,7 @@ class TestBuildXmlPrompt:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_build_xml_prompt_basic(self, mock_settings, mock_anthropic):
+    def test_build_xml_prompt_basic(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test XML prompt structure with normal text."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -122,7 +122,7 @@ class TestBuildXmlPrompt:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_build_xml_prompt_escapes_xml_characters(self, mock_settings, mock_anthropic):
+    def test_build_xml_prompt_escapes_xml_characters(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test XML special characters are properly escaped."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -141,7 +141,7 @@ class TestBuildXmlPrompt:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_build_xml_prompt_all_categories_present(self, mock_settings, mock_anthropic):
+    def test_build_xml_prompt_all_categories_present(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test all signal categories are included in prompt."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -162,7 +162,7 @@ class TestParseResponse:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_parse_response_valid_feature_request(self, mock_settings, mock_anthropic):
+    def test_parse_response_valid_feature_request(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test parsing valid feature request response."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -178,7 +178,7 @@ class TestParseResponse:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_parse_response_valid_bug_report(self, mock_settings, mock_anthropic):
+    def test_parse_response_valid_bug_report(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test parsing valid bug report response."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -194,7 +194,7 @@ class TestParseResponse:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_parse_response_with_whitespace(self, mock_settings, mock_anthropic):
+    def test_parse_response_with_whitespace(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test parsing handles extra whitespace correctly."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -210,7 +210,7 @@ class TestParseResponse:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_parse_response_invalid_format_too_few_parts(self, mock_settings, mock_anthropic):
+    def test_parse_response_invalid_format_too_few_parts(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test parsing raises ValueError for too few parts."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -225,7 +225,7 @@ class TestParseResponse:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_parse_response_invalid_format_too_many_parts(self, mock_settings, mock_anthropic):
+    def test_parse_response_invalid_format_too_many_parts(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test parsing raises ValueError for too many parts."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -240,7 +240,7 @@ class TestParseResponse:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_parse_response_invalid_category(self, mock_settings, mock_anthropic):
+    def test_parse_response_invalid_category(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test parsing raises ValueError for invalid category."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -255,7 +255,7 @@ class TestParseResponse:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_parse_response_invalid_confidence(self, mock_settings, mock_anthropic):
+    def test_parse_response_invalid_confidence(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test parsing raises ValueError for non-numeric confidence."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -270,7 +270,7 @@ class TestParseResponse:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_parse_response_truncates_long_responses_in_error(self, mock_settings, mock_anthropic):
+    def test_parse_response_truncates_long_responses_in_error(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test error logging truncates long responses to prevent PII exposure."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -291,7 +291,7 @@ class TestCalculateCost:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_calculate_cost_haiku_no_cache(self, mock_settings, mock_anthropic):
+    def test_calculate_cost_haiku_no_cache(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test cost calculation for Haiku without caching."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -306,7 +306,7 @@ class TestCalculateCost:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_calculate_cost_sonnet_no_cache(self, mock_settings, mock_anthropic):
+    def test_calculate_cost_sonnet_no_cache(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test cost calculation for Sonnet without caching."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -321,7 +321,7 @@ class TestCalculateCost:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_calculate_cost_opus_no_cache(self, mock_settings, mock_anthropic):
+    def test_calculate_cost_opus_no_cache(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test cost calculation for Opus without caching."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -336,7 +336,7 @@ class TestCalculateCost:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_calculate_cost_with_caching(self, mock_settings, mock_anthropic):
+    def test_calculate_cost_with_caching(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test cost calculation with cached tokens (90% discount)."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -355,7 +355,7 @@ class TestCalculateCost:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_calculate_cost_all_cached(self, mock_settings, mock_anthropic):
+    def test_calculate_cost_all_cached(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test cost calculation when all input tokens are cached."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -376,7 +376,7 @@ class TestGetModelId:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_get_model_id_haiku(self, mock_settings, mock_anthropic):
+    def test_get_model_id_haiku(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test _get_model_id returns correct API identifier for Haiku."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -390,7 +390,7 @@ class TestGetModelId:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_get_model_id_sonnet(self, mock_settings, mock_anthropic):
+    def test_get_model_id_sonnet(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test _get_model_id returns correct API identifier for Sonnet."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -404,7 +404,7 @@ class TestGetModelId:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_get_model_id_opus(self, mock_settings, mock_anthropic):
+    def test_get_model_id_opus(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test _get_model_id returns correct API identifier for Opus."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
@@ -422,7 +422,7 @@ class TestClassifyImpl:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_classify_impl_feature_request(self, mock_settings, mock_anthropic):
+    def test_classify_impl_feature_request(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test full classification flow for feature request."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
 
@@ -452,7 +452,7 @@ class TestClassifyImpl:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_classify_impl_bug_report(self, mock_settings, mock_anthropic):
+    def test_classify_impl_bug_report(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test full classification flow for bug report."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
 
@@ -477,7 +477,7 @@ class TestClassifyImpl:
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
-    def test_classify_impl_calls_api_with_correct_params(self, mock_settings, mock_anthropic):
+    def test_classify_impl_calls_api_with_correct_params(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
         """Test that API is called with correct parameters."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
 
@@ -509,13 +509,13 @@ class TestClassifyImpl:
 class TestClaudePricingConstants:
     """Test CLAUDE_PRICING constants."""
 
-    def test_pricing_dict_has_all_models(self):
+    def test_pricing_dict_has_all_models(self) -> None:
         """Test CLAUDE_PRICING contains all supported models."""
         assert "claude-haiku" in CLAUDE_PRICING
         assert "claude-sonnet" in CLAUDE_PRICING
         assert "claude-opus" in CLAUDE_PRICING
 
-    def test_pricing_values_are_tuples(self):
+    def test_pricing_values_are_tuples(self) -> None:
         """Test all pricing values are (input, output) tuples."""
         for _model, prices in CLAUDE_PRICING.items():
             assert isinstance(prices, tuple)
@@ -526,7 +526,7 @@ class TestClaudePricingConstants:
             assert input_price > 0
             assert output_price > 0
 
-    def test_pricing_output_higher_than_input(self):
+    def test_pricing_output_higher_than_input(self) -> None:
         """Test output pricing is higher than input (standard model pricing)."""
         for model, (input_price, output_price) in CLAUDE_PRICING.items():
             assert output_price > input_price, f"{model}: output should cost more than input"

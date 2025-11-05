@@ -2,7 +2,7 @@
 
 **Complexity**: 🔴 Advanced
 **Category**: Product Strategy / Development Workflow
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-4 | ✅ Gemini
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-5 | ✅ Gemini
 
 ## Overview
 

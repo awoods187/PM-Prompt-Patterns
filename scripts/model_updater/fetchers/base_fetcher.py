@@ -7,7 +7,7 @@ import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import date, datetime
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -251,7 +251,7 @@ class BaseFetcher(ABC):
         return len(errors) == 0, errors
 
     def retry_with_backoff(
-        self, func: callable, max_retries: int = 3, initial_delay: float = 1.0
+        self, func: Callable[[], Any], max_retries: int = 3, initial_delay: float = 1.0
     ) -> Any:
         """Retry a function with exponential backoff.
 

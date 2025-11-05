@@ -29,7 +29,7 @@ from pm_prompt_toolkit.providers.vertex import VertexProvider
 
 
 @pytest.fixture
-def mock_settings_default():
+def mock_settings_default():  # type: ignore[no-untyped-def]
     """Provide settings with all providers disabled (default state)."""
     settings = Mock()
     settings.enable_bedrock = False
@@ -39,7 +39,7 @@ def mock_settings_default():
 
 
 @pytest.fixture
-def mock_settings_bedrock_enabled():
+def mock_settings_bedrock_enabled():  # type: ignore[no-untyped-def]
     """Provide settings with Bedrock enabled."""
     settings = Mock()
     settings.enable_bedrock = True
@@ -53,7 +53,7 @@ def mock_settings_bedrock_enabled():
 
 
 @pytest.fixture
-def mock_settings_vertex_enabled():
+def mock_settings_vertex_enabled():  # type: ignore[no-untyped-def]
     """Provide settings with Vertex enabled."""
     settings = Mock()
     settings.enable_bedrock = False
@@ -67,7 +67,7 @@ def mock_settings_vertex_enabled():
 
 
 @pytest.fixture
-def mock_settings_all_enabled():
+def mock_settings_all_enabled():  # type: ignore[no-untyped-def]
     """Provide settings with all providers enabled."""
     settings = Mock()
     settings.enable_bedrock = True
@@ -94,7 +94,7 @@ class TestExplicitPrefixRouting:
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.MockProvider")
-    def test_mock_prefix_routes_to_mock_provider(self, mock_provider_class, mock_get_settings):
+    def test_mock_prefix_routes_to_mock_provider(self, mock_provider_class, mock_get_settings) -> None:  # type: ignore[no-untyped-def]
         """Test that 'mock:' prefix routes to MockProvider."""
         # Arrange
         mock_get_settings.return_value = Mock(enable_bedrock=False)
@@ -108,7 +108,7 @@ class TestExplicitPrefixRouting:
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.BedrockProvider")
-    def test_bedrock_prefix_with_enabled_routes_to_bedrock(self, mock_bedrock, mock_get_settings):
+    def test_bedrock_prefix_with_enabled_routes_to_bedrock(self, mock_bedrock, mock_get_settings) -> None:  # type: ignore[no-untyped-def]
         """Test that 'bedrock:' prefix routes to BedrockProvider when enabled."""
         # Arrange
         mock_settings = Mock()
@@ -123,7 +123,7 @@ class TestExplicitPrefixRouting:
         mock_bedrock.assert_called_once_with(model="claude-sonnet-4-5", enable_caching=True)
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_bedrock_prefix_with_disabled_raises_configuration_error(self, mock_get_settings):
+    def test_bedrock_prefix_with_disabled_raises_configuration_error(self, mock_get_settings) -> None:  # type: ignore[no-untyped-def]
         """Test that 'bedrock:' prefix with disabled provider raises ConfigurationError."""
         # Arrange
         mock_settings = Mock()
@@ -136,7 +136,7 @@ class TestExplicitPrefixRouting:
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.VertexProvider")
-    def test_vertex_prefix_with_enabled_routes_to_vertex(self, mock_vertex, mock_get_settings):
+    def test_vertex_prefix_with_enabled_routes_to_vertex(self, mock_vertex, mock_get_settings) -> None:  # type: ignore[no-untyped-def]
         """Test that 'vertex:' prefix routes to VertexProvider when enabled."""
         # Arrange
         mock_settings = Mock()
@@ -151,7 +151,7 @@ class TestExplicitPrefixRouting:
         mock_vertex.assert_called_once_with(model="claude-opus-4", enable_caching=True)
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_vertex_prefix_with_disabled_raises_configuration_error(self, mock_get_settings):
+    def test_vertex_prefix_with_disabled_raises_configuration_error(self, mock_get_settings) -> None:  # type: ignore[no-untyped-def]
         """Test that 'vertex:' prefix with disabled provider raises ConfigurationError."""
         # Arrange
         mock_settings = Mock()
@@ -164,7 +164,7 @@ class TestExplicitPrefixRouting:
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_anthropic_prefix_routes_to_claude_provider(self, mock_claude, mock_get_settings):
+    def test_anthropic_prefix_routes_to_claude_provider(self, mock_claude, mock_get_settings) -> None:  # type: ignore[no-untyped-def]
         """Test that 'anthropic:' prefix routes to ClaudeProvider."""
         # Arrange
         mock_get_settings.return_value = Mock()
@@ -186,7 +186,7 @@ class TestExplicitPrefixRouting:
         ],
     )
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_unknown_prefix_raises_value_error(self, mock_get_settings, invalid_prefix):
+    def test_unknown_prefix_raises_value_error(self, mock_get_settings, invalid_prefix) -> None:  # type: ignore[no-untyped-def]
         """Test that unknown prefixes raise ValueError."""
         # Arrange
         mock_get_settings.return_value = Mock()
@@ -206,9 +206,9 @@ class TestEnabledProvidersRouting:
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.BedrockProvider")
-    def test_claude_model_with_bedrock_enabled_routes_to_bedrock(
+    def test_claude_model_with_bedrock_enabled_routes_to_bedrock(  # type: ignore[no-untyped-def]
         self, mock_bedrock, mock_get_settings
-    ):
+    ) -> None:
         """Test that Claude models route to Bedrock when enabled."""
         # Arrange
         mock_settings = Mock()
@@ -226,9 +226,9 @@ class TestEnabledProvidersRouting:
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.VertexProvider")
-    def test_claude_model_with_vertex_enabled_routes_to_vertex(
+    def test_claude_model_with_vertex_enabled_routes_to_vertex(  # type: ignore[no-untyped-def]
         self, mock_vertex, mock_get_settings
-    ):
+    ) -> None:
         """Test that Claude models route to Vertex when enabled (and Bedrock disabled)."""
         # Arrange
         mock_settings = Mock()
@@ -246,9 +246,9 @@ class TestEnabledProvidersRouting:
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.BedrockProvider")
     @patch("pm_prompt_toolkit.providers.factory.VertexProvider")
-    def test_bedrock_takes_precedence_over_vertex_when_both_enabled(
+    def test_bedrock_takes_precedence_over_vertex_when_both_enabled(  # type: ignore[no-untyped-def]
         self, mock_vertex, mock_bedrock, mock_get_settings
-    ):
+    ) -> None:
         """Test that Bedrock has higher priority than Vertex when both enabled."""
         # Arrange
         mock_settings = Mock()
@@ -268,9 +268,9 @@ class TestEnabledProvidersRouting:
     @patch("pm_prompt_toolkit.providers.factory.BedrockProvider")
     @patch("pm_prompt_toolkit.providers.factory.VertexProvider")
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_fallback_to_vertex_when_bedrock_fails(
+    def test_fallback_to_vertex_when_bedrock_fails(  # type: ignore[no-untyped-def]
         self, mock_claude, mock_vertex, mock_bedrock, mock_get_settings
-    ):
+    ) -> None:
         """Test that routing falls back to Vertex if Bedrock initialization fails."""
         # Arrange
         mock_settings = Mock()
@@ -291,9 +291,9 @@ class TestEnabledProvidersRouting:
     @patch("pm_prompt_toolkit.providers.factory.BedrockProvider")
     @patch("pm_prompt_toolkit.providers.factory.VertexProvider")
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_fallback_to_anthropic_when_all_cloud_providers_fail(
+    def test_fallback_to_anthropic_when_all_cloud_providers_fail(  # type: ignore[no-untyped-def]
         self, mock_claude, mock_vertex, mock_bedrock, mock_get_settings
-    ):
+    ) -> None:
         """Test final fallback to direct Anthropic API when all cloud providers fail."""
         # Arrange
         mock_settings = Mock()
@@ -323,9 +323,9 @@ class TestFallbackRouting:
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_claude_model_with_no_providers_enabled_uses_anthropic(
+    def test_claude_model_with_no_providers_enabled_uses_anthropic(  # type: ignore[no-untyped-def]
         self, mock_claude, mock_get_settings
-    ):
+    ) -> None:
         """Test that Claude models use direct Anthropic API when no providers enabled."""
         # Arrange
         mock_settings = Mock()
@@ -354,7 +354,7 @@ class TestFallbackRouting:
     )
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_all_claude_models_route_correctly(self, mock_claude, mock_get_settings, claude_model):
+    def test_all_claude_models_route_correctly(self, mock_claude, mock_get_settings, claude_model) -> None:  # type: ignore[no-untyped-def]
         """Test that all Claude model names route to ClaudeProvider."""
         # Arrange
         mock_settings = Mock()
@@ -389,9 +389,9 @@ class TestModelNameNormalization:
     )
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_model_names_normalized_to_lowercase(
+    def test_model_names_normalized_to_lowercase(  # type: ignore[no-untyped-def]
         self, mock_claude, mock_get_settings, model_variant
-    ):
+    ) -> None:
         """Test that model names are normalized to lowercase."""
         # Arrange
         mock_settings = Mock()
@@ -411,7 +411,7 @@ class TestModelNameNormalization:
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.MockProvider")
-    def test_explicit_prefix_normalizes_model_name(self, mock_provider, mock_get_settings):
+    def test_explicit_prefix_normalizes_model_name(self, mock_provider, mock_get_settings) -> None:  # type: ignore[no-untyped-def]
         """Test that explicit prefix also normalizes model names."""
         # Arrange
         mock_get_settings.return_value = Mock()
@@ -434,7 +434,7 @@ class TestOpenAIRouting:
     """Test suite for OpenAI model routing."""
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_gpt4_with_openai_disabled_raises_configuration_error(self, mock_get_settings):
+    def test_gpt4_with_openai_disabled_raises_configuration_error(self, mock_get_settings) -> None:  # type: ignore[no-untyped-def]
         """Test that GPT-4 with OpenAI disabled raises ConfigurationError."""
         # Arrange
         mock_settings = Mock()
@@ -447,9 +447,9 @@ class TestOpenAIRouting:
 
     @patch("pm_prompt_toolkit.providers.factory.OpenAIProvider")
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_gpt4_with_openai_enabled_routes_to_openai(
+    def test_gpt4_with_openai_enabled_routes_to_openai(  # type: ignore[no-untyped-def]
         self, mock_get_settings, mock_openai_provider
-    ):
+    ) -> None:
         """Test that GPT-4o routes to OpenAI when enabled."""
         # Arrange
         mock_settings = Mock()
@@ -477,7 +477,7 @@ class TestOpenAIRouting:
         ],
     )
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_openai_models_detected(self, mock_get_settings, model):
+    def test_openai_models_detected(self, mock_get_settings, model) -> None:  # type: ignore[no-untyped-def]
         """Test that various OpenAI model names are detected."""
         # Arrange
         mock_settings = Mock()
@@ -499,7 +499,7 @@ class TestGeminiRouting:
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
-    def test_gemini_pro_routes_to_gemini_provider(self, mock_gemini, mock_get_settings):
+    def test_gemini_pro_routes_to_gemini_provider(self, mock_gemini, mock_get_settings) -> None:  # type: ignore[no-untyped-def]
         """Test that Gemini 2.5 Pro routes to GeminiProvider."""
         # Arrange
         mock_get_settings.return_value = Mock()
@@ -521,7 +521,7 @@ class TestGeminiRouting:
     )
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
-    def test_gemini_models_detected(self, mock_gemini, mock_get_settings, model):
+    def test_gemini_models_detected(self, mock_gemini, mock_get_settings, model) -> None:  # type: ignore[no-untyped-def]
         """Test that various Gemini model names are detected."""
         # Arrange
         mock_get_settings.return_value = Mock()
@@ -550,7 +550,7 @@ class TestEdgeCases:
         ],
     )
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_empty_model_name_raises_value_error(self, mock_get_settings, empty_model):
+    def test_empty_model_name_raises_value_error(self, mock_get_settings, empty_model) -> None:  # type: ignore[no-untyped-def]
         """Test that empty or whitespace model names raise ValueError."""
         # Arrange
         mock_get_settings.return_value = Mock()
@@ -560,7 +560,7 @@ class TestEdgeCases:
             get_provider(empty_model)
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_unknown_model_raises_value_error(self, mock_get_settings):
+    def test_unknown_model_raises_value_error(self, mock_get_settings) -> None:  # type: ignore[no-untyped-def]
         """Test that unknown model names raise ValueError with helpful message."""
         # Arrange
         mock_get_settings.return_value = Mock()
@@ -571,7 +571,7 @@ class TestEdgeCases:
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_caching_parameter_passed_through(self, mock_claude, mock_get_settings):
+    def test_caching_parameter_passed_through(self, mock_claude, mock_get_settings) -> None:  # type: ignore[no-untyped-def]
         """Test that enable_caching parameter is passed to provider."""
         # Arrange
         mock_settings = Mock()
@@ -588,7 +588,7 @@ class TestEdgeCases:
         mock_claude.assert_called_once_with(model="claude-sonnet", enable_caching=False)
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_model_with_colon_but_empty_prefix_handled(self, mock_get_settings):
+    def test_model_with_colon_but_empty_prefix_handled(self, mock_get_settings) -> None:  # type: ignore[no-untyped-def]
         """Test that model names with colon but empty prefix are handled."""
         # Arrange
         mock_get_settings.return_value = Mock()
@@ -607,7 +607,7 @@ class TestGetProviderByPrefix:
     """Test suite for _get_provider_by_prefix helper function."""
 
     @patch("pm_prompt_toolkit.providers.factory.MockProvider")
-    def test_get_provider_by_prefix_mock_always_available(self, mock_provider):
+    def test_get_provider_by_prefix_mock_always_available(self, mock_provider) -> None:  # type: ignore[no-untyped-def]
         """Test that mock provider is always available regardless of settings."""
         # Arrange
         settings = Mock()
@@ -622,7 +622,7 @@ class TestGetProviderByPrefix:
         mock_provider.assert_called_once()
 
     @patch("pm_prompt_toolkit.providers.factory.BedrockProvider")
-    def test_get_provider_by_prefix_bedrock_with_enabled(self, mock_bedrock):
+    def test_get_provider_by_prefix_bedrock_with_enabled(self, mock_bedrock) -> None:  # type: ignore[no-untyped-def]
         """Test bedrock prefix routing with enabled setting."""
         # Arrange
         settings = Mock()
@@ -635,7 +635,7 @@ class TestGetProviderByPrefix:
         # Assert
         mock_bedrock.assert_called_once()
 
-    def test_get_provider_by_prefix_bedrock_with_disabled_raises_error(self):
+    def test_get_provider_by_prefix_bedrock_with_disabled_raises_error(self) -> None:
         """Test bedrock prefix with disabled setting raises ConfigurationError."""
         # Arrange
         settings = Mock()
@@ -653,7 +653,7 @@ class TestGetProviderByPrefix:
             ("test", ValueError),
         ],
     )
-    def test_get_provider_by_prefix_unknown_raises_value_error(self, prefix, expected_error):
+    def test_get_provider_by_prefix_unknown_raises_value_error(self, prefix, expected_error) -> None:  # type: ignore[no-untyped-def]
         """Test that unknown prefixes raise ValueError."""
         # Arrange
         settings = Mock()
@@ -673,9 +673,9 @@ class TestAdditionalCoverage:
 
     @patch("pm_prompt_toolkit.providers.factory.OpenAIProvider")
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_openai_prefix_with_enabled_logs_message(
+    def test_openai_prefix_with_enabled_logs_message(  # type: ignore[no-untyped-def]
         self, mock_get_settings, mock_openai_provider, caplog
-    ):
+    ) -> None:
         """Test that OpenAI prefix with enabled provider logs info message."""
         # Arrange
         import logging
@@ -697,7 +697,7 @@ class TestAdditionalCoverage:
 
     @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
-    def test_gemini_prefix_logs_message(self, mock_get_settings, mock_gemini_provider, caplog):
+    def test_gemini_prefix_logs_message(self, mock_get_settings, mock_gemini_provider, caplog) -> None:  # type: ignore[no-untyped-def]
         """Test that Gemini prefix logs info message."""
         # Arrange
         import logging

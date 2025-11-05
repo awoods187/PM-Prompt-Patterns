@@ -2,7 +2,7 @@
 
 **Complexity**: [🟢 Beginner | 🟡 Intermediate | 🔴 Advanced]
 **Category**: [Category Name]
-**Model Compatibility**: [✅ Claude (all) | ✅ GPT-4 | ✅ Gemini]
+**Model Compatibility**: [✅ Claude (all) | ✅ GPT-5 | ✅ Gemini]
 
 ## Overview
 
@@ -132,7 +132,7 @@ result = provider.generate(
 - [Claude-specific tip]
 - [Performance note]
 
-**OpenAI (GPT-4)**:
+**OpenAI (GPT-5)**:
 - [OpenAI-specific tip]
 - [Performance note]
 

@@ -2,7 +2,7 @@
 
 **Complexity**: 🔴 Advanced
 **Category**: Product Strategy / Prompt Engineering
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-4 | ✅ Gemini
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-5 | ✅ Gemini
 
 ## Overview
 
@@ -504,7 +504,7 @@ FEEDBACK TO ANALYZE:
 | **Manual (Ad-hoc)** | 2-4 hours | $0 (time only) | 60-75% | Low (varies) |
 | **Manual (Structured)** | 3-5 hours | $0 (time only) | 80-90% | Medium |
 | **Meta-prompt (Claude Sonnet)** | 5-15 min | $0.02-0.08 | 90-95% | High |
-| **Meta-prompt (GPT-4)** | 10-20 min | $0.03-0.10 | 85-92% | High |
+| **Meta-prompt (GPT-5)** | 10-20 min | $0.03-0.10 | 85-92% | High |
 | **Meta-prompt (Interactive)** | 15-30 min | $0.05-0.15 | 95%+ | Very High |
 
 **Recommendation**: Meta-prompt with Claude Sonnet for best balance of quality, cost, and speed.

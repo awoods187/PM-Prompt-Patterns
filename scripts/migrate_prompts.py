@@ -522,7 +522,7 @@ Browse more prompts in the [prompts directory](../../).
         return stats
 
 
-def main():
+def main() -> int:
     """Main entry point."""
     parser = argparse.ArgumentParser(
         description="Migrate prompts to multi-provider structure",
