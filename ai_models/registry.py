@@ -335,6 +335,74 @@ class ModelRegistry:
         return [model for model in cls._models.values() if model.optimization.cost_tier == tier]
 
     @classmethod
+    def get_available_models(cls, as_of_date: Optional[date] = None) -> list[Model]:
+        """Get all models available (released) as of a specific date.
+
+        This filters out models with future release dates, helping prevent
+        confusion about which models are actually available to use.
+
+        Args:
+            as_of_date: Date to check availability against (defaults to today)
+
+        Returns:
+            List of Model objects that have been released
+
+        Example:
+            >>> from datetime import date
+            >>> # Get models available today
+            >>> current_models = ModelRegistry.get_available_models()
+            >>> # Get models available as of a specific date
+            >>> models = ModelRegistry.get_available_models(date(2024, 11, 1))
+        """
+        cls._load_models()
+        check_date = as_of_date or date.today()
+        return [
+            model for model in cls._models.values() if model.metadata.release_date <= check_date
+        ]
+
+    @classmethod
+    def get_available_by_provider(
+        cls, provider: str, as_of_date: Optional[date] = None
+    ) -> list[Model]:
+        """Get available models from a specific provider as of a date.
+
+        Args:
+            provider: Provider name ("anthropic", "openai", "google")
+            as_of_date: Date to check availability against (defaults to today)
+
+        Returns:
+            List of available Model objects from the provider
+
+        Example:
+            >>> # Get OpenAI models available today
+            >>> openai_models = ModelRegistry.get_available_by_provider("openai")
+        """
+        available = cls.get_available_models(as_of_date)
+        return [m for m in available if m.provider.lower() == provider.lower()]
+
+    @classmethod
+    def get_latest_model(cls, provider: str, as_of_date: Optional[date] = None) -> Optional[Model]:
+        """Get the most recently released model from a provider.
+
+        Args:
+            provider: Provider name ("anthropic", "openai", "google")
+            as_of_date: Date to check availability against (defaults to today)
+
+        Returns:
+            Most recent Model object or None
+
+        Example:
+            >>> # Get latest available OpenAI model
+            >>> latest = ModelRegistry.get_latest_model("openai")
+            >>> print(latest.model_id)
+            gpt-5
+        """
+        models = cls.get_available_by_provider(provider, as_of_date)
+        if not models:
+            return None
+        return max(models, key=lambda m: m.metadata.release_date)
+
+    @classmethod
     def clear_cache(cls) -> None:
         """Clear all caches and force reload."""
         cls.get.cache_clear()
@@ -372,3 +440,28 @@ def list_providers() -> list[str]:
     """
     models = ModelRegistry.get_all()
     return list({model.provider for model in models.values()})
+
+
+def get_available_models(as_of_date: Optional[date] = None) -> list[Model]:
+    """Get all models available as of a specific date (convenience function).
+
+    Args:
+        as_of_date: Date to check availability against (defaults to today)
+
+    Returns:
+        List of Model objects that have been released
+    """
+    return ModelRegistry.get_available_models(as_of_date)
+
+
+def get_latest_model(provider: str, as_of_date: Optional[date] = None) -> Optional[Model]:
+    """Get the most recently released model from a provider (convenience function).
+
+    Args:
+        provider: Provider name ("anthropic", "openai", "google")
+        as_of_date: Date to check availability against (defaults to today)
+
+    Returns:
+        Most recent Model object or None
+    """
+    return ModelRegistry.get_latest_model(provider, as_of_date)
