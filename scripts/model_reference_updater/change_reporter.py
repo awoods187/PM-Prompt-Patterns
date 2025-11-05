@@ -8,7 +8,7 @@ This module generates comprehensive reports of scans and updates.
 
 import logging
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from scripts.model_reference_updater.reference_scanner import ScanResults
 from scripts.model_reference_updater.reference_updater import UpdateResults
@@ -20,7 +20,7 @@ class ChangeReporter:
     """Generates reports for model reference updates."""
 
     @staticmethod
-    def generate_scan_report(results: ScanResults, output_path: Path | None = None) -> str:
+    def generate_scan_report(results: ScanResults, output_path: Optional[Path] = None) -> str:
         """Generate report from scan results.
 
         Args:
@@ -152,7 +152,7 @@ class ChangeReporter:
 
     @staticmethod
     def generate_update_report(
-        update_results: UpdateResults, scan_results: ScanResults, output_path: Path | None = None
+        update_results: UpdateResults, scan_results: ScanResults, output_path: Optional[Path] = None
     ) -> str:
         """Generate report from update results.
 
@@ -232,7 +232,7 @@ class ChangeReporter:
 
     @staticmethod
     def generate_combined_report(
-        scan_results: ScanResults, update_results: UpdateResults, output_path: Path | None = None
+        scan_results: ScanResults, update_results: UpdateResults, output_path: Optional[Path] = None
     ) -> str:
         """Generate combined scan and update report.
 

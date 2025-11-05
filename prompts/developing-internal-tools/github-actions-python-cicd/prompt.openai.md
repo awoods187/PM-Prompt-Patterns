@@ -103,7 +103,7 @@ Generate a complete, production-ready GitHub Actions CI/CD pipeline for a Python
 - **Clear role definition**: Explicit system message with role and responsibilities
 - **Structured output**: Consistent formatting instructions
 - **Function calling ready**: Can be combined with function schemas for structured output
-- **Concise directives**: Optimized for GPT-4's instruction-following capabilities
+- **Concise directives**: Optimized for GPT-5's instruction-following capabilities
 
 ## Usage
 

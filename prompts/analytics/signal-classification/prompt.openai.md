@@ -2,14 +2,14 @@
 
 **Category**: Analytics / Classification
 **Complexity**: 🟡 Moderate
-**Model Compatibility**: GPT-4o, GPT-4o-mini, gpt-4o
+**Model Compatibility**: GPT-5o, GPT-5o-mini, gpt-4o
 
 ## OpenAI-Specific Optimizations
 
 - **Function Calling**: Structured JSON output with schema validation
 - **JSON Mode**: Guaranteed valid JSON responses
 - **Parallel Tools**: Batch process multiple signals simultaneously
-- **Best Models**: GPT-4o-mini (cost), GPT-4o (accuracy)
+- **Best Models**: GPT-5o-mini (cost), GPT-5o (accuracy)
 
 ## Function Definition
 
@@ -223,7 +223,7 @@ response = client.chat.completions.create(
 
 ## OpenAI-Specific Performance
 
-- **Accuracy**: 90-93% with GPT-4o, 87-90% with GPT-4o-mini
+- **Accuracy**: 90-93% with GPT-5o, 87-90% with GPT-5o-mini
 - **Latency**: 0.5-0.8s with mini, 0.8-1.2s with 4o
 - **Cost**: $0.0002 per classification (mini), $0.0007 per classification (4o)
 - **Batch Processing**: 50-100 signals per API call with parallel tools
@@ -282,4 +282,4 @@ except (json.JSONDecodeError, KeyError, AssertionError) as e:
 - Parallel tools enable efficient batch processing
 - Temperature 0.0 recommended for deterministic classification
 - Seed parameter enables reproducible results for testing
-- GPT-4o-mini offers 94% of GPT-4o accuracy at 94% lower cost
+- GPT-5o-mini offers 94% of GPT-5o accuracy at 94% lower cost

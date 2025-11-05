@@ -18,18 +18,18 @@ from pm_prompt_toolkit.providers.bedrock import (  # noqa: E402
 class TestBedrockInitialization:
     """Test Bedrock provider initialization without credentials."""
 
-    def test_init_with_invalid_model_raises_error(self):
+    def test_init_with_invalid_model_raises_error(self) -> None:
         """Test that invalid model raises ValueError."""
         with pytest.raises(ValueError, match="Unsupported Bedrock model"):
             BedrockProvider(model="invalid-model")
 
-    def test_model_id_mapping_exists(self):
+    def test_model_id_mapping_exists(self) -> None:
         """Test that model ID mapping is defined."""
         assert isinstance(BEDROCK_MODEL_IDS, dict)
         assert len(BEDROCK_MODEL_IDS) > 0
         assert "claude-sonnet-4-5" in BEDROCK_MODEL_IDS
 
-    def test_model_id_values_are_strings(self):
+    def test_model_id_values_are_strings(self) -> None:
         """Test that model IDs are properly formatted strings."""
         for model_name, model_id in BEDROCK_MODEL_IDS.items():
             assert isinstance(model_name, str)

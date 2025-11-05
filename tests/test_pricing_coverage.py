@@ -9,6 +9,7 @@ Focuses on edge cases, error handling, and untested code paths.
 
 from datetime import date
 from pathlib import Path
+from typing import Any
 from unittest.mock import Mock, mock_open, patch
 
 import pytest
@@ -20,7 +21,7 @@ from ai_models.pricing import Pricing, PricingService, get_pricing_service
 class TestPricingToDict:
     """Test Pricing.to_dict() serialization."""
 
-    def test_to_dict_with_all_fields(self):
+    def test_to_dict_with_all_fields(self) -> None:
         """Test to_dict includes all fields when present."""
         pricing = Pricing(
             model_id="test-model",
@@ -42,7 +43,7 @@ class TestPricingToDict:
         assert result["effective_date"] == "2025-01-01"
         assert result["verified_date"] == "2025-01-15"
 
-    def test_to_dict_without_optional_fields(self):
+    def test_to_dict_without_optional_fields(self) -> None:
         """Test to_dict omits None optional fields."""
         pricing = Pricing(
             model_id="test-model",
@@ -65,7 +66,7 @@ class TestPricingToDict:
         assert "effective_date" not in result
         assert "verified_date" not in result
 
-    def test_to_dict_with_partial_optional_fields(self):
+    def test_to_dict_with_partial_optional_fields(self) -> None:
         """Test to_dict includes only present optional fields."""
         pricing = Pricing(
             model_id="test-model",
@@ -89,7 +90,7 @@ class TestPricingToDict:
 class TestPricingServiceInit:
     """Test PricingService initialization."""
 
-    def test_init_with_custom_definitions_dir(self):
+    def test_init_with_custom_definitions_dir(self) -> None:
         """Test initialization with custom definitions directory."""
         custom_dir = Path("/tmp/custom_definitions")
 
@@ -99,7 +100,7 @@ class TestPricingServiceInit:
             assert service.definitions_dir == custom_dir
             assert isinstance(service._pricing_cache, dict)
 
-    def test_init_with_default_definitions_dir(self):
+    def test_init_with_default_definitions_dir(self) -> None:
         """Test initialization uses default directory when not specified."""
         service = PricingService()
 
@@ -112,7 +113,7 @@ class TestPricingServiceInit:
 class TestPricingServiceErrorHandling:
     """Test error handling in PricingService."""
 
-    def test_load_all_pricing_with_missing_directory(self):
+    def test_load_all_pricing_with_missing_directory(self) -> None:
         """Test graceful handling when definitions directory doesn't exist."""
         with patch.object(Path, "exists", return_value=False):
             service = PricingService()
@@ -122,7 +123,7 @@ class TestPricingServiceErrorHandling:
 
     @patch("pathlib.Path.exists")
     @patch("pathlib.Path.rglob")
-    def test_load_all_pricing_skips_schema_file(self, mock_rglob, mock_exists):
+    def test_load_all_pricing_skips_schema_file(self, mock_rglob: Any, mock_exists: Any) -> None:
         """Test that schema.md files are skipped during loading."""
         mock_exists.return_value = True
 
@@ -139,13 +140,15 @@ class TestPricingServiceErrorHandling:
     @patch("pathlib.Path.exists")
     @patch("pathlib.Path.rglob")
     @patch("builtins.open", new_callable=mock_open)
-    def test_load_all_pricing_skips_invalid_yaml(self, mock_file, mock_rglob, mock_exists):
+    def test_load_all_pricing_skips_invalid_yaml(
+        self, mock_file: Any, mock_rglob: Any, mock_exists: Any
+    ) -> None:
         """Test that YAML files without model_id are skipped."""
         mock_exists.return_value = True
 
         yaml_path = Mock(spec=Path)
         yaml_path.name = "test.yaml"
-        yaml_path.__str__ = Mock(return_value="test.yaml")
+        yaml_path.__str__ = Mock(return_value="test.yaml")  # type: ignore[method-assign]
         mock_rglob.return_value = [yaml_path]
 
         # YAML without model_id
@@ -160,14 +163,14 @@ class TestPricingServiceErrorHandling:
     @patch("builtins.open", new_callable=mock_open)
     @patch("builtins.print")
     def test_load_all_pricing_handles_yaml_exceptions(
-        self, mock_print, mock_file, mock_rglob, mock_exists
-    ):
+        self, mock_print: Any, mock_file: Any, mock_rglob: Any, mock_exists: Any
+    ) -> None:
         """Test exception handling when YAML loading fails."""
         mock_exists.return_value = True
 
         yaml_path = Mock(spec=Path)
         yaml_path.name = "bad.yaml"
-        yaml_path.__str__ = Mock(return_value="bad.yaml")
+        yaml_path.__str__ = Mock(return_value="bad.yaml")  # type: ignore[method-assign]
         mock_rglob.return_value = [yaml_path]
 
         # Simulate YAML error
@@ -183,19 +186,19 @@ class TestPricingServiceErrorHandling:
 class TestParseDateMethod:
     """Test _parse_date method."""
 
-    def test_parse_date_with_none(self):
+    def test_parse_date_with_none(self) -> None:
         """Test _parse_date returns None when input is None."""
         service = PricingService()
         result = service._parse_date(None)
         assert result is None
 
-    def test_parse_date_with_empty_string(self):
+    def test_parse_date_with_empty_string(self) -> None:
         """Test _parse_date returns None for empty string."""
         service = PricingService()
         result = service._parse_date("")
         assert result is None
 
-    def test_parse_date_with_invalid_format(self):
+    def test_parse_date_with_invalid_format(self) -> None:
         """Test _parse_date returns None for invalid date format."""
         service = PricingService()
 
@@ -207,7 +210,7 @@ class TestParseDateMethod:
         result = service._parse_date("2025/01/01")
         assert result is None
 
-    def test_parse_date_with_valid_format(self):
+    def test_parse_date_with_valid_format(self) -> None:
         """Test _parse_date correctly parses valid ISO dates."""
         service = PricingService()
 
@@ -221,7 +224,7 @@ class TestParseDateMethod:
 class TestGetAllPricing:
     """Test get_all_pricing method."""
 
-    def test_get_all_pricing_returns_copy(self):
+    def test_get_all_pricing_returns_copy(self) -> None:
         """Test that get_all_pricing returns a copy, not the original cache."""
         service = PricingService()
 
@@ -237,7 +240,7 @@ class TestGetAllPricing:
         pricing2_after = service.get_all_pricing()
         assert len(pricing2_after) > 0  # Original cache unchanged
 
-    def test_get_all_pricing_includes_all_models(self):
+    def test_get_all_pricing_includes_all_models(self) -> None:
         """Test get_all_pricing includes all loaded models."""
         service = PricingService()
         all_pricing = service.get_all_pricing()
@@ -252,7 +255,7 @@ class TestGetAllPricing:
 class TestCalculateCostMethod:
     """Test PricingService.calculate_cost method."""
 
-    def test_calculate_cost_raises_for_unknown_model(self):
+    def test_calculate_cost_raises_for_unknown_model(self) -> None:
         """Test calculate_cost raises ValueError for unknown model."""
         service = PricingService()
 
@@ -262,7 +265,7 @@ class TestCalculateCostMethod:
         assert "Pricing not found" in str(exc_info.value)
         assert "nonexistent-model" in str(exc_info.value)
 
-    def test_calculate_cost_with_valid_model(self):
+    def test_calculate_cost_with_valid_model(self) -> None:
         """Test calculate_cost works for valid model."""
         service = PricingService()
 
@@ -272,7 +275,7 @@ class TestCalculateCostMethod:
         # (1000/1M * 1.00) + (500/1M * 5.00) = 0.001 + 0.0025 = 0.0035
         assert cost == pytest.approx(0.0035, rel=1e-6)
 
-    def test_calculate_cost_with_caching(self):
+    def test_calculate_cost_with_caching(self) -> None:
         """Test calculate_cost includes caching costs."""
         service = PricingService()
 
@@ -288,7 +291,7 @@ class TestCalculateCostMethod:
 class TestGetPricingService:
     """Test get_pricing_service singleton function."""
 
-    def test_get_pricing_service_returns_singleton(self):
+    def test_get_pricing_service_returns_singleton(self) -> None:
         """Test get_pricing_service returns the same instance."""
         # Reset singleton
         import ai_models.pricing
@@ -301,7 +304,7 @@ class TestGetPricingService:
         # Should be the exact same object
         assert service1 is service2
 
-    def test_get_pricing_service_returns_pricing_service(self):
+    def test_get_pricing_service_returns_pricing_service(self) -> None:
         """Test get_pricing_service returns PricingService instance."""
         import ai_models.pricing
 
@@ -317,7 +320,7 @@ class TestGetPricingService:
 class TestPricingDataclass:
     """Test Pricing dataclass behavior."""
 
-    def test_pricing_is_frozen(self):
+    def test_pricing_is_frozen(self) -> None:
         """Test that Pricing dataclass is immutable (frozen)."""
         pricing = Pricing(
             model_id="test-model",
@@ -327,9 +330,9 @@ class TestPricingDataclass:
 
         # Should not be able to modify frozen dataclass
         with pytest.raises(Exception):  # FrozenInstanceError or AttributeError
-            pricing.input_per_1m = 2.0
+            pricing.input_per_1m = 2.0  # type: ignore[misc]
 
-    def test_pricing_defaults(self):
+    def test_pricing_defaults(self) -> None:
         """Test Pricing dataclass default values."""
         pricing = Pricing(
             model_id="test-model",
@@ -346,13 +349,13 @@ class TestPricingDataclass:
 class TestGetPricing:
     """Test PricingService.get_pricing method."""
 
-    def test_get_pricing_returns_none_for_unknown_model(self):
+    def test_get_pricing_returns_none_for_unknown_model(self) -> None:
         """Test get_pricing returns None for unknown model."""
         service = PricingService()
         pricing = service.get_pricing("nonexistent-model")
         assert pricing is None
 
-    def test_get_pricing_returns_pricing_for_known_model(self):
+    def test_get_pricing_returns_pricing_for_known_model(self) -> None:
         """Test get_pricing returns Pricing object for known model."""
         service = PricingService()
         pricing = service.get_pricing("claude-sonnet-4-5")
@@ -363,7 +366,7 @@ class TestGetPricing:
         assert pricing.input_per_1m > 0
         assert pricing.output_per_1m > 0
 
-    def test_get_pricing_ignores_as_of_date_for_now(self):
+    def test_get_pricing_ignores_as_of_date_for_now(self) -> None:
         """Test get_pricing ignores as_of_date parameter (future feature)."""
         service = PricingService()
 

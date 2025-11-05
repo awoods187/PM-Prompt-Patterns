@@ -9,6 +9,8 @@ The Mock provider is critical for testing infrastructure and CI/CD pipelines.
 Tests focus on deterministic behavior, keyword matching, and zero-cost guarantees.
 """
 
+from typing import Any
+
 import pytest
 
 from pm_prompt_toolkit.providers.base import SignalCategory
@@ -20,13 +22,13 @@ from pm_prompt_toolkit.providers.mock import CLASSIFICATION_RULES, MockProvider
 
 
 @pytest.fixture
-def mock_provider():
+def mock_provider() -> Any:
     """Provide a standard MockProvider instance."""
     return MockProvider(model="mock-claude-sonnet", base_confidence=0.95)
 
 
 @pytest.fixture
-def low_confidence_provider():
+def low_confidence_provider() -> Any:
     """Provide a MockProvider with low base confidence."""
     return MockProvider(model="mock-claude-haiku", base_confidence=0.70)
 
@@ -39,7 +41,7 @@ def low_confidence_provider():
 class TestMockProviderInitialization:
     """Test suite for MockProvider initialization."""
 
-    def test_init_with_default_parameters_succeeds(self):
+    def test_init_with_default_parameters_succeeds(self) -> None:
         """Test successful initialization with default parameters."""
         # Arrange & Act
         provider = MockProvider()
@@ -49,7 +51,7 @@ class TestMockProviderInitialization:
         assert provider.base_confidence == 0.95
         assert provider.enable_caching is False
 
-    def test_init_with_custom_model_name_succeeds(self):
+    def test_init_with_custom_model_name_succeeds(self) -> None:
         """Test initialization with custom model name."""
         # Arrange & Act
         provider = MockProvider(model="custom-mock-model")
@@ -57,7 +59,7 @@ class TestMockProviderInitialization:
         # Assert
         assert provider.model == "custom-mock-model"
 
-    def test_init_with_custom_confidence_succeeds(self):
+    def test_init_with_custom_confidence_succeeds(self) -> None:
         """Test initialization with custom base confidence."""
         # Arrange & Act
         provider = MockProvider(base_confidence=0.80)
@@ -65,7 +67,7 @@ class TestMockProviderInitialization:
         # Assert
         assert provider.base_confidence == 0.80
 
-    def test_init_with_caching_enabled_sets_to_false(self):
+    def test_init_with_caching_enabled_sets_to_false(self) -> None:
         """Test that caching is always disabled for mock provider."""
         # Arrange & Act
         provider = MockProvider(enable_caching=True)
@@ -82,7 +84,7 @@ class TestMockProviderInitialization:
             -1.0,  # Negative
         ],
     )
-    def test_init_with_invalid_confidence_raises_value_error(self, invalid_confidence):
+    def test_init_with_invalid_confidence_raises_value_error(self, invalid_confidence: Any) -> None:
         """Test that invalid confidence values raise ValueError."""
         # Arrange & Act & Assert
         with pytest.raises(ValueError, match="base_confidence must be between 0.0 and 1.0"):
@@ -96,7 +98,7 @@ class TestMockProviderInitialization:
             1.0,  # Maximum
         ],
     )
-    def test_init_with_boundary_confidence_succeeds(self, valid_confidence):
+    def test_init_with_boundary_confidence_succeeds(self, valid_confidence: Any) -> None:
         """Test that boundary confidence values are accepted."""
         # Arrange & Act
         provider = MockProvider(base_confidence=valid_confidence)
@@ -113,7 +115,7 @@ class TestMockProviderInitialization:
 class TestMockProviderClassification:
     """Test suite for MockProvider classification logic."""
 
-    def test_classify_feature_request_with_keyword_match(self, mock_provider):
+    def test_classify_feature_request_with_keyword_match(self, mock_provider: Any) -> None:
         """Test classification of clear feature request."""
         # Arrange
         text = "We need SSO integration for our enterprise customers"
@@ -129,7 +131,7 @@ class TestMockProviderClassification:
         assert result.provider_metadata["provider"] == "mock"
         assert result.provider_metadata["is_mock"] is True
 
-    def test_classify_bug_report_with_error_keywords(self, mock_provider):
+    def test_classify_bug_report_with_error_keywords(self, mock_provider: Any) -> None:
         """Test classification of bug report with error keywords."""
         # Arrange
         text = "The dashboard is broken and showing 500 errors"
@@ -142,7 +144,7 @@ class TestMockProviderClassification:
         assert result.confidence >= 0.85
         assert "broken" in result.evidence or "error" in result.evidence or "500" in result.evidence
 
-    def test_classify_churn_risk_with_negative_sentiment(self, mock_provider):
+    def test_classify_churn_risk_with_negative_sentiment(self, mock_provider: Any) -> None:
         """Test classification of churn risk signal."""
         # Arrange
         text = "We are very disappointed and considering switching to a competitor"
@@ -155,7 +157,7 @@ class TestMockProviderClassification:
         assert result.confidence >= 0.85
         assert any(kw in result.evidence for kw in ["disappointed", "switching", "competitor"])
 
-    def test_classify_expansion_signal_with_growth_keywords(self, mock_provider):
+    def test_classify_expansion_signal_with_growth_keywords(self, mock_provider: Any) -> None:
         """Test classification of expansion signal."""
         # Arrange
         text = "We want to upgrade to enterprise and add more users to our team"
@@ -168,7 +170,7 @@ class TestMockProviderClassification:
         assert result.confidence >= 0.85
         assert any(kw in result.evidence for kw in ["upgrade", "more", "team"])
 
-    def test_classify_general_feedback_with_no_keyword_matches(self, mock_provider):
+    def test_classify_general_feedback_with_no_keyword_matches(self, mock_provider: Any) -> None:
         """Test classification defaults to general feedback when no keywords match."""
         # Arrange
         text = "The sky is blue today"
@@ -181,7 +183,7 @@ class TestMockProviderClassification:
         assert result.confidence >= 0.50
         assert len(result.evidence) > 0
 
-    def test_classify_returns_deterministic_results(self, mock_provider):
+    def test_classify_returns_deterministic_results(self, mock_provider: Any) -> None:
         """Test that same input always produces same output."""
         # Arrange
         text = "We need SSO integration"
@@ -222,7 +224,9 @@ class TestKeywordMatching:
             ("Increase our growth capacity", SignalCategory.EXPANSION_SIGNAL),
         ],
     )
-    def test_classify_matches_expected_category(self, mock_provider, text, expected_category):
+    def test_classify_matches_expected_category(
+        self, mock_provider: Any, text: Any, expected_category: Any
+    ) -> None:
         """Test that various inputs match expected categories."""
         # Act
         result = mock_provider.classify(text)
@@ -230,7 +234,7 @@ class TestKeywordMatching:
         # Assert
         assert result.category == expected_category
 
-    def test_classify_case_insensitive_matching(self, mock_provider):
+    def test_classify_case_insensitive_matching(self, mock_provider: Any) -> None:
         """Test that keyword matching is case-insensitive."""
         # Arrange
         text_lower = "we need sso integration"
@@ -247,7 +251,9 @@ class TestKeywordMatching:
         assert result_upper.category == SignalCategory.FEATURE_REQUEST
         assert result_mixed.category == SignalCategory.FEATURE_REQUEST
 
-    def test_classify_multiple_keyword_matches_increases_confidence(self, mock_provider):
+    def test_classify_multiple_keyword_matches_increases_confidence(
+        self, mock_provider: Any
+    ) -> None:
         """Test that multiple keyword matches increase confidence."""
         # Arrange
         text_one_keyword = "We need this"
@@ -269,7 +275,7 @@ class TestKeywordMatching:
 class TestConfidenceCalculation:
     """Test suite for confidence score calculation."""
 
-    def test_confidence_varies_by_text_hash(self, mock_provider):
+    def test_confidence_varies_by_text_hash(self, mock_provider: Any) -> None:
         """Test that confidence has deterministic variation based on text hash."""
         # Arrange
         text1 = "We need SSO"
@@ -285,7 +291,7 @@ class TestConfidenceCalculation:
         result1_repeat = mock_provider.classify(text1)
         assert result1.confidence == result1_repeat.confidence
 
-    def test_confidence_has_minimum_floor(self, mock_provider):
+    def test_confidence_has_minimum_floor(self, mock_provider: Any) -> None:
         """Test that confidence never goes below 0.5."""
         # Arrange
         text = "x"  # Minimal text, no keywords
@@ -296,7 +302,7 @@ class TestConfidenceCalculation:
         # Assert
         assert result.confidence >= 0.5
 
-    def test_confidence_has_maximum_ceiling(self, mock_provider):
+    def test_confidence_has_maximum_ceiling(self, mock_provider: Any) -> None:
         """Test that confidence never exceeds 1.0."""
         # Arrange
         # Text with many matching keywords
@@ -308,7 +314,7 @@ class TestConfidenceCalculation:
         # Assert
         assert result.confidence <= 1.0
 
-    def test_base_confidence_affects_final_score(self):
+    def test_base_confidence_affects_final_score(self) -> None:
         """Test that base_confidence parameter affects final confidence."""
         # Arrange
         text = "We need SSO"
@@ -331,7 +337,7 @@ class TestConfidenceCalculation:
 class TestProviderMetadata:
     """Test suite for provider metadata."""
 
-    def test_provider_metadata_includes_required_fields(self, mock_provider):
+    def test_provider_metadata_includes_required_fields(self, mock_provider: Any) -> None:
         """Test that provider metadata includes all required fields."""
         # Arrange & Act
         result = mock_provider.classify("Test text")
@@ -343,7 +349,7 @@ class TestProviderMetadata:
         assert "match_count" in result.provider_metadata
         assert "is_mock" in result.provider_metadata
 
-    def test_provider_metadata_has_correct_values(self, mock_provider):
+    def test_provider_metadata_has_correct_values(self, mock_provider: Any) -> None:
         """Test that provider metadata has correct values."""
         # Arrange & Act
         result = mock_provider.classify("We need SSO")
@@ -355,7 +361,7 @@ class TestProviderMetadata:
         assert isinstance(result.provider_metadata["matched_keywords"], list)
         assert isinstance(result.provider_metadata["match_count"], int)
 
-    def test_matched_keywords_contains_actual_matches(self, mock_provider):
+    def test_matched_keywords_contains_actual_matches(self, mock_provider: Any) -> None:
         """Test that matched_keywords contains the keywords that were found."""
         # Arrange
         text = "We need SSO integration"
@@ -368,7 +374,7 @@ class TestProviderMetadata:
         assert "need" in matched or "sso" in matched or "integration" in matched
         assert result.provider_metadata["match_count"] > 0
 
-    def test_match_count_equals_matched_keywords_length(self, mock_provider):
+    def test_match_count_equals_matched_keywords_length(self, mock_provider: Any) -> None:
         """Test that match_count matches the number of matched keywords."""
         # Arrange & Act
         result = mock_provider.classify("We need SSO support")
@@ -387,7 +393,7 @@ class TestProviderMetadata:
 class TestCostAndPerformance:
     """Test suite for cost and performance characteristics."""
 
-    def test_classify_always_returns_zero_cost(self, mock_provider):
+    def test_classify_always_returns_zero_cost(self, mock_provider: Any) -> None:
         """Test that mock provider is always free."""
         # Arrange
         texts = [
@@ -401,7 +407,7 @@ class TestCostAndPerformance:
             result = mock_provider.classify(text)
             assert result.cost == 0.0
 
-    def test_calculate_cost_always_returns_zero(self, mock_provider):
+    def test_calculate_cost_always_returns_zero(self, mock_provider: Any) -> None:
         """Test that _calculate_cost always returns 0."""
         # Arrange & Act
         cost = mock_provider._calculate_cost(
@@ -411,7 +417,7 @@ class TestCostAndPerformance:
         # Assert
         assert cost == 0.0
 
-    def test_tokens_used_approximates_word_count(self, mock_provider):
+    def test_tokens_used_approximates_word_count(self, mock_provider: Any) -> None:
         """Test that tokens_used is based on word count."""
         # Arrange
         text = "one two three four five"  # 5 words
@@ -422,7 +428,7 @@ class TestCostAndPerformance:
         # Assert
         assert result.tokens_used == 5
 
-    def test_classify_completes_quickly(self, mock_provider):
+    def test_classify_completes_quickly(self, mock_provider: Any) -> None:
         """Test that classification is fast (< 5ms)."""
         # Arrange
         import time
@@ -447,7 +453,7 @@ class TestCostAndPerformance:
 class TestEdgeCases:
     """Test suite for edge cases and error handling."""
 
-    def test_classify_with_empty_string_raises_value_error(self, mock_provider):
+    def test_classify_with_empty_string_raises_value_error(self, mock_provider: Any) -> None:
         """Test that empty string raises ValueError."""
         # Arrange
         text = ""
@@ -456,7 +462,7 @@ class TestEdgeCases:
         with pytest.raises(ValueError, match="Text cannot be empty"):
             mock_provider.classify(text)
 
-    def test_classify_with_whitespace_only_raises_value_error(self, mock_provider):
+    def test_classify_with_whitespace_only_raises_value_error(self, mock_provider: Any) -> None:
         """Test that whitespace-only text raises ValueError."""
         # Arrange
         text = "   \n\t   "
@@ -465,7 +471,7 @@ class TestEdgeCases:
         with pytest.raises(ValueError, match="Text cannot be empty"):
             mock_provider.classify(text)
 
-    def test_classify_with_special_characters(self, mock_provider):
+    def test_classify_with_special_characters(self, mock_provider: Any) -> None:
         """Test that special characters don't break classification."""
         # Arrange
         text = "We need @#$% SSO!!! 🚀"
@@ -478,7 +484,7 @@ class TestEdgeCases:
         assert isinstance(result.confidence, float)
         assert 0.0 <= result.confidence <= 1.0
 
-    def test_classify_with_very_long_text(self, mock_provider):
+    def test_classify_with_very_long_text(self, mock_provider: Any) -> None:
         """Test that very long text is handled gracefully."""
         # Arrange
         text = "We need SSO integration. " * 1000
@@ -490,7 +496,7 @@ class TestEdgeCases:
         assert result.category == SignalCategory.FEATURE_REQUEST
         assert result.cost == 0.0
 
-    def test_classify_with_unicode_characters(self, mock_provider):
+    def test_classify_with_unicode_characters(self, mock_provider: Any) -> None:
         """Test that unicode characters are handled correctly."""
         # Arrange
         text = "我们需要 SSO intégration für Unternehmenskunden"
@@ -511,11 +517,11 @@ class TestEdgeCases:
 class TestClassificationRules:
     """Test suite for the CLASSIFICATION_RULES constant."""
 
-    def test_classification_rules_is_dict(self):
+    def test_classification_rules_is_dict(self) -> None:
         """Test that CLASSIFICATION_RULES is a dictionary."""
         assert isinstance(CLASSIFICATION_RULES, dict)
 
-    def test_classification_rules_has_all_categories(self):
+    def test_classification_rules_has_all_categories(self) -> None:
         """Test that CLASSIFICATION_RULES covers all main categories."""
         # Arrange
         expected_categories = {"feature_request", "bug_report", "churn_risk", "expansion_signal"}
@@ -523,7 +529,7 @@ class TestClassificationRules:
         # Act & Assert
         assert expected_categories.issubset(set(CLASSIFICATION_RULES.keys()))
 
-    def test_classification_rules_keywords_are_lowercase(self):
+    def test_classification_rules_keywords_are_lowercase(self) -> None:
         """Test that all keywords in rules are lowercase."""
         # Act & Assert
         for category, keywords in CLASSIFICATION_RULES.items():
@@ -532,7 +538,7 @@ class TestClassificationRules:
                     keyword == keyword.lower()
                 ), f"Keyword '{keyword}' in {category} is not lowercase"
 
-    def test_classification_rules_keywords_are_strings(self):
+    def test_classification_rules_keywords_are_strings(self) -> None:
         """Test that all keywords are strings."""
         # Act & Assert
         for category, keywords in CLASSIFICATION_RULES.items():
@@ -549,7 +555,7 @@ class TestClassificationRules:
 class TestGetDefaultPrompt:
     """Test suite for _get_default_prompt method."""
 
-    def test_get_default_prompt_returns_string(self, mock_provider):
+    def test_get_default_prompt_returns_string(self, mock_provider: Any) -> None:
         """Test that default prompt is a string."""
         # Act
         prompt = mock_provider._get_default_prompt()
@@ -558,7 +564,7 @@ class TestGetDefaultPrompt:
         assert isinstance(prompt, str)
         assert len(prompt) > 0
 
-    def test_get_default_prompt_indicates_mock_usage(self, mock_provider):
+    def test_get_default_prompt_indicates_mock_usage(self, mock_provider: Any) -> None:
         """Test that default prompt mentions mock provider."""
         # Act
         prompt = mock_provider._get_default_prompt()

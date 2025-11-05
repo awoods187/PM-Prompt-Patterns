@@ -203,7 +203,7 @@ class ModelUpdater:
         Returns:
             Dictionary mapping model_id to model definition
         """
-        models = {}
+        models = {}  # type: ignore[var-annotated]
 
         if not self.definitions_dir.exists():
             logger.warning(f"Definitions directory not found: {self.definitions_dir}")

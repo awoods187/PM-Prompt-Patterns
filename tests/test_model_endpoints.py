@@ -46,12 +46,12 @@ class TestAnthropicEndpoints:
     """Test Anthropic Claude model endpoints."""
 
     @pytest.fixture(autouse=True)
-    def check_api_key(self):
+    def check_api_key(self):  # type: ignore[no-untyped-def]
         """Skip Anthropic tests if API key not present."""
         if not os.getenv("ANTHROPIC_API_KEY"):
             pytest.skip("ANTHROPIC_API_KEY not set")
 
-    def test_claude_sonnet_endpoint(self):
+    def test_claude_sonnet_endpoint(self) -> None:
         """Verify Claude Sonnet 4.5 endpoint is accessible."""
         try:
             import anthropic
@@ -59,7 +59,7 @@ class TestAnthropicEndpoints:
             pytest.skip("anthropic package not installed")
 
         client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        model = ModelRegistry.CLAUDE_SONNET_4_5
+        model = ModelRegistry.CLAUDE_SONNET_4_5  # type: ignore[attr-defined]
 
         response = client.messages.create(
             model=model.api_identifier,
@@ -72,7 +72,7 @@ class TestAnthropicEndpoints:
             response.model == model.api_identifier
         ), f"Expected {model.api_identifier}, got {response.model}"
 
-    def test_claude_haiku_endpoint(self):
+    def test_claude_haiku_endpoint(self) -> None:
         """Verify Claude Haiku 4.5 endpoint is accessible."""
         try:
             import anthropic
@@ -80,7 +80,7 @@ class TestAnthropicEndpoints:
             pytest.skip("anthropic package not installed")
 
         client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        model = ModelRegistry.CLAUDE_HAIKU_4_5
+        model = ModelRegistry.CLAUDE_HAIKU_4_5  # type: ignore[attr-defined]
 
         response = client.messages.create(
             model=model.api_identifier,
@@ -91,7 +91,7 @@ class TestAnthropicEndpoints:
         assert response.content, "Empty response from Claude Haiku"
         assert response.model == model.api_identifier
 
-    def test_claude_opus_endpoint(self):
+    def test_claude_opus_endpoint(self) -> None:
         """Verify Claude Opus 4.1 endpoint is accessible."""
         try:
             import anthropic
@@ -99,7 +99,7 @@ class TestAnthropicEndpoints:
             pytest.skip("anthropic package not installed")
 
         client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        model = ModelRegistry.CLAUDE_OPUS_4_1
+        model = ModelRegistry.CLAUDE_OPUS_4_1  # type: ignore[attr-defined]
 
         response = client.messages.create(
             model=model.api_identifier,
@@ -110,7 +110,7 @@ class TestAnthropicEndpoints:
         assert response.content, "Empty response from Claude Opus"
         assert response.model == model.api_identifier
 
-    def test_prompt_caching_available(self):
+    def test_prompt_caching_available(self) -> None:
         """Verify prompt caching feature is available for Claude."""
         try:
             import anthropic
@@ -118,7 +118,7 @@ class TestAnthropicEndpoints:
             pytest.skip("anthropic package not installed")
 
         client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        model = ModelRegistry.CLAUDE_SONNET_4_5
+        model = ModelRegistry.CLAUDE_SONNET_4_5  # type: ignore[attr-defined]
 
         # Test with cache_control
         response = client.messages.create(
@@ -141,12 +141,12 @@ class TestOpenAIEndpoints:
     """Test OpenAI GPT model endpoints."""
 
     @pytest.fixture(autouse=True)
-    def check_api_key(self):
+    def check_api_key(self):  # type: ignore[no-untyped-def]
         """Skip OpenAI tests if API key not present."""
         if not os.getenv("OPENAI_API_KEY"):
             pytest.skip("OPENAI_API_KEY not set")
 
-    def test_gpt_4o_endpoint(self):
+    def test_gpt_4o_endpoint(self) -> None:
         """Verify GPT-4o endpoint is accessible."""
         try:
             import openai
@@ -154,7 +154,7 @@ class TestOpenAIEndpoints:
             pytest.skip("openai package not installed")
 
         client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        model = ModelRegistry.GPT_4O
+        model = ModelRegistry.GPT_4O  # type: ignore[attr-defined]
 
         response = client.chat.completions.create(
             model=model.api_identifier,
@@ -165,7 +165,7 @@ class TestOpenAIEndpoints:
         assert response.choices, "Empty response from GPT-4o"
         assert response.choices[0].message.content, "No content in GPT-4o response"
 
-    def test_gpt_4o_mini_endpoint(self):
+    def test_gpt_4o_mini_endpoint(self) -> None:
         """Verify GPT-4o mini endpoint is accessible."""
         try:
             import openai
@@ -173,7 +173,7 @@ class TestOpenAIEndpoints:
             pytest.skip("openai package not installed")
 
         client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        model = ModelRegistry.GPT_4O_MINI
+        model = ModelRegistry.GPT_4O_MINI  # type: ignore[attr-defined]
 
         response = client.chat.completions.create(
             model=model.api_identifier,
@@ -184,7 +184,7 @@ class TestOpenAIEndpoints:
         assert response.choices, "Empty response from GPT-4o mini"
         assert response.choices[0].message.content
 
-    def test_gpt_4o_vision(self):
+    def test_gpt_4o_vision(self) -> None:
         """Verify GPT-4o vision capability is working."""
         try:
             import openai
@@ -192,7 +192,7 @@ class TestOpenAIEndpoints:
             pytest.skip("openai package not installed")
 
         client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        model = ModelRegistry.GPT_4O
+        model = ModelRegistry.GPT_4O  # type: ignore[attr-defined]
 
         # Test with a simple data URL (1x1 red pixel)
         data_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg=="
@@ -219,12 +219,12 @@ class TestGoogleGeminiEndpoints:
     """Test Google Gemini model endpoints."""
 
     @pytest.fixture(autouse=True)
-    def check_api_key(self):
+    def check_api_key(self):  # type: ignore[no-untyped-def]
         """Skip Gemini tests if API key not present."""
         if not os.getenv("GOOGLE_API_KEY"):
             pytest.skip("GOOGLE_API_KEY not set")
 
-    def test_gemini_2_5_pro_endpoint(self):
+    def test_gemini_2_5_pro_endpoint(self) -> None:
         """Verify Gemini 2.5 Pro endpoint is accessible."""
         try:
             import google.generativeai as genai
@@ -232,14 +232,14 @@ class TestGoogleGeminiEndpoints:
             pytest.skip("google-generativeai package not installed")
 
         genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-        model_spec = ModelRegistry.GEMINI_2_5_PRO
+        model_spec = ModelRegistry.GEMINI_2_5_PRO  # type: ignore[attr-defined]
         model = genai.GenerativeModel(model_spec.api_identifier)
 
         response = model.generate_content("test")
 
         assert response.text, "Empty response from Gemini 2.5 Pro"
 
-    def test_gemini_2_5_flash_endpoint(self):
+    def test_gemini_2_5_flash_endpoint(self) -> None:
         """Verify Gemini 2.5 Flash endpoint is accessible."""
         try:
             import google.generativeai as genai
@@ -247,14 +247,14 @@ class TestGoogleGeminiEndpoints:
             pytest.skip("google-generativeai package not installed")
 
         genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-        model_spec = ModelRegistry.GEMINI_2_5_FLASH
+        model_spec = ModelRegistry.GEMINI_2_5_FLASH  # type: ignore[attr-defined]
         model = genai.GenerativeModel(model_spec.api_identifier)
 
         response = model.generate_content("test")
 
         assert response.text, "Empty response from Gemini 2.5 Flash"
 
-    def test_gemini_2_5_flash_lite_endpoint(self):
+    def test_gemini_2_5_flash_lite_endpoint(self) -> None:
         """Verify Gemini 2.5 Flash-Lite endpoint is accessible."""
         try:
             import google.generativeai as genai
@@ -262,14 +262,14 @@ class TestGoogleGeminiEndpoints:
             pytest.skip("google-generativeai package not installed")
 
         genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-        model_spec = ModelRegistry.GEMINI_2_5_FLASH_LITE
+        model_spec = ModelRegistry.GEMINI_2_5_FLASH_LITE  # type: ignore[attr-defined]
         model = genai.GenerativeModel(model_spec.api_identifier)
 
         response = model.generate_content("test")
 
         assert response.text, "Empty response from Gemini 2.5 Flash-Lite"
 
-    def test_gemini_context_window(self):
+    def test_gemini_context_window(self) -> None:
         """Verify Gemini can handle large context (1M tokens claim)."""
         try:
             import google.generativeai as genai
@@ -277,7 +277,7 @@ class TestGoogleGeminiEndpoints:
             pytest.skip("google-generativeai package not installed")
 
         genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-        model_spec = ModelRegistry.GEMINI_2_5_FLASH
+        model_spec = ModelRegistry.GEMINI_2_5_FLASH  # type: ignore[attr-defined]
         model = genai.GenerativeModel(model_spec.api_identifier)
 
         # Test with ~10K tokens (full 1M test would be expensive)
@@ -290,14 +290,14 @@ class TestGoogleGeminiEndpoints:
 class TestContextWindowLimits:
     """Test that declared context windows are accurate."""
 
-    def test_context_windows_declared(self):
+    def test_context_windows_declared(self) -> None:
         """Verify all models have context windows declared."""
-        for key, spec in ModelRegistry.get_all_current_models().items():
+        for key, spec in ModelRegistry.get_all_current_models().items():  # type: ignore[attr-defined]
             assert spec.context_window_input > 0, f"{key} has no input context window declared"
 
-    def test_context_window_reasonable(self):
+    def test_context_window_reasonable(self) -> None:
         """Verify context windows are within reasonable ranges."""
-        for key, spec in ModelRegistry.get_all_current_models().items():
+        for key, spec in ModelRegistry.get_all_current_models().items():  # type: ignore[attr-defined]
             assert (
                 spec.context_window_input >= 8_000
             ), f"{key} context window too small: {spec.context_window_input}"
@@ -309,15 +309,15 @@ class TestContextWindowLimits:
 class TestPricingAccuracy:
     """Test that pricing information is present and reasonable."""
 
-    def test_pricing_declared(self):
+    def test_pricing_declared(self) -> None:
         """Verify all models have pricing declared."""
-        for key, spec in ModelRegistry.get_all_current_models().items():
+        for key, spec in ModelRegistry.get_all_current_models().items():  # type: ignore[attr-defined]
             assert spec.input_price_per_1m > 0, f"{key} has no input price declared"
             assert spec.output_price_per_1m > 0, f"{key} has no output price declared"
 
-    def test_pricing_reasonable(self):
+    def test_pricing_reasonable(self) -> None:
         """Verify pricing is within reasonable ranges."""
-        for key, spec in ModelRegistry.get_all_current_models().items():
+        for key, spec in ModelRegistry.get_all_current_models().items():  # type: ignore[attr-defined]
             # Input price should be $0.01 to $20 per 1M tokens
             assert (
                 0.01 <= spec.input_price_per_1m <= 20
@@ -328,9 +328,9 @@ class TestPricingAccuracy:
                 0.01 <= spec.output_price_per_1m <= 100
             ), f"{key} output price unreasonable: ${spec.output_price_per_1m}"
 
-    def test_output_more_expensive_than_input(self):
+    def test_output_more_expensive_than_input(self) -> None:
         """Verify output tokens cost >= input tokens (industry standard)."""
-        for key, spec in ModelRegistry.get_all_current_models().items():
+        for key, spec in ModelRegistry.get_all_current_models().items():  # type: ignore[attr-defined]
             assert (
                 spec.output_price_per_1m >= spec.input_price_per_1m
             ), f"{key} output cheaper than input (unusual)"
@@ -339,22 +339,22 @@ class TestPricingAccuracy:
 class TestModelMetadata:
     """Test model metadata completeness."""
 
-    def test_all_models_have_docs_url(self):
+    def test_all_models_have_docs_url(self) -> None:
         """Verify all models link to official documentation."""
-        for key, spec in ModelRegistry.get_all_current_models().items():
+        for key, spec in ModelRegistry.get_all_current_models().items():  # type: ignore[attr-defined]
             assert spec.docs_url, f"{key} has no docs_url"
             assert spec.docs_url.startswith(
                 "http"
             ), f"{key} docs_url not a valid URL: {spec.docs_url}"
 
-    def test_all_models_recently_verified(self):
+    def test_all_models_recently_verified(self) -> None:
         """Verify all models were verified recently (within 90 days)."""
         from datetime import date, timedelta
 
         stale_threshold = date.today() - timedelta(days=90)
 
         stale_models = []
-        for key, spec in ModelRegistry.get_all_current_models().items():
+        for key, spec in ModelRegistry.get_all_current_models().items():  # type: ignore[attr-defined]
             if spec.last_verified < stale_threshold:
                 days_old = (date.today() - spec.last_verified).days
                 stale_models.append((key, days_old))
@@ -368,9 +368,9 @@ class TestModelMetadata:
                 f"Update: See UPDATING_MODELS.md for verification procedure"
             )
 
-    def test_all_models_have_knowledge_cutoff(self):
+    def test_all_models_have_knowledge_cutoff(self) -> None:
         """Verify all models declare knowledge cutoff."""
-        for key, spec in ModelRegistry.get_all_current_models().items():
+        for key, spec in ModelRegistry.get_all_current_models().items():  # type: ignore[attr-defined]
             assert spec.knowledge_cutoff, f"{key} has no knowledge_cutoff declared"
 
 

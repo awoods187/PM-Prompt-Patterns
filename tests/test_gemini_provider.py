@@ -24,7 +24,7 @@ from pm_prompt_toolkit.providers.gemini import (
 class TestGeminiProviderInitialization:
     """Test GeminiProvider initialization and validation."""
 
-    def test_init_missing_genai_package(self):
+    def test_init_missing_genai_package(self) -> None:
         """Test initialization raises ImportError when google-generativeai is not installed."""
         with patch("pm_prompt_toolkit.providers.gemini.genai", None):
             with pytest.raises(ImportError) as exc_info:
@@ -35,7 +35,7 @@ class TestGeminiProviderInitialization:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_init_invalid_model(self, mock_settings, mock_genai):
+    def test_init_invalid_model(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test initialization raises ValueError for unsupported model."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
 
@@ -49,7 +49,7 @@ class TestGeminiProviderInitialization:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_init_successful_flash(self, mock_settings, mock_genai):
+    def test_init_successful_flash(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test successful initialization with Gemini 2.5 Flash model."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_model = MagicMock()
@@ -65,7 +65,7 @@ class TestGeminiProviderInitialization:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_init_successful_pro(self, mock_settings, mock_genai):
+    def test_init_successful_pro(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test successful initialization with Gemini 2.5 Pro model."""
         mock_settings.return_value.get_api_key.return_value = "ai-test"
         mock_model = MagicMock()
@@ -79,7 +79,7 @@ class TestGeminiProviderInitialization:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_init_configures_json_mode(self, mock_settings, mock_genai):
+    def test_init_configures_json_mode(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test initialization configures JSON response mode."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_model = MagicMock()
@@ -101,7 +101,7 @@ class TestBuildPrompt:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_build_classification_prompt(self, mock_settings, mock_genai):
+    def test_build_classification_prompt(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test classification prompt structure."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_genai.GenerativeModel.return_value = MagicMock()
@@ -125,7 +125,7 @@ class TestResponseParsing:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_parse_response_valid_json(self, mock_settings, mock_genai):
+    def test_parse_response_valid_json(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test parsing valid JSON response."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_genai.GenerativeModel.return_value = MagicMock()
@@ -141,7 +141,7 @@ class TestResponseParsing:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_parse_response_invalid_json(self, mock_settings, mock_genai):
+    def test_parse_response_invalid_json(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test parsing invalid JSON raises ValueError."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_genai.GenerativeModel.return_value = MagicMock()
@@ -155,7 +155,7 @@ class TestResponseParsing:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_parse_response_invalid_category(self, mock_settings, mock_genai):
+    def test_parse_response_invalid_category(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test parsing invalid category raises ValueError."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_genai.GenerativeModel.return_value = MagicMock()
@@ -168,7 +168,7 @@ class TestResponseParsing:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_parse_response_truncates_long_responses_in_logs(self, mock_settings, mock_genai):
+    def test_parse_response_truncates_long_responses_in_logs(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test long responses are truncated in error logs."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_genai.GenerativeModel.return_value = MagicMock()
@@ -185,7 +185,7 @@ class TestCostCalculation:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_calculate_cost_flash_no_cache(self, mock_settings, mock_genai):
+    def test_calculate_cost_flash_no_cache(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test cost calculation for Flash without caching."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_genai.GenerativeModel.return_value = MagicMock()
@@ -199,7 +199,7 @@ class TestCostCalculation:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_calculate_cost_pro_no_cache(self, mock_settings, mock_genai):
+    def test_calculate_cost_pro_no_cache(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test cost calculation for Pro without caching."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_genai.GenerativeModel.return_value = MagicMock()
@@ -213,7 +213,7 @@ class TestCostCalculation:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_calculate_cost_with_caching(self, mock_settings, mock_genai):
+    def test_calculate_cost_with_caching(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test cost calculation with cached tokens."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_genai.GenerativeModel.return_value = MagicMock()
@@ -235,7 +235,7 @@ class TestCostCalculation:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_calculate_cost_all_cached(self, mock_settings, mock_genai):
+    def test_calculate_cost_all_cached(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test cost calculation when all input tokens are cached."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_genai.GenerativeModel.return_value = MagicMock()
@@ -256,7 +256,7 @@ class TestClassifyImplementation:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_classify_impl_success(self, mock_settings, mock_genai):
+    def test_classify_impl_success(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test successful classification."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
 
@@ -291,7 +291,7 @@ class TestClassifyImplementation:
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
     @patch("pm_prompt_toolkit.providers.gemini.get_settings")
-    def test_classify_impl_with_caching(self, mock_settings, mock_genai):
+    def test_classify_impl_with_caching(self, mock_settings, mock_genai) -> None:  # type: ignore[no-untyped-def]
         """Test classification with cached tokens."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
 
@@ -320,13 +320,13 @@ class TestClassifyImplementation:
 class TestModelMapping:
     """Test model ID mapping and pricing consistency."""
 
-    def test_model_ids_match_pricing(self):
+    def test_model_ids_match_pricing(self) -> None:
         """Test all model IDs have corresponding pricing."""
         for model_name, model_id in GEMINI_MODEL_IDS.items():
             assert model_id in GEMINI_PRICING, f"Missing pricing for {model_id}"
             assert model_id in GEMINI_CACHE_PRICING, f"Missing cache pricing for {model_id}"
 
-    def test_pricing_covers_all_models(self):
+    def test_pricing_covers_all_models(self) -> None:
         """Test pricing tables cover all supported models."""
         model_ids = set(GEMINI_MODEL_IDS.values())
         pricing_ids = set(GEMINI_PRICING.keys())
@@ -335,7 +335,7 @@ class TestModelMapping:
         assert model_ids == pricing_ids
         assert model_ids == cache_pricing_ids
 
-    def test_cache_pricing_structure(self):
+    def test_cache_pricing_structure(self) -> None:
         """Test cache pricing has write and read prices."""
         for model_id, (write_price, read_price) in GEMINI_CACHE_PRICING.items():
             assert write_price > 0, f"Invalid write price for {model_id}"

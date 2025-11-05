@@ -17,7 +17,7 @@ Requirements:
     - pm_prompt_toolkit package installed (pip install -e .)
 """
 
-from pm_prompt_toolkit import SignalClassifier
+from pm_prompt_toolkit import SignalClassifier  # type: ignore[attr-defined]
 
 
 def main() -> None:

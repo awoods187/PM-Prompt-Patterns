@@ -19,7 +19,7 @@ from pm_prompt_toolkit.providers.openai import OPENAI_MODEL_IDS, OPENAI_PRICING,
 class TestOpenAIProviderInitialization:
     """Test OpenAIProvider initialization and validation."""
 
-    def test_init_missing_openai_package(self):
+    def test_init_missing_openai_package(self) -> None:
         """Test initialization raises ImportError when openai is not installed."""
         with patch("pm_prompt_toolkit.providers.openai.OpenAI", None):
             with pytest.raises(ImportError) as exc_info:
@@ -30,7 +30,7 @@ class TestOpenAIProviderInitialization:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_init_invalid_model(self, mock_settings, mock_openai_class):
+    def test_init_invalid_model(self, mock_settings, mock_openai_class) -> None:  # type: ignore[no-untyped-def]
         """Test initialization raises ValueError for unsupported model."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
 
@@ -44,7 +44,7 @@ class TestOpenAIProviderInitialization:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_init_successful_gpt4o(self, mock_settings, mock_openai_class):
+    def test_init_successful_gpt4o(self, mock_settings, mock_openai_class) -> None:  # type: ignore[no-untyped-def]
         """Test successful initialization with GPT-4o model."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_client = MagicMock()
@@ -60,7 +60,7 @@ class TestOpenAIProviderInitialization:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_init_successful_gpt4o_mini(self, mock_settings, mock_openai_class):
+    def test_init_successful_gpt4o_mini(self, mock_settings, mock_openai_class) -> None:  # type: ignore[no-untyped-def]
         """Test successful initialization with GPT-4o-mini model."""
         mock_settings.return_value.get_api_key.return_value = "sk-test"
         mock_client = MagicMock()
@@ -74,7 +74,7 @@ class TestOpenAIProviderInitialization:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_init_with_organization(self, mock_settings, mock_openai_class):
+    def test_init_with_organization(self, mock_settings, mock_openai_class) -> None:  # type: ignore[no-untyped-def]
         """Test initialization with optional organization parameter."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_client = MagicMock()
@@ -90,7 +90,7 @@ class TestBuildPrompts:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_build_system_prompt(self, mock_settings, mock_openai_class):
+    def test_build_system_prompt(self, mock_settings, mock_openai_class) -> None:  # type: ignore[no-untyped-def]
         """Test system prompt structure."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_openai_class.return_value = MagicMock()
@@ -109,7 +109,7 @@ class TestBuildPrompts:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_build_user_message(self, mock_settings, mock_openai_class):
+    def test_build_user_message(self, mock_settings, mock_openai_class) -> None:  # type: ignore[no-untyped-def]
         """Test user message formatting."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_openai_class.return_value = MagicMock()
@@ -127,7 +127,7 @@ class TestResponseParsing:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_parse_response_valid_json(self, mock_settings, mock_openai_class):
+    def test_parse_response_valid_json(self, mock_settings, mock_openai_class) -> None:  # type: ignore[no-untyped-def]
         """Test parsing valid JSON response."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_openai_class.return_value = MagicMock()
@@ -143,7 +143,7 @@ class TestResponseParsing:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_parse_response_invalid_json(self, mock_settings, mock_openai_class):
+    def test_parse_response_invalid_json(self, mock_settings, mock_openai_class) -> None:  # type: ignore[no-untyped-def]
         """Test parsing invalid JSON raises ValueError."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_openai_class.return_value = MagicMock()
@@ -157,7 +157,7 @@ class TestResponseParsing:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_parse_response_invalid_category(self, mock_settings, mock_openai_class):
+    def test_parse_response_invalid_category(self, mock_settings, mock_openai_class) -> None:  # type: ignore[no-untyped-def]
         """Test parsing invalid category raises ValueError."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_openai_class.return_value = MagicMock()
@@ -170,9 +170,9 @@ class TestResponseParsing:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_parse_response_truncates_long_responses_in_logs(
+    def test_parse_response_truncates_long_responses_in_logs(  # type: ignore[no-untyped-def]
         self, mock_settings, mock_openai_class
-    ):
+    ) -> None:
         """Test long responses are truncated in error logs."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_openai_class.return_value = MagicMock()
@@ -189,7 +189,7 @@ class TestCostCalculation:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_calculate_cost_gpt4o(self, mock_settings, mock_openai_class):
+    def test_calculate_cost_gpt4o(self, mock_settings, mock_openai_class) -> None:  # type: ignore[no-untyped-def]
         """Test cost calculation for GPT-4o."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_openai_class.return_value = MagicMock()
@@ -203,7 +203,7 @@ class TestCostCalculation:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_calculate_cost_gpt4o_mini(self, mock_settings, mock_openai_class):
+    def test_calculate_cost_gpt4o_mini(self, mock_settings, mock_openai_class) -> None:  # type: ignore[no-untyped-def]
         """Test cost calculation for GPT-4o-mini."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_openai_class.return_value = MagicMock()
@@ -217,7 +217,7 @@ class TestCostCalculation:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_calculate_cost_cached_tokens_ignored(self, mock_settings, mock_openai_class):
+    def test_calculate_cost_cached_tokens_ignored(self, mock_settings, mock_openai_class) -> None:  # type: ignore[no-untyped-def]
         """Test cached tokens parameter is ignored (OpenAI doesn't have caching)."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_openai_class.return_value = MagicMock()
@@ -237,7 +237,7 @@ class TestClassifyImplementation:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_classify_impl_success(self, mock_settings, mock_openai_class):
+    def test_classify_impl_success(self, mock_settings, mock_openai_class) -> None:  # type: ignore[no-untyped-def]
         """Test successful classification."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
 
@@ -272,7 +272,7 @@ class TestClassifyImplementation:
 
     @patch("pm_prompt_toolkit.providers.openai.OpenAI")
     @patch("pm_prompt_toolkit.providers.openai.get_settings")
-    def test_classify_impl_uses_json_mode(self, mock_settings, mock_openai_class):
+    def test_classify_impl_uses_json_mode(self, mock_settings, mock_openai_class) -> None:  # type: ignore[no-untyped-def]
         """Test classification uses JSON mode."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
 
@@ -305,12 +305,12 @@ class TestClassifyImplementation:
 class TestModelMapping:
     """Test model ID mapping."""
 
-    def test_model_ids_match_pricing(self):
+    def test_model_ids_match_pricing(self) -> None:
         """Test all model IDs have corresponding pricing."""
         for model_name, model_id in OPENAI_MODEL_IDS.items():
             assert model_id in OPENAI_PRICING, f"Missing pricing for {model_id}"
 
-    def test_pricing_covers_all_models(self):
+    def test_pricing_covers_all_models(self) -> None:
         """Test pricing table covers all supported models."""
         model_ids = set(OPENAI_MODEL_IDS.values())
         pricing_ids = set(OPENAI_PRICING.keys())

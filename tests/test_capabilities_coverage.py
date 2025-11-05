@@ -8,6 +8,7 @@ Focuses on edge cases, error handling, and untested code paths.
 """
 
 from pathlib import Path
+from typing import Any
 from unittest.mock import Mock, mock_open, patch
 
 import pytest
@@ -26,7 +27,7 @@ from ai_models.capabilities import (
 class TestModelCapabilityEnum:
     """Test ModelCapability enum functionality."""
 
-    def test_from_string_with_invalid_capability(self):
+    def test_from_string_with_invalid_capability(self) -> None:
         """Test from_string raises ValueError with helpful message for invalid input."""
         with pytest.raises(ValueError) as exc_info:
             ModelCapability.from_string("invalid_capability")
@@ -38,20 +39,20 @@ class TestModelCapabilityEnum:
         assert "vision" in error_msg
         assert "function_calling" in error_msg
 
-    def test_from_string_with_valid_capabilities(self):
+    def test_from_string_with_valid_capabilities(self) -> None:
         """Test from_string correctly converts valid capability strings."""
         assert ModelCapability.from_string("vision") == ModelCapability.VISION
         assert ModelCapability.from_string("function_calling") == ModelCapability.FUNCTION_CALLING
         assert ModelCapability.from_string("prompt_caching") == ModelCapability.PROMPT_CACHING
         assert ModelCapability.from_string("streaming") == ModelCapability.STREAMING
 
-    def test_str_representation(self):
+    def test_str_representation(self) -> None:
         """Test __str__ returns the value."""
         assert str(ModelCapability.VISION) == "vision"
         assert str(ModelCapability.FUNCTION_CALLING) == "function_calling"
         assert str(ModelCapability.LARGE_CONTEXT) == "large_context"
 
-    def test_all_capabilities_have_string_values(self):
+    def test_all_capabilities_have_string_values(self) -> None:
         """Test that all capabilities can be converted to/from strings."""
         for cap in ModelCapability:
             # Should be able to convert to string and back
@@ -64,7 +65,7 @@ class TestCapabilityValidatorErrorHandling:
     """Test error handling in CapabilityValidator."""
 
     @patch("pathlib.Path.exists")
-    def test_missing_definitions_directory(self, mock_exists):
+    def test_missing_definitions_directory(self, mock_exists: Any) -> None:
         """Test graceful handling when definitions directory doesn't exist."""
         mock_exists.return_value = False
 
@@ -79,12 +80,14 @@ class TestCapabilityValidatorErrorHandling:
     @patch("pathlib.Path.exists")
     @patch("pathlib.Path.rglob")
     @patch("builtins.open", new_callable=mock_open)
-    def test_invalid_yaml_data_skipped(self, mock_file, mock_rglob, mock_exists):
+    def test_invalid_yaml_data_skipped(
+        self, mock_file: Any, mock_rglob: Any, mock_exists: Any
+    ) -> None:
         """Test that YAML files without model_id are skipped."""
         mock_exists.return_value = True
 
         mock_yaml_path = Mock(spec=Path)
-        mock_yaml_path.__str__ = Mock(return_value="test.yaml")
+        mock_yaml_path.__str__ = Mock(return_value="test.yaml")  # type: ignore[method-assign]
         mock_rglob.return_value = [mock_yaml_path]
 
         # Mock YAML content without model_id
@@ -99,14 +102,14 @@ class TestCapabilityValidatorErrorHandling:
     @patch("pathlib.Path.rglob")
     @patch("builtins.open", new_callable=mock_open)
     @patch("builtins.print")
-    def test_invalid_capability_in_yaml_generates_warning(
+    def test_invalid_capability_in_yaml_generates_warning(  # type: ignore[no-untyped-def]
         self, mock_print, mock_file, mock_rglob, mock_exists
-    ):
+    ) -> None:
         """Test that invalid capabilities in YAML generate warnings."""
         mock_exists.return_value = True
 
         mock_yaml_path = Mock(spec=Path)
-        mock_yaml_path.__str__ = Mock(return_value="test.yaml")
+        mock_yaml_path.__str__ = Mock(return_value="test.yaml")  # type: ignore[method-assign]
         mock_rglob.return_value = [mock_yaml_path]
 
         # YAML with invalid capability
@@ -136,12 +139,14 @@ capabilities:
     @patch("pathlib.Path.rglob")
     @patch("builtins.open", new_callable=mock_open)
     @patch("builtins.print")
-    def test_yaml_load_exception_handling(self, mock_print, mock_file, mock_rglob, mock_exists):
+    def test_yaml_load_exception_handling(
+        self, mock_print: Any, mock_file: Any, mock_rglob: Any, mock_exists: Any
+    ) -> None:
         """Test exception handling when YAML loading fails."""
         mock_exists.return_value = True
 
         mock_yaml_path = Mock(spec=Path)
-        mock_yaml_path.__str__ = Mock(return_value="bad.yaml")
+        mock_yaml_path.__str__ = Mock(return_value="bad.yaml")  # type: ignore[method-assign]
         mock_rglob.return_value = [mock_yaml_path]
 
         # Simulate YAML parsing error
@@ -158,7 +163,7 @@ capabilities:
 class TestHasAllCapabilities:
     """Test has_all_capabilities method."""
 
-    def test_has_all_capabilities_returns_true_when_all_present(self):
+    def test_has_all_capabilities_returns_true_when_all_present(self) -> None:
         """Test returns True when model has all required capabilities."""
         # Clear cache from mock tests
         CapabilityValidator.clear_cache()
@@ -169,7 +174,7 @@ class TestHasAllCapabilities:
         )
         assert result is True
 
-    def test_has_all_capabilities_returns_false_when_some_missing(self):
+    def test_has_all_capabilities_returns_false_when_some_missing(self) -> None:
         """Test returns False when model missing some capabilities."""
         # Gemini 2.5 Flash-Lite has limited capabilities
         result = CapabilityValidator.has_all_capabilities(
@@ -182,12 +187,12 @@ class TestHasAllCapabilities:
         )
         assert result is False
 
-    def test_has_all_capabilities_with_empty_list(self):
+    def test_has_all_capabilities_with_empty_list(self) -> None:
         """Test returns True when no capabilities required."""
         result = CapabilityValidator.has_all_capabilities("claude-haiku-4-5", [])
         assert result is True
 
-    def test_has_all_capabilities_with_nonexistent_model(self):
+    def test_has_all_capabilities_with_nonexistent_model(self) -> None:
         """Test returns False for nonexistent model."""
         result = CapabilityValidator.has_all_capabilities(
             "nonexistent-model", [ModelCapability.VISION]
@@ -198,7 +203,7 @@ class TestHasAllCapabilities:
 class TestHasAnyCapability:
     """Test has_any_capability method."""
 
-    def test_has_any_capability_returns_true_when_at_least_one_present(self):
+    def test_has_any_capability_returns_true_when_at_least_one_present(self) -> None:
         """Test returns True when model has at least one capability."""
         # Clear cache from mock tests
         CapabilityValidator.clear_cache()
@@ -214,7 +219,7 @@ class TestHasAnyCapability:
         )
         assert result is True  # Has VISION
 
-    def test_has_any_capability_returns_false_when_none_present(self):
+    def test_has_any_capability_returns_false_when_none_present(self) -> None:
         """Test returns False when model has none of the capabilities."""
         # Flash-Lite doesn't have function_calling or prompt_caching
         result = CapabilityValidator.has_any_capability(
@@ -223,12 +228,12 @@ class TestHasAnyCapability:
         )
         assert result is False
 
-    def test_has_any_capability_with_empty_list(self):
+    def test_has_any_capability_with_empty_list(self) -> None:
         """Test returns False when no capabilities to check."""
         result = CapabilityValidator.has_any_capability("claude-sonnet-4-5", [])
         assert result is False
 
-    def test_has_any_capability_with_nonexistent_model(self):
+    def test_has_any_capability_with_nonexistent_model(self) -> None:
         """Test returns False for nonexistent model."""
         result = CapabilityValidator.has_any_capability(
             "nonexistent-model", [ModelCapability.VISION]
@@ -239,7 +244,7 @@ class TestHasAnyCapability:
 class TestFilterModelsByCapability:
     """Test filter_models_by_capability method."""
 
-    def test_filter_models_by_capability_returns_matching_models(self):
+    def test_filter_models_by_capability_returns_matching_models(self) -> None:
         """Test filtering returns all models with the capability."""
         # Clear cache from mock tests
         CapabilityValidator.clear_cache()
@@ -252,7 +257,7 @@ class TestFilterModelsByCapability:
         assert "claude-sonnet-4-5" in vision_models
         assert "gpt-4o" in vision_models
 
-    def test_filter_models_by_capability_with_rare_capability(self):
+    def test_filter_models_by_capability_with_rare_capability(self) -> None:
         """Test filtering with capability few models have."""
         # Clear cache from mock tests
         CapabilityValidator.clear_cache()
@@ -266,7 +271,7 @@ class TestFilterModelsByCapability:
         gemini_models = [m for m in code_exec_models if "gemini" in m]
         assert len(gemini_models) > 0
 
-    def test_filter_models_by_capability_returns_list(self):
+    def test_filter_models_by_capability_returns_list(self) -> None:
         """Test method always returns a list, even if empty."""
         # Even if no models have a capability, should return empty list
         models = CapabilityValidator.filter_models_by_capability(ModelCapability.STREAMING)
@@ -276,7 +281,7 @@ class TestFilterModelsByCapability:
 class TestGetCapabilityMatrix:
     """Test get_capability_matrix method."""
 
-    def test_get_capability_matrix_returns_complete_mapping(self):
+    def test_get_capability_matrix_returns_complete_mapping(self) -> None:
         """Test matrix returns all models with their capabilities."""
         # Clear cache from mock tests
         CapabilityValidator.clear_cache()
@@ -290,7 +295,7 @@ class TestGetCapabilityMatrix:
         assert "claude-sonnet-4-5" in matrix
         assert "gpt-4o" in matrix
 
-    def test_get_capability_matrix_capabilities_are_strings(self):
+    def test_get_capability_matrix_capabilities_are_strings(self) -> None:
         """Test capability values in matrix are strings, not enums."""
         matrix = CapabilityValidator.get_capability_matrix()
 
@@ -312,7 +317,7 @@ class TestGetCapabilityMatrix:
                     "search",
                 ]
 
-    def test_get_capability_matrix_consistency(self):
+    def test_get_capability_matrix_consistency(self) -> None:
         """Test matrix is consistent with individual lookups."""
         matrix = CapabilityValidator.get_capability_matrix()
 
@@ -330,7 +335,7 @@ class TestGetCapabilityMatrix:
 class TestConvenienceFunctions:
     """Test module-level convenience functions."""
 
-    def test_has_vision_convenience_function(self):
+    def test_has_vision_convenience_function(self) -> None:
         """Test has_vision convenience function."""
         # Clear cache to ensure fresh data
         CapabilityValidator.clear_cache()
@@ -339,7 +344,7 @@ class TestConvenienceFunctions:
         assert has_vision("gpt-4o") is True
         assert has_vision("nonexistent-model") is False
 
-    def test_has_function_calling_convenience_function(self):
+    def test_has_function_calling_convenience_function(self) -> None:
         """Test has_function_calling convenience function."""
         CapabilityValidator.clear_cache()
 
@@ -348,7 +353,7 @@ class TestConvenienceFunctions:
         # Flash-Lite doesn't have function calling
         assert has_function_calling("gemini-2-5-flash-lite") is False
 
-    def test_has_prompt_caching_convenience_function(self):
+    def test_has_prompt_caching_convenience_function(self) -> None:
         """Test has_prompt_caching convenience function."""
         CapabilityValidator.clear_cache()
 
@@ -358,7 +363,7 @@ class TestConvenienceFunctions:
         assert has_prompt_caching("gemini-2-5-flash-lite") is False
         assert has_prompt_caching("gpt-4o") is False
 
-    def test_supports_large_context_convenience_function(self):
+    def test_supports_large_context_convenience_function(self) -> None:
         """Test supports_large_context convenience function."""
         CapabilityValidator.clear_cache()
 
@@ -372,7 +377,7 @@ class TestConvenienceFunctions:
 class TestGetCapabilities:
     """Test get_capabilities returns a copy."""
 
-    def test_get_capabilities_returns_copy(self):
+    def test_get_capabilities_returns_copy(self) -> None:
         """Test that get_capabilities returns a copy, not the original set."""
         caps1 = CapabilityValidator.get_capabilities("claude-sonnet-4-5")
         caps2 = CapabilityValidator.get_capabilities("claude-sonnet-4-5")
@@ -386,7 +391,7 @@ class TestGetCapabilities:
         caps2_after = CapabilityValidator.get_capabilities("claude-sonnet-4-5")
         assert len(caps2_after) > 0  # Original data unchanged
 
-    def test_get_capabilities_for_nonexistent_model(self):
+    def test_get_capabilities_for_nonexistent_model(self) -> None:
         """Test get_capabilities returns empty set for unknown model."""
         caps = CapabilityValidator.get_capabilities("nonexistent-model")
         assert isinstance(caps, set)
@@ -396,7 +401,7 @@ class TestGetCapabilities:
 class TestCacheClear:
     """Test cache clearing functionality."""
 
-    def test_clear_cache_resets_state(self):
+    def test_clear_cache_resets_state(self) -> None:
         """Test that clear_cache resets validator state."""
         # Load some data
         _ = CapabilityValidator.get_capabilities("claude-sonnet-4-5")

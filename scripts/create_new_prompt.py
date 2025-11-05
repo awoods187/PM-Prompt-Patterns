@@ -14,7 +14,7 @@ This script will:
 
 import re
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List, Union
 
 
 def sanitize_filename(name: str) -> str:
@@ -100,11 +100,11 @@ def get_prompt_metadata() -> Dict[str, str]:
     return metadata
 
 
-def get_prompt_content() -> Dict[str, str]:
+def get_prompt_content() -> Dict[str, Union[str, List[str]]]:
     """Collect prompt content from user."""
     print("\n=== PROMPT CONTENT ===")
 
-    content = {}
+    content: Dict[str, Union[str, List[str]]] = {}
 
     # Overview
     print("\nOverview (1-2 sentences describing what this prompt does):")
@@ -113,12 +113,16 @@ def get_prompt_content() -> Dict[str, str]:
     # Business value
     print("\nBusiness value (comma-separated list, e.g., 'Reduce X, Improve Y'):")
     business_input = input("> ").strip()
-    content["business_value"] = [v.strip() for v in business_input.split(",")]
+    content["business_value"] = (
+        [v.strip() for v in business_input.split(",")] if business_input else []
+    )
 
     # Use cases
     print("\nUse cases (comma-separated list):")
     use_cases_input = input("> ").strip()
-    content["use_cases"] = [u.strip() for u in use_cases_input.split(",")]
+    content["use_cases"] = (
+        [u.strip() for u in use_cases_input.split(",")] if use_cases_input else []
+    )
 
     # Production metrics (optional)
     print("\nProduction metrics (optional, comma-separated, e.g., 'Accuracy: 95%, Time: <2s'):")
@@ -145,7 +149,7 @@ def get_prompt_content() -> Dict[str, str]:
     return content
 
 
-def create_base_prompt(metadata: Dict[str, str], content: Dict[str, str]) -> str:
+def create_base_prompt(metadata: Dict[str, str], content: Dict[str, Union[str, List[str]]]) -> str:
     """Generate the base prompt.md file content."""
 
     parts = [f"# {metadata['name']}\n"]
@@ -183,7 +187,7 @@ def create_base_prompt(metadata: Dict[str, str], content: Dict[str, str]) -> str
     parts.append("---\n")
     parts.append("## Prompt\n")
     parts.append("```")
-    parts.append(content["prompt"])
+    parts.append(str(content["prompt"]))
     parts.append("```\n")
 
     # Placeholder sections
@@ -210,7 +214,9 @@ def create_base_prompt(metadata: Dict[str, str], content: Dict[str, str]) -> str
     return "\n".join(parts)
 
 
-def create_claude_prompt(metadata: Dict[str, str], content: Dict[str, str]) -> str:
+def create_claude_prompt(
+    metadata: Dict[str, str], content: Dict[str, Union[str, List[str]]]
+) -> str:
     """Generate the Claude-optimized prompt.claude.md file."""
 
     parts = [f"# {metadata['name']} - Claude Optimized\n"]
@@ -218,7 +224,7 @@ def create_claude_prompt(metadata: Dict[str, str], content: Dict[str, str]) -> s
 
     parts.append("## Prompt\n")
     parts.append("<task>")
-    parts.append(content["prompt"])
+    parts.append(str(content["prompt"]))
     parts.append("</task>\n")
 
     parts.append("## Claude Optimizations Applied\n")
@@ -247,7 +253,9 @@ def create_claude_prompt(metadata: Dict[str, str], content: Dict[str, str]) -> s
     return "\n".join(parts)
 
 
-def create_openai_prompt(metadata: Dict[str, str], content: Dict[str, str]) -> str:
+def create_openai_prompt(
+    metadata: Dict[str, str], content: Dict[str, Union[str, List[str]]]
+) -> str:
     """Generate the OpenAI-optimized prompt.openai.md file."""
 
     parts = [f"# {metadata['name']} - OpenAI Optimized\n"]
@@ -255,7 +263,7 @@ def create_openai_prompt(metadata: Dict[str, str], content: Dict[str, str]) -> s
 
     parts.append("## System Prompt\n")
     parts.append("```")
-    parts.append(content["prompt"])
+    parts.append(str(content["prompt"]))
     parts.append("```\n")
 
     parts.append("## OpenAI Optimizations Applied\n")
@@ -293,7 +301,9 @@ def create_openai_prompt(metadata: Dict[str, str], content: Dict[str, str]) -> s
     return "\n".join(parts)
 
 
-def create_gemini_prompt(metadata: Dict[str, str], content: Dict[str, str]) -> str:
+def create_gemini_prompt(
+    metadata: Dict[str, str], content: Dict[str, Union[str, List[str]]]
+) -> str:
     """Generate the Gemini-optimized prompt.gemini.md file."""
 
     parts = [f"# {metadata['name']} - Gemini Optimized\n"]
@@ -301,7 +311,7 @@ def create_gemini_prompt(metadata: Dict[str, str], content: Dict[str, str]) -> s
 
     parts.append("## System Instruction\n")
     parts.append("```")
-    parts.append(content["prompt"])
+    parts.append(str(content["prompt"]))
     parts.append("```\n")
 
     parts.append("## Gemini Optimizations Applied\n")
@@ -413,7 +423,7 @@ def validate_prompt_structure(prompt_dir: Path) -> bool:
     return all_valid
 
 
-def main():
+def main() -> None:
     """Main script execution."""
     print("=" * 70)
     print("CREATE NEW PROMPT PATTERN")

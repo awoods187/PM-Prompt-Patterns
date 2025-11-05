@@ -171,7 +171,7 @@ class ReferenceScanner:
         Returns:
             Dictionary mapping category to list of files
         """
-        categories = {
+        categories: Dict[str, List[Path]] = {
             "Python files": [],
             "Markdown docs": [],
             "YAML configs": [],

@@ -2,7 +2,7 @@
 
 **Complexity**: 🔴 Advanced
 **Category**: Technical Documentation / Development Standards
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-4 | ⚠️ Gemini (large context needed)
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-5 | ⚠️ Gemini (large context needed)
 
 ## Overview
 

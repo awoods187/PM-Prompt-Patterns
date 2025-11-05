@@ -23,7 +23,7 @@ from pm_prompt_toolkit.providers.base import (
 class TestSignalCategoryEnum:
     """Test SignalCategory enum."""
 
-    def test_all_categories_defined(self):
+    def test_all_categories_defined(self) -> None:
         """Test that all expected categories exist."""
         assert SignalCategory.FEATURE_REQUEST.value == "feature_request"
         assert SignalCategory.BUG_REPORT.value == "bug_report"
@@ -31,12 +31,12 @@ class TestSignalCategoryEnum:
         assert SignalCategory.EXPANSION_SIGNAL.value == "expansion_signal"
         assert SignalCategory.GENERAL_FEEDBACK.value == "general_feedback"
 
-    def test_enum_is_string(self):
+    def test_enum_is_string(self) -> None:
         """Test that SignalCategory inherits from str."""
         assert isinstance(SignalCategory.FEATURE_REQUEST, str)
         assert SignalCategory.FEATURE_REQUEST == "feature_request"
 
-    def test_all_categories_unique(self):
+    def test_all_categories_unique(self) -> None:
         """Test that all category values are unique."""
         values = [cat.value for cat in SignalCategory]
         assert len(values) == len(set(values))
@@ -45,7 +45,7 @@ class TestSignalCategoryEnum:
 class TestClassificationResult:
     """Test ClassificationResult dataclass."""
 
-    def test_valid_result_creation(self):
+    def test_valid_result_creation(self) -> None:
         """Test creating a valid classification result."""
         result = ClassificationResult(
             category=SignalCategory.FEATURE_REQUEST,
@@ -69,7 +69,7 @@ class TestClassificationResult:
         assert result.cached_tokens == 50
         assert result.model == "claude-sonnet-4-5"
 
-    def test_default_values(self):
+    def test_default_values(self) -> None:
         """Test default values for optional fields."""
         result = ClassificationResult(
             category=SignalCategory.BUG_REPORT,
@@ -85,7 +85,7 @@ class TestClassificationResult:
         assert result.model == ""
         assert isinstance(result.timestamp, datetime)
 
-    def test_validation_confidence_too_high(self):
+    def test_validation_confidence_too_high(self) -> None:
         """Test validation rejects confidence > 1.0."""
         with pytest.raises(ValueError) as exc_info:
             ClassificationResult(
@@ -97,7 +97,7 @@ class TestClassificationResult:
         assert "Confidence must be between 0.0 and 1.0" in str(exc_info.value)
         assert "1.5" in str(exc_info.value)
 
-    def test_validation_confidence_too_low(self):
+    def test_validation_confidence_too_low(self) -> None:
         """Test validation rejects confidence < 0.0."""
         with pytest.raises(ValueError) as exc_info:
             ClassificationResult(
@@ -108,7 +108,7 @@ class TestClassificationResult:
             )
         assert "Confidence must be between 0.0 and 1.0" in str(exc_info.value)
 
-    def test_validation_negative_cost(self):
+    def test_validation_negative_cost(self) -> None:
         """Test validation rejects negative cost."""
         with pytest.raises(ValueError) as exc_info:
             ClassificationResult(
@@ -120,7 +120,7 @@ class TestClassificationResult:
             )
         assert "Cost cannot be negative" in str(exc_info.value)
 
-    def test_validation_negative_latency(self):
+    def test_validation_negative_latency(self) -> None:
         """Test validation rejects negative latency."""
         with pytest.raises(ValueError) as exc_info:
             ClassificationResult(
@@ -132,7 +132,7 @@ class TestClassificationResult:
             )
         assert "Latency cannot be negative" in str(exc_info.value)
 
-    def test_validation_boundary_confidence_values(self):
+    def test_validation_boundary_confidence_values(self) -> None:
         """Test confidence boundary values (0.0 and 1.0 are valid)."""
         # 0.0 should be valid
         result_zero = ClassificationResult(
@@ -152,7 +152,7 @@ class TestClassificationResult:
         )
         assert result_one.confidence == 1.0
 
-    def test_to_dict_complete(self):
+    def test_to_dict_complete(self) -> None:
         """Test to_dict with all fields populated."""
         timestamp = datetime(2025, 1, 15, 12, 30, 45)
         result = ClassificationResult(
@@ -181,7 +181,7 @@ class TestClassificationResult:
         assert result_dict["model"] == "claude-sonnet-4-5"
         assert result_dict["timestamp"] == "2025-01-15T12:30:45"
 
-    def test_frozen_dataclass(self):
+    def test_frozen_dataclass(self) -> None:
         """Test that ClassificationResult is immutable."""
         result = ClassificationResult(
             category=SignalCategory.BUG_REPORT,
@@ -192,13 +192,13 @@ class TestClassificationResult:
 
         # Should not be able to modify frozen dataclass
         with pytest.raises(Exception):  # FrozenInstanceError or AttributeError
-            result.confidence = 0.8
+            result.confidence = 0.8  # type: ignore[misc]
 
 
 class TestProviderMetrics:
     """Test ProviderMetrics dataclass."""
 
-    def test_initial_state(self):
+    def test_initial_state(self) -> None:
         """Test metrics start at zero."""
         metrics = ProviderMetrics()
 
@@ -208,12 +208,12 @@ class TestProviderMetrics:
         assert metrics.total_cached_tokens == 0
         assert metrics.total_latency_ms == 0.0
 
-    def test_average_cost_with_zero_requests(self):
+    def test_average_cost_with_zero_requests(self) -> None:
         """Test average_cost returns 0 when no requests."""
         metrics = ProviderMetrics()
         assert metrics.average_cost == 0.0
 
-    def test_average_cost_with_requests(self):
+    def test_average_cost_with_requests(self) -> None:
         """Test average_cost calculation."""
         metrics = ProviderMetrics()
         metrics.record_request(cost=0.001, tokens=100, latency_ms=200)
@@ -222,12 +222,12 @@ class TestProviderMetrics:
         # Total cost: 0.003, Total requests: 2
         assert metrics.average_cost == pytest.approx(0.0015)
 
-    def test_average_latency_with_zero_requests(self):
+    def test_average_latency_with_zero_requests(self) -> None:
         """Test average_latency_ms returns 0 when no requests."""
         metrics = ProviderMetrics()
         assert metrics.average_latency_ms == 0.0
 
-    def test_average_latency_with_requests(self):
+    def test_average_latency_with_requests(self) -> None:
         """Test average_latency_ms calculation."""
         metrics = ProviderMetrics()
         metrics.record_request(cost=0.001, tokens=100, latency_ms=200)
@@ -236,12 +236,12 @@ class TestProviderMetrics:
         # Total latency: 600, Total requests: 2
         assert metrics.average_latency_ms == pytest.approx(300.0)
 
-    def test_cache_hit_rate_with_zero_tokens(self):
+    def test_cache_hit_rate_with_zero_tokens(self) -> None:
         """Test cache_hit_rate returns 0 when no tokens."""
         metrics = ProviderMetrics()
         assert metrics.cache_hit_rate == 0.0
 
-    def test_cache_hit_rate_with_tokens(self):
+    def test_cache_hit_rate_with_tokens(self) -> None:
         """Test cache_hit_rate calculation."""
         metrics = ProviderMetrics()
         # First request: 100 tokens, 50 cached (50% hit rate)
@@ -252,7 +252,7 @@ class TestProviderMetrics:
         # Total tokens: 300, Total cached: 150 = 50% overall
         assert metrics.cache_hit_rate == pytest.approx(0.5)
 
-    def test_record_request_without_caching(self):
+    def test_record_request_without_caching(self) -> None:
         """Test recording a request without cached tokens."""
         metrics = ProviderMetrics()
         metrics.record_request(cost=0.0008, tokens=200, latency_ms=450)
@@ -263,7 +263,7 @@ class TestProviderMetrics:
         assert metrics.total_cached_tokens == 0
         assert metrics.total_latency_ms == 450
 
-    def test_record_request_with_caching(self):
+    def test_record_request_with_caching(self) -> None:
         """Test recording a request with cached tokens."""
         metrics = ProviderMetrics()
         metrics.record_request(cost=0.0005, tokens=150, latency_ms=300, cached_tokens=100)
@@ -274,7 +274,7 @@ class TestProviderMetrics:
         assert metrics.total_cached_tokens == 100
         assert metrics.total_latency_ms == 300
 
-    def test_record_multiple_requests(self):
+    def test_record_multiple_requests(self) -> None:
         """Test accumulation across multiple requests."""
         metrics = ProviderMetrics()
 
@@ -288,7 +288,7 @@ class TestProviderMetrics:
         assert metrics.total_cached_tokens == 185
         assert metrics.total_latency_ms == pytest.approx(750.0)
 
-    def test_to_dict(self):
+    def test_to_dict(self) -> None:
         """Test metrics serialization to dict."""
         metrics = ProviderMetrics()
         metrics.record_request(cost=0.001, tokens=100, latency_ms=200, cached_tokens=50)
@@ -329,7 +329,7 @@ class MockProvider(LLMProvider):
 class TestLLMProvider:
     """Test LLMProvider abstract base class."""
 
-    def test_initialization(self):
+    def test_initialization(self) -> None:
         """Test provider initialization."""
         provider = MockProvider(model="test-model", enable_caching=True)
 
@@ -337,13 +337,13 @@ class TestLLMProvider:
         assert provider.enable_caching is True
         assert isinstance(provider.metrics, ProviderMetrics)
 
-    def test_initialization_without_caching(self):
+    def test_initialization_without_caching(self) -> None:
         """Test provider initialization with caching disabled."""
         provider = MockProvider(model="test-model", enable_caching=False)
 
         assert provider.enable_caching is False
 
-    def test_classify_with_valid_text(self):
+    def test_classify_with_valid_text(self) -> None:
         """Test successful classification."""
         provider = MockProvider(model="test-model")
 
@@ -355,7 +355,7 @@ class TestLLMProvider:
         assert result.model == "test-model"
         assert result.latency_ms > 0  # Should have been timed
 
-    def test_classify_with_empty_text(self):
+    def test_classify_with_empty_text(self) -> None:
         """Test classification rejects empty text."""
         provider = MockProvider(model="test-model")
 
@@ -363,7 +363,7 @@ class TestLLMProvider:
             provider.classify("")
         assert "Text cannot be empty" in str(exc_info.value)
 
-    def test_classify_with_whitespace_only(self):
+    def test_classify_with_whitespace_only(self) -> None:
         """Test classification rejects whitespace-only text."""
         provider = MockProvider(model="test-model")
 
@@ -371,7 +371,7 @@ class TestLLMProvider:
             provider.classify("   \n\t  ")
         assert "Text cannot be empty" in str(exc_info.value)
 
-    def test_classify_with_custom_prompt(self):
+    def test_classify_with_custom_prompt(self) -> None:
         """Test classification with custom prompt."""
         provider = MockProvider(model="test-model")
 
@@ -380,15 +380,15 @@ class TestLLMProvider:
 
         assert isinstance(result, ClassificationResult)
 
-    def test_classify_uses_default_prompt_when_none(self):
+    def test_classify_uses_default_prompt_when_none(self) -> None:
         """Test that classify uses default prompt when none provided."""
         provider = MockProvider(model="test-model")
 
         with patch.object(provider, "_get_default_prompt", return_value="default prompt"):
             provider.classify("Test text")
-            provider._get_default_prompt.assert_called_once()
+            provider._get_default_prompt.assert_called_once()  # type: ignore[attr-defined]
 
-    def test_classify_records_metrics(self):
+    def test_classify_records_metrics(self) -> None:
         """Test that classification records metrics."""
         provider = MockProvider(model="test-model")
 
@@ -400,7 +400,7 @@ class TestLLMProvider:
         assert provider.metrics.total_cost > 0
         assert provider.metrics.total_tokens > 0
 
-    def test_classify_handles_implementation_exception(self):
+    def test_classify_handles_implementation_exception(self) -> None:
         """Test that classify propagates implementation exceptions."""
 
         class FailingProvider(LLMProvider):
@@ -418,7 +418,7 @@ class TestLLMProvider:
             provider.classify("Test text")
         assert "API Error" in str(exc_info.value)
 
-    def test_get_default_prompt(self):
+    def test_get_default_prompt(self) -> None:
         """Test default prompt template."""
         provider = MockProvider(model="test-model")
 
@@ -432,7 +432,7 @@ class TestLLMProvider:
         assert "general_feedback" in prompt
         assert "{text}" in prompt
 
-    def test_get_metrics(self):
+    def test_get_metrics(self) -> None:
         """Test getting provider metrics."""
         provider = MockProvider(model="test-model")
 
@@ -444,7 +444,7 @@ class TestLLMProvider:
         assert isinstance(metrics, ProviderMetrics)
         assert metrics.total_requests == 2
 
-    def test_reset_metrics(self):
+    def test_reset_metrics(self) -> None:
         """Test resetting provider metrics."""
         provider = MockProvider(model="test-model")
 
@@ -457,7 +457,7 @@ class TestLLMProvider:
         assert provider.metrics.total_cost == 0.0
         assert provider.metrics.total_tokens == 0
 
-    def test_classify_updates_result_with_latency(self):
+    def test_classify_updates_result_with_latency(self) -> None:
         """Test that classify adds latency to result."""
         provider = MockProvider(model="test-model")
 
@@ -466,7 +466,7 @@ class TestLLMProvider:
         assert result.latency_ms > 0
         assert result.latency_ms < 10000  # Should be under 10 seconds
 
-    def test_classify_preserves_method_from_impl(self):
+    def test_classify_preserves_method_from_impl(self) -> None:
         """Test that classify preserves method from implementation."""
 
         class CustomMethodProvider(LLMProvider):
@@ -490,7 +490,7 @@ class TestLLMProvider:
 
         assert result.method == "custom-method"
 
-    def test_classify_uses_model_name_when_method_empty(self):
+    def test_classify_uses_model_name_when_method_empty(self) -> None:
         """Test that classify uses model name when method is not set."""
 
         class NoMethodProvider(LLMProvider):

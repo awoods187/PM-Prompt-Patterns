@@ -159,7 +159,7 @@ Implement this validated design using GitHub Copilot:
 - Structured templates for consistent outputs
 
 ### 2. Instruction Following
-- Direct, imperative language optimized for GPT-4
+- Direct, imperative language optimized for GPT-5
 - Numbered lists for sequential steps
 - Concrete action items vs abstract concepts
 

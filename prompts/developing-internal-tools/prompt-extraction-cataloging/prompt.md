@@ -2,7 +2,7 @@
 
 **Complexity**: 🔴 Advanced
 **Category**: Code Analysis / Prompt Engineering
-**Model Compatibility**: ✅ Claude Sonnet 4+ (best) | ✅ Claude Opus | ⚠️ GPT-4 (may miss context)
+**Model Compatibility**: ✅ Claude Sonnet 4+ (best) | ✅ Claude Opus | ⚠️ GPT-5 (may miss context)
 
 ## Overview
 

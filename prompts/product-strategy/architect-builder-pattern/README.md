@@ -1,8 +1,8 @@
-# Opus Design → Claude Code Execution Pattern
+# Architect-Builder Pattern
 
 ## 🎯 Purpose
 
-**Production-grade workflow for leveraging Opus's architectural capabilities with Claude Code's autonomous execution**
+**Production-grade three-phase workflow that separates strategic architectural design from tactical implementation**
 
 ## 📊 Provider Variants
 
@@ -22,7 +22,7 @@ from ai_models import get_prompt, get_model
 
 # Auto-select best variant based on model
 model = get_model("gpt-4o")
-prompt = get_prompt("product-strategy/opus-code-execution-pattern", model=model.id)
+prompt = get_prompt("product-strategy/architect-builder-pattern", model=model.id)
 
 # Use the prompt
 result = model.generate(prompt.format(**your_variables))
@@ -32,9 +32,9 @@ result = model.generate(prompt.format(**your_variables))
 
 ```python
 # Explicit provider selection
-claude_prompt = get_prompt("product-strategy/opus-code-execution-pattern", provider="claude")
-openai_prompt = get_prompt("product-strategy/opus-code-execution-pattern", provider="openai")
-gemini_prompt = get_prompt("product-strategy/opus-code-execution-pattern", provider="gemini")
+claude_prompt = get_prompt("product-strategy/architect-builder-pattern", provider="claude")
+openai_prompt = get_prompt("product-strategy/architect-builder-pattern", provider="openai")
+gemini_prompt = get_prompt("product-strategy/architect-builder-pattern", provider="gemini")
 ```
 
 ## 🎯 When to Use Each Provider

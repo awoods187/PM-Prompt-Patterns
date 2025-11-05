@@ -107,10 +107,10 @@ class ChangeReport:
         if self.pricing_changes:
             lines.append(f"## 💰 Pricing Changes ({len(self.pricing_changes)})\n")
             for change in self.pricing_changes:
-                symbol = "📈" if change.new_value > change.old_value else "📉"
+                symbol = "📈" if (change.new_value or 0) > (change.old_value or 0) else "📉"
                 pct_change = (
                     ((change.new_value - change.old_value) / change.old_value * 100)
-                    if change.old_value
+                    if change.old_value and change.new_value
                     else 0
                 )
                 lines.append(
@@ -124,7 +124,7 @@ class ChangeReport:
         if self.context_changes:
             lines.append(f"## 📏 Context Window Changes ({len(self.context_changes)})\n")
             for change in self.context_changes:
-                symbol = "📈" if change.new_value > change.old_value else "📉"
+                symbol = "📈" if (change.new_value or 0) > (change.old_value or 0) else "📉"
                 lines.append(
                     f"{symbol} **{change.model_id}** - {change.field}: "
                     f"{change.old_value:,} → {change.new_value:,} tokens"

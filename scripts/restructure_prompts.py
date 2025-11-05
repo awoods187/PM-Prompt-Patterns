@@ -374,7 +374,7 @@ def restructure_prompt_directory(prompt_dir: Path) -> None:
     print(f"  📊 File size: {old_size/1024:.1f}KB → {new_size/1024:.1f}KB")
 
 
-def main():
+def main() -> None:
     """Main restructuring script."""
 
     repo_root = Path(__file__).parent.parent

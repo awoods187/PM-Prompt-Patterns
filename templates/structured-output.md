@@ -22,7 +22,7 @@ Check back soon or [contribute](../CONTRIBUTING.md)!
 
 **Provider Strengths**:
 - **Claude**: XML tags (native understanding)
-- **GPT-4**: JSON mode (guaranteed valid JSON) + function calling
+- **GPT-5**: JSON mode (guaranteed valid JSON) + function calling
 - **Gemini**: Markdown for reports
 
 See [prompt_design_principles.md](../prompt_design_principles.md#output-structure-design) and [MODEL_OPTIMIZATION_GUIDE.md](../MODEL_OPTIMIZATION_GUIDE.md) for examples.

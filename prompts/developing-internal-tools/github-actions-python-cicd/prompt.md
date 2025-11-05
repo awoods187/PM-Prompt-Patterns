@@ -2,7 +2,7 @@
 
 **Complexity**: 🔴 Advanced
 **Category**: Development Infrastructure / CI/CD
-**Model Compatibility**: ✅ Claude Opus (best) | ✅ Claude Sonnet 4 | ⚠️ GPT-4 (may need more guidance)
+**Model Compatibility**: ✅ Claude Opus (best) | ✅ Claude Sonnet 4 | ⚠️ GPT-5 (may need more guidance)
 
 ## Overview
 

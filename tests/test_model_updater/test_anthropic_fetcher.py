@@ -84,13 +84,13 @@ class TestStaticModelSpecs:
         """Test that specs include prompt caching pricing."""
         specs = anthropic_fetcher._get_static_model_specs("claude-sonnet-4-5")
 
-        assert "pricing" in specs
-        assert "cache_write_per_1m" in specs["pricing"]
-        assert "cache_read_per_1m" in specs["pricing"]
+        assert "pricing" in specs  # type: ignore[operator]
+        assert "cache_write_per_1m" in specs["pricing"]  # type: ignore[index]
+        assert "cache_read_per_1m" in specs["pricing"]  # type: ignore[index]
         # Cache write should be slightly more expensive than input (1.25x)
-        assert specs["pricing"]["cache_write_per_1m"] > specs["pricing"]["input_per_1m"]
+        assert specs["pricing"]["cache_write_per_1m"] > specs["pricing"]["input_per_1m"]  # type: ignore[index]
         # Cache read should be significantly cheaper than input
-        assert specs["pricing"]["cache_read_per_1m"] < specs["pricing"]["input_per_1m"]
+        assert specs["pricing"]["cache_read_per_1m"] < specs["pricing"]["input_per_1m"]  # type: ignore[index]
 
     def test_static_specs_include_recommended_for(
         self, anthropic_fetcher: AnthropicFetcher
@@ -98,17 +98,17 @@ class TestStaticModelSpecs:
         """Test that specs include recommended use cases."""
         specs = anthropic_fetcher._get_static_model_specs("claude-sonnet-4-5")
 
-        assert "recommended_for" in specs
-        assert len(specs["recommended_for"]) > 0
-        assert isinstance(specs["recommended_for"], list)
+        assert "recommended_for" in specs  # type: ignore[operator]
+        assert len(specs["recommended_for"]) > 0  # type: ignore[index]
+        assert isinstance(specs["recommended_for"], list)  # type: ignore[index]
 
     def test_static_specs_include_best_practices(self, anthropic_fetcher: AnthropicFetcher) -> None:
         """Test that specs include best practices."""
         specs = anthropic_fetcher._get_static_model_specs("claude-haiku-4-5")
 
-        assert "best_practices" in specs
-        assert len(specs["best_practices"]) > 0
-        assert isinstance(specs["best_practices"], list)
+        assert "best_practices" in specs  # type: ignore[operator]
+        assert len(specs["best_practices"]) > 0  # type: ignore[index]
+        assert isinstance(specs["best_practices"], list)  # type: ignore[index]
 
 
 # ============================================================================
@@ -149,8 +149,8 @@ class TestDocsFallback:
             assert len(model.capabilities) > 0
             assert model.input_per_1m > 0
             assert model.output_per_1m > 0
-            assert model.cache_write_per_1m > 0
-            assert model.cache_read_per_1m > 0
+            assert model.cache_write_per_1m > 0  # type: ignore[operator]
+            assert model.cache_read_per_1m > 0  # type: ignore[operator]
             assert model.source == "anthropic_docs"
 
     def test_fetch_from_docs_logs_usage_of_static_specs(
@@ -463,10 +463,10 @@ class TestEdgeCases:
         models = anthropic_fetcher.fetch_from_docs()
 
         for model in models:
-            assert model.cache_write_per_1m > 0
-            assert model.cache_read_per_1m > 0
+            assert model.cache_write_per_1m > 0  # type: ignore[operator]
+            assert model.cache_read_per_1m > 0  # type: ignore[operator]
             # Cache read should be cheaper than cache write
-            assert model.cache_read_per_1m < model.cache_write_per_1m
+            assert model.cache_read_per_1m < model.cache_write_per_1m  # type: ignore[operator]
 
     def test_model_pricing_reflects_capability_tiers(
         self, anthropic_fetcher: AnthropicFetcher

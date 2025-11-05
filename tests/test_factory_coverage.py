@@ -20,7 +20,7 @@ class TestGetProviderClaude:
     """Test get_provider with Claude models."""
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_get_provider_claude_haiku(self, mock_claude_provider):
+    def test_get_provider_claude_haiku(self, mock_claude_provider) -> None:  # type: ignore[no-untyped-def]
         """Test get_provider returns ClaudeProvider for haiku."""
         mock_instance = MagicMock(spec=ClaudeProvider)
         mock_claude_provider.return_value = mock_instance
@@ -31,7 +31,7 @@ class TestGetProviderClaude:
         assert result == mock_instance
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_get_provider_claude_sonnet(self, mock_claude_provider):
+    def test_get_provider_claude_sonnet(self, mock_claude_provider) -> None:  # type: ignore[no-untyped-def]
         """Test get_provider returns ClaudeProvider for sonnet."""
         mock_instance = MagicMock(spec=ClaudeProvider)
         mock_claude_provider.return_value = mock_instance
@@ -42,7 +42,7 @@ class TestGetProviderClaude:
         assert result == mock_instance
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_get_provider_claude_opus(self, mock_claude_provider):
+    def test_get_provider_claude_opus(self, mock_claude_provider) -> None:  # type: ignore[no-untyped-def]
         """Test get_provider returns ClaudeProvider for opus."""
         mock_instance = MagicMock(spec=ClaudeProvider)
         mock_claude_provider.return_value = mock_instance
@@ -53,7 +53,7 @@ class TestGetProviderClaude:
         assert result == mock_instance
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_get_provider_case_insensitive(self, mock_claude_provider):
+    def test_get_provider_case_insensitive(self, mock_claude_provider) -> None:  # type: ignore[no-untyped-def]
         """Test get_provider handles mixed case model names."""
         mock_instance = MagicMock(spec=ClaudeProvider)
         mock_claude_provider.return_value = mock_instance
@@ -68,7 +68,7 @@ class TestGetProviderClaude:
         assert all(call[1]["model"].islower() for call in mock_claude_provider.call_args_list)
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_get_provider_with_caching_enabled(self, mock_claude_provider):
+    def test_get_provider_with_caching_enabled(self, mock_claude_provider) -> None:  # type: ignore[no-untyped-def]
         """Test get_provider passes enable_caching=True by default."""
         mock_instance = MagicMock(spec=ClaudeProvider)
         mock_claude_provider.return_value = mock_instance
@@ -78,7 +78,7 @@ class TestGetProviderClaude:
         mock_claude_provider.assert_called_once_with(model="claude-sonnet", enable_caching=True)
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_get_provider_with_caching_disabled(self, mock_claude_provider):
+    def test_get_provider_with_caching_disabled(self, mock_claude_provider) -> None:  # type: ignore[no-untyped-def]
         """Test get_provider passes enable_caching=False when requested."""
         mock_instance = MagicMock(spec=ClaudeProvider)
         mock_claude_provider.return_value = mock_instance
@@ -91,7 +91,7 @@ class TestGetProviderClaude:
 class TestGetProviderOpenAI:
     """Test get_provider with OpenAI models when not enabled."""
 
-    def test_get_provider_gpt4_raises_configuration_error(self):
+    def test_get_provider_gpt4_raises_configuration_error(self) -> None:
         """Test get_provider raises ConfigurationError for GPT-4 when not enabled."""
         with pytest.raises(ConfigurationError) as exc_info:
             get_provider("gpt-4")
@@ -101,7 +101,7 @@ class TestGetProviderOpenAI:
         assert "ENABLE_OPENAI=true" in error_msg
         assert "OPENAI_API_KEY" in error_msg
 
-    def test_get_provider_gpt35_raises_configuration_error(self):
+    def test_get_provider_gpt35_raises_configuration_error(self) -> None:
         """Test get_provider raises ConfigurationError for GPT-3.5 when not enabled."""
         with pytest.raises(ConfigurationError) as exc_info:
             get_provider("gpt-3.5")
@@ -109,7 +109,7 @@ class TestGetProviderOpenAI:
         error_msg = str(exc_info.value)
         assert "OpenAI provider for gpt-3.5 is not enabled" in error_msg
 
-    def test_get_provider_gpt4_turbo_raises_configuration_error(self):
+    def test_get_provider_gpt4_turbo_raises_configuration_error(self) -> None:
         """Test get_provider raises ConfigurationError for GPT-4o when not enabled."""
         with pytest.raises(ConfigurationError) as exc_info:
             get_provider("gpt-4o")
@@ -117,7 +117,7 @@ class TestGetProviderOpenAI:
         error_msg = str(exc_info.value)
         assert "OpenAI provider for gpt-4o is not enabled" in error_msg
 
-    def test_get_provider_openai_case_insensitive(self):
+    def test_get_provider_openai_case_insensitive(self) -> None:
         """Test OpenAI model detection is case-insensitive."""
         with pytest.raises(ConfigurationError):
             get_provider("GPT-4")
@@ -130,7 +130,7 @@ class TestGetProviderGemini:
     """Test get_provider with Gemini models (now implemented)."""
 
     @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
-    def test_get_provider_gemini_pro(self, mock_gemini_provider):
+    def test_get_provider_gemini_pro(self, mock_gemini_provider) -> None:  # type: ignore[no-untyped-def]
         """Test get_provider returns GeminiProvider for Gemini 2.5 Pro."""
         from pm_prompt_toolkit.providers.gemini import GeminiProvider
 
@@ -143,7 +143,7 @@ class TestGetProviderGemini:
         assert result == mock_instance
 
     @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
-    def test_get_provider_gemini_flash(self, mock_gemini_provider):
+    def test_get_provider_gemini_flash(self, mock_gemini_provider) -> None:  # type: ignore[no-untyped-def]
         """Test get_provider returns GeminiProvider for Gemini 2.5 Flash."""
         from pm_prompt_toolkit.providers.gemini import GeminiProvider
 
@@ -156,7 +156,7 @@ class TestGetProviderGemini:
         assert result == mock_instance
 
     @patch("pm_prompt_toolkit.providers.factory.GeminiProvider")
-    def test_get_provider_gemini_case_insensitive(self, mock_gemini_provider):
+    def test_get_provider_gemini_case_insensitive(self, mock_gemini_provider) -> None:  # type: ignore[no-untyped-def]
         """Test Gemini model detection is case-insensitive."""
         from pm_prompt_toolkit.providers.gemini import GeminiProvider
 
@@ -172,7 +172,7 @@ class TestGetProviderGemini:
 class TestGetProviderUnknownModel:
     """Test get_provider with unknown models."""
 
-    def test_get_provider_unknown_model_raises_value_error(self):
+    def test_get_provider_unknown_model_raises_value_error(self) -> None:
         """Test get_provider raises ValueError for unknown model."""
         with pytest.raises(ValueError) as exc_info:
             get_provider("unknown-model")
@@ -183,7 +183,7 @@ class TestGetProviderUnknownModel:
         assert "claude-sonnet" in error_msg
         assert "claude-opus" in error_msg
 
-    def test_get_provider_empty_string_raises_value_error(self):
+    def test_get_provider_empty_string_raises_value_error(self) -> None:
         """Test get_provider raises ValueError for empty string."""
         with pytest.raises(ValueError) as exc_info:
             get_provider("")
@@ -191,7 +191,7 @@ class TestGetProviderUnknownModel:
         error_msg = str(exc_info.value)
         assert "Unknown model:" in error_msg
 
-    def test_get_provider_invalid_model_shows_planned_models(self):
+    def test_get_provider_invalid_model_shows_planned_models(self) -> None:
         """Test error message includes supported models."""
         with pytest.raises(ValueError) as exc_info:
             get_provider("invalid-model")
@@ -203,7 +203,7 @@ class TestGetProviderUnknownModel:
         assert "claude-haiku" in error_msg
         assert "README.md" in error_msg
 
-    def test_get_provider_similar_but_invalid_model(self):
+    def test_get_provider_similar_but_invalid_model(self) -> None:
         """Test models that are close to valid but not exact."""
         # Close to valid but not exact - these raise ValueError
         invalid_models = [
@@ -230,7 +230,7 @@ class TestGetProviderReturnType:
     """Test get_provider return type and interface."""
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_get_provider_returns_llm_provider_interface(self, mock_claude_provider):
+    def test_get_provider_returns_llm_provider_interface(self, mock_claude_provider) -> None:  # type: ignore[no-untyped-def]
         """Test get_provider returns LLMProvider interface."""
         mock_instance = MagicMock(spec=LLMProvider)
         mock_claude_provider.return_value = mock_instance
@@ -240,7 +240,7 @@ class TestGetProviderReturnType:
         assert isinstance(result, LLMProvider)
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_get_provider_returns_claude_provider_instance(self, mock_claude_provider):
+    def test_get_provider_returns_claude_provider_instance(self, mock_claude_provider) -> None:  # type: ignore[no-untyped-def]
         """Test get_provider specifically returns ClaudeProvider for Claude models."""
         mock_instance = MagicMock(spec=ClaudeProvider)
         mock_claude_provider.return_value = mock_instance
@@ -254,7 +254,7 @@ class TestGetProviderReturnType:
 class TestGetProviderEdgeCases:
     """Test edge cases and boundary conditions."""
 
-    def test_get_provider_with_whitespace(self):
+    def test_get_provider_with_whitespace(self) -> None:
         """Test get_provider raises ValueError for models with whitespace."""
         # Whitespace is not stripped, so this is treated as unknown model
         with pytest.raises(ValueError) as exc_info:
@@ -263,7 +263,7 @@ class TestGetProviderEdgeCases:
         error_msg = str(exc_info.value)
         assert "Unknown model:" in error_msg
 
-    def test_get_provider_special_characters(self):
+    def test_get_provider_special_characters(self) -> None:
         """Test get_provider with special characters in model name."""
         with pytest.raises(ValueError):
             get_provider("claude@haiku")
@@ -272,7 +272,7 @@ class TestGetProviderEdgeCases:
             get_provider("claude/haiku")
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_get_provider_preserves_original_model_casing_in_error(self, mock_claude_provider):
+    def test_get_provider_preserves_original_model_casing_in_error(self, mock_claude_provider) -> None:  # type: ignore[no-untyped-def]
         """Test that error messages preserve original model casing."""
         # When ClaudeProvider raises an error, the original casing should be visible
         mock_claude_provider.side_effect = ValueError("Invalid model")
@@ -288,7 +288,7 @@ class TestGetProviderParameterCombinations:
     """Test various parameter combinations."""
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_all_claude_models_with_caching_disabled(self, mock_claude_provider):
+    def test_all_claude_models_with_caching_disabled(self, mock_claude_provider) -> None:  # type: ignore[no-untyped-def]
         """Test all Claude models can be instantiated with caching disabled."""
         mock_instance = MagicMock(spec=ClaudeProvider)
         mock_claude_provider.return_value = mock_instance
@@ -303,7 +303,7 @@ class TestGetProviderParameterCombinations:
         assert all(not call[1]["enable_caching"] for call in mock_claude_provider.call_args_list)
 
     @patch("pm_prompt_toolkit.providers.factory.ClaudeProvider")
-    def test_all_claude_models_with_caching_enabled(self, mock_claude_provider):
+    def test_all_claude_models_with_caching_enabled(self, mock_claude_provider) -> None:  # type: ignore[no-untyped-def]
         """Test all Claude models can be instantiated with caching enabled."""
         mock_instance = MagicMock(spec=ClaudeProvider)
         mock_claude_provider.return_value = mock_instance

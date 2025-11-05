@@ -46,7 +46,7 @@ CURRENT PERFORMANCE:
 
 REQUIREMENTS:
 - Optimize for: [accuracy | cost | speed | consistency]
-- Target model: [Claude Opus | Sonnet | Haiku | GPT-4 | etc.]
+- Target model: [Claude Opus | Sonnet | Haiku | GPT-5 | etc.]
 - Constraints: [token limit | latency requirement | budget]
 
 Please provide:
@@ -172,14 +172,14 @@ BASE PROMPT (model-agnostic):
 
 TARGET MODELS:
 - Claude Sonnet (Anthropic)
-- GPT-4o (OpenAI)
+- GPT-5o (OpenAI)
 - Gemini 2.5 Pro (Google)
 
 Please provide:
 1. Analysis of which model would perform best on this task
 2. Three optimized versions (one per provider) leveraging each model's strengths:
    - Claude version: Use XML tags, emphasize reasoning
-   - GPT-4 version: Use JSON mode or function calling
+   - GPT-5 version: Use JSON mode or function calling
    - Gemini version: Optimize for context handling
 3. Explanation of provider-specific optimizations
 4. Expected performance differences
@@ -209,7 +209,7 @@ I need to adapt this extraction prompt for different providers, but DON'T execut
 
 TARGET MODELS:
 - Claude Sonnet (primary)
-- GPT-4o (fallback)
+- GPT-5o (fallback)
 - Gemini 2.5 Pro (for very long feedback)
 
 Please provide optimized versions for each provider leveraging their strengths.
@@ -219,7 +219,7 @@ DO NOT execute the prompts.
 
 **Response** (abbreviated):
 
-> **Model Recommendation**: Claude Sonnet for primary (best cost/quality), GPT-4 for structured extraction via function calling
+> **Model Recommendation**: Claude Sonnet for primary (best cost/quality), GPT-5 for structured extraction via function calling
 >
 > **Claude Sonnet Version** (optimized for XML + caching):
 > ```xml
@@ -249,7 +249,7 @@ DO NOT execute the prompts.
 > ```
 > Benefits: Native XML parsing, cacheable structure, clear hierarchy
 >
-> **GPT-4 Version** (optimized for function calling):
+> **GPT-5 Version** (optimized for function calling):
 > ```python
 > {
 >     "name": "extract_customer_feedback",
@@ -268,7 +268,7 @@ DO NOT execute the prompts.
 > ```
 > Benefits: Guaranteed schema compliance, type validation, enum enforcement
 
-**Outcome**: We implemented Claude version (85% of traffic), GPT-4 fallback (15% when Claude has rate limits).
+**Outcome**: We implemented Claude version (85% of traffic), GPT-5 fallback (15% when Claude has rate limits).
 
 ---
 
