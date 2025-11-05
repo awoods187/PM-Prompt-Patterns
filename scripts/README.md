@@ -136,6 +136,58 @@ Total Models: 3
   ⏭️  Skipped: 0
 ```
 
+## Prompt Management Scripts
+
+### create_new_prompt.py ⭐ RECOMMENDED
+
+Interactive tool for creating new prompt patterns that follow library standards.
+
+**Usage:**
+```bash
+python scripts/create_new_prompt.py
+```
+
+**What it does:**
+1. Guides you through metadata collection (name, category, complexity)
+2. Collects prompt content interactively
+3. Auto-generates all 4 required files:
+   - `prompt.md` (base, model-agnostic)
+   - `prompt.claude.md` (Claude-optimized)
+   - `prompt.openai.md` (OpenAI-optimized)
+   - `prompt.gemini.md` (Gemini-optimized)
+4. Validates structure against library guidelines
+5. Detects common issues (cross-contamination, missing sections)
+
+**When to use:**
+- Creating a new prompt pattern from scratch
+- Want guided workflow with validation
+- First time contributing
+
+**See also:** [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed contributing guide
+
+### restructure_prompts_v2.py
+
+Automated tool to restructure existing prompts or regenerate model-specific files.
+
+**Usage:**
+```bash
+python scripts/restructure_prompts_v2.py
+```
+
+**What it does:**
+1. Scans all prompt directories
+2. Extracts base prompt content from `prompt.md`
+3. Generates clean model-specific files
+4. Eliminates duplication
+
+**When to use:**
+- Restructuring old prompts with duplication
+- Regenerating model files after base prompt changes
+- Batch processing multiple prompts
+- Fixing structure issues
+
+**Note:** This is the same script used for the major restructuring that reduced code by 82%.
+
 ## Automated Checks
 
 The `check_staleness.py` script runs automatically via GitHub Actions:
