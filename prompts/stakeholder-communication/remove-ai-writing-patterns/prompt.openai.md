@@ -30,6 +30,14 @@ Focus on these patterns:
    - Pattern: "What X knew that I didn't:", "Here's what happened:"
    - Fix: More direct transitions
 
+6. Bolded list lead-ins
+   - Pattern: "* **Performance**: Improved through caching"
+   - Pattern: "* **Key benefit**: Reduces latency"
+   - Fix: Remove bolding and integrate naturally into the bullet point
+   - Or: Rewrite to avoid the colon structure entirely
+   - Example: Change "* **Performance**: Improved through caching" to "* Caching improves performance"
+   - Avoid formulaic "[Category]:[Description]" structure
+
 Output format:
 - List each instance found with line/paragraph reference
 - Provide before/after diff for each

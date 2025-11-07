@@ -52,6 +52,14 @@ Focus on these patterns:
    - Pattern: "What X knew that I didn't:", "Here's what happened:"
    - Fix: More direct transitions
 
+6. Bolded list lead-ins
+   - Pattern: "* **Performance**: Improved through caching"
+   - Pattern: "* **Key benefit**: Reduces latency"
+   - Fix: Remove bolding and integrate naturally into the bullet point
+   - Or: Rewrite to avoid the colon structure entirely
+   - Example: Change "* **Performance**: Improved through caching" to "* Caching improves performance"
+   - Avoid formulaic "[Category]:[Description]" structure
+
 Output format:
 - List each instance found with line/paragraph reference
 - Provide before/after diff for each
@@ -178,6 +186,12 @@ But here's the remarkable part: the system handled edge cases I hadn't considere
 were particularly impressive when dealing with large datasets—effectively reducing processing
 time by 90%. What I learned was this: performance optimization is essentially about understanding
 your bottlenecks.
+
+Here are the key benefits of the new system:
+* **Performance**: Achieves 10x faster processing through intelligent caching
+* **Reliability**: Implements automatic retry logic with exponential backoff
+* **Observability**: Provides detailed metrics and logging for debugging
+* **Scalability**: Handles up to 10,000 concurrent connections
 ```
 
 **After**:
@@ -185,6 +199,12 @@ your bottlenecks.
 This changes the entire development workflow, not just coding speed. The system handled edge
 cases I hadn't considered. Results showed a 90% reduction in processing time for large datasets.
 The key insight: performance optimization requires understanding your bottlenecks.
+
+The new system provides several benefits:
+* 10x faster processing through intelligent caching
+* Automatic retry logic with exponential backoff for reliability
+* Detailed metrics and logging for debugging
+* Support for up to 10,000 concurrent connections
 ```
 
 **Improvements**:
@@ -193,6 +213,7 @@ The key insight: performance optimization requires understanding your bottleneck
 - Removed hedge words ("particularly," "effectively," "essentially")
 - Reduced em-dashes from 3 to 0
 - More direct, confident tone
+- Removed bolded list lead-ins and "[Category]:[Description]" structure
 
 ### Success Metrics
 
@@ -202,6 +223,7 @@ The key insight: performance optimization requires understanding your bottleneck
 - Hedge words: ~95%
 - Meta-commentary: ~92%
 - Listicle intros: ~90%
+- Bolded list lead-ins: ~97%
 
 **Readability improvement**:
 - Flesch Reading Ease: +5-10 points average

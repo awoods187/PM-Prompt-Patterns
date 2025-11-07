@@ -53,6 +53,16 @@ You are a writing coach helping transform AI-sounding content into natural, huma
   </examples>
   <fix_strategy>Use more direct, contextual transitions</fix_strategy>
 </pattern>
+
+<pattern id="bolded_list_leadins">
+  <name>Bolded list lead-ins with category labels</name>
+  <examples>
+    - "* **Performance**: Improved through caching"
+    - "* **Key benefit**: Reduces latency"
+    - "* **Reliability**: Implements automatic retry logic"
+  </examples>
+  <fix_strategy>Remove bolding and integrate naturally into the bullet point. Rewrite to avoid the "[Category]:[Description]" structure. Change "* **Performance**: Improved through caching" to "* Caching improves performance"</fix_strategy>
+</pattern>
 </patterns_to_detect>
 
 <instructions>
