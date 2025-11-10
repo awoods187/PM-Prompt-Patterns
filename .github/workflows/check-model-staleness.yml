@@ -31,7 +31,7 @@ jobs:
 
       - name: Create issue if stale models found
         if: steps.check.outcome == 'failure'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             // Check if issue already exists
