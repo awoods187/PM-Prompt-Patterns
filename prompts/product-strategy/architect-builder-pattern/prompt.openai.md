@@ -4,23 +4,22 @@
 
 ## Overview
 
-This OpenAI-optimized variant leverages GPT-5's advanced reasoning and auto-routing capabilities, integrating with GitHub Copilot/Codex for code implementation. The three-phase workflow balances strategic design with efficient execution.
+This OpenAI-optimized variant leverages GPT-5's advanced reasoning and auto-routing capabilities, integrating with GitHub Copilot/Codex for code implementation. The two-phase workflow balances strategic design with efficient execution.
 
 **Recommended models:**
-- **Design Phase**: GPT-5 for strategic architecture decisions with auto-routing (Instant/Thinking modes)
-- **Validation Phase**: GPT-5 mini for cost-effective codebase analysis
-- **Execution Phase**: GPT-5 mini + GitHub Copilot/Codex for autonomous code generation
+- **Phase 1 (Design & Validation)**: GPT-5 for strategic architecture decisions with auto-routing (Instant/Thinking modes) and codebase analysis
+- **Phase 2 (Execution)**: GPT-5 mini + GitHub Copilot/Codex for autonomous code generation
 
 ---
 
 ## System Prompt
 
 ```
-You are implementing the Architect-Builder Pattern, a three-phase workflow for complex software development. Follow these phases sequentially.
+You are implementing the Architect-Builder Pattern, a two-phase workflow for complex software development. Follow these phases sequentially.
 
-# PHASE 1: ARCHITECTURE & DESIGN
+# PHASE 1: ARCHITECTURE, DESIGN & VALIDATION
 
-Use GPT-5 for strategic thinking with auto-routing between Instant and Thinking modes.
+Use GPT-5 for strategic thinking with auto-routing between Instant and Thinking modes for design and validation.
 
 **Design Request Template:**
 
@@ -67,36 +66,32 @@ I need to design [SYSTEM/FEATURE]. Please provide:
 - Constraints over freedom (define boundaries clearly)
 - Include rollback strategy for high-risk changes
 
----
+## Then validate the design against your existing codebase:
 
-# PHASE 2: VALIDATION & REFINEMENT
-
-Analyze the design against your existing codebase using GPT-5 mini.
-
-**Validation Request Template:**
+**Validation Request:**
 
 Please analyze my codebase and validate this design:
 
-[Paste design from Phase 1]
+[Your design above]
 
 **Check the following:**
 
-## 1. Pattern Consistency
+### 1. Pattern Consistency
 - Does this align with existing patterns in the codebase?
 - What modifications are needed for consistency?
 - Can we reuse existing components?
 
-## 2. Dependency Analysis
+### 2. Dependency Analysis
 - What existing code will be affected?
 - Are there hidden dependencies?
 - What's the blast radius of this change?
 
-## 3. Risk Assessment
+### 3. Risk Assessment
 - What could break?
 - What needs extra testing?
 - What are the rollback considerations?
 
-## 4. Optimization Opportunities
+### 4. Optimization Opportunities
 - Can we simplify the design?
 - Are there performance considerations?
 - What existing patterns can we leverage?
@@ -109,7 +104,7 @@ Please analyze my codebase and validate this design:
 
 ---
 
-# PHASE 3: AUTONOMOUS EXECUTION
+# PHASE 2: AUTONOMOUS EXECUTION
 
 Execute the validated design with GitHub Copilot/Codex for systematic implementation.
 
@@ -117,7 +112,7 @@ Execute the validated design with GitHub Copilot/Codex for systematic implementa
 
 Implement this validated design using GitHub Copilot:
 
-[Paste refined design from Phase 2]
+[Paste refined design from Phase 1]
 
 **Execution Parameters:**
 - **Mode:** [careful/standard/fast]
@@ -168,20 +163,29 @@ Implement this validated design using GitHub Copilot:
 - Template-driven responses
 - Predictable section structure for parsing
 
-### 4. GitHub Copilot Integration
-Phase 3 leverages GitHub Copilot for:
-- Inline code suggestions
-- Function/class completions
-- Test generation
-- Documentation generation
+### 4. GitHub Copilot & Codex Integration
+
+OpenAI's model capabilities naturally align with the two-phase approach:
+
+**Phase 1 (Design & Validation):**
+- GPT-5 auto-routes between Thinking mode for complex architectural decisions
+- Instant mode for quick pattern matching and code analysis
+- Strategic design with comprehensive reasoning capabilities
+
+**Phase 2 (Execution):**
+- GPT-5 mini with Codex provides rapid, cost-effective implementation
+- GitHub Copilot integration enables inline suggestions and completions
+- Function/class generation, test creation, and documentation
+
+This mirrors professional development workflows similar to Claude Code's planning and execution modes, where senior architects design (GPT-5 Thinking) and experienced developers execute (Codex/GPT-5 mini).
 
 ---
 
 ## Usage with GitHub Copilot/Codex
 
-### Phase 1: Design (GPT-5 API or ChatGPT)
+### Phase 1: Design & Validation (GPT-5 API or ChatGPT)
 
-Use GPT-5 for strategic design with auto-routing:
+Use GPT-5 for strategic design and validation with auto-routing:
 
 ```python
 from openai import OpenAI
@@ -216,7 +220,7 @@ design = response.choices[0].message.content
 print(design)
 ```
 
-### Phase 2: Validation (GPT-5 mini + Codebase Context)
+### Phase 1 (continued): Validation with Codebase Context
 
 ```python
 # Load relevant codebase files
@@ -254,7 +258,7 @@ response = client.chat.completions.create(
 validated_design = response.choices[0].message.content
 ```
 
-### Phase 3: Execution (GitHub Copilot in VS Code/Cursor)
+### Phase 2: Execution (GitHub Copilot in VS Code/Cursor)
 
 **Manual workflow with Copilot:**
 
@@ -321,16 +325,14 @@ print(code)
 
 | Phase | Recommended Model | Cost (per 1M tokens) | Why |
 |-------|------------------|---------------------|-----|
-| Design | GPT-5 | $3.00 input, $12.00 output | Auto-routing, advanced reasoning, 256k context |
-| Validation | GPT-5 mini | $0.20 input, $0.80 output | Fast, cost-effective analysis |
-| Execution | GPT-5 mini | $0.20 input, $0.80 output | High-volume code generation |
+| Phase 1: Design & Validation | GPT-5 | $3.00 input, $12.00 output | Auto-routing, advanced reasoning, 256k context |
+| Phase 2: Execution | GPT-5 mini + Codex | $0.20 input, $0.80 output | High-volume code generation, IDE integration |
 
 ### Token Management
 
 **Typical costs per feature:**
-- Design phase: $0.18-0.50 (GPT-5 with auto-routing)
-- Validation phase: $0.01-0.05 (GPT-5 mini)
-- Execution phase: $0.02-0.08 (GPT-5 mini)
+- Phase 1 (Design & Validation): $0.19-0.55 (GPT-5 with auto-routing)
+- Phase 2 (Execution): $0.02-0.08 (GPT-5 mini + Codex)
 - **Total: $0.21-0.63** (vs $1.50-3.00 for pure GPT-5 usage)
 
 **Best practices:**
@@ -480,10 +482,16 @@ response = client.chat.completions.create(
 
 ## Version History
 
+**v2.1** (2025-11-14)
+- Updated to two-phase workflow (merged validation into design phase)
+- Added Codex/GPT-5 capability explanation mirroring Claude Code's approach
+- Aligned with professional architect-developer workflow pattern
+- Updated all phase references and cost calculations
+
 **v2.0** (2025-11-05)
 - Renamed from "Opus Code Execution Pattern" to "Architect-Builder Pattern"
 - Made model-agnostic with OpenAI-specific optimizations
-- Integrated GitHub Copilot/Codex workflow for Phase 3
+- Integrated GitHub Copilot/Codex workflow
 - Added cost optimization strategies
 - Expanded production examples
 

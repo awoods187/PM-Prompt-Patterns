@@ -6,7 +6,7 @@
 
 ## Overview
 
-A production-grade three-phase workflow that separates strategic architectural design from tactical implementation. This pattern uses a high-capability model for system design and architecture, a validation phase for codebase analysis, and an execution phase for autonomous implementation.
+A production-grade two-phase workflow that separates strategic architectural design from tactical implementation. This pattern uses a high-capability model for system design and architecture with a validation phase for codebase analysis, and an execution phase for autonomous implementation.
 
 **Business Value**:
 - Reduce architecture mistakes that cost >$10K to fix
@@ -34,9 +34,8 @@ A production-grade three-phase workflow that separates strategic architectural d
 ---
 
 ## Prompt
-
 ```
-You are implementing the Architect-Builder Pattern, a three-phase workflow for
+You are implementing the Architect-Builder Pattern, a two-phase workflow for
 complex software development. Follow these phases sequentially.
 
 ## PHASE 1: ARCHITECTURE & DESIGN
@@ -88,17 +87,11 @@ I need to design [SYSTEM/FEATURE]. Please provide:
 - Constraints over freedom (define boundaries clearly)
 - Include rollback strategy for high-risk changes
 
----
-
-## PHASE 2: VALIDATION & REFINEMENT
-
-Analyze the design against your existing codebase.
+Then analyze the design against your existing codebase.
 
 **Validation Request Template:**
 
 Please analyze my codebase and validate this design:
-
-[Paste design from Phase 1]
 
 **Check the following:**
 
@@ -130,7 +123,7 @@ Please analyze my codebase and validate this design:
 
 ---
 
-## PHASE 3: AUTONOMOUS EXECUTION
+## PHASE 2: AUTONOMOUS EXECUTION
 
 Execute the validated design with systematic checkpoints.
 
@@ -138,7 +131,7 @@ Execute the validated design with systematic checkpoints.
 
 Implement this validated design:
 
-[Paste refined design from Phase 2]
+[Paste refined design from Phase 1]
 
 **Execution Parameters:**
 - **Mode:** [careful/standard/fast]
@@ -327,10 +320,6 @@ Design a RESTful API refactoring that:
 - Implements rate limiting (100 req/min per user)
 - Uses consistent error response format
 - Includes OpenAPI/Swagger documentation
-```
-
-**Phase 2: Validate**
-```
 Check existing API patterns in /src/api:
 - Which endpoints follow REST conventions?
 - What's our current error response format?
@@ -338,7 +327,7 @@ Check existing API patterns in /src/api:
 - What rate limiting exists (if any)?
 ```
 
-**Phase 3: Execute**
+**Phase 2: Execute**
 ```
 Implement the validated API design:
 1. Create versioning middleware
@@ -358,10 +347,6 @@ Design a migration strategy from MongoDB to PostgreSQL:
 - Include rollback plan
 - Zero data loss tolerance
 - Preserve query performance
-```
-
-**Phase 2: Validate**
-```
 Analyze current data access patterns:
 - Which queries are most frequent? (top 10)
 - What's the current schema structure?
@@ -369,7 +354,7 @@ Analyze current data access patterns:
 - Check for data inconsistencies
 ```
 
-**Phase 3: Execute**
+**Phase 2: Execute**
 ```
 Execute phased migration:
 Phase 1: Set up PostgreSQL schema and indexes
@@ -389,10 +374,6 @@ Extract user authentication service from monolith:
 - Plan data migration strategy
 - Include service discovery approach
 - Design failure handling (circuit breakers, timeouts)
-```
-
-**Phase 2: Validate**
-```
 Analyze monolith dependencies:
 - What code depends on auth module?
 - Are there circular dependencies?
@@ -440,14 +421,14 @@ Extract service incrementally:
 
 ### Evaluation Metrics
 
-| Metric | Target | Measurement Method |
-|--------|--------|-------------------|
-| Design Completeness | 100% | All sections of design template filled |
-| Architecture Clarity | >8/10 | Team review score |
-| Test Coverage | >80% | Automated coverage tool |
-| First-Time Success | >80% | Tests pass without code changes |
-| Pattern Consistency | >90% | Code review checklist |
-| Documentation Quality | >7/10 | Peer review score |
+| Metric               | Target | Measurement Method                     |
+|----------------------|--------|----------------------------------------|
+| Design Completeness  | 100%   | All sections of design template filled |
+| Architecture Clarity | >8/10  | Team review score                      |
+| Test Coverage        | >80%   | Automated coverage tool                |
+| First-Time Success   | >80%   | Tests pass without code changes        |
+| Pattern Consistency  | >90%   | Code review checklist                  |
+| Documentation Quality| >7/10  | Peer review score                      |
 
 ---
 
@@ -476,8 +457,6 @@ Extract service incrementally:
 - Use for strategic thinking and architecture
 - Worth the cost for complex decisions
 - Saves money by preventing costly mistakes
-
-**Validation Phase (Mid-Tier Model):**
 - Pattern matching and code analysis
 - Cost-effective for systematic checks
 - Can skip for low-risk changes
@@ -609,7 +588,7 @@ git commit -m "feat: Implement validated design"
 
 ## Version History
 
-**v2.0** (2025-11-05)
+**v2.0** (2025-11-14)
 - Renamed from "Opus Code Execution Pattern" to "Architect-Builder Pattern"
 - Made model-agnostic (works with any LLM providers)
 - Expanded with detailed production patterns
@@ -617,7 +596,7 @@ git commit -m "feat: Implement validated design"
 - Included cost optimization strategies
 - Added success metrics and evaluation criteria
 
-**v1.0** (2024)
+**v1.0** (2025-10-01)
 - Initial version focused on Claude Opus + Claude Code
 - Basic three-window workflow
 - Limited examples and patterns

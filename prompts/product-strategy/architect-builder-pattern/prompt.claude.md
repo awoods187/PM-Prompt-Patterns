@@ -4,23 +4,22 @@
 
 ## Overview
 
-This Claude-optimized variant leverages Claude's extended context window, XML tag understanding, and prompt caching capabilities for maximum efficiency in the three-phase Architect-Builder workflow.
+This Claude-optimized variant leverages Claude's extended context window, XML tag understanding, and prompt caching capabilities for maximum efficiency in the two-phase Architect-Builder workflow.
 
 **Recommended models:**
-- **Design Phase**: Claude Opus 4 or Claude Sonnet 4.5 for strategic architecture decisions
-- **Validation Phase**: Claude Sonnet 4.5 for codebase analysis
-- **Execution Phase**: Claude Sonnet 4.5 with Claude Code for autonomous implementation
+- **Phase 1 (Design & Validation)**: Claude Opus 4 or Claude Sonnet 4.5 for strategic architecture decisions and codebase analysis
+- **Phase 2 (Execution)**: Claude Sonnet 4.5 with Claude Code for autonomous implementation
 
 ---
 
 ## Prompt
 
 <task>
-You are implementing the Architect-Builder Pattern, a three-phase workflow for complex software development. Follow these phases sequentially.
+You are implementing the Architect-Builder Pattern, a two-phase workflow for complex software development. Follow these phases sequentially.
 
-## PHASE 1: ARCHITECTURE & DESIGN
+## PHASE 1: ARCHITECTURE, DESIGN & VALIDATION
 
-Use Claude Opus 4 or Claude Sonnet 4.5 for strategic thinking.
+Use Claude Opus 4 or Claude Sonnet 4.5 for strategic thinking and codebase analysis.
 
 **Design Request Template:**
 
@@ -69,19 +68,13 @@ I need to design [SYSTEM/FEATURE]. Please provide:
 - Include rollback strategy for high-risk changes
 </design_request>
 
----
-
-## PHASE 2: VALIDATION & REFINEMENT
-
-Analyze the design against your existing codebase using Claude Sonnet 4.5.
-
-**Validation Request Template:**
+### Then validate the design against your existing codebase:
 
 <validation_request>
 Please analyze my codebase and validate this design:
 
 <design>
-[Paste design from Phase 1]
+[Your design above]
 </design>
 
 **Check the following:**
@@ -115,7 +108,7 @@ Please analyze my codebase and validate this design:
 
 ---
 
-## PHASE 3: AUTONOMOUS EXECUTION
+## PHASE 2: AUTONOMOUS EXECUTION
 
 Execute the validated design with Claude Code for systematic implementation.
 
@@ -125,7 +118,7 @@ Execute the validated design with Claude Code for systematic implementation.
 Implement this validated design using Claude Code:
 
 <validated_design>
-[Paste refined design from Phase 2]
+[Paste refined design from Phase 1]
 </validated_design>
 
 **Execution Parameters:**
@@ -185,19 +178,30 @@ The static prompt structure is cacheable, providing:
 - Supports multi-file validation in single request
 
 ### 4. Claude Code Integration
-Phase 3 works seamlessly with Claude Code for:
-- Autonomous file reading and writing
-- Test execution and validation
-- Git operations
-- Incremental checkpoints
+
+Claude Code naturally aligns with this two-phase pattern through its planning and execution modes:
+
+**Planning Mode (Phase 1 - Design & Validation):**
+- Use Claude Opus for strategic architectural decisions
+- Analyze existing codebase patterns
+- Design comprehensive solutions without making changes
+- Validate approaches against current implementation
+
+**Execution Mode (Phase 2 - Implementation):**
+- Use Claude Sonnet for rapid, autonomous implementation
+- Execute the validated design with systematic checkpoints
+- Perform file operations, run tests, and create commits
+- Complete the implementation with quality gates
+
+This mirrors professional development workflows where senior architects design and experienced developers execute. The separation ensures thoughtful design before committing to implementation.
 
 ---
 
 ## Usage with Claude Code
 
-### Phase 1: Design (Claude Web UI or API)
+### Phase 1: Design & Validation (Claude Web UI or API)
 
-Use Claude Opus 4 or Sonnet 4.5 for strategic design:
+Use Claude Opus 4 or Sonnet 4.5 for strategic design and validation:
 
 ```python
 import anthropic
@@ -228,17 +232,7 @@ response = client.messages.create(
 design = response.content[0].text
 ```
 
-### Phase 2: Validation (Claude Code CLI)
-
-```bash
-# Open Claude Code in your project directory
-claude-code
-
-# Paste the validation request with your design
-# Claude Code will analyze your codebase automatically
-```
-
-### Phase 3: Execution (Claude Code CLI)
+### Phase 2: Execution (Claude Code CLI)
 
 ```bash
 # Continue in Claude Code session
@@ -258,9 +252,8 @@ claude-code
 
 | Phase | Recommended Model | Why |
 |-------|------------------|-----|
-| Design | Claude Opus 4 or Sonnet 4.5 | Strategic decisions, complex reasoning |
-| Validation | Claude Sonnet 4.5 | Pattern matching, code analysis |
-| Execution | Claude Sonnet 4.5 + Claude Code | Autonomous implementation |
+| Phase 1: Design & Validation | Claude Opus 4 or Sonnet 4.5 | Strategic decisions, complex reasoning, pattern matching |
+| Phase 2: Execution | Claude Sonnet 4.5 + Claude Code | Autonomous implementation, file operations |
 
 ### Token Management
 
@@ -323,12 +316,13 @@ print(f"✅ Design complete ({design_response.usage.input_tokens} tokens)")
 with open("design_output.md", "w") as f:
     f.write(design)
 
-print("\n📋 Phase 2: Use Claude Code to validate design against codebase")
-print("   $ claude-code")
-print("   Paste validation request with design_output.md content")
+print("\n📋 Phase 1 (continued): Validate design against codebase")
+print("   Use the same session to validate the design")
+print("   Or use Claude Code in planning mode for codebase analysis")
 
-print("\n🚀 Phase 3: Use Claude Code to execute validated design")
-print("   Continue in Claude Code with execution request")
+print("\n🚀 Phase 2: Use Claude Code to execute validated design")
+print("   $ claude-code")
+print("   Switch to execution mode with the validated design")
 ```
 
 ---
@@ -414,10 +408,16 @@ Please analyze these files in my codebase:
 
 ## Version History
 
+**v2.1** (2025-11-14)
+- Updated to two-phase workflow (merged validation into design phase)
+- Added Claude Code planning and execution mode explanation
+- Aligned with professional architect-developer workflow pattern
+- Updated all phase references and cross-references
+
 **v2.0** (2025-11-05)
 - Renamed from "Opus Code Execution Pattern" to "Architect-Builder Pattern"
 - Added Claude-specific XML structure and optimizations
-- Integrated Claude Code workflow for Phase 3
+- Integrated Claude Code workflow
 - Added prompt caching strategy
 - Expanded production examples
 
