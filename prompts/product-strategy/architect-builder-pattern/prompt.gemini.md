@@ -4,23 +4,22 @@
 
 ## Overview
 
-This Gemini-optimized variant leverages Gemini's extended context window, multimodal capabilities, and instruction-following strengths for the three-phase Architect-Builder workflow. Particularly effective for design phases requiring visual diagrams or architectural sketches.
+This Gemini-optimized variant leverages Gemini's extended context window, multimodal capabilities, and instruction-following strengths for the two-phase Architect-Builder workflow. Particularly effective for design phases requiring visual diagrams or architectural sketches.
 
 **Recommended models:**
-- **Design Phase**: Gemini 1.5 Pro or Gemini 2.0 Flash Exp for strategic architecture decisions
-- **Validation Phase**: Gemini 2.0 Flash Exp for codebase analysis
-- **Execution Phase**: Gemini Code Assist for autonomous implementation (if available)
+- **Phase 1 (Design & Validation)**: Gemini 1.5 Pro or Gemini 2.0 Flash Exp for strategic architecture decisions and codebase analysis
+- **Phase 2 (Execution)**: Gemini 2.0 Flash Exp or Gemini Code Assist for autonomous implementation
 
 ---
 
 ## System Instruction
 
 ```
-You are implementing the Architect-Builder Pattern, a three-phase workflow for complex software development. Follow these phases sequentially with clear, structured outputs.
+You are implementing the Architect-Builder Pattern, a two-phase workflow for complex software development. Follow these phases sequentially with clear, structured outputs.
 
-# PHASE 1: ARCHITECTURE & DESIGN
+# PHASE 1: ARCHITECTURE, DESIGN & VALIDATION
 
-Use Gemini 1.5 Pro or Gemini 2.0 Flash Exp for strategic thinking.
+Use Gemini 1.5 Pro or Gemini 2.0 Flash Exp for strategic thinking and validation.
 
 **Design Request Template:**
 
@@ -71,40 +70,36 @@ Specific guidance:
 4. Constraints over freedom (define boundaries clearly)
 5. Include rollback strategy for high-risk changes
 
----
+## Then validate the design against your existing codebase:
 
-# PHASE 2: VALIDATION & REFINEMENT
-
-Analyze the design against your existing codebase using Gemini 2.0 Flash Exp.
-
-**Validation Request Template:**
+**Validation Request:**
 
 Please analyze my codebase and validate this design:
 
 **Design to validate:**
-[Paste design from Phase 1]
+[Your design above]
 
 **Validation checklist:**
 
-## 1. Pattern Consistency
+### 1. Pattern Consistency
 Questions to answer:
 - Does this align with existing patterns in the codebase?
 - What modifications are needed for consistency?
 - Can we reuse existing components?
 
-## 2. Dependency Analysis
+### 2. Dependency Analysis
 Assess:
 - What existing code will be affected?
 - Are there hidden dependencies?
 - What's the blast radius of this change?
 
-## 3. Risk Assessment
+### 3. Risk Assessment
 Identify:
 - What could break?
 - What needs extra testing?
 - What are the rollback considerations?
 
-## 4. Optimization Opportunities
+### 4. Optimization Opportunities
 Explore:
 - Can we simplify the design?
 - Are there performance considerations?
@@ -119,7 +114,7 @@ Refined implementation plan with:
 
 ---
 
-# PHASE 3: AUTONOMOUS EXECUTION
+# PHASE 2: AUTONOMOUS EXECUTION
 
 Execute the validated design systematically.
 
@@ -128,7 +123,7 @@ Execute the validated design systematically.
 Implement this validated design:
 
 **Validated design:**
-[Paste refined design from Phase 2]
+[Paste refined design from Phase 1]
 
 **Execution parameters:**
 - **Mode:** [careful/standard/fast]
@@ -341,17 +336,16 @@ for i, phase in enumerate(phases, 1):
 
 | Phase | Recommended Model | Cost (per 1M tokens) | Why |
 |-------|------------------|---------------------|-----|
-| Design | Gemini 1.5 Pro | $1.25 input, $5.00 output | Strategic decisions, complex reasoning |
-| Validation | Gemini 2.0 Flash Exp | $0 (free tier) | Fast analysis |
-| Execution | Gemini 2.0 Flash Exp | $0 (free tier) | Code generation |
+| Phase 1: Design & Validation | Gemini 1.5 Pro or 2.0 Flash Exp | $1.25/$5.00 or $0 (free) | Strategic decisions, complex reasoning, codebase analysis |
+| Phase 2: Execution | Gemini 2.0 Flash Exp | $0 (free tier) | Code generation |
 
 ### Token Management
 
-**Typical costs per feature (with 1.5 Pro for design):**
-- Design phase: $0.05-0.15
-- Validation phase: $0 (free tier)
-- Execution phase: $0 (free tier)
-- **Total: $0.05-0.15** (extremely cost-effective)
+**Typical costs per feature:**
+- Phase 1 (Design & Validation with 1.5 Pro): $0.05-0.15
+- Phase 1 (Design & Validation with 2.0 Flash Exp): $0 (free tier)
+- Phase 2 (Execution): $0 (free tier)
+- **Total: $0-0.15** (extremely cost-effective)
 
 **Best practices:**
 - Use Gemini 2.0 Flash Exp for validation and execution (free tier)
@@ -504,6 +498,11 @@ For each phase, provide:
 ---
 
 ## Version History
+
+**v2.1** (2025-11-14)
+- Updated to two-phase workflow (merged validation into design phase)
+- Aligned with professional architect-developer workflow pattern
+- Updated all phase references and cost calculations
 
 **v2.0** (2025-11-05)
 - Renamed from "Opus Code Execution Pattern" to "Architect-Builder Pattern"
