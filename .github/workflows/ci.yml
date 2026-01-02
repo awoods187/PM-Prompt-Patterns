@@ -42,7 +42,7 @@ jobs:
           python-version: "3.11"
 
       - name: Cache pip dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-lint-${{ hashFiles('**/pyproject.toml') }}
@@ -90,7 +90,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Cache pip dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/pyproject.toml') }}
@@ -140,7 +140,7 @@ jobs:
           python-version: "3.11"
 
       - name: Cache pip dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-security-${{ hashFiles('**/pyproject.toml') }}
@@ -155,7 +155,7 @@ jobs:
 
       - name: Install security tools
         run: |
-          pip install bandit safety pip-audit semgrep
+          pip install bandit safety pip-audit
 
       - name: Run Bandit (Python security linter)
         run: |
@@ -175,9 +175,9 @@ jobs:
         continue-on-error: true
 
       - name: Run Semgrep (SAST)
-        run: |
-          semgrep --config=auto --json --output=semgrep-report.json pm_prompt_toolkit/ ai_models/ || true
-          semgrep --config=auto pm_prompt_toolkit/ ai_models/ || true
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: auto
         continue-on-error: true
 
       - name: TruffleHog Secret Scanning
@@ -193,9 +193,7 @@ jobs:
         if: always()
         with:
           name: security-reports
-          path: |
-            bandit-report.json
-            semgrep-report.json
+          path: bandit-report.json
           if-no-files-found: ignore
 
   # Job 4: Build Verification
@@ -211,7 +209,7 @@ jobs:
           python-version: "3.11"
 
       - name: Cache pip dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-build-${{ hashFiles('**/pyproject.toml') }}
