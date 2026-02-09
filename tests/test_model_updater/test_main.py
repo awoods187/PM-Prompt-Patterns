@@ -31,8 +31,7 @@ def temp_repo_root(tmp_path: Path) -> Path:
 
     # Create a sample YAML file
     yaml_file = definitions_dir / "test-model.yaml"
-    yaml_file.write_text(
-        """model_id: test-model
+    yaml_file.write_text("""model_id: test-model
 provider: test
 name: Test Model
 api_identifier: test-v1
@@ -55,8 +54,7 @@ optimization:
   cost_tier: mid-tier
   speed_tier: balanced
 notes: "Test model"
-"""
-    )
+""")
 
     return tmp_path
 
