@@ -9,6 +9,8 @@ on:
 jobs:
   check-staleness:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write  # Required for creating/listing issues
 
     steps:
       - name: Checkout code

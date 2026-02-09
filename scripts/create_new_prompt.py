@@ -379,7 +379,9 @@ def validate_prompt_structure(prompt_dir: Path) -> bool:
                 print(f"⚠️  {filename}: Missing '## Prompt' section")
                 all_valid = False
             if "<task>" in content or "</task>" in content:
-                print(f"⚠️  {filename}: Contains model-specific XML tags (should be model-agnostic)")
+                print(
+                    f"⚠️  {filename}: Contains model-specific XML tags (should be model-agnostic)"
+                )
                 all_valid = False
             else:
                 print(f"✅ {filename}: Valid base prompt")
