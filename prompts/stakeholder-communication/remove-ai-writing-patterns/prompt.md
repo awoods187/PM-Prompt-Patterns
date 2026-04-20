@@ -60,6 +60,16 @@ Focus on these patterns:
    - Example: Change "* **Performance**: Improved through caching" to "* Caching improves performance"
    - Avoid formulaic "[Category]:[Description]" structure
 
+7. Anaphoric triads and fragment cascades
+   - Pattern: Three or more consecutive sentences (or sentence fragments) starting with the same word or phrase, used as rhythmic emphasis
+   - Pattern: "It is a missed close. It is an audit finding. It is a compliance exposure."
+   - Pattern: "Did the data hold up. Did the integration round-trip. Did the migration land. Did the period close."
+   - Pattern: "The pitch decks will rhyme. The demos will sing."
+   - Pattern: Comma-separated noun triplets like "One person, one post, one afternoon"
+   - Fix: Break the parallel structure. Consolidate into a single sentence, or vary the sentence openers so the rhythm disappears
+   - Example: Change "It is a missed close. It is an audit finding. It is a compliance exposure." to "A missed close becomes an audit finding and a compliance exposure."
+   - This is one of the strongest AI "tells" because humans rarely sustain this cadence naturally
+
 Output format:
 - List each instance found with line/paragraph reference
 - Provide before/after diff for each
@@ -224,6 +234,7 @@ The new system provides several benefits:
 - Meta-commentary: ~92%
 - Listicle intros: ~90%
 - Bolded list lead-ins: ~97%
+- Anaphoric triads / fragment cascades: ~94%
 
 **Readability improvement**:
 - Flesch Reading Ease: +5-10 points average
