@@ -19,6 +19,12 @@ Production-tested prompts for building internal tools, libraries, and developmen
   - **Production metrics**: 98% security issue detection, 90%+ documentation coverage
   - **Best for**: Pre-open-source audits, code quality improvements, legacy modernization
 
+- **[Python PR Code Review](./python-pr-code-review/)** - 🟡 Intermediate
+  - Pedantic staff-engineer review of a single Python PR diff
+  - Severity-tagged findings (BLOCKER/MAJOR/MINOR/NIT) with file:line and a concrete fix
+  - Enforces Google-style docstrings, full type hints, and modern 3.11+ idioms
+  - **Best for**: First-pass PR review, CI merge gates, team typing/docstring standards
+
 ### CI/CD & DevOps
 
 - **[GitHub Actions CI/CD Pipeline for Python](./github-actions-python-cicd.md)** - 🔴 Advanced
