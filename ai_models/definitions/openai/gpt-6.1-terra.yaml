@@ -12,7 +12,7 @@ metadata:
   context_window_input: 922000
   context_window_output: 128000
   knowledge_cutoff: "June 2026"
-  release_date: null  # Not published by provider
+  release_date: "2026-10-26"
   last_verified: "2026-10-30"
   docs_url: "https://developers.openai.com/api/docs/models/gpt-6.1-terra"
 
