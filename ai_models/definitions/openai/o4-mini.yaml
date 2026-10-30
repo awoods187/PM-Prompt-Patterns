@@ -1,20 +1,24 @@
 # o4-mini Model Definition
-# Last verified: 2025-11-01
-# Source: https://platform.openai.com/docs/models
+# Last verified: 2026-10-30
+# Source: https://developers.openai.com/api/docs/deprecations
 
 schema_version: "1.0.0"
 model_id: "o4-mini"
 provider: "openai"
 name: "o4-mini"
 api_identifier: "o4-mini-2025-04-16"
+deprecated: true
+replacement: "gpt-6.1-terra"
 
 metadata:
-  context_window_input: 128000
-  context_window_output: 16384
-  knowledge_cutoff: "April 2025"
+  context_window_input: 200000
+  context_window_output: 100000
+  knowledge_cutoff: "June 2024"
   release_date: "2025-04-16"
-  last_verified: "2025-11-01"
-  docs_url: "https://platform.openai.com/docs/models/o4-mini"
+  last_verified: "2026-10-30"
+  deprecation_date: "2026-04-22"
+  retirement_date: "2026-10-23"
+  docs_url: "https://developers.openai.com/api/docs/models/o4-mini"
 
 capabilities:
   - text_input
@@ -29,8 +33,9 @@ capabilities:
   - visual_reasoning
 
 pricing:
-  input_per_1m: 1.00
-  output_per_1m: 4.00
+  input_per_1m: 1.10
+  output_per_1m: 4.40
+  cache_read_per_1m: 0.275
 
 optimization:
   recommended_for:
@@ -52,4 +57,4 @@ optimization:
   cost_tier: "budget"
   speed_tier: "fast"
 
-notes: "Fast, cost-efficient reasoning with visual thinking capability. Released April 16, 2025. Can analyze images during reasoning."
+notes: "SHUT DOWN by OpenAI on 2026-10-23 (requests fail). OpenAI lists gpt-5.6-terra as the replacement; this library migrates to gpt-6.1-terra."

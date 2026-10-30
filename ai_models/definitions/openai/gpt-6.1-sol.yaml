@@ -1,0 +1,46 @@
+# GPT-6.1 Sol Model Definition
+# Last verified: 2026-10-30
+# Source: https://developers.openai.com/api/docs/models/gpt-6.1-sol
+
+schema_version: "1.0.0"
+model_id: "gpt-6.1-sol"
+provider: "openai"
+name: "GPT-6.1 Sol"
+api_identifier: "gpt-6.1-sol"
+
+metadata:
+  context_window_input: 922000
+  context_window_output: 128000
+  knowledge_cutoff: "April 2026"
+  release_date: null  # Not published by provider
+  last_verified: "2026-10-30"
+  docs_url: "https://developers.openai.com/api/docs/models/gpt-6.1-sol"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - prompt_caching
+  - streaming
+  - json_mode
+
+pricing:
+  input_per_1m: 2.00
+  output_per_1m: 10.00
+  cache_write_per_1m: 2.50
+  cache_read_per_1m: 0.10
+
+optimization:
+  recommended_for:
+    - "General production workloads"
+    - "Coding and analysis"
+    - "Replacement for gpt-5 and o3"
+  best_practices:
+    - "Use the Responses API for function calling"
+    - "Keep prompts under 272k input tokens to avoid 2x input / 1.5x output pricing"
+  cost_tier: "mid-tier"
+  speed_tier: "balanced"
+
+notes: "RECOMMENDED OpenAI default in this library. 1.05M total context (922k input, 128k output). Prompts over 272k input tokens cost 2x input and cache rates and 1.5x output."

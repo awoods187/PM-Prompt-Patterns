@@ -1,0 +1,49 @@
+# Claude Sonnet 5.5 Model Definition
+# Last verified: 2026-10-30
+# Source: https://platform.claude.com/docs/en/models/sonnet-5-5/overview
+
+schema_version: "1.0.0"
+model_id: "claude-sonnet-5-5"
+provider: "anthropic"
+name: "Claude Sonnet 5.5"
+api_identifier: "claude-sonnet-5-5"
+
+metadata:
+  context_window_input: 1000000
+  context_window_output: 128000
+  knowledge_cutoff: "June 2026"
+  release_date: "2026-09-28"
+  last_verified: "2026-10-30"
+  docs_url: "https://platform.claude.com/docs/en/models/sonnet-5-5/overview"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - prompt_caching
+  - streaming
+  - json_mode
+
+pricing:
+  input_per_1m: 2.00
+  output_per_1m: 10.00
+  cache_write_per_1m: 2.50
+  cache_read_per_1m: 0.10
+
+optimization:
+  recommended_for:
+    - "Production workhorse applications"
+    - "Code generation and review"
+    - "Document analysis and summarization"
+    - "Multi-step instructions"
+  best_practices:
+    - "Use XML tags for structured prompts"
+    - "Enable prompt caching for repeated system prompts (cache reads cost 5% of base input)"
+    - "Do not set temperature, top_p, or top_k"
+    - "Forced tool use (tool_choice any/tool) returns an error; use auto"
+  cost_tier: "mid-tier"
+  speed_tier: "fast"
+
+notes: "RECOMMENDED default for most use cases. Replaces claude-sonnet-4-5. Retirement not sooner than 2027-09-28."

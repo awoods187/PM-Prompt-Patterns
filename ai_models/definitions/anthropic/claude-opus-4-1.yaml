@@ -1,20 +1,24 @@
 # Claude Opus 4.1 Model Definition
-# Last verified: 2025-10-25
-# Source: https://docs.claude.com/en/docs/about-claude/models
+# Last verified: 2026-10-30
+# Source: https://platform.claude.com/docs/en/about-claude/model-deprecations
 
 schema_version: "1.0.0"
 model_id: "claude-opus-4-1"
 provider: "anthropic"
 name: "Claude Opus 4.1"
 api_identifier: "claude-opus-4-1-20250805"
+deprecated: true
+replacement: "claude-opus-5-5"
 
 metadata:
   context_window_input: 200000
   context_window_output: null
   knowledge_cutoff: "December 2024"
   release_date: "2025-08-05"
-  last_verified: "2025-10-29"
-  docs_url: "https://docs.claude.com/en/docs/about-claude/models"
+  last_verified: "2026-10-30"
+  deprecation_date: "2026-06-05"
+  retirement_date: "2026-08-05"
+  docs_url: "https://platform.claude.com/docs/en/about-claude/model-deprecations"
 
 capabilities:
   - text_input
@@ -50,4 +54,4 @@ optimization:
   cost_tier: "premium"
   speed_tier: "thorough"
 
-notes: "Highest capability model with superior reasoning. Training data through August 2025. Use selectively for maximum ROI."
+notes: "RETIRED on the Claude API on 2026-08-05 (requests fail). Still offered on Amazon Bedrock and Google-managed Vertex AI on their own schedules. Anthropic's listed replacement is claude-opus-4-8; this library migrates to claude-opus-5-5."

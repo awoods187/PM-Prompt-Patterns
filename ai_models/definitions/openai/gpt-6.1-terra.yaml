@@ -1,0 +1,44 @@
+# GPT-6.1 Terra Model Definition
+# Last verified: 2026-10-30
+# Source: https://developers.openai.com/api/docs/models/gpt-6.1-terra
+
+schema_version: "1.0.0"
+model_id: "gpt-6.1-terra"
+provider: "openai"
+name: "GPT-6.1 Terra"
+api_identifier: "gpt-6.1-terra"
+
+metadata:
+  context_window_input: 922000
+  context_window_output: 128000
+  knowledge_cutoff: "June 2026"
+  release_date: null  # Not published by provider
+  last_verified: "2026-10-30"
+  docs_url: "https://developers.openai.com/api/docs/models/gpt-6.1-terra"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - prompt_caching
+  - streaming
+  - json_mode
+
+pricing:
+  input_per_1m: 1.00
+  output_per_1m: 5.00
+  cache_write_per_1m: 1.25
+  cache_read_per_1m: 0.05
+
+optimization:
+  recommended_for:
+    - "Cost-sensitive production workloads"
+    - "Replacement for gpt-5-mini and o4-mini"
+  best_practices:
+    - "Keep prompts under 272k input tokens to avoid 2x input / 1.5x output pricing"
+  cost_tier: "mid-tier"
+  speed_tier: "fast"
+
+notes: "1.05M total context (922k input, 128k output)."
