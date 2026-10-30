@@ -197,9 +197,8 @@ class TestGetProviderUnknownModel:
             get_provider("invalid-model")
 
         error_msg = str(exc_info.value)
-        assert "gpt-4" in error_msg
-        assert "gpt-4o" in error_msg
-        assert "gemini-2-5" in error_msg
+        assert "gpt-6.1-sol" in error_msg
+        assert "gemini-3-8-flash" in error_msg
         assert "claude-haiku" in error_msg
         assert "README.md" in error_msg
 

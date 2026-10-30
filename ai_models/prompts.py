@@ -10,7 +10,7 @@ optimized for different LLM providers (Claude, OpenAI, Gemini).
 Example:
     >>> from ai_models.prompts import PromptRegistry, get_prompt
     >>> # Auto-select best variant for model
-    >>> prompt = get_prompt("signal-classification", model="gpt-4o")
+    >>> prompt = get_prompt("signal-classification", model="gpt-6.1-sol")
     >>> # Explicit provider selection
     >>> prompt = get_prompt("signal-classification", provider="openai")
 """
@@ -45,7 +45,7 @@ class PromptRegistry:
         Args:
             prompt_name: Name/path of the prompt (e.g., "analytics/signal-classification")
             provider: Optional provider name (claude, openai, gemini)
-            model: Optional model name for auto-detection (e.g., "gpt-4o", "claude-sonnet")
+            model: Optional model name for auto-detection (e.g., "gpt-6.1-sol", "claude-sonnet")
 
         Returns:
             Prompt content optimized for the provider
@@ -56,7 +56,7 @@ class PromptRegistry:
 
         Example:
             >>> # Auto-detect from model name
-            >>> prompt = PromptRegistry.get_prompt("signal-classification", model="gpt-4o")
+            >>> prompt = PromptRegistry.get_prompt("signal-classification", model="gpt-6.1-sol")
             >>> # Explicit provider
             >>> prompt = PromptRegistry.get_prompt("signal-classification", provider="openai")
         """
@@ -194,7 +194,7 @@ class PromptRegistry:
         Detect provider from model name.
 
         Args:
-            model_name: Model identifier (e.g., "gpt-4o", "claude-sonnet-4-5")
+            model_name: Model identifier (e.g., "gpt-6.1-sol", "claude-sonnet-5-5")
 
         Returns:
             Provider name or None if not detected
@@ -252,7 +252,7 @@ def get_prompt(
 
     Example:
         >>> from ai_models import get_prompt
-        >>> prompt = get_prompt("signal-classification", model="gpt-4o")
+        >>> prompt = get_prompt("signal-classification", model="gpt-6.1-sol")
     """
     return PromptRegistry.get_prompt(prompt_name, provider=provider, model=model)
 

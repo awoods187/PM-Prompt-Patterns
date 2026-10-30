@@ -4,7 +4,7 @@
 """Google Vertex AI provider implementation for Claude models.
 
 This module provides integration with Google Vertex AI for Claude models,
-supporting Claude 4.5, Claude 4, and Claude 3.5 models via Google Cloud infrastructure.
+supporting Claude 5.5 and older Claude models via Google Cloud infrastructure.
 
 Security:
     GCP credentials are loaded from:
@@ -14,7 +14,7 @@ Security:
 
 Example:
     >>> from pm_prompt_toolkit.providers import VertexProvider
-    >>> provider = VertexProvider(model="claude-sonnet-4-5")
+    >>> provider = VertexProvider(model="claude-sonnet-5-5")
     >>> result = provider.classify("We need SSO integration")
     >>> print(result.category, result.confidence)
     feature_request 0.96
@@ -42,25 +42,33 @@ logger = logging.getLogger(__name__)
 # Model ID mapping for Vertex AI
 # Maps our simplified names to Vertex AI's model identifiers
 VERTEX_MODEL_IDS = {
-    # Claude 4.5 models
-    "claude-sonnet-4-5": "claude-sonnet-4-5-v2@20241022",
-    # Claude 4 models
-    "claude-sonnet-4": "claude-sonnet-4-5@20240620",
-    "claude-opus-4-1": "claude-opus-4-1@20240229",
-    "claude-opus-4": "claude-opus-4-1@20240229",
-    # Claude 3.5 models (backward compatibility)
-    "claude-sonnet": "claude-sonnet-4-5-v2@20241022",
-    "claude-haiku": "claude-haiku-4-5@20241022",
-    "claude-opus": "claude-opus-4-1@20240229",
+    # Claude 5.5 models
+    "claude-opus-5-5": "claude-opus-5-5",
+    "claude-sonnet-5-5": "claude-sonnet-5-5",
+    "claude-haiku-5-5": "claude-haiku-5-5",
+    # Older Claude models (Google-managed Vertex AI sets its own retirement dates)
+    "claude-sonnet-4-5": "claude-sonnet-4-5@20250929",
+    "claude-haiku-4-5": "claude-haiku-4-5@20251001",
+    "claude-opus-4-1": "claude-opus-4-1@20250805",
+    "claude-sonnet-4": "claude-sonnet-4@20250514",
+    "claude-opus-4": "claude-opus-4@20250514",
+    # Family aliases resolve to the current generation
+    "claude-sonnet": "claude-sonnet-5-5",
+    "claude-haiku": "claude-haiku-5-5",
+    "claude-opus": "claude-opus-5-5",
 }
 
 # Vertex AI pricing (per 1M tokens) - Input/Output
-# Last verified: 2025-01-28
+# Last verified: 2026-10-30 (Claude API base rates; Haiku 5.5 rate is for prompts up to 100k tokens)
 VERTEX_PRICING = {
-    "claude-sonnet-4-5-v2@20241022": (3.0, 15.0),
-    "claude-sonnet-4-5@20240620": (3.0, 15.0),
-    "claude-opus-4-1@20240229": (15.0, 75.0),
-    "claude-haiku-4-5@20241022": (1.0, 5.0),
+    "claude-opus-5-5": (4.0, 20.0),
+    "claude-sonnet-5-5": (2.0, 10.0),
+    "claude-haiku-5-5": (0.10, 0.50),
+    "claude-sonnet-4-5@20250929": (3.0, 15.0),
+    "claude-haiku-4-5@20251001": (1.0, 5.0),
+    "claude-opus-4-1@20250805": (15.0, 75.0),
+    "claude-sonnet-4@20250514": (3.0, 15.0),
+    "claude-opus-4@20250514": (15.0, 75.0),
 }
 
 
@@ -74,14 +82,15 @@ class VertexProvider(LLMProvider):
         - Integrated GCP billing
 
     Supported Models:
-        - claude-sonnet-4-5: Latest Claude Sonnet 4.5 ($3/$15 per 1M tokens)
-        - claude-sonnet-4: Claude Sonnet 4 ($3/$15 per 1M tokens)
-        - claude-opus-4-1: Claude Opus 4.1 ($15/$75 per 1M tokens)
-        - claude-haiku: Claude Haiku 3.5 ($1/$5 per 1M tokens)
+        - claude-sonnet-5-5: Claude Sonnet 5.5, the default ($2/$10 per 1M tokens)
+        - claude-opus-5-5: Claude Opus 5.5 ($4/$20 per 1M tokens)
+        - claude-haiku-5-5: Claude Haiku 5.5 ($0.10/$0.50 per 1M tokens, prompts up to 100k)
+        - claude-sonnet-4-5, claude-haiku-4-5, claude-opus-4-1, claude-sonnet-4, claude-opus-4:
+          older models, subject to the platform's own retirement schedule
 
     Example:
         >>> provider = VertexProvider(
-        ...     model="claude-sonnet-4-5",
+        ...     model="claude-sonnet-5-5",
         ...     project_id="my-gcp-project",
         ...     region="us-central1"
         ... )
@@ -96,7 +105,7 @@ class VertexProvider(LLMProvider):
 
     def __init__(
         self,
-        model: str = "claude-sonnet-4-5",
+        model: str = "claude-sonnet-5-5",
         enable_caching: bool = False,
         project_id: Optional[str] = None,
         region: Optional[str] = None,
@@ -104,7 +113,7 @@ class VertexProvider(LLMProvider):
         """Initialize Vertex AI provider.
 
         Args:
-            model: Claude model to use (e.g., 'claude-sonnet-4-5', 'claude-opus-4-1')
+            model: Claude model to use (e.g., 'claude-sonnet-5-5', 'claude-opus-5-5')
             enable_caching: Enable caching (Note: Vertex caching works differently)
             project_id: GCP project ID (defaults to settings.gcp_project_id)
             region: GCP region (defaults to settings.gcp_region)

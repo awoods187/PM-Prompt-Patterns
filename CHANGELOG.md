@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Model definitions verified 2026-10-30 (#41)
+- **Added** definitions for Claude Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5; GPT-6 Astra, GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna; Gemini 4 Argon, 3.8 Flash, 3.5 Flash-Lite
+- **Changed** defaults: Claude `claude-sonnet-4-5` → `claude-sonnet-5-5` (and the `claude-sonnet`/`claude-opus`/`claude-haiku` aliases now resolve to the 5.5 models), OpenAI `gpt-5` → `gpt-6.1-sol`, Gemini `gemini-2-5-flash` → `gemini-3-8-flash`
+- **Deprecated** in the registry, with replacement and shutdown dates: Claude Sonnet 4.5 (retires 2026-11-30), Claude Opus 4.1 (retired 2026-08-05), o4-mini (shut down 2026-10-23), GPT-5/GPT-5 mini/o3 (shut down 2026-12-11), GPT-4.1/GPT-4.1 mini/GPT-4o/GPT-4o mini (shut down 2027-01-14)
+- **Fixed** pricing for every OpenAI and Gemini model, context windows for GPT-5, GPT-4.1, o3, o4-mini, and Gemini 2.5, and API identifiers that did not exist (`gemini-2.5-pro-002`, `gpt-4.1-2025-04`, Bedrock `anthropic.claude-*-v2:0`, Vertex `@2024*` snapshots)
+- **Fixed** `get_provider("claude-sonnet-5-5")` (full Claude IDs previously raised `ValueError`; only aliases worked)
+- **Fixed** Claude cost estimates to use each model's cache read rate instead of a flat 10%
+- **Fixed** the model updater's static fallback specs, which were stale and would have proposed reverting corrected definitions
+- **Removed** `o4-mini-high` from the OpenAI provider (not an API model)
+
 ### Added
 - **Comprehensive documentation overhaul** - 8,000+ lines of production-ready documentation:
   - `docs/advanced_techniques.md` (1,093 lines) - XML prompts, provider patterns, meta-prompting

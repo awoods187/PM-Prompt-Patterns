@@ -36,11 +36,25 @@ logger = logging.getLogger(__name__)
 
 # DEPRECATED: Use ai_models.PricingService instead
 # This dict is kept for backward compatibility but will be removed in future versions
-# Last verified: 2025-10-25
+# Last verified: 2026-10-30
 CLAUDE_PRICING = {
-    "claude-haiku": (1.00, 5.00),  # Fixed: was (0.25, 1.25) - 4x underestimation
-    "claude-sonnet": (3.0, 15.0),
-    "claude-opus": (15.0, 75.0),
+    "claude-haiku": (0.10, 0.50),  # Prompts up to 100k tokens
+    "claude-sonnet": (2.0, 10.0),
+    "claude-opus": (4.0, 20.0),
+}
+
+# Cache reads as a fraction of the base input price
+CLAUDE_CACHE_READ_MULTIPLIER = {
+    "claude-haiku": 0.10,
+    "claude-sonnet": 0.05,
+    "claude-opus": 0.05,
+}
+
+# Registry model each alias resolves to
+CLAUDE_MODEL_IDS = {
+    "claude-haiku": "claude-haiku-5-5",
+    "claude-sonnet": "claude-sonnet-5-5",
+    "claude-opus": "claude-opus-5-5",
 }
 
 # Try to import new pricing system (graceful fallback if not available)
@@ -80,7 +94,9 @@ class ClaudeProvider(LLMProvider):
         """Initialize Claude provider.
 
         Args:
-            model: Claude model to use ('claude-haiku', 'claude-sonnet', 'claude-opus')
+            model: Claude model to use: an alias ('claude-haiku', 'claude-sonnet',
+                'claude-opus') or its full ID ('claude-haiku-5-5', 'claude-sonnet-5-5',
+                'claude-opus-5-5')
             enable_caching: Enable prompt caching for cost savings
 
         Raises:
@@ -91,10 +107,13 @@ class ClaudeProvider(LLMProvider):
         if anthropic is None:
             raise ImportError("anthropic package is required. Install with: pip install anthropic")
 
+        aliases_by_id = {model_id: alias for alias, model_id in CLAUDE_MODEL_IDS.items()}
+        model = aliases_by_id.get(model, model)
+
         if model not in CLAUDE_PRICING:
             raise ValueError(
                 f"Unsupported Claude model: {model}. "
-                f"Valid models: {list(CLAUDE_PRICING.keys())}"
+                f"Valid models: {list(CLAUDE_PRICING.keys()) + list(aliases_by_id)}"
             )
 
         super().__init__(model=model, enable_caching=enable_caching)
@@ -226,17 +245,16 @@ category|confidence|evidence
         Args:
             input_tokens: Input tokens
             output_tokens: Output tokens
-            cached_tokens: Cached tokens (90% discount)
+            cached_tokens: Cached tokens (billed at the model's cache read rate)
 
         Returns:
             Cost in USD
         """
         input_price, output_price = CLAUDE_PRICING[self.model]
 
-        # Cached tokens get 90% discount
-        cache_discount = 0.1  # 90% off
+        cache_multiplier = CLAUDE_CACHE_READ_MULTIPLIER[self.model]
         uncached_input = input_tokens - cached_tokens
-        cached_input_cost = (cached_tokens / 1_000_000) * input_price * cache_discount
+        cached_input_cost = (cached_tokens / 1_000_000) * input_price * cache_multiplier
 
         input_cost = (uncached_input / 1_000_000) * input_price
         output_cost = (output_tokens / 1_000_000) * output_price
@@ -252,11 +270,7 @@ category|confidence|evidence
         # Import current models from new registry
         from ai_models import ModelRegistry
 
-        model = ModelRegistry.get(
-            f"{self.model}-4-5"
-            if "haiku" in self.model or "sonnet" in self.model
-            else f"{self.model}-4-1"
-        )
+        model = ModelRegistry.get(CLAUDE_MODEL_IDS[self.model])
         if model is None:
             # Fallback for unknown models
             raise ValueError(f"Model {self.model} not found in registry")

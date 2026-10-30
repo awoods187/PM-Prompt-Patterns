@@ -9,7 +9,7 @@ Example:
     >>> from ai_models.capabilities import ModelCapability, CapabilityValidator
     >>>
     >>> # Check if model supports vision
-    >>> if CapabilityValidator.has_capability("claude-sonnet-4-5", ModelCapability.VISION):
+    >>> if CapabilityValidator.has_capability("claude-sonnet-5-5", ModelCapability.VISION):
     ...     process_image()
 """
 
@@ -127,7 +127,7 @@ class CapabilityValidator:
             Set of ModelCapability enums
 
         Example:
-            >>> caps = CapabilityValidator.get_capabilities("claude-sonnet-4-5")
+            >>> caps = CapabilityValidator.get_capabilities("claude-sonnet-5-5")
             >>> ModelCapability.VISION in caps
             True
         """
@@ -147,7 +147,7 @@ class CapabilityValidator:
 
         Example:
             >>> CapabilityValidator.has_capability(
-            ...     "claude-haiku-4-5",
+            ...     "claude-haiku-5-5",
             ...     ModelCapability.FUNCTION_CALLING
             ... )
             True
@@ -168,7 +168,7 @@ class CapabilityValidator:
 
         Example:
             >>> CapabilityValidator.has_all_capabilities(
-            ...     "gpt-4o",
+            ...     "gpt-6.1-sol",
             ...     [ModelCapability.VISION, ModelCapability.FUNCTION_CALLING]
             ... )
             True
@@ -189,7 +189,7 @@ class CapabilityValidator:
 
         Example:
             >>> CapabilityValidator.has_any_capability(
-            ...     "gemini-2-5-flash-lite",
+            ...     "gemini-3-5-flash-lite",
             ...     [ModelCapability.FUNCTION_CALLING, ModelCapability.VISION]
             ... )
             True  # Has vision but not function calling
@@ -211,7 +211,7 @@ class CapabilityValidator:
             >>> models = CapabilityValidator.filter_models_by_capability(
             ...     ModelCapability.PROMPT_CACHING
             ... )
-            >>> "claude-sonnet-4-5" in models
+            >>> "claude-sonnet-5-5" in models
             True
         """
         cls._load_capabilities()
@@ -228,7 +228,7 @@ class CapabilityValidator:
 
         Example:
             >>> matrix = CapabilityValidator.get_capability_matrix()
-            >>> matrix["claude-sonnet-4-5"]
+            >>> matrix["claude-sonnet-5-5"]
             {'text_input', 'text_output', 'vision', ...}
         """
         cls._load_capabilities()

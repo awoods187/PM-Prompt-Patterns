@@ -60,7 +60,7 @@ class TestGeminiProviderInitialization:
         assert provider.model == "gemini-2-5-flash"
         assert provider.enable_caching is True
         assert provider.client == mock_model
-        assert provider.gemini_model_id == "gemini-2.5-flash-001"
+        assert provider.gemini_model_id == "gemini-2.5-flash"
         mock_genai.configure.assert_called_once_with(api_key="test-key")
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
@@ -74,7 +74,7 @@ class TestGeminiProviderInitialization:
         provider = GeminiProvider(model="gemini-2-5-pro")
 
         assert provider.model == "gemini-2-5-pro"
-        assert provider.gemini_model_id == "gemini-2.5-pro-002"
+        assert provider.gemini_model_id == "gemini-2.5-pro"
         mock_settings.return_value.get_api_key.assert_called_once_with("google")
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
@@ -89,7 +89,7 @@ class TestGeminiProviderInitialization:
 
         # Verify GenerativeModel was called with JSON config
         call_args = mock_genai.GenerativeModel.call_args
-        assert call_args.kwargs["model_name"] == "gemini-2.5-flash-001"
+        assert call_args.kwargs["model_name"] == "gemini-2.5-flash"
         config = call_args.kwargs["generation_config"]
         assert config["temperature"] == 0.3
         assert config["max_output_tokens"] == 200
@@ -193,8 +193,8 @@ class TestCostCalculation:
         provider = GeminiProvider(model="gemini-2-5-flash")
         cost = provider._calculate_cost(input_tokens=100_000, output_tokens=10_000, cached_tokens=0)
 
-        # Flash: $0.075 input, $0.30 output per 1M tokens
-        expected = (100_000 / 1_000_000) * 0.075 + (10_000 / 1_000_000) * 0.30
+        # Flash: $0.30 input, $2.50 output per 1M tokens
+        expected = (100_000 / 1_000_000) * 0.30 + (10_000 / 1_000_000) * 2.50
         assert abs(cost - expected) < 0.0001
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
@@ -207,8 +207,8 @@ class TestCostCalculation:
         provider = GeminiProvider(model="gemini-2-5-pro")
         cost = provider._calculate_cost(input_tokens=100_000, output_tokens=10_000, cached_tokens=0)
 
-        # Pro: $1.25 input, $5.00 output per 1M tokens
-        expected = (100_000 / 1_000_000) * 1.25 + (10_000 / 1_000_000) * 5.00
+        # Pro: $1.25 input, $10.00 output per 1M tokens
+        expected = (100_000 / 1_000_000) * 1.25 + (10_000 / 1_000_000) * 10.00
         assert abs(cost - expected) < 0.0001
 
     @patch("pm_prompt_toolkit.providers.gemini.genai")
@@ -223,13 +223,13 @@ class TestCostCalculation:
             input_tokens=100_000, output_tokens=10_000, cached_tokens=50_000
         )
 
-        # Flash: $0.075 input, $0.30 output, $0.019 cache read per 1M tokens
+        # Flash: $0.30 input, $2.50 output, $0.03 cache read per 1M tokens
         # Uncached input: 50,000 tokens
         # Cached input: 50,000 tokens
         expected = (
-            (50_000 / 1_000_000) * 0.075  # Uncached input
-            + (50_000 / 1_000_000) * 0.019  # Cached input
-            + (10_000 / 1_000_000) * 0.30  # Output
+            (50_000 / 1_000_000) * 0.30  # Uncached input
+            + (50_000 / 1_000_000) * 0.03  # Cached input
+            + (10_000 / 1_000_000) * 2.50  # Output
         )
         assert abs(cost - expected) < 0.0001
 
@@ -245,9 +245,9 @@ class TestCostCalculation:
             input_tokens=100_000, output_tokens=10_000, cached_tokens=100_000
         )
 
-        # Pro: $1.25 input, $5.00 output, $0.31 cache read per 1M tokens
+        # Pro: $1.25 input, $10.00 output, $0.125 cache read per 1M tokens
         # All input is cached
-        expected = (100_000 / 1_000_000) * 0.31 + (10_000 / 1_000_000) * 5.00
+        expected = (100_000 / 1_000_000) * 0.125 + (10_000 / 1_000_000) * 10.00
         assert abs(cost - expected) < 0.0001
 
 
@@ -313,8 +313,12 @@ class TestClassifyImplementation:
         result = provider._classify_impl("Need SSO", "")
 
         assert result.cached_tokens == 100
+        # 50 uncached input at $0.30, 100 cached at $0.03, 50 output at $2.50 per 1M
+        expected = (50 * 0.30 + 100 * 0.03 + 50 * 2.50) / 1_000_000
+        uncached_cost = (150 * 0.30 + 50 * 2.50) / 1_000_000
+        assert abs(result.cost - expected) < 1e-9
         # Cost should be lower due to caching
-        assert result.cost < 0.0001
+        assert result.cost < uncached_cost
 
 
 class TestModelMapping:
@@ -336,10 +340,14 @@ class TestModelMapping:
         assert model_ids == cache_pricing_ids
 
     def test_cache_pricing_structure(self) -> None:
-        """Test cache pricing has write and read prices."""
+        """Test cache reads are billed and cheaper than uncached input.
+
+        Gemini bills cache storage per hour instead of per write, so write price is 0.
+        """
         for model_id, (write_price, read_price) in GEMINI_CACHE_PRICING.items():
-            assert write_price > 0, f"Invalid write price for {model_id}"
+            input_price, _ = GEMINI_PRICING[model_id]
+            assert write_price == 0, f"Unexpected write price for {model_id}"
             assert read_price > 0, f"Invalid read price for {model_id}"
             assert (
-                read_price < write_price
-            ), f"Read price should be less than write price for {model_id}"
+                read_price < input_price
+            ), f"Cache read should cost less than input for {model_id}"

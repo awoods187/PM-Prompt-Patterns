@@ -9,7 +9,7 @@ Example:
     >>> from ai_models import ModelRegistry, get_model
     >>>
     >>> # Get a model
-    >>> model = get_model("claude-sonnet-4-5")
+    >>> model = get_model("claude-sonnet-5-5")
     >>> print(f"{model.name}: ${model.pricing.input_per_1m}/1M tokens")
     >>>
     >>> # Check capabilities

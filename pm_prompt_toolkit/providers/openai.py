@@ -3,9 +3,9 @@
 
 """OpenAI GPT provider implementation.
 
-This module provides integration with OpenAI's GPT models including GPT-5, GPT-4.1,
-o-series reasoning models, and GPT-4o with support for function calling, JSON mode,
-vision capabilities, and advanced reasoning.
+This module provides integration with OpenAI's GPT models, including the GPT-6 family
+and older deprecated models, with support for function calling, JSON mode, vision
+capabilities, and advanced reasoning.
 
 Security:
     API key is loaded from environment variable OPENAI_API_KEY.
@@ -13,7 +13,7 @@ Security:
 
 Example:
     >>> from pm_prompt_toolkit.providers import OpenAIProvider
-    >>> provider = OpenAIProvider(model="gpt-5")
+    >>> provider = OpenAIProvider(model="gpt-6.1-sol")
     >>> result = provider.classify("We need SSO integration")
     >>> print(result.category, result.confidence)
     feature_request 0.96
@@ -36,45 +36,45 @@ logger = logging.getLogger(__name__)
 # Model ID mapping for OpenAI
 # Maps our simplified names to OpenAI's model identifiers
 OPENAI_MODEL_IDS = {
-    # GPT-5 family (released August 7, 2025) - flagship with auto-routing
+    # GPT-6 family (current)
+    "gpt-6-astra": "gpt-6-astra",
+    "gpt-6.1-sol": "gpt-6.1-sol",
+    "gpt-6.1-terra": "gpt-6.1-terra",
+    "gpt-6-luna": "gpt-6-luna",
+    # Deprecated: OpenAI shuts these down on 2026-12-11
     "gpt-5": "gpt-5-2025-08-07",
     "gpt-5-mini": "gpt-5-mini-2025-08-07",
     "gpt-5-nano": "gpt-5-nano-2025-08-07",
-    "gpt-5-pro": "gpt-5-pro-2025-08-07",
-    # GPT-4.1 family (available since April 2025) - specialized for coding
-    "gpt-4.1": "gpt-4.1-2025-04",
-    "gpt-4.1-mini": "gpt-4.1-mini-2025-04",
-    # o-series reasoning models (released April 16, 2025)
+    "gpt-5-pro": "gpt-5-pro-2025-10-06",
     "o3": "o3-2025-04-16",
-    "o3-pro": "o3-pro-2025-04-16",
-    "o4-mini": "o4-mini-2025-04-16",
-    "o4-mini-high": "o4-mini-high-2025-04-16",
-    # GPT-4o (still available) - multimodal specialist
+    "o3-pro": "o3-pro-2025-06-10",
+    # Deprecated: OpenAI shuts these down on 2027-01-14
+    "gpt-4.1": "gpt-4.1-2025-04-14",
+    "gpt-4.1-mini": "gpt-4.1-mini-2025-04-14",
     "gpt-4o": "gpt-4o-2024-08-06",
-    # Deprecated models (kept for backwards compatibility)
-    "gpt-4o-mini": "gpt-4o-mini-2024-07-18",  # Replaced by gpt-4.1-mini
+    "gpt-4o-mini": "gpt-4o-mini-2024-07-18",
+    # Shut down 2026-10-23 (requests fail); kept so old configs get a clear API error
+    "o4-mini": "o4-mini-2025-04-16",
 }
 
 # OpenAI pricing (per 1M tokens) - Input/Output
-# Last verified: 2025-11-01
+# Last verified: 2026-10-30 (standard tier, prompts up to 272k input tokens)
 OPENAI_PRICING = {
-    # GPT-5 family pricing
-    "gpt-5-2025-08-07": (3.00, 12.00),
-    "gpt-5-mini-2025-08-07": (0.20, 0.80),
-    "gpt-5-nano-2025-08-07": (0.10, 0.40),
-    "gpt-5-pro-2025-08-07": (15.00, 60.00),
-    # GPT-4.1 family pricing
-    "gpt-4.1-2025-04": (2.50, 10.00),
-    "gpt-4.1-mini-2025-04": (0.15, 0.60),
-    # o-series reasoning models pricing
-    "o3-2025-04-16": (10.00, 40.00),
-    "o3-pro-2025-04-16": (20.00, 80.00),
-    "o4-mini-2025-04-16": (1.00, 4.00),
-    "o4-mini-high-2025-04-16": (1.50, 6.00),
-    # GPT-4o pricing (still available)
+    "gpt-6-astra": (10.00, 50.00),
+    "gpt-6.1-sol": (2.00, 10.00),
+    "gpt-6.1-terra": (1.00, 5.00),
+    "gpt-6-luna": (0.10, 0.50),
+    "gpt-5-2025-08-07": (1.25, 10.00),
+    "gpt-5-mini-2025-08-07": (0.25, 2.00),
+    "gpt-5-nano-2025-08-07": (0.05, 0.40),
+    "gpt-5-pro-2025-10-06": (15.00, 120.00),
+    "o3-2025-04-16": (2.00, 8.00),
+    "o3-pro-2025-06-10": (20.00, 80.00),
+    "gpt-4.1-2025-04-14": (2.00, 8.00),
+    "gpt-4.1-mini-2025-04-14": (0.40, 1.60),
     "gpt-4o-2024-08-06": (2.50, 10.00),
-    # Deprecated models
     "gpt-4o-mini-2024-07-18": (0.15, 0.60),
+    "o4-mini-2025-04-16": (1.10, 4.40),
 }
 
 
@@ -86,31 +86,26 @@ class OpenAIProvider(LLMProvider):
         - Function calling capabilities
         - Vision support for multimodal inputs
         - Advanced reasoning (o-series models)
-        - Auto-routing between Instant/Thinking modes (GPT-5)
         - Efficient token usage with precise prompts
 
     Supported Models:
-        **GPT-5 Family (Released August 7, 2025):**
-        - gpt-5: Flagship with auto-routing ($3.00/$12.00 per 1M tokens)
-        - gpt-5-mini: Fast, efficient variant ($0.20/$0.80 per 1M tokens)
-        - gpt-5-nano: Ultra-efficient variant ($0.10/$0.40 per 1M tokens)
-        - gpt-5-pro: Extended reasoning ($15.00/$60.00 per 1M tokens)
+        **GPT-6 Family (current):**
+        - gpt-6.1-sol: Default; coding and professional work ($2.00/$10.00 per 1M tokens)
+        - gpt-6-astra: Most capable ($10.00/$50.00 per 1M tokens)
+        - gpt-6.1-terra: Fast and efficient ($1.00/$5.00 per 1M tokens)
+        - gpt-6-luna: Lowest cost, high volume ($0.10/$0.50 per 1M tokens)
 
-        **GPT-4.1 Family (Available since April 2025):**
-        - gpt-4.1: Specialized for coding, tools ($2.50/$10.00 per 1M tokens)
-        - gpt-4.1-mini: Fast coding model ($0.15/$0.60 per 1M tokens)
+        **Deprecated (shutting down 2026-12-11):**
+        - gpt-5, gpt-5-mini, gpt-5-nano, gpt-5-pro, o3, o3-pro
 
-        **o-series Reasoning Models (Released April 16, 2025):**
-        - o3: Advanced reasoning, full tool access ($10.00/$40.00 per 1M tokens)
-        - o3-pro: Highest-capability reasoning ($20.00/$80.00 per 1M tokens)
-        - o4-mini: Fast, cost-efficient reasoning ($1.00/$4.00 per 1M tokens)
-        - o4-mini-high: Enhanced o4-mini ($1.50/$6.00 per 1M tokens)
+        **Deprecated (shutting down 2027-01-14):**
+        - gpt-4.1, gpt-4.1-mini, gpt-4o, gpt-4o-mini
 
-        **GPT-4o (Still available):**
-        - gpt-4o: Multimodal specialist for voice/vision ($2.50/$10.00 per 1M tokens)
+        **Shut down:**
+        - o4-mini (2026-10-23)
 
     Example:
-        >>> provider = OpenAIProvider(model="gpt-5", enable_caching=True)
+        >>> provider = OpenAIProvider(model="gpt-6.1-sol", enable_caching=True)
         >>> result = provider.classify("Dashboard broken, getting 500 errors")
         >>> assert result.category == SignalCategory.BUG_REPORT
         >>> assert result.cost < 0.001
@@ -121,7 +116,7 @@ class OpenAIProvider(LLMProvider):
 
     def __init__(
         self,
-        model: str = "gpt-5",
+        model: str = "gpt-6.1-sol",
         enable_caching: bool = False,
         organization: Optional[str] = None,
     ) -> None:
@@ -129,11 +124,10 @@ class OpenAIProvider(LLMProvider):
 
         Args:
             model: OpenAI model to use. Supported models:
-                - GPT-5 family: 'gpt-5', 'gpt-5-mini', 'gpt-5-nano', 'gpt-5-pro'
-                - GPT-4.1 family: 'gpt-4.1', 'gpt-4.1-mini'
-                - o-series: 'o3', 'o3-pro', 'o4-mini', 'o4-mini-high'
-                - GPT-4o: 'gpt-4o' (multimodal specialist)
-                - Deprecated: 'gpt-4o-mini' (use 'gpt-4.1-mini' instead)
+                - GPT-6 family: 'gpt-6.1-sol', 'gpt-6-astra', 'gpt-6.1-terra', 'gpt-6-luna'
+                - Deprecated: 'gpt-5', 'gpt-5-mini', 'gpt-5-nano', 'gpt-5-pro', 'o3', 'o3-pro',
+                  'gpt-4.1', 'gpt-4.1-mini', 'gpt-4o', 'gpt-4o-mini'
+                - Shut down: 'o4-mini'
             enable_caching: Enable caching (Note: OpenAI doesn't have built-in caching like Claude)
             organization: Optional OpenAI organization ID
 

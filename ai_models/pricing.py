@@ -10,7 +10,7 @@ Example:
     >>> from ai_models.pricing import PricingService
     >>>
     >>> service = PricingService()
-    >>> pricing = service.get_pricing("claude-sonnet-4-5")
+    >>> pricing = service.get_pricing("claude-sonnet-5-5")
     >>> cost = pricing.calculate_cost(input_tokens=1000, output_tokens=500)
     >>> print(f"Cost: ${cost:.4f}")
     Cost: $0.0105
@@ -63,11 +63,11 @@ class Pricing:
             Total cost in USD
 
         Example:
-            >>> pricing = Pricing("claude-sonnet-4-5", 3.00, 15.00, 3.75, 0.30)
+            >>> pricing = Pricing("claude-sonnet-5-5", 2.00, 10.00, 2.50, 0.10)
             >>> # 1000 input (900 cached), 500 output
             >>> cost = pricing.calculate_cost(1000, 500, 900)
-            >>> # (100 * 3.00/1M) + (900 * 0.30/1M) + (500 * 15.00/1M)
-            >>> # = 0.0003 + 0.00027 + 0.0075 = $0.00807
+            >>> # (100 * 2.00/1M) + (900 * 0.10/1M) + (500 * 10.00/1M)
+            >>> # = 0.0002 + 0.00009 + 0.005 = $0.00529
             >>> print(f"${cost:.5f}")
             $0.00807
         """
@@ -116,7 +116,7 @@ class PricingService:
 
     Example:
         >>> service = PricingService()
-        >>> pricing = service.get_pricing("claude-haiku-4-5")
+        >>> pricing = service.get_pricing("claude-haiku-5-5")
         >>> print(f"${pricing.input_per_1m}/1M input")
         $1.00/1M input
     """
@@ -185,7 +185,7 @@ class PricingService:
         """Get pricing for a model.
 
         Args:
-            model_id: Model identifier (e.g., "claude-sonnet-4-5")
+            model_id: Model identifier (e.g., "claude-sonnet-5-5")
             as_of_date: Get pricing as of this date (future: historical support)
 
         Returns:
@@ -193,7 +193,7 @@ class PricingService:
 
         Example:
             >>> service = PricingService()
-            >>> pricing = service.get_pricing("claude-haiku-4-5")
+            >>> pricing = service.get_pricing("claude-haiku-5-5")
             >>> pricing.input_per_1m
             1.0
         """
@@ -225,7 +225,7 @@ class PricingService:
         Example:
             >>> service = PricingService()
             >>> cost = service.calculate_cost(
-            ...     "claude-sonnet-4-5",
+            ...     "claude-sonnet-5-5",
             ...     input_tokens=1000,
             ...     output_tokens=500
             ... )
@@ -265,7 +265,7 @@ def get_pricing_service() -> PricingService:
     Example:
         >>> from ai_models.pricing import get_pricing_service
         >>> service = get_pricing_service()
-        >>> pricing = service.get_pricing("gpt-4o")
+        >>> pricing = service.get_pricing("gpt-6.1-sol")
     """
     global _pricing_service
     if _pricing_service is None:

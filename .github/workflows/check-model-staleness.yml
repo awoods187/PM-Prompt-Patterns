@@ -73,13 +73,13 @@ jobs:
             \`\`\`
 
             Follow the update procedure in:
-            \`docs/workflows/MODEL_UPDATE_WORKFLOW.md\`
+            \`docs/model_update_system.md\` (Manual Update Procedure)
 
             ### Provider Documentation Links
 
-            - **Anthropic Claude**: https://docs.claude.com/en/docs/about-claude/models
-            - **OpenAI GPT**: https://platform.openai.com/docs/models
-            - **Google Gemini**: https://ai.google.dev/gemini-api/docs/models/gemini
+            - **Anthropic Claude**: https://platform.claude.com/docs/en/about-claude/models/overview
+            - **OpenAI GPT**: https://developers.openai.com/api/docs/models
+            - **Google Gemini**: https://ai.google.dev/gemini-api/docs/models
 
             ---
 

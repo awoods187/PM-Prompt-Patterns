@@ -172,6 +172,9 @@ class Settings(BaseSettings):
         "claude-opus",
         "gpt-4",
         "gpt-3.5",
+        "gpt-6.1-sol",
+        "gemini-4-argon",
+        "gemini-3-8-flash",
         "gemini-2-5-pro",
         "gemini-2-5-flash",
     ] = Field(

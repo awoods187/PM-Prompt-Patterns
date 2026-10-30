@@ -10,8 +10,8 @@ Supported Providers:
     - Anthropic Claude (direct API) - Haiku, Sonnet, Opus (fully implemented)
     - AWS Bedrock - Claude models via AWS infrastructure (fully implemented)
     - Google Vertex AI - Claude models via Google Cloud (fully implemented)
-    - OpenAI GPT - GPT-4o, GPT-4o-mini, gpt-4o (fully implemented)
-    - Google Gemini - Gemini 2.5 Pro, Flash, Flash Lite (fully implemented)
+    - OpenAI GPT - GPT-6.1 Sol, GPT-6 Astra, GPT-6.1 Terra, GPT-6 Luna (fully implemented)
+    - Google Gemini - Gemini 4 Argon, 3.8 Flash, 3.5 Flash-Lite (fully implemented)
     - Mock - Testing provider with zero cost (fully implemented)
 
 Provider Routing:
@@ -23,7 +23,7 @@ Provider Routing:
 Example:
     >>> from pm_prompt_toolkit.providers import get_provider
     >>> # Explicit provider selection
-    >>> provider = get_provider("bedrock:claude-sonnet-4-5")
+    >>> provider = get_provider("bedrock:claude-sonnet-5-5")
     >>> # Automatic routing to enabled provider
     >>> provider = get_provider("claude-sonnet")
     >>> result = provider.classify("We need SSO integration")
