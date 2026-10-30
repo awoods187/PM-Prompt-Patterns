@@ -47,7 +47,7 @@ def test_google_fetcher_static_specs() -> None:
 
     assert specs is not None
     assert specs["name"] == "Gemini 2.5 Pro"
-    assert specs["context_window_input"] == 2000000
+    assert specs["context_window_input"] == 1048576
     assert "pricing" in specs
 
 

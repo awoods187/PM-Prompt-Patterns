@@ -17,6 +17,16 @@ import pytest
 from scripts.model_updater.fetchers.base_fetcher import ModelData
 from scripts.model_updater.fetchers.google_fetcher import GoogleFetcher
 
+# Every model in ai_models/definitions/google/, in fetcher order.
+ALL_GEMINI_MODELS = [
+    "gemini-4-argon",
+    "gemini-3-8-flash",
+    "gemini-3-5-flash-lite",
+    "gemini-2-5-pro",
+    "gemini-2-5-flash",
+    "gemini-2-5-flash-lite",
+]
+
 # ============================================================================
 # FIXTURES
 # ============================================================================
@@ -33,12 +43,14 @@ def mock_genai_models() -> list[Mock]:
     """Create mock Google Generative AI model list."""
     models = []
 
-    # Create mock model objects that match API response
-    # Note: Using hyphens (2-5) to match target_model_ids in the actual code
+    # Create mock model objects that match API response ("models/<api_identifier>")
     for model_name in [
-        "models/gemini-2-5-flash-lite",
-        "models/gemini-2-5-flash",
-        "models/gemini-2-5-pro",
+        "models/gemini-4-argon",
+        "models/gemini-3.8-flash",
+        "models/gemini-3.5-flash-lite",
+        "models/gemini-2.5-pro",
+        "models/gemini-2.5-flash",
+        "models/gemini-2.5-flash-lite",
     ]:
         mock_model = Mock()
         mock_model.name = model_name
@@ -62,18 +74,21 @@ class TestStaticModelSpecs:
         specs = google_fetcher._get_static_model_specs("gemini-2-5-flash-lite")
 
         assert specs is not None
-        assert specs["name"] == "Gemini 2.5 Flash Lite"
-        assert specs["api_identifier"] == "gemini-2.5-flash-lite-latest"
-        assert specs["context_window_input"] == 1000000
-        assert specs["context_window_output"] == 8192
-        assert specs["knowledge_cutoff"] == "August 2024"
-        assert specs["release_date"] == "2025-02-01"
+        assert specs["name"] == "Gemini 2.5 Flash-Lite"
+        assert specs["api_identifier"] == "gemini-2.5-flash-lite"
+        assert specs["context_window_input"] == 1048576
+        assert specs["context_window_output"] == 65536
+        assert specs["knowledge_cutoff"] == "January 2025"
+        assert specs["release_date"] == "2025-07-22"
         assert "pricing" in specs
-        assert specs["pricing"]["input_per_1m"] == 0.075
-        assert specs["pricing"]["output_per_1m"] == 0.30
+        assert specs["pricing"]["input_per_1m"] == 0.10
+        assert specs["pricing"]["output_per_1m"] == 0.40
+        assert specs["pricing"]["cache_read_per_1m"] == 0.01
+        assert "cache_write_per_1m" not in specs["pricing"]
         assert "capabilities" in specs
         assert "vision" in specs["capabilities"]
-        assert "function_calling" in specs["capabilities"]
+        # Flash-Lite's definition does not list function calling
+        assert "function_calling" not in specs["capabilities"]
         assert specs["cost_tier"] == "budget"
         assert specs["speed_tier"] == "fast"
 
@@ -85,9 +100,10 @@ class TestStaticModelSpecs:
 
         assert specs is not None
         assert specs["name"] == "Gemini 2.5 Flash"
-        assert specs["context_window_input"] == 1000000
-        assert specs["pricing"]["input_per_1m"] == 0.15
-        assert specs["pricing"]["output_per_1m"] == 0.60
+        assert specs["api_identifier"] == "gemini-2.5-flash"
+        assert specs["context_window_input"] == 1048576
+        assert specs["pricing"]["input_per_1m"] == 0.30
+        assert specs["pricing"]["output_per_1m"] == 2.50
         assert specs["cost_tier"] == "budget"
 
     def test_get_static_specs_gemini_pro_returns_valid_specs(
@@ -98,11 +114,12 @@ class TestStaticModelSpecs:
 
         assert specs is not None
         assert specs["name"] == "Gemini 2.5 Pro"
-        assert specs["api_identifier"] == "gemini-2.5-pro-latest"
-        assert specs["context_window_input"] == 2000000  # 2M context
-        assert specs["context_window_output"] == 8192
+        assert specs["api_identifier"] == "gemini-2.5-pro"
+        assert specs["context_window_input"] == 1048576
+        assert specs["context_window_output"] == 65536
         assert specs["pricing"]["input_per_1m"] == 1.25
-        assert specs["pricing"]["output_per_1m"] == 5.00
+        assert specs["pricing"]["output_per_1m"] == 10.00
+        assert specs["pricing"]["cache_read_per_1m"] == 0.125
         assert specs["cost_tier"] == "mid-tier"
         assert specs["speed_tier"] == "balanced"
 
@@ -157,13 +174,9 @@ class TestAPIFetching:
         models = google_fetcher.fetch_from_api()
 
         # Verify
-        assert len(models) == 3  # flash-lite, flash, pro
+        assert len(models) == 6
         assert all(isinstance(m, ModelData) for m in models)
-
-        model_ids = [m.model_id for m in models]
-        assert "gemini-2-5-flash-lite" in model_ids
-        assert "gemini-2-5-flash" in model_ids
-        assert "gemini-2-5-pro" in model_ids
+        assert {m.model_id for m in models} == set(ALL_GEMINI_MODELS)
 
         # Verify API was called
         mock_configure.assert_called_once_with(api_key="test-api-key")
@@ -192,24 +205,28 @@ class TestAPIFetching:
     @patch.dict("os.environ", {"GOOGLE_API_KEY": "test-api-key"})
     @patch("google.generativeai.configure")
     @patch("google.generativeai.list_models")
-    def test_fetch_from_api_filters_gemini_25_models(
+    def test_fetch_from_api_filters_to_tracked_models(
         self,
         mock_list_models: Mock,
         mock_configure: Mock,
         google_fetcher: GoogleFetcher,
     ) -> None:
-        """Test that only Gemini 2.5 models are included."""
+        """Test that only tracked models are included, without duplicates."""
         # Create mixed model list
         all_models = []
 
-        # Gemini 2.5 models (should be included) - use hyphens
-        for name in ["models/gemini-2-5-flash", "models/gemini-2-5-pro"]:
+        # Tracked models (should be included)
+        for name in ["models/gemini-2.5-flash", "models/gemini-2.5-pro"]:
             mock_model = Mock()
             mock_model.name = name
             all_models.append(mock_model)
 
-        # Other models (should be filtered out)
-        for name in ["models/gemini-2-5-pro", "models/text-bison-001"]:
+        # Duplicate, untracked variants, and other models (should be filtered out)
+        for name in [
+            "models/gemini-2.5-pro",
+            "models/gemini-2.5-flash-preview-tts",
+            "models/text-bison-001",
+        ]:
             mock_model = Mock()
             mock_model.name = name
             all_models.append(mock_model)
@@ -218,9 +235,8 @@ class TestAPIFetching:
 
         models = google_fetcher.fetch_from_api()
 
-        # Should only get Gemini 2.5 models
-        assert len(models) == 2
-        assert all("gemini-2-5" in m.model_id for m in models)
+        # Should only get the two tracked models, once each
+        assert [m.model_id for m in models] == ["gemini-2-5-flash", "gemini-2-5-pro"]
 
     @patch.dict("os.environ", {"GOOGLE_API_KEY": "test-api-key"})
     @patch("google.generativeai.configure")
@@ -231,8 +247,8 @@ class TestAPIFetching:
         mock_configure: Mock,
         google_fetcher: GoogleFetcher,
     ) -> None:
-        """Test that ValueError is raised when no Gemini 2.5 models found."""
-        # Return only non-Gemini 2.5 models
+        """Test that ValueError is raised when no tracked Gemini models are found."""
+        # Return only untracked models
         other_models = []
         for name in ["models/gemini-1.0-pro", "models/palm-2"]:
             mock_model = Mock()
@@ -241,7 +257,7 @@ class TestAPIFetching:
 
         mock_list_models.return_value = other_models
 
-        with pytest.raises(ValueError, match="No Gemini 2.5 models found via API"):
+        with pytest.raises(ValueError, match="No tracked Gemini models found via API"):
             google_fetcher.fetch_from_api()
 
     @patch.dict("os.environ", {"GOOGLE_API_KEY": "test-api-key"})
@@ -263,15 +279,17 @@ class TestAPIFetching:
         pro_model = next(m for m in models if m.model_id == "gemini-2-5-pro")
         assert pro_model.provider == "google"
         assert pro_model.name == "Gemini 2.5 Pro"
-        assert pro_model.api_identifier == "gemini-2.5-pro-latest"
-        assert pro_model.context_window_input == 2000000  # 2M
-        assert pro_model.context_window_output == 8192
-        assert pro_model.knowledge_cutoff == "August 2024"
-        assert pro_model.release_date == date(2025, 2, 1)
-        assert pro_model.docs_url == "https://ai.google.dev/gemini-api/docs/models/gemini"
+        assert pro_model.api_identifier == "gemini-2.5-pro"
+        assert pro_model.context_window_input == 1048576
+        assert pro_model.context_window_output == 65536
+        assert pro_model.knowledge_cutoff == "January 2025"
+        assert pro_model.release_date == date(2025, 6, 17)
+        assert pro_model.docs_url == "https://ai.google.dev/gemini-api/docs/models"
         assert "vision" in pro_model.capabilities
         assert pro_model.input_per_1m == 1.25
-        assert pro_model.output_per_1m == 5.00
+        assert pro_model.output_per_1m == 10.00
+        assert pro_model.cache_write_per_1m is None
+        assert pro_model.cache_read_per_1m == 0.125
         assert pro_model.cost_tier == "mid-tier"
         assert pro_model.speed_tier == "balanced"
         assert pro_model.source == "google_api"
@@ -288,16 +306,15 @@ class TestAPIFetching:
         """Test that model names with 'models/' prefix are handled correctly."""
         models_with_prefix = []
         mock_model = Mock()
-        mock_model.name = "models/gemini-2-5-flash"  # hyphen not period
+        mock_model.name = "models/gemini-2.5-flash"
         models_with_prefix.append(mock_model)
 
         mock_list_models.return_value = models_with_prefix
 
         models = google_fetcher.fetch_from_api()
 
-        assert len(models) > 0
-        # Name should be extracted correctly
-        assert any("gemini-2-5-flash" in m.model_id for m in models)
+        # Name should be extracted correctly and mapped back to the model_id
+        assert [m.model_id for m in models] == ["gemini-2-5-flash"]
 
 
 # ============================================================================
@@ -312,11 +329,8 @@ class TestDocsFallback:
         """Test that fetch_from_docs returns all supported models."""
         models = google_fetcher.fetch_from_docs()
 
-        assert len(models) == 3
-        model_ids = [m.model_id for m in models]
-        assert "gemini-2-5-flash-lite" in model_ids
-        assert "gemini-2-5-flash" in model_ids
-        assert "gemini-2-5-pro" in model_ids
+        assert len(models) == 6
+        assert {m.model_id for m in models} == set(ALL_GEMINI_MODELS)
 
     def test_fetch_from_docs_creates_valid_model_data(self, google_fetcher: GoogleFetcher) -> None:
         """Test that docs-based models have all required fields."""
@@ -353,12 +367,7 @@ class TestDocsFallback:
         models = google_fetcher.fetch_from_docs()
 
         model_ids = [m.model_id for m in models]
-        expected_order = [
-            "gemini-2-5-flash-lite",
-            "gemini-2-5-flash",
-            "gemini-2-5-pro",
-        ]
-        assert model_ids == expected_order
+        assert model_ids == ALL_GEMINI_MODELS
 
 
 # ============================================================================
@@ -424,7 +433,7 @@ class TestMainFetchMethod:
         mock_configure: Mock,
         google_fetcher: GoogleFetcher,
     ) -> None:
-        """Test fallback when API returns no Gemini 2.5 models."""
+        """Test fallback when API returns no tracked Gemini models."""
         # Return empty list
         mock_list_models.return_value = []
 
@@ -465,11 +474,7 @@ class TestEdgeCases:
             "notes",
         }
 
-        for model_id in [
-            "gemini-2-5-flash-lite",
-            "gemini-2-5-flash",
-            "gemini-2-5-pro",
-        ]:
+        for model_id in ALL_GEMINI_MODELS:
             specs = google_fetcher._get_static_model_specs(model_id)
             assert specs is not None
             assert required_keys.issubset(set(specs.keys()))
@@ -499,19 +504,17 @@ class TestEdgeCases:
         google_fetcher: GoogleFetcher,
     ) -> None:
         """Test handling of model names without 'models/' prefix."""
-        # Create model without prefix (use hyphen not period)
         mock_model = Mock()
-        mock_model.name = "gemini-2-5-flash"  # No "models/" prefix
+        mock_model.name = "gemini-2.5-flash"  # No "models/" prefix
         mock_list_models.return_value = [mock_model]
 
         models = google_fetcher.fetch_from_api()
 
         # Should still work
-        assert len(models) > 0
-        assert any("gemini-2-5-flash" in m.model_id for m in models)
+        assert [m.model_id for m in models] == ["gemini-2-5-flash"]
 
     def test_all_models_have_large_context_capability(self, google_fetcher: GoogleFetcher) -> None:
-        """Test that all Gemini 2.5 models advertise large_context capability."""
+        """Test that all Gemini models advertise large_context capability."""
         models = google_fetcher.fetch_from_docs()
 
         for model in models:
@@ -533,5 +536,11 @@ class TestEdgeCases:
         assert flash_lite.input_per_1m < flash.input_per_1m < pro.input_per_1m
         assert flash_lite.output_per_1m < flash.output_per_1m < pro.output_per_1m
 
-        # Pro should have largest context window
-        assert pro.context_window_input > flash.context_window_input
+        # Pro is the 2.5 mid-tier model; Flash and Flash-Lite are budget
+        assert pro.cost_tier == "mid-tier"
+        assert flash.cost_tier == flash_lite.cost_tier == "budget"
+
+        # Gemini 4 Argon is the premium tier and costs more than 2.5 Pro
+        argon = models_dict["gemini-4-argon"]
+        assert argon.cost_tier == "premium"
+        assert argon.input_per_1m > pro.input_per_1m
