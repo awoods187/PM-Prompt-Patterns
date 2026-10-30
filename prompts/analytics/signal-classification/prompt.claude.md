@@ -9,7 +9,7 @@
 - **XML Tags**: Structured data with proper escaping
 - **Chain-of-Thought**: Explicit thinking steps for accuracy
 - **Examples**: Few-shot learning with Claude's preferred format
-- **Best Models**: Claude Haiku 4.5 (cost), Claude Sonnet 4.5 (accuracy)
+- **Best Models**: Claude Haiku 5.5 (cost), Claude Sonnet 5.5 (accuracy)
 
 ## Prompt
 
@@ -175,7 +175,7 @@ Let me analyze this signal:
 
 - **Accuracy**: 92-95% (higher than base prompt due to chain-of-thought)
 - **Reasoning Quality**: Excellent - clear step-by-step thinking
-- **Best Model**: Claude Haiku 4.5 ($1/$5 per 1M tokens)
+- **Best Model**: Claude Haiku 5.5 ($0.10/$0.50 per 1M tokens)
 - **Latency**: 0.8-1.5s with Haiku
 - **Caching**: Use prompt caching for repeated classifications to reduce cost by 90%
 
@@ -184,7 +184,7 @@ Let me analyze this signal:
 ```python
 from pm_prompt_toolkit.providers import get_provider
 
-provider = get_provider("claude-sonnet-4-5", enable_caching=True)
+provider = get_provider("claude-sonnet-5-5", enable_caching=True)
 
 # The category definitions will be cached
 # Only the signal changes between requests

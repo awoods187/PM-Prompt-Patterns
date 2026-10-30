@@ -103,7 +103,7 @@ Generate a complete, production-ready GitHub Actions CI/CD pipeline for a Python
 - **XML structure**: Uses XML tags for clear task delineation and better parsing
 - **Structured thinking**: Encourages use of `<thinking>` tags for complex reasoning
 - **Prompt caching**: Static prompt content is cacheable for 90%+ cost savings
-- **Extended context**: Leverages Claude's 200K token context window
+- **Extended context**: Leverages Claude's 1M token context window
 
 ## Usage
 
@@ -111,7 +111,7 @@ Generate a complete, production-ready GitHub Actions CI/CD pipeline for a Python
 from pm_prompt_toolkit.providers import get_provider
 
 # Initialize Claude provider with caching
-provider = get_provider("claude-sonnet-4-5", enable_caching=True)
+provider = get_provider("claude-sonnet-5-5", enable_caching=True)
 
 result = provider.generate(
     system_prompt="<prompt from above>",

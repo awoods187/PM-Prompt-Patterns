@@ -2,7 +2,7 @@
 
 **Complexity**: 🔴 Advanced
 **Category**: Product Strategy / Prompt Engineering
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-5 | ✅ Gemini
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-6.1 Sol | ✅ Gemini
 
 ## Overview
 
@@ -358,7 +358,7 @@ def interactive_prompt_designer():
                 print("\n🔍 Testing prompt...")
 
                 response = client.messages.create(
-                    model="claude-sonnet-4-5-20250929",  # Latest Claude Sonnet 4.5
+                    model="claude-sonnet-5-5",  # Latest Claude Sonnet 5.5
                     max_tokens=4000,
                     messages=[{
                         "role": "user",
@@ -506,6 +506,8 @@ FEEDBACK TO ANALYZE:
 | **Meta-prompt (Claude Sonnet)** | 5-15 min | $0.02-0.08 | 90-95% | High |
 | **Meta-prompt (GPT-5)** | 10-20 min | $0.03-0.10 | 85-92% | High |
 | **Meta-prompt (Interactive)** | 15-30 min | $0.05-0.15 | 95%+ | Very High |
+
+_Measured on the previous model lineup; not yet re-run on current models._
 
 **Recommendation**: Meta-prompt with Claude Sonnet for best balance of quality, cost, and speed.
 

@@ -214,17 +214,17 @@ Every model is validated against:
 ```markdown
 ## Model Update Summary
 
-**Date:** 2025-11-01
+**Date:** 2026-10-30
 **Total Changes:** 5
 
 ### New Models (2)
-- `claude-sonnet-5-0` (Anthropic)
-- `gpt-5` (OpenAI)
+- `claude-sonnet-5-5` (Anthropic)
+- `gpt-6.1-terra` (OpenAI)
 
 ### Pricing Changes (3)
-- `claude-opus-4-1`: $15.00 → $12.00 per 1M input (-20%)
-- `gpt-4o`: $5.00 → $2.50 per 1M input (-50%)
-- `gemini-2-5-pro`: Cache read $0.10 → $0.05 per 1M (-50%)
+- `claude-opus-5-5`: $5.00 → $4.00 per 1M input (-20%)
+- `gpt-6-luna`: $0.20 → $0.10 per 1M input (-50%)
+- `gemini-4-argon`: Cache read $0.20 → $0.10 per 1M (-50%)
 
 ### Metadata Updates (0)
 
@@ -252,15 +252,15 @@ Use this procedure when:
 Visit provider documentation pages:
 
 1. **Anthropic Claude**
-   - URL: https://docs.claude.com/en/docs/about-claude/models
+   - URL: https://platform.claude.com/docs/en/about-claude/models/overview
    - Check for: New models, API identifier changes, pricing updates
 
 2. **OpenAI GPT**
-   - URL: https://platform.openai.com/docs/models
+   - URL: https://developers.openai.com/api/docs/models
    - Check for: New model releases, deprecations, capability additions
 
 3. **Google Gemini**
-   - URL: https://ai.google.dev/gemini-api/docs/models/gemini
+   - URL: https://ai.google.dev/gemini-api/docs/models
    - Check for: Version updates, experimental → production promotions
 
 ### Step 2: Update Model YAML Definitions
@@ -268,28 +268,28 @@ Visit provider documentation pages:
 Edit files in `ai_models/definitions/{provider}/`:
 
 ```yaml
-# Example: ai_models/definitions/anthropic/claude-opus-4-1.yaml
+# Example: ai_models/definitions/anthropic/claude-opus-5-5.yaml
 
 schema_version: "1.0.0"
-model_id: "claude-opus-4-1"
+model_id: "claude-opus-5-5"
 provider: "anthropic"
-name: "Claude Opus 4.1"
-api_identifier: "claude-opus-4-1-20250805"  # ← UPDATE if changed
+name: "Claude Opus 5.5"
+api_identifier: "claude-opus-5-5"  # ← UPDATE if changed
 
 metadata:
-  context_window_input: 200000
-  context_window_output: null
-  knowledge_cutoff: "December 2024"  # ← UPDATE if changed
-  release_date: "2025-08-05"  # ← UPDATE if changed
-  last_verified: "2025-11-01"  # ← ALWAYS update to today
-  docs_url: "https://docs.claude.com/en/docs/about-claude/models"
-  description: "Most powerful model for complex tasks"
+  context_window_input: 1000000
+  context_window_output: 128000
+  knowledge_cutoff: "June 2026"  # ← UPDATE if changed
+  release_date: "2026-09-22"  # ← UPDATE if changed
+  last_verified: "2026-10-30"  # ← ALWAYS update to today
+  docs_url: "https://platform.claude.com/docs/en/about-claude/models/overview"
+  description: "Recommended starting model for most workloads"
 
 pricing:
-  input_per_1m: 15.00   # ← UPDATE if changed
-  output_per_1m: 75.00  # ← UPDATE if changed
-  cache_write_per_1m: 18.75
-  cache_read_per_1m: 1.50
+  input_per_1m: 4.00   # ← UPDATE if changed
+  output_per_1m: 20.00  # ← UPDATE if changed
+  cache_write_per_1m: 5.00
+  cache_read_per_1m: 0.20
   cost_tier: "premium"  # budget | balanced | premium
 
 capabilities:
@@ -300,7 +300,7 @@ capabilities:
 
 performance:
   speed_tier: "slow"     # fast | medium | slow
-  max_output_tokens: 16384
+  max_output_tokens: 128000
 
 notes: |
   Top-tier model for complex reasoning, analysis, and creative tasks.
@@ -320,8 +320,8 @@ If provider releases completely new model:
 
 ```bash
 # 1. Create new YAML file
-cp ai_models/definitions/anthropic/claude-sonnet-4-5.yaml \
-   ai_models/definitions/anthropic/claude-sonnet-5-0.yaml
+cp ai_models/definitions/anthropic/claude-sonnet-5-5.yaml \
+   ai_models/definitions/anthropic/claude-sonnet-6-0.yaml
 
 # 2. Edit the file with new model details
 
@@ -329,9 +329,9 @@ cp ai_models/definitions/anthropic/claude-sonnet-4-5.yaml \
 # Edit: pm_prompt_toolkit/providers/factory.py
 # Add to claude_models list:
 claude_models = [
-    "claude-sonnet-4-5",
-    "claude-sonnet-5-0",  # Add here
-    "claude-haiku-4-5",
+    "claude-sonnet-5-5",
+    "claude-sonnet-6-0",  # Add here
+    "claude-haiku-5-5",
     # ...
 ]
 ```
@@ -346,7 +346,7 @@ python -c "
 from pm_prompt_toolkit.providers import get_provider
 
 # Test the updated/new model
-provider = get_provider('claude-opus-4-1')
+provider = get_provider('claude-opus-5-5')
 result = provider.classify('Test signal')
 print(f'Success: {result.category}')
 "
@@ -374,14 +374,14 @@ Document changes in commit message:
 ```bash
 git add ai_models/definitions/
 
-git commit -m "chore: Update Anthropic models (2025-11-01)
+git commit -m "chore: Update Anthropic models (2026-10-30)
 
-- Update Claude Opus 4.1 API identifier: 20250514 → 20250805
-- Verify pricing unchanged ($15/$75 per 1M tokens)
-- Add vision capability to Sonnet 4.5
+- Replace Claude Opus 4.1 with Claude Opus 5.5 (claude-opus-5-5)
+- Verify pricing unchanged ($4/$20 per 1M tokens)
+- Add vision capability to Sonnet 5.5
 - Update last_verified dates for all Anthropic models
 
-Verified from https://docs.claude.com/en/docs/about-claude/models
+Verified from https://platform.claude.com/docs/en/about-claude/models/overview
 Tested all endpoints successfully
 All 507 tests passing"
 ```
@@ -430,19 +430,19 @@ GOOGLE_API_KEY=...            # Google Gemini API access
 # Provider configuration
 anthropic:
   name: "Anthropic"
-  docs_url: "https://docs.claude.com/en/docs/about-claude/models"
+  docs_url: "https://platform.claude.com/docs/en/about-claude/models/overview"
   api_available: false  # Uses static specs
   notes: "Updated manually from official docs"
 
 openai:
   name: "OpenAI"
-  docs_url: "https://platform.openai.com/docs/models"
+  docs_url: "https://developers.openai.com/api/docs/models"
   api_available: true   # Can fetch via API
   notes: "Fetches via OpenAI API when key provided"
 
 google:
   name: "Google"
-  docs_url: "https://ai.google.dev/gemini-api/docs/models/gemini"
+  docs_url: "https://ai.google.dev/gemini-api/docs/models"
   api_available: true
   notes: "Fetches via Google Generative AI API"
 
@@ -600,7 +600,7 @@ validator = ModelValidator()
 
 # Load model YAML
 import yaml
-data = yaml.safe_load(open('ai_models/definitions/anthropic/claude-opus-4-1.yaml'))
+data = yaml.safe_load(open('ai_models/definitions/anthropic/claude-opus-5-5.yaml'))
 
 # Convert to ModelData and validate
 # ... (implementation details)
@@ -616,14 +616,14 @@ if not result.is_valid:
 
 ```bash
 # Check API identifier is correct
-cat ai_models/definitions/anthropic/claude-opus-4-1.yaml | grep api_identifier
+cat ai_models/definitions/anthropic/claude-opus-5-5.yaml | grep api_identifier
 
 # Test endpoint directly
 python -c "
 import anthropic
 client = anthropic.Anthropic(api_key='...')
 response = client.messages.create(
-    model='claude-opus-4-1-20250805',  # Use API identifier
+    model='claude-opus-5-5',  # Use API identifier
     max_tokens=10,
     messages=[{'role': 'user', 'content': 'test'}]
 )
@@ -672,7 +672,7 @@ api_identifier: "claude-opus-4-1-20250514"  # Revert to old
 
 # 3. Or switch to different model temporarily
 # In your code:
-provider = get_provider("claude-sonnet-4-5")  # Use Sonnet instead of Opus
+provider = get_provider("claude-sonnet-5-5")  # Use Sonnet instead of Opus
 
 # 4. Commit emergency fix
 git add ai_models/definitions/
@@ -812,7 +812,7 @@ if any(model_normalized in m for m in mistral_models):
 
 ### Scenario 1: Provider Releases New Model Family
 
-**Example:** Claude Opus 5.0 released
+**Example:** Claude Opus 5.5 released
 
 ```bash
 # 1. Wait for automated update (runs Sunday)
@@ -820,14 +820,14 @@ if any(model_normalized in m for m in mistral_models):
 
 # 2. Create YAML definition
 cp ai_models/definitions/anthropic/claude-opus-4-1.yaml \
-   ai_models/definitions/anthropic/claude-opus-5-0.yaml
+   ai_models/definitions/anthropic/claude-opus-5-5.yaml
 
 # 3. Edit with new model details
 
 # 4. Add to factory routing
 # Edit: pm_prompt_toolkit/providers/factory.py
 claude_models = [
-    "claude-opus-5-0",  # Add new
+    "claude-opus-5-5",  # Add new
     "claude-opus-4-1",  # Keep old (transition period)
     # ...
 ]
@@ -838,7 +838,7 @@ claude_models = [
 
 # 6. Test and commit
 pytest tests/
-git commit -m "feat: Add Claude Opus 5.0 support"
+git commit -m "feat: Add Claude Opus 5.5 support"
 ```
 
 **Deprecation timeline:**
@@ -877,7 +877,7 @@ pricing:
 
 notes: |
   Pricing reduced on 2025-11-01 (-33% input, -33% output).
-  See https://docs.claude.com/en/docs/about-claude/models
+  See https://platform.claude.com/docs/en/about-claude/models/overview
 ```
 
 **If >25% change:**
@@ -983,17 +983,17 @@ PM-Prompt-Patterns/
 │   ├── pricing.py                     # Cost calculations
 │   └── definitions/                   # Model YAML files
 │       ├── anthropic/
-│       │   ├── claude-sonnet-4-5.yaml
-│       │   ├── claude-haiku-4-5.yaml
-│       │   └── claude-opus-4-1.yaml
+│       │   ├── claude-sonnet-5-5.yaml
+│       │   ├── claude-haiku-5-5.yaml
+│       │   └── claude-opus-5-5.yaml
 │       ├── openai/
-│       │   ├── gpt-4o.yaml
-│       │   ├── gpt-4o-mini.yaml
-│       │   └── gpt-4o-mini.yaml
+│       │   ├── gpt-6.1-sol.yaml
+│       │   ├── gpt-6.1-terra.yaml
+│       │   └── gpt-6-luna.yaml
 │       └── google/
-│           ├── gemini-2-5-pro.yaml
-│           ├── gemini-2-5-flash.yaml
-│           └── gemini-2-0-flash-exp.yaml
+│           ├── gemini-4-argon.yaml
+│           ├── gemini-3-8-flash.yaml
+│           └── gemini-3-5-flash-lite.yaml
 ├── scripts/
 │   ├── model_updater/
 │   │   ├── main.py                    # Main orchestrator
@@ -1026,10 +1026,10 @@ PM-Prompt-Patterns/
 
 ### Anthropic Claude
 
-- **Identifiers**: Date-based (e.g., `claude-sonnet-4-5-20250929`)
+- **Identifiers**: Undated for current models (e.g., `claude-sonnet-5-5`); older models used date-based identifiers (e.g., `claude-sonnet-4-5-20250929`)
 - **Versioning**: New dated identifiers released periodically for same model
 - **Deprecation**: Old identifiers supported ~6 months
-- **Docs**: https://docs.claude.com/en/docs/about-claude/models
+- **Docs**: https://platform.claude.com/docs/en/about-claude/models/overview
 - **Update Frequency**: Monthly releases common
 
 **Example identifiers over time:**
@@ -1041,33 +1041,32 @@ claude-opus-4-1-20251101  (Nov 2025)
 
 ### OpenAI GPT
 
-- **Identifiers**: Simple names (e.g., `gpt-4o`, `gpt-4o-mini`)
+- **Identifiers**: Simple names (e.g., `gpt-6.1-sol`, `gpt-6-luna`)
 - **Versioning**: Occasionally add date suffixes for major updates
 - **Deprecation**: 3-6 months notice given
-- **Docs**: https://platform.openai.com/docs/models
+- **Docs**: https://developers.openai.com/api/docs/models
 - **Update Frequency**: Quarterly major releases
 
 **Naming patterns:**
 ```
-gpt-4o              (Latest GPT-4 optimized)
-gpt-4o-mini         (Smaller, faster version)
-gpt-4o         (Previous generation)
-gpt-3.5-turbo       (Legacy but still supported)
+gpt-6.1-sol         (Recommended default)
+gpt-6.1-terra       (Cost-sensitive production)
+gpt-6-luna          (Lowest cost)
 ```
 
 ### Google Gemini
 
-- **Identifiers**: Version-based (e.g., `gemini-2.5-pro`)
-- **Versioning**: Clear version numbers (2.0, 2.5, etc.)
+- **Identifiers**: Version-based (e.g., `gemini-3.8-flash`)
+- **Versioning**: Clear version numbers (3.5, 3.8, 4, etc.)
 - **Experimental**: Separate identifiers for experimental vs production
-- **Docs**: https://ai.google.dev/gemini-api/docs/models/gemini
+- **Docs**: https://ai.google.dev/gemini-api/docs/models
 - **Update Frequency**: Rapid experimental releases, stable every 3-6 months
 
 **Version hierarchy:**
 ```
-gemini-2.5-pro             (Latest production)
-gemini-2.5-flash           (Fast version)
-gemini-2-5-flash       (Experimental)
+gemini-4-argon             (Flagship)
+gemini-3.8-flash           (Recommended default)
+gemini-3.5-flash-lite      (Low cost, high volume)
 ```
 
 ---

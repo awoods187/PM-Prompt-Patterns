@@ -90,7 +90,7 @@ models = list_models()
 print(f"Available models: {len(models)}")  # 8 models
 
 # Get a specific model
-model = get_model("claude-sonnet-4-5")
+model = get_model("claude-sonnet-5-5")
 print(f"Model: {model.name}")
 print(f"Provider: {model.provider}")
 print(f"Context: {model.metadata.context_window_input:,} tokens")
@@ -108,7 +108,7 @@ print(f"Budget models: {[m.model_id for m in budget_models]}")
 # Calculate costs
 from ai_models import calculate_cost
 cost = calculate_cost(
-    model_id="claude-sonnet-4-5",
+    model_id="claude-sonnet-5-5",
     input_tokens=1000,
     output_tokens=500
 )
@@ -116,13 +116,12 @@ print(f"Cost for request: ${cost:.4f}")
 ```
 
 **Available models:**
-- `claude-haiku-4-5` (budget, fast)
-- `claude-sonnet-4-5` (balanced, recommended)
-- `claude-opus-4-1` (premium, highest quality)
-- `gpt-4o` (provider not implemented yet)
-- `gpt-4o-mini` (provider not implemented yet)
-- `gemini-2-5-flash` (provider not implemented yet)
-- `gemini-2.5-pro` (provider not implemented yet)
+- `claude-haiku-5-5` (budget, fast)
+- `claude-sonnet-5-5` (balanced, recommended)
+- `claude-opus-5-5` (premium, highest quality)
+- `gpt-6-luna` (provider not implemented yet)
+- `gemini-3-8-flash` (provider not implemented yet)
+- `gemini-4-argon` (provider not implemented yet)
 
 ### 2. Using Providers for Classification
 
@@ -132,7 +131,7 @@ For classification tasks using implemented providers:
 from pm_prompt_toolkit.providers import get_provider
 
 # Use Claude (Anthropic direct API)
-provider = get_provider("claude:claude-sonnet-4-5")
+provider = get_provider("claude:claude-sonnet-5-5")
 result = provider.classify("We need SSO integration before Q4 rollout")
 
 print(f"Category: {result.category}")
@@ -140,11 +139,11 @@ print(f"Confidence: {result.confidence:.2f}")
 print(f"Cost: ${result.cost:.4f}")
 
 # Use AWS Bedrock (if configured)
-bedrock_provider = get_provider("bedrock:claude-sonnet-4-5")
+bedrock_provider = get_provider("bedrock:claude-sonnet-5-5")
 result = bedrock_provider.classify("Dashboard is slow")
 
 # Use Google Vertex AI (if configured)
-vertex_provider = get_provider("vertex:claude-sonnet-4-5")
+vertex_provider = get_provider("vertex:claude-sonnet-5-5")
 result = vertex_provider.classify("Can we get a quote?")
 ```
 
@@ -170,7 +169,7 @@ print(f"Category: {result.category}")
 from ai_models import get_model, calculate_cost
 
 # Compare costs across models
-models_to_compare = ["claude-haiku-4-5", "claude-sonnet-4-5", "claude-opus-4-1"]
+models_to_compare = ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5"]
 
 print("Cost comparison for 1M input + 100K output tokens:")
 for model_id in models_to_compare:
@@ -179,9 +178,9 @@ for model_id in models_to_compare:
     print(f"  {model.name}: ${cost:.2f}")
 
 # Output:
-# Claude Haiku 4.0: $1.25
-# Claude Sonnet 4.5: $4.00
-# Claude Opus 4.0: $18.00
+# Claude Haiku 5.5: $0.75
+# Claude Sonnet 5.5: $3.00
+# Claude Opus 5.5: $6.00
 ```
 
 ### 5. Batch Processing with Metrics
@@ -189,7 +188,7 @@ for model_id in models_to_compare:
 ```python
 from pm_prompt_toolkit.providers import get_provider
 
-provider = get_provider("claude:claude-haiku-4-5")  # Use cheapest model
+provider = get_provider("claude:claude-haiku-5-5")  # Use cheapest model
 
 signals = [
     "We need SSO integration",
@@ -283,15 +282,15 @@ ai_models/
 ### Provider Limitations
 
 **OpenAI Provider:**
-- ✅ Model definitions exist in registry (gpt-4o, gpt-4o-mini, gpt-3.5-turbo)
+- ✅ Model definitions exist in registry (gpt-6.1-sol, gpt-6.1-terra, gpt-6-luna)
 - ❌ Provider implementation raises `NotImplementedError`
-- 📝 Planned features: GPT-4o, JSON mode, function calling
+- 📝 Planned features: GPT-6 Luna, JSON mode, function calling
 - 🤝 Contributions welcome! See [CONTRIBUTING.md](../.github/CONTRIBUTING.md)
 
-**Google Gemini 2.5 Provider:**
-- ✅ Model definitions exist in registry (gemini-2-5-flash, gemini-2.5-pro)
+**Google Gemini Provider:**
+- ✅ Model definitions exist in registry (gemini-3-8-flash, gemini-4-argon)
 - ❌ Provider implementation raises `NotImplementedError`
-- 📝 Planned features: Gemini 2.5 Pro, Gemini 2.5 Flash, 1M+ token context
+- 📝 Planned features: Gemini 4 Argon, Gemini 3.8 Flash, 1M+ token context
 - 🤝 Contributions welcome! See [CONTRIBUTING.md](../.github/CONTRIBUTING.md)
 
 **Workaround:**
@@ -425,7 +424,7 @@ PM Prompt Toolkit - Basic Example
 ======================================================================
 
 📦 Initializing SignalClassifier...
-   Model: claude-sonnet-4-5
+   Model: claude-sonnet-5-5
    Keyword filter: True
 
 🔍 Classifying signals...
@@ -487,16 +486,16 @@ Use ClaudeProvider instead.
 ```python
 # ✅ Use Claude (fully implemented)
 from pm_prompt_toolkit.providers import get_provider
-provider = get_provider("claude:claude-sonnet-4-5")
+provider = get_provider("claude:claude-sonnet-5-5")
 
 # ✅ Use Bedrock (fully implemented, requires AWS config)
-provider = get_provider("bedrock:claude-sonnet-4-5")
+provider = get_provider("bedrock:claude-sonnet-5-5")
 
 # ✅ Use Vertex AI (fully implemented, requires GCP config)
-provider = get_provider("vertex:claude-sonnet-4-5")
+provider = get_provider("vertex:claude-sonnet-5-5")
 
 # ❌ OpenAI not implemented yet
-# provider = get_provider("openai:gpt-4o")  # Raises NotImplementedError
+# provider = get_provider("openai:gpt-6-luna")  # Raises NotImplementedError
 ```
 
 ### "Model not found"
@@ -520,7 +519,7 @@ for model in models:
 
 We welcome contributions! Especially for:
 
-- 🎯 **High Priority:** Implementing OpenAI and Gemini 2.5 Providers
+- 🎯 **High Priority:** Implementing OpenAI and Gemini Providers
 - 📊 **Medium Priority:** Adding cost optimization utilities
 - 🧪 **Medium Priority:** Expanding test coverage
 - 📚 **Low Priority:** Adding more examples and documentation

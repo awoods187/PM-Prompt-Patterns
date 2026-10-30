@@ -2,14 +2,14 @@
 
 **Category**: Analytics / Classification
 **Complexity**: 🟡 Moderate
-**Model Compatibility**: GPT-5o, GPT-5o-mini, gpt-4o
+**Model Compatibility**: GPT-6 Luna, GPT-6.1 Sol
 
 ## OpenAI-Specific Optimizations
 
 - **Function Calling**: Structured JSON output with schema validation
 - **JSON Mode**: Guaranteed valid JSON responses
 - **Parallel Tools**: Batch process multiple signals simultaneously
-- **Best Models**: GPT-5o-mini (cost), GPT-5o (accuracy)
+- **Best Models**: GPT-6 Luna (cost), GPT-6.1 Sol (accuracy)
 
 ## Function Definition
 
@@ -131,7 +131,7 @@ functions = [classification_function]
 
 # Make API call
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-6-luna",
     messages=[
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": f"Classify this signal: {signal}"}
@@ -150,7 +150,7 @@ classification = json.loads(result)
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-6-luna",
     messages=[
         {"role": "system", "content": system_prompt + "\n\nRespond with valid JSON only."},
         {"role": "user", "content": signal}
@@ -193,7 +193,7 @@ tool_calls = [
 
 # Single API call processes all signals
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-6-luna",
     messages=[
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": "Classify these signals"},
@@ -229,15 +229,17 @@ response = client.chat.completions.create(
 - **Batch Processing**: 50-100 signals per API call with parallel tools
 - **JSON Validation**: 100% valid JSON with function calling
 
+_Measured on the previous model lineup; not yet re-run on current models._
+
 ## Model Selection Guide
 
 ```python
 def select_model(volume: int, budget_priority: bool):
     """Select best OpenAI model for signal classification."""
     if budget_priority or volume > 10_000:
-        return "gpt-4o-mini"  # $0.15/$0.60 per 1M tokens
+        return "gpt-6-luna"  # $0.10/$0.50 per 1M tokens
     else:
-        return "gpt-4o"  # $2.50/$10.00 per 1M tokens
+        return "gpt-6.1-sol"  # $2.00/$10.00 per 1M tokens
 ```
 
 ## Reproducibility with Seed
@@ -245,7 +247,7 @@ def select_model(volume: int, budget_priority: bool):
 ```python
 # Get consistent results for testing
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-6-luna",
     messages=messages,
     functions=functions,
     function_call={"name": "classify_customer_signal"},
@@ -282,4 +284,4 @@ except (json.JSONDecodeError, KeyError, AssertionError) as e:
 - Parallel tools enable efficient batch processing
 - Temperature 0.0 recommended for deterministic classification
 - Seed parameter enables reproducible results for testing
-- GPT-5o-mini offers 94% of GPT-5o accuracy at 94% lower cost
+- GPT-5o-mini offers 94% of GPT-5o accuracy at 94% lower cost (previous model lineup; not yet re-run on current models)

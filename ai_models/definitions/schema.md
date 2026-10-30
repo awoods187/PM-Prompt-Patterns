@@ -10,7 +10,7 @@ Current version: `1.0.0`
 
 ```yaml
 schema_version: "1.0.0"
-model_id: string          # Unique identifier (e.g., "claude-sonnet-4-5")
+model_id: string          # Unique identifier (e.g., "claude-sonnet-5-5")
 provider: string          # Provider name: "anthropic" | "openai" | "google"
 name: string              # Human-readable name
 api_identifier: string    # Exact string used in API calls
@@ -52,22 +52,22 @@ optimization:
 notes: string             # Additional information (optional)
 ```
 
-## Example: Claude Sonnet 4.5
+## Example: Claude Sonnet 5.5
 
 ```yaml
 schema_version: "1.0.0"
-model_id: "claude-sonnet-4-5"
+model_id: "claude-sonnet-5-5"
 provider: "anthropic"
-name: "Claude Sonnet 4.5"
-api_identifier: "claude-sonnet-4-5-20250929"
+name: "Claude Sonnet 5.5"
+api_identifier: "claude-sonnet-5-5"
 
 metadata:
-  context_window_input: 200000
-  context_window_output: null  # Same as input
-  knowledge_cutoff: "January 2025"
-  release_date: "2025-09-29"
-  last_verified: "2025-10-25"
-  docs_url: "https://docs.claude.com/en/docs/about-claude/models"
+  context_window_input: 1000000
+  context_window_output: 128000
+  knowledge_cutoff: "June 2026"
+  release_date: "2026-09-28"
+  last_verified: "2026-10-30"
+  docs_url: "https://platform.claude.com/docs/en/models/sonnet-5-5/overview"
 
 capabilities:
   - text_input
@@ -80,27 +80,26 @@ capabilities:
   - json_mode
 
 pricing:
-  input_per_1m: 3.00
-  output_per_1m: 15.00
-  cache_write_per_1m: 3.75
-  cache_read_per_1m: 0.30
+  input_per_1m: 2.00
+  output_per_1m: 10.00
+  cache_write_per_1m: 2.50
+  cache_read_per_1m: 0.10
 
 optimization:
   recommended_for:
     - "Production workhorse applications"
-    - "Complex analysis and reasoning"
-    - "Long-form content generation"
     - "Code generation and review"
+    - "Document analysis and summarization"
     - "Multi-step instructions"
   best_practices:
     - "Use XML tags for structured prompts"
-    - "Enable prompt caching for repeated system prompts"
-    - "Leverage 200k context for comprehensive analysis"
-    - "Use function calling for structured outputs"
+    - "Enable prompt caching for repeated system prompts (cache reads cost 5% of base input)"
+    - "Do not set temperature, top_p, or top_k"
+    - "Forced tool use (tool_choice any/tool) returns an error; use auto"
   cost_tier: "mid-tier"
-  speed_tier: "balanced"
+  speed_tier: "fast"
 
-notes: "RECOMMENDED for most use cases. Training data through July 2025. Extended context window (1M tokens) in beta."
+notes: "RECOMMENDED default for most use cases. Replaces claude-sonnet-4-5. Retirement not sooner than 2027-09-28."
 ```
 
 ## Validation Rules
@@ -149,16 +148,17 @@ ai_models/
 ├── definitions/
 │   ├── schema.md              # This file
 │   ├── anthropic/
-│   │   ├── claude-sonnet-4-5.yaml
-│   │   ├── claude-haiku-4-5.yaml
-│   │   └── claude-opus-4-1.yaml
+│   │   ├── claude-sonnet-5-5.yaml
+│   │   ├── claude-haiku-5-5.yaml
+│   │   └── claude-opus-5-5.yaml
 │   ├── openai/
-│   │   ├── gpt-4o.yaml
-│   │   └── gpt-4o-mini.yaml
+│   │   ├── gpt-6.1-sol.yaml
+│   │   ├── gpt-6.1-terra.yaml
+│   │   └── gpt-6-luna.yaml
 │   └── google/
-│       ├── gemini-2-5-pro.yaml
-│       ├── gemini-2-5-flash.yaml
-│       └── gemini-2-5-flash-lite.yaml
+│       ├── gemini-4-argon.yaml
+│       ├── gemini-3-8-flash.yaml
+│       └── gemini-3-5-flash-lite.yaml
 ├── registry.py               # Auto-loads YAML files
 ├── pricing.py                # PricingService
 ├── capabilities.py           # ModelCapability enum
@@ -171,7 +171,7 @@ ai_models/
 from ai_models import ModelRegistry
 
 # Get model by ID
-model = ModelRegistry.get("claude-sonnet-4-5")
+model = ModelRegistry.get("claude-sonnet-5-5")
 
 # Check capabilities
 if model.has_capability("vision"):

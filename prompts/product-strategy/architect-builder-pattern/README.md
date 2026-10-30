@@ -9,9 +9,9 @@
 | Provider | File | Key Features | Best For | Cost Range |
 |----------|------|-------------|----------|------------|
 | **Base** | [`prompt.md`](./prompt.md) | Universal compatibility | Any provider, fallback | Varies |
-| **Claude** | [`prompt.claude.md`](./prompt.claude.md) | XML tags, chain-of-thought | Complex reasoning, accuracy | $1-15 per 1M tokens |
-| **OpenAI** | [`prompt.openai.md`](./prompt.openai.md) | Function calling, JSON mode | Structured output, integration | $0.15-10 per 1M tokens |
-| **Gemini** | [`prompt.gemini.md`](./prompt.gemini.md) | 2M context, caching | High volume, batch processing | $0.038-5 per 1M tokens |
+| **Claude** | [`prompt.claude.md`](./prompt.claude.md) | XML tags, chain-of-thought | Complex reasoning, accuracy | $0.10-20 per 1M tokens |
+| **OpenAI** | [`prompt.openai.md`](./prompt.openai.md) | Function calling, JSON mode | Structured output, integration | $0.10-10 per 1M tokens |
+| **Gemini** | [`prompt.gemini.md`](./prompt.gemini.md) | 1M context, caching | High volume, batch processing | $0.30-10 per 1M tokens |
 
 ## 🚀 Quick Start
 
@@ -21,7 +21,7 @@
 from ai_models import get_prompt, get_model
 
 # Auto-select best variant based on model
-model = get_model("gpt-4o")
+model = get_model("gpt-6-luna")
 prompt = get_prompt("product-strategy/architect-builder-pattern", model=model.id)
 
 # Use the prompt
@@ -55,7 +55,7 @@ gemini_prompt = get_prompt("product-strategy/architect-builder-pattern", provide
 - ✅ Ultra-high volume (10K+ operations/day)
 - ✅ Cost is primary concern
 - ✅ Can batch operations together
-- ✅ Need large context window (2M tokens)
+- ✅ Need large context window (1M tokens)
 
 ## 📚 Examples
 

@@ -96,7 +96,7 @@ PR DIFF TO REVIEW:
 from pm_prompt_toolkit.providers import get_provider
 
 # Initialize OpenAI provider
-provider = get_provider("gpt-5")
+provider = get_provider("gpt-6.1-sol")
 
 result = provider.generate(
     system_prompt="<prompt from above>",
@@ -106,9 +106,8 @@ result = provider.generate(
 
 ## Model Recommendations
 
-- **gpt-5**: Best review depth and severity calibration
-- **gpt-5-mini**: Faster and cheaper for small PRs
-- **o3**: Use for tricky logic or concurrency changes that need deeper reasoning
+- **gpt-6.1-sol**: Best review depth and severity calibration, including tricky logic or concurrency changes
+- **gpt-6.1-terra**: Faster and cheaper for small PRs
 
 ## See Also
 

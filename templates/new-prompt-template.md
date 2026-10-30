@@ -2,7 +2,7 @@
 
 **Complexity**: [🟢 Beginner | 🟡 Intermediate | 🔴 Advanced]
 **Category**: [Category Name]
-**Model Compatibility**: [✅ Claude (all) | ✅ GPT-5 | ✅ Gemini]
+**Model Compatibility**: [✅ Claude (all) | ✅ GPT-6.1 Sol | ✅ Gemini]
 
 ## Overview
 
@@ -72,7 +72,7 @@ You are a [role description]. Your task is to [primary objective].
 # Code example showing how to use this prompt in production
 from pm_prompt_toolkit.providers import get_provider
 
-provider = get_provider("claude-sonnet-4-5")
+provider = get_provider("claude-sonnet-5-5")
 result = provider.generate(
     system_prompt="<your prompt>",
     user_message="<user input>"
@@ -132,7 +132,7 @@ result = provider.generate(
 - [Claude-specific tip]
 - [Performance note]
 
-**OpenAI (GPT-5)**:
+**OpenAI (GPT-6.1 Sol)**:
 - [OpenAI-specific tip]
 - [Performance note]
 

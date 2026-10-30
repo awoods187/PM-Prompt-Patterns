@@ -2,7 +2,7 @@
 
 **Complexity**: 🔴 Advanced
 **Category**: Technical Documentation
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-5 | ⚠️ Gemini (large context needed)
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-6.1 Sol | ⚠️ Gemini (large context needed)
 
 ## Overview
 
@@ -327,12 +327,14 @@ class DataProcessor:
 | **GPT-5o** | 128K | $0.15-0.40 | 94% | Fast | Balance of cost/quality |
 | **Gemini Pro 1.5** | 2M | $0.10-0.30 | 90% | Medium | Good for huge codebases |
 
+_Measured on the previous model lineup; not yet re-run on current models._
+
 **LOC = Lines of Code**
 
 **Recommendation**:
-- **Claude Sonnet 3.5**: Best accuracy/cost balance for most projects (1K-50K LOC)
-- **Gemini Pro 1.5**: Large codebases (50K+ LOC) requiring full context
-- **GPT-5o**: When you need structured JSON output for automation
+- **Claude Sonnet 5.5**: Best accuracy/cost balance for most projects (1K-50K LOC)
+- **Gemini 4 Argon**: Large codebases (50K+ LOC) requiring full context
+- **GPT-6.1 Sol**: When you need structured JSON output for automation
 
 ---
 

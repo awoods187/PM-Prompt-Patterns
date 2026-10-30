@@ -2,7 +2,7 @@
 
 **Complexity**: 🟡 Intermediate
 **Category**: Code Quality & Standards
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-5 | ✅ Gemini 2.5
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-6.1 Sol | ✅ Gemini 4 Argon
 
 ## Overview
 
@@ -134,7 +134,7 @@ diff = subprocess.run(
 ).stdout
 
 prompt = get_prompt("developing-internal-tools/python-pr-code-review", provider="claude")
-provider = get_provider("claude-sonnet-4-5", enable_caching=True)
+provider = get_provider("claude-sonnet-5-5", enable_caching=True)
 
 review = provider.generate(
     system_prompt=prompt.replace("{paste_diff_here}", ""),

@@ -4,11 +4,11 @@
 
 ## Overview
 
-This OpenAI-optimized variant leverages GPT-5's advanced reasoning and auto-routing capabilities, integrating with GitHub Copilot/Codex for code implementation. The two-phase workflow balances strategic design with efficient execution.
+This OpenAI-optimized variant leverages GPT-6.1 Sol's advanced reasoning capabilities, integrating with GitHub Copilot/Codex for code implementation. The two-phase workflow balances strategic design with efficient execution.
 
 **Recommended models:**
-- **Phase 1 (Design & Validation)**: GPT-5 for strategic architecture decisions with auto-routing (Instant/Thinking modes) and codebase analysis
-- **Phase 2 (Execution)**: GPT-5 mini + GitHub Copilot/Codex for autonomous code generation
+- **Phase 1 (Design & Validation)**: GPT-6.1 Sol for strategic architecture decisions and codebase analysis
+- **Phase 2 (Execution)**: GPT-6.1 Terra + GitHub Copilot/Codex for autonomous code generation
 
 ---
 
@@ -19,7 +19,7 @@ You are implementing the Architect-Builder Pattern, a two-phase workflow for com
 
 # PHASE 1: ARCHITECTURE, DESIGN & VALIDATION
 
-Use GPT-5 for strategic thinking with auto-routing between Instant and Thinking modes for design and validation.
+Use GPT-6.1 Sol for strategic thinking for design and validation.
 
 **Design Request Template:**
 
@@ -154,7 +154,7 @@ Implement this validated design using GitHub Copilot:
 - Structured templates for consistent outputs
 
 ### 2. Instruction Following
-- Direct, imperative language optimized for GPT-5
+- Direct, imperative language optimized for GPT-6.1 Sol
 - Numbered lists for sequential steps
 - Concrete action items vs abstract concepts
 
@@ -168,24 +168,22 @@ Implement this validated design using GitHub Copilot:
 OpenAI's model capabilities naturally align with the two-phase approach:
 
 **Phase 1 (Design & Validation):**
-- GPT-5 auto-routes between Thinking mode for complex architectural decisions
-- Instant mode for quick pattern matching and code analysis
 - Strategic design with comprehensive reasoning capabilities
 
 **Phase 2 (Execution):**
-- GPT-5 mini with Codex provides rapid, cost-effective implementation
+- GPT-6.1 Terra with Codex provides rapid, cost-effective implementation
 - GitHub Copilot integration enables inline suggestions and completions
 - Function/class generation, test creation, and documentation
 
-This mirrors professional development workflows similar to Claude Code's planning and execution modes, where senior architects design (GPT-5 Thinking) and experienced developers execute (Codex/GPT-5 mini).
+This mirrors professional development workflows similar to Claude Code's planning and execution modes, where senior architects design (GPT-6.1 Sol) and experienced developers execute (Codex/GPT-6.1 Terra).
 
 ---
 
 ## Usage with GitHub Copilot/Codex
 
-### Phase 1: Design & Validation (GPT-5 API or ChatGPT)
+### Phase 1: Design & Validation (GPT-6.1 Sol API or ChatGPT)
 
-Use GPT-5 for strategic design and validation with auto-routing:
+Use GPT-6.1 Sol for strategic design and validation:
 
 ```python
 from openai import OpenAI
@@ -193,7 +191,7 @@ from openai import OpenAI
 client = OpenAI(api_key="...")
 
 response = client.chat.completions.create(
-    model="gpt-5",  # Auto-routes to Instant or Thinking mode
+    model="gpt-6.1-sol",
     messages=[
         {
             "role": "system",
@@ -230,7 +228,7 @@ for file in ["src/api/routes.js", "src/middleware/auth.js", "src/models/user.js"
         codebase_context += f"\n\n// {file}\n{f.read()}"
 
 response = client.chat.completions.create(
-    model="gpt-5-mini",  # Cost-effective for analysis
+    model="gpt-6.1-terra",  # Cost-effective for analysis
     messages=[
         {
             "role": "system",
@@ -287,9 +285,9 @@ validated_design = response.choices[0].message.content
 ```python
 # Generate code for each component
 def generate_component(component_spec: str) -> str:
-    """Use GPT-5 mini to generate implementation from spec."""
+    """Use GPT-6.1 Terra to generate implementation from spec."""
     response = client.chat.completions.create(
-        model="gpt-5-mini",  # Fast and cost-effective for code generation
+        model="gpt-6.1-terra",  # Fast and cost-effective for code generation
         messages=[
             {
                 "role": "system",
@@ -325,22 +323,21 @@ print(code)
 
 | Phase | Recommended Model | Cost (per 1M tokens) | Why |
 |-------|------------------|---------------------|-----|
-| Phase 1: Design & Validation | GPT-5 | $3.00 input, $12.00 output | Auto-routing, advanced reasoning, 256k context |
-| Phase 2: Execution | GPT-5 mini + Codex | $0.20 input, $0.80 output | High-volume code generation, IDE integration |
+| Phase 1: Design & Validation | GPT-6.1 Sol | $2.00 input, $10.00 output | Advanced reasoning, 922k input context |
+| Phase 2: Execution | GPT-6.1 Terra + Codex | $1.00 input, $5.00 output | High-volume code generation, IDE integration |
 
 ### Token Management
 
 **Typical costs per feature:**
-- Phase 1 (Design & Validation): $0.19-0.55 (GPT-5 with auto-routing)
-- Phase 2 (Execution): $0.02-0.08 (GPT-5 mini + Codex)
-- **Total: $0.21-0.63** (vs $1.50-3.00 for pure GPT-5 usage)
+- Phase 1 (Design & Validation): $0.13-0.46 (GPT-6.1 Sol)
+- Phase 2 (Execution): $0.10-0.50 (GPT-6.1 Terra + Codex)
+- **Total: $0.23-0.96** (vs $1.00-2.50 for pure GPT-6.1 Sol usage)
 
 **Best practices:**
-- Use GPT-5 mini for code generation (93% cost reduction vs GPT-5)
-- GPT-5 auto-routes to Instant mode for simple tasks, Thinking mode for complex reasoning
+- Use GPT-6.1 Terra for code generation (50% cost reduction vs GPT-6.1 Sol)
 - Use function calling for structured outputs (reduces token usage)
 - Batch related operations in single requests
-- Leverage GPT-5's 256k context window for large architectural designs
+- Leverage GPT-6.1 Sol's 922k input context window for large architectural designs
 
 ---
 
@@ -361,7 +358,7 @@ with open("prompt.openai.md") as f:
 # Phase 1: Design
 print("🎨 Phase 1: Designing architecture...")
 design_response = client.chat.completions.create(
-    model="gpt-5",  # Auto-routing for optimal performance
+    model="gpt-6.1-sol",
     messages=[
         {"role": "system", "content": system_prompt},
         {
@@ -460,10 +457,10 @@ Provide architecture design with:
 
 ### Issue: High cost for validation phase
 
-**Solution:** Use GPT-5 mini for cost-effective validation:
+**Solution:** Use GPT-6.1 Terra for cost-effective validation:
 ```python
 response = client.chat.completions.create(
-    model="gpt-5-mini",  # Fast and cost-effective
+    model="gpt-6.1-terra",  # Fast and cost-effective
     messages=[...],
     temperature=0.3
 )

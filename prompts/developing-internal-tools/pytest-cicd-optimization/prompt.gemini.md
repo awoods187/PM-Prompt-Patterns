@@ -38,7 +38,7 @@ Test execution command:
 from pm_prompt_toolkit.providers import get_provider
 
 # Initialize Gemini provider
-provider = get_provider("gemini-2.0-flash-exp")
+provider = get_provider("gemini-3-8-flash")
 
 result = provider.generate(
     system_instruction="<prompt from above>",
@@ -48,9 +48,8 @@ result = provider.generate(
 
 ## Model Recommendations
 
-- **gemini-2.0-flash-exp**: Best for most use cases (fast, high quality)
-- **gemini-1.5-pro**: Maximum context window (2M tokens)
-- **gemini-1.5-flash**: Fastest option for simpler tasks
+- **gemini-3-8-flash**: Best for most use cases (fast, high quality)
+- **gemini-4-argon**: Hardest reasoning and agentic tasks
 
 ## See Also
 

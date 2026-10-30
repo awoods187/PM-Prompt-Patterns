@@ -334,7 +334,7 @@ INPUT CUSTOMIZATION:
 - **Clear role definition**: Explicit system message with role and responsibilities
 - **Structured output**: Consistent formatting instructions
 - **Function calling ready**: Can be combined with function schemas for structured output
-- **Concise directives**: Optimized for GPT-5's instruction-following capabilities
+- **Concise directives**: Optimized for GPT-6.1 Sol's instruction-following capabilities
 
 ## Usage
 
@@ -342,7 +342,7 @@ INPUT CUSTOMIZATION:
 from pm_prompt_toolkit.providers import get_provider
 
 # Initialize OpenAI provider
-provider = get_provider("gpt-4o")
+provider = get_provider("gpt-6-luna")
 
 result = provider.generate(
     system_prompt="<prompt from above>",
@@ -352,9 +352,7 @@ result = provider.generate(
 
 ## Model Recommendations
 
-- **gpt-4o**: Best balance of speed, quality, and cost for most use cases
-- **gpt-4o-mini**: Faster and more cost-effective for simpler tasks
-- **gpt-4-turbo**: Use for extended context needs (>128k tokens)
+- **gpt-6-luna**: Best balance of speed, quality, and cost for most use cases
 
 ## See Also
 

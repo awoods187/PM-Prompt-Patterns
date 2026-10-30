@@ -209,7 +209,7 @@ Before submitting your prompt, verify:
 # ✅ Good: Clear, complete, works out of the box
 from pm_prompt_toolkit.providers import get_provider
 
-provider = get_provider("claude-sonnet-4-5")
+provider = get_provider("claude-sonnet-5-5")
 result = provider.generate(
     system_prompt="Your prompt here",
     user_message="User input here"
@@ -232,7 +232,7 @@ provider.generate(prompt, input)
    ```python
    from pm_prompt_toolkit.providers import get_provider
 
-   models = ["claude-sonnet-4-5", "gpt-4o", "gemini-2.0-flash-exp"]
+   models = ["claude-sonnet-5-5", "gpt-6-luna", "gemini-3-8-flash"]
 
    for model_name in models:
        provider = get_provider(model_name)

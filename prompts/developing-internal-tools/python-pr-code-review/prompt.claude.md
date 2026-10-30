@@ -96,7 +96,7 @@ PR DIFF TO REVIEW:
 from pm_prompt_toolkit.providers import get_provider
 
 # Initialize Claude provider with caching
-provider = get_provider("claude-sonnet-4-5", enable_caching=True)
+provider = get_provider("claude-sonnet-5-5", enable_caching=True)
 
 result = provider.generate(
     system_prompt="<prompt from above>",

@@ -4,7 +4,7 @@
 
 **These prompts are for GENERATING CLAUDE.md files, not for Claude to read.**
 
-This prompt library helps you use **different LLMs** (GPT-4o, Gemini, or Claude itself) to **create** CLAUDE.md files. The resulting CLAUDE.md files are then read by Claude's computer use feature, regardless of which LLM generated them.
+This prompt library helps you use **different LLMs** (GPT-6 Luna, Gemini, or Claude itself) to **create** CLAUDE.md files. The resulting CLAUDE.md files are then read by Claude's computer use feature, regardless of which LLM generated them.
 
 ```
 ┌─────────────┐    ┌──────────────────┐    ┌──────────────┐    ┌────────────────┐
@@ -12,15 +12,14 @@ This prompt library helps you use **different LLMs** (GPT-4o, Gemini, or Claude 
 │             │    │ Prompt           │    │ (generated)  │    │ (reads file)   │
 └─────────────┘    └──────────────────┘    └──────────────┘    └────────────────┘
                         ↑
-                  (GPT-4o, Gemini,
+                  (GPT-6 Luna, Gemini,
                    or Claude)
 ```
 
 **Why use different LLMs for generation?**
-- **Cost**: Gemini is 10-50x cheaper for bulk generation
-- **Scale**: Gemini's 2M context handles entire codebases
+- **Scale**: Gemini's 1M context handles entire codebases
 - **Quality**: Claude excels at nuanced, complex standards
-- **Speed**: GPT-4o-mini provides fast, validated output
+- **Speed**: GPT-6 Luna provides fast, validated output
 
 ## 🎯 Purpose
 
@@ -35,9 +34,9 @@ CLAUDE.md files establish development standards, testing requirements, git workf
 | Provider | File | Key Features | Best For | Cost/Generation |
 |----------|------|-------------|----------|-----------------|
 | **Base** | [`prompt.md`](./prompt.md) | Universal compatibility | Any provider, fallback | Varies |
-| **Claude** | [`prompt.claude.md`](./prompt.claude.md) | XML tags, chain-of-thought | Generating complex CLAUDE.md with nuanced instructions | $0.03-0.15 |
-| **OpenAI** | [`prompt.openai.md`](./prompt.openai.md) | Function calling, JSON mode | Batch generating validated CLAUDE.md files with consistent structure | $0.002-0.02 |
-| **Gemini** | [`prompt.gemini.md`](./prompt.gemini.md) | 2M context, caching | High-volume CLAUDE.md generation for large codebases | $0.0004-0.005 |
+| **Claude** | [`prompt.claude.md`](./prompt.claude.md) | XML tags, chain-of-thought | Generating complex CLAUDE.md with nuanced instructions | $0.01-0.20 |
+| **OpenAI** | [`prompt.openai.md`](./prompt.openai.md) | Function calling, JSON mode | Batch generating validated CLAUDE.md files with consistent structure | $0.01 |
+| **Gemini** | [`prompt.gemini.md`](./prompt.gemini.md) | 1M context, caching | High-volume CLAUDE.md generation for large codebases | $0.075-0.20 |
 
 *Costs based on typical CLAUDE.md generation (10K-20K tokens output)*
 
@@ -49,7 +48,7 @@ CLAUDE.md files establish development standards, testing requirements, git workf
 from ai_models import get_prompt, get_model
 
 # Auto-select best variant based on model
-model = get_model("gemini-2.0-flash-exp")  # Free experimental
+model = get_model("gemini-3-8-flash")
 prompt = get_prompt("developing-internal-tools/claude-md-generator", model=model.id)
 
 # Generate CLAUDE.md content
@@ -69,10 +68,10 @@ with open(".claude/CLAUDE.md", "w") as f:
 ```python
 from ai_models import get_prompt
 
-# Use Gemini for large codebase (cheap + 2M context)
+# Use Gemini for large codebase (cheap + 1M context)
 gemini_prompt = get_prompt("developing-internal-tools/claude-md-generator", provider="gemini")
 
-# Use GPT-4o for batch generation with validation
+# Use GPT-6 Luna for batch generation with validation
 openai_prompt = get_prompt("developing-internal-tools/claude-md-generator", provider="openai")
 
 # Use Claude for highest quality, most nuanced output
@@ -85,7 +84,7 @@ claude_prompt = get_prompt("developing-internal-tools/claude-md-generator", prov
 - ✅ Generating complex CLAUDE.md with nuanced behavioral guidelines
 - ✅ Need meta-understanding of what makes good Claude instructions
 - ✅ Creating standards for ambiguous or novel domains
-- ✅ Budget allows $0.03-0.15 per generation
+- ✅ Budget allows $0.01-0.20 per generation
 
 **Example**: Generating CLAUDE.md for a cutting-edge ML research project with novel patterns
 
@@ -93,14 +92,14 @@ claude_prompt = get_prompt("developing-internal-tools/claude-md-generator", prov
 - ✅ Batch generating CLAUDE.md files for multiple similar projects
 - ✅ Need strict schema validation for consistency
 - ✅ Want reproducible results (seed parameter)
-- ✅ Budget-conscious: GPT-4o-mini at $0.002 per generation
+- ✅ Budget-conscious: GPT-6 Luna at $0.01 per generation
 
 **Example**: Creating standardized CLAUDE.md files for 50 microservices
 
 ### Use Gemini when:
-- ✅ Generating CLAUDE.md for very large codebases (2M context window)
+- ✅ Generating CLAUDE.md for very large codebases (1M context window)
 - ✅ Ultra-high volume: 100+ CLAUDE.md files per day
-- ✅ Cost is critical: $0.0004 with gemini-2.0-flash-exp (free experimental)
+- ✅ Cost is critical: ~$0.075 with gemini-3-8-flash
 - ✅ Can batch multiple projects in single request
 
 **Example**: Analyzing entire monorepo (500K+ LOC) to generate comprehensive CLAUDE.md
@@ -115,7 +114,7 @@ claude_prompt = get_prompt("developing-internal-tools/claude-md-generator", prov
 ### ❌ Misconception 2
 **"I need the OpenAI variant if I want Claude to work with OpenAI APIs"**
 
-✅ **Reality**: You use the OpenAI variant when you want **GPT-4o to generate** your CLAUDE.md file. The generated file works with Claude regardless.
+✅ **Reality**: You use the OpenAI variant when you want **GPT-6 Luna to generate** your CLAUDE.md file. The generated file works with Claude regardless.
 
 ### ❌ Misconception 3
 **"Provider-specific prompts produce different CLAUDE.md formats"**
@@ -135,11 +134,11 @@ claude_prompt = get_prompt("developing-internal-tools/claude-md-generator", prov
 from ai_models import get_prompt
 import google.generativeai as genai
 
-# Use Gemini 2M context to analyze entire codebase
-model = genai.GenerativeModel("gemini-2.0-flash-exp")  # Free!
+# Use Gemini 1M context to analyze entire codebase
+model = genai.GenerativeModel("gemini-3.8-flash")
 prompt = get_prompt("developing-internal-tools/claude-md-generator", provider="gemini")
 
-# Include entire codebase context (up to 2M tokens)
+# Include entire codebase context (up to 1M tokens)
 codebase_summary = analyze_codebase()  # Your function
 
 claude_md = model.generate_content(
@@ -150,11 +149,11 @@ claude_md = model.generate_content(
     )
 ).text
 
-# Cost: ~$0 (free experimental) vs $2-10 with other providers
+# Cost: ~$0.075
 save_file(".claude/CLAUDE.md", claude_md)
 ```
 
-### Example 2: Batch Generation with GPT-4o-mini
+### Example 2: Batch Generation with GPT-6 Luna
 
 ```python
 from ai_models import get_prompt
@@ -166,7 +165,7 @@ prompt = get_prompt("developing-internal-tools/claude-md-generator", provider="o
 
 for service in microservices:
     response = model.create(
-        model="gpt-4o-mini",  # $0.002 per generation
+        model="gpt-6-luna",  # $0.01 per generation
         messages=[{"role": "user", "content": prompt.format(
             project_type=f"Microservice: {service.name}",
             tech_stack=service.stack,
@@ -177,7 +176,7 @@ for service in microservices:
 
     save_file(f"{service.path}/.claude/CLAUDE.md", response.choices[0].message.content)
 
-# Total cost: 50 × $0.002 = $0.10 vs $1.50 with GPT-4o
+# Total cost: 50 × $0.01 = $0.50 vs $10.00 with GPT-6.1 Sol
 ```
 
 ### Example 3: High-Quality Generation with Claude
@@ -187,7 +186,7 @@ from ai_models import get_prompt
 from pm_prompt_toolkit.providers import get_provider
 
 # Use Claude for highest quality output
-provider = get_provider("claude-sonnet-4-5")
+provider = get_provider("claude-sonnet-5-5")
 prompt = get_prompt("developing-internal-tools/claude-md-generator", provider="claude")
 
 # Generate nuanced CLAUDE.md for complex project
@@ -200,33 +199,31 @@ claude_md = provider.generate(
     )
 )
 
-# Cost: ~$0.06 but highest quality
+# Cost: ~$0.20 but highest quality
 save_file(".claude/CLAUDE.md", claude_md)
 ```
 
 ## 🔧 Latest Model Recommendations
 
-### OpenAI Models (Updated Nov 2025)
+### OpenAI Models (Updated Oct 2026)
 
 | Model | Cost/1M | Best For | Generation Cost |
 |-------|---------|----------|-----------------|
-| **gpt-4o-mini** | $0.15/$0.60 | High-volume, budget | $0.002 |
-| **gpt-4o** | $2.50/$10.00 | Balanced quality | $0.02 |
+| **gpt-6-luna** | $0.10/$0.50 | High-volume, budget, balanced quality | $0.01 |
 
-### Gemini Models (Updated Nov 2025)
+### Gemini Models (Updated Oct 2026)
 
 | Model | Cost/1M | Best For | Generation Cost |
 |-------|---------|----------|-----------------|
-| **gemini-2.0-flash-exp** | $0/$0 (free!) | Experimentation, high-volume | $0 |
-| **gemini-2-5-flash** | $0.075/$0.30 | Production, balanced | $0.0015 |
-| **gemini-2-5-pro** | $1.25/$5.00 | Large context, quality | $0.005 |
+| **gemini-3-8-flash** | $0.75/$3.75 | Production, balanced, high-volume | $0.075 |
+| **gemini-4-argon** | $2.00/$10.00 | Large context, quality | $0.20 |
 
 ### Claude Models
 
 | Model | Cost/1M | Best For | Generation Cost |
 |-------|---------|----------|-----------------|
-| **claude-haiku-4.5** | $1/$5 | Fast, cost-effective | $0.03 |
-| **claude-sonnet-4.5** | $3/$15 | Best quality | $0.06 |
+| **claude-haiku-5-5** | $0.10/$0.50 | Fast, cost-effective | $0.01 |
+| **claude-sonnet-5-5** | $2/$10 | Best quality | $0.20 |
 
 *Generation costs assume 20K token output (typical CLAUDE.md file)*
 
@@ -238,19 +235,19 @@ save_file(".claude/CLAUDE.md", claude_md)
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  Need to analyze huge codebase (>100K LOC)?                 │
-│  → Gemini 2.5 Pro (2M context)                              │
+│  → Gemini 4 Argon (1M context)                              │
 │                                                              │
-│  Generating 50+ files? Want them all free?                  │
-│  → Gemini 2.0 Flash Exp (experimental, free)                │
+│  Generating 50+ files on a tight budget?                    │
+│  → Gemini 3.8 Flash                                         │
 │                                                              │
 │  Need batch generation with validation?                     │
-│  → GPT-4o-mini ($0.002 each)                                │
+│  → GPT-6 Luna ($0.01 each)                                  │
 │                                                              │
 │  Complex project with unique requirements?                  │
-│  → Claude Sonnet 4.5 (highest quality)                      │
+│  → Claude Sonnet 5.5 (highest quality)                      │
 │                                                              │
 │  Prototyping or learning?                                   │
-│  → Gemini 2.0 Flash Exp (free!)                             │
+│  → Gemini 3.8 Flash                                         │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -292,16 +289,16 @@ For detailed optimization strategies:
 
 ## 💡 Pro Tips
 
-1. **Start Free**: Use `gemini-2.0-flash-exp` for experimentation (it's free!)
-2. **Batch Smart**: Generate 10-50 CLAUDE.md files with GPT-4o-mini in one go
-3. **Cache Context**: With Gemini 2.5 Pro, cache your codebase analysis for 74% savings
-4. **Iterate Cheap**: Refine prompts with free/cheap models before using premium
+1. **Start Cheap**: Use `gemini-3-8-flash` for experimentation
+2. **Batch Smart**: Generate 10-50 CLAUDE.md files with GPT-6 Luna in one go
+3. **Cache Context**: With Gemini 4 Argon, cache your codebase analysis
+4. **Iterate Cheap**: Refine prompts with cheap models before using premium
 5. **Mix & Match**: Use Gemini to generate, Claude to refine, GPT to batch-produce
 
 ## ❓ FAQ
 
 **Q: Which LLM should I use to generate CLAUDE.md files?**
-A: For most cases, start with `gemini-2.0-flash-exp` (free). Upgrade to Claude Sonnet if quality issues arise.
+A: For most cases, start with `gemini-3-8-flash`. Upgrade to Claude Sonnet if quality issues arise.
 
 **Q: Will Claude work differently based on which LLM generated the file?**
 A: No. Claude reads the same CLAUDE.md format regardless of generator. Choose based on generation needs, not execution.

@@ -393,10 +393,10 @@ This is bad and we should fix it.
 
 | Model | Cost | Speed | When to Use |
 |-------|------|-------|-------------|
-| **Claude Sonnet 4.5** | $3/M | ⚡⚡ | **RECOMMENDED**: Best for complex analysis |
-| Claude Opus 4.1 | $15/M | ⚡ | High-stakes incidents, critical decisions |
-| Gemini 2.5 Pro | $1.25/M | ⚡⚡ | Large context (analyzing 100+ data points) |
-| GPT-4o | $2.50/M | ⚡⚡ | Structured hypothesis testing |
+| **Claude Sonnet 5.5** | $2/M | ⚡⚡ | **RECOMMENDED**: Best for complex analysis |
+| Claude Opus 5.5 | $4/M | ⚡ | High-stakes incidents, critical decisions |
+| Gemini 4 Argon | $2/M | ⚡⚡ | Large context (analyzing 100+ data points) |
+| GPT-6 Luna | $0.10/M | ⚡⚡ | Structured hypothesis testing |
 
 **Cost Optimization**: For incident investigation:
 - Manual analysis: 8-16 hours @ $100/hr = $800-1,600
