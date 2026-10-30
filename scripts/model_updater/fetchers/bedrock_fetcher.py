@@ -49,7 +49,7 @@ class BedrockFetcher(BaseFetcher):
         try:
             import boto3  # noqa: F401
         except ImportError:
-            raise ImportError("boto3 package not installed")
+            raise ImportError("boto3 package not installed") from None
 
         # This would require AWS credentials configuration
         # Commenting out for now as it's complex to set up

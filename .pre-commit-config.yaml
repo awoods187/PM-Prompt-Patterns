@@ -27,7 +27,7 @@ repos:
 
   # Python formatting (matches CI)
   - repo: https://github.com/psf/black
-    rev: 24.1.1
+    rev: 26.10.1
     hooks:
       - id: black
         language_version: python3
@@ -35,36 +35,28 @@ repos:
 
   # Python import sorting (matches CI)
   - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
+    rev: 9.0.2
     hooks:
       - id: isort
         args: ["--profile", "black", "--line-length", "100"]
 
   # Python linting (matches CI)
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.14
+    rev: v0.17.3
     hooks:
-      - id: ruff
+      - id: ruff-check
         args: ['--fix']
 
   # Project-specific validation (fast, no API calls)
   - repo: local
     hooks:
-      - id: check-deprecated-models
-        name: Check for deprecated model identifiers
-        entry: python -m pytest tests/test_deprecated_models.py -v
-        language: system
-        pass_filenames: false
-        always_run: true
-        stages: [commit]
-
       - id: validate-model-registry
-        name: Validate model registry structure
-        entry: python -m pytest tests/test_model_registry.py -v
+        name: Validate model registry and updater specs
+        entry: python -m pytest tests/test_ai_models.py tests/test_model_updater/test_static_specs_match_definitions.py -q
         language: system
         pass_filenames: false
-        files: ^models/
-        stages: [commit]
+        files: ^(ai_models|scripts/model_updater)/
+        stages: [pre-commit]
 
 # Skip expensive endpoint tests in pre-commit (run in CI instead)
 # To run endpoint tests manually: pytest tests/test_model_endpoints.py

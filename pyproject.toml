@@ -173,7 +173,8 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "RUF022"]  # unused imports, __all__ sorting
-"tests/**" = ["S101", "PLR2004", "ARG001"]
+"tests/**" = ["S101", "S105", "PLR2004", "PLR0917", "ARG001", "PT011", "B017", "DTZ001", "S108"]
+"scripts/**" = ["S603", "S607"]  # scripts shell out to git and gh by design
 
 [tool.mypy]
 python_version = "3.9"

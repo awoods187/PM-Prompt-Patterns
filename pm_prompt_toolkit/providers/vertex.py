@@ -24,7 +24,7 @@ Example:
 
 import logging
 import os
-from typing import Any, Dict, Optional, Tuple, cast
+from typing import Any, Optional, cast
 from xml.sax.saxutils import escape  # nosec B406  # Used to escape user input, not parse XML
 
 try:
@@ -192,7 +192,7 @@ class VertexProvider(LLMProvider):
         )
 
         # Extract classification from response
-        result_text = cast(TextBlock, response.content[0]).text
+        result_text = cast("TextBlock", response.content[0]).text
         category, confidence, evidence = self._parse_response(result_text)
 
         # Calculate cost
@@ -201,7 +201,7 @@ class VertexProvider(LLMProvider):
         cost = self._calculate_cost(input_tokens, output_tokens)
 
         # Build provider metadata
-        provider_metadata: Dict[str, Any] = {
+        provider_metadata: dict[str, Any] = {
             "provider": "vertex",
             "model": self.model,
             "provider_model_id": self.vertex_model_id,
@@ -253,7 +253,7 @@ class VertexProvider(LLMProvider):
 category|confidence|evidence
 </output_format>"""
 
-    def _parse_response(self, response: str) -> Tuple[SignalCategory, float, str]:
+    def _parse_response(self, response: str) -> tuple[SignalCategory, float, str]:
         """Parse Claude's response.
 
         Expected format: category|confidence|evidence

@@ -171,7 +171,6 @@ PM-Prompt-Patterns/
 ├── .env.example                # Environment variable template
 ├── .gitignore                  # Git ignore rules
 ├── .pre-commit-config.yaml     # Pre-commit hooks configuration
-├── .ruff.toml                  # Ruff linter configuration
 ├── LICENSE                     # MIT License
 ├── pyproject.toml              # Python project configuration (PEP 518)
 ├── pytest.ini                  # Pytest configuration

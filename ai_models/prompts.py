@@ -17,7 +17,7 @@ Example:
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import ClassVar, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ class PromptRegistry:
     PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
 
     # Provider name mapping
-    PROVIDER_MAP = {
+    PROVIDER_MAP: ClassVar[dict[str, list[str]]] = {
         "claude": ["claude", "anthropic"],
         "openai": ["gpt", "openai"],
         "gemini": ["gemini", "google"],
@@ -96,7 +96,7 @@ class PromptRegistry:
         )
 
     @classmethod
-    def list_variants(cls, prompt_name: str) -> Dict[str, Path]:
+    def list_variants(cls, prompt_name: str) -> dict[str, Path]:
         """
         List all available variants for a prompt.
 
@@ -133,7 +133,7 @@ class PromptRegistry:
         return variants
 
     @classmethod
-    def list_prompts(cls) -> List[str]:
+    def list_prompts(cls) -> list[str]:
         """
         List all available prompts in the registry.
 
@@ -257,7 +257,7 @@ def get_prompt(
     return PromptRegistry.get_prompt(prompt_name, provider=provider, model=model)
 
 
-def list_prompts() -> List[str]:
+def list_prompts() -> list[str]:
     """
     List all available prompts.
 
@@ -271,7 +271,7 @@ def list_prompts() -> List[str]:
     return PromptRegistry.list_prompts()
 
 
-def list_variants(prompt_name: str) -> Dict[str, Path]:
+def list_variants(prompt_name: str) -> dict[str, Path]:
     """
     List all available variants for a prompt.
 

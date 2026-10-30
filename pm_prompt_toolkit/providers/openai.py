@@ -21,7 +21,7 @@ Example:
 
 import json
 import logging
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 try:
     from openai import OpenAI
@@ -152,7 +152,7 @@ class OpenAIProvider(LLMProvider):
         api_key = settings.get_api_key("openai")
 
         # Initialize OpenAI client
-        client_kwargs: Dict[str, Any] = {"api_key": api_key}
+        client_kwargs: dict[str, Any] = {"api_key": api_key}
         if organization:
             client_kwargs["organization"] = organization
 
@@ -266,7 +266,7 @@ Be precise with confidence scores:
 
 Respond with JSON only."""
 
-    def _parse_response(self, response: str) -> Tuple[SignalCategory, float, str]:
+    def _parse_response(self, response: str) -> tuple[SignalCategory, float, str]:
         """Parse OpenAI's JSON response.
 
         Expected format: {"category": "...", "confidence": 0.95, "evidence": "..."}

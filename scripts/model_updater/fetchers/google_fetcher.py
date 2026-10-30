@@ -283,7 +283,7 @@ class GoogleFetcher(BaseFetcher):
         try:
             import google.generativeai as genai
         except ImportError:
-            raise ImportError("google-generativeai package not installed")
+            raise ImportError("google-generativeai package not installed") from None
 
         genai.configure(api_key=api_key)
 

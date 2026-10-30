@@ -6,7 +6,7 @@
 import logging
 from dataclasses import dataclass, field
 from datetime import date
-from typing import Any
+from typing import Any, ClassVar
 
 from scripts.model_updater.fetchers.base_fetcher import ModelData
 
@@ -27,7 +27,7 @@ class ModelValidator:
     """Validates fetched model data."""
 
     # Valid capability values
-    VALID_CAPABILITIES = {
+    VALID_CAPABILITIES: ClassVar[set[str]] = {
         "text_input",
         "text_output",
         "function_calling",
@@ -51,8 +51,8 @@ class ModelValidator:
     }
 
     # Valid tier values
-    VALID_COST_TIERS = {"budget", "mid-tier", "premium"}
-    VALID_SPEED_TIERS = {"fast", "balanced", "thorough"}
+    VALID_COST_TIERS: ClassVar[set[str]] = {"budget", "mid-tier", "premium"}
+    VALID_SPEED_TIERS: ClassVar[set[str]] = {"fast", "balanced", "thorough"}
 
     # Reasonable ranges
     MIN_CONTEXT_WINDOW = 1000
@@ -260,9 +260,8 @@ class ModelValidator:
 
     def _validate_urls(self, model: ModelData, result: ValidationResult) -> None:
         """Validate URL formats."""
-        if model.docs_url:
-            if not model.docs_url.startswith(("http://", "https://")):
-                result.errors.append("docs_url must start with http:// or https://")
+        if model.docs_url and not model.docs_url.startswith(("http://", "https://")):
+            result.errors.append("docs_url must start with http:// or https://")
 
     def validate_batch(self, models: list[ModelData]) -> dict[str, ValidationResult]:
         """Validate multiple models.

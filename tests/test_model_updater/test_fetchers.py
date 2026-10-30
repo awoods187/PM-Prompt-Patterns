@@ -116,9 +116,9 @@ def test_base_fetcher_cache() -> None:
     assert len(models1) > 0
 
     # Cache the result manually
-    from datetime import datetime
+    from datetime import datetime, timezone
 
-    fetcher._cache[fetcher.provider_name] = (datetime.now(), models1)
+    fetcher._cache[fetcher.provider_name] = (datetime.now(timezone.utc), models1)
 
     # Second fetch should use cache
     models2 = fetcher.fetch_with_cache()

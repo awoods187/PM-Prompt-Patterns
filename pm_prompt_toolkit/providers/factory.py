@@ -165,12 +165,11 @@ def get_provider(
         if settings.enable_openai:
             logger.info(f"Routing OpenAI model '{model_normalized}' to OpenAI provider")
             return OpenAIProvider(model=model_normalized, enable_caching=enable_caching)
-        else:
-            raise ConfigurationError(
-                f"OpenAI provider for {model} is not enabled. "
-                f"To use OpenAI models, set ENABLE_OPENAI=true and OPENAI_API_KEY in your .env file. "
-                f"See README.md for setup instructions."
-            )
+        raise ConfigurationError(
+            f"OpenAI provider for {model} is not enabled. "
+            f"To use OpenAI models, set ENABLE_OPENAI=true and OPENAI_API_KEY in your .env file. "
+            f"See README.md for setup instructions."
+        )
 
     # Check for Gemini models
     gemini_models = [

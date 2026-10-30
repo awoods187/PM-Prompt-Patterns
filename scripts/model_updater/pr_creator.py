@@ -5,7 +5,7 @@
 
 import logging
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from scripts.model_updater.change_detector import ChangeReport
@@ -45,7 +45,7 @@ class PRCreator:
 
         # Generate branch name
         if not branch_name:
-            timestamp = datetime.now().strftime("%Y%m%d")
+            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d")
             branch_name = f"auto-update-models-{timestamp}"
 
         try:
@@ -62,9 +62,7 @@ class PRCreator:
             self._push_branch(branch_name)
 
             # Create PR
-            pr_url = self._create_github_pr(branch_name, changelog)
-
-            return pr_url
+            return self._create_github_pr(branch_name, changelog)
 
         except Exception as e:
             self.logger.error(f"Failed to create PR: {e}")
@@ -84,6 +82,7 @@ class PRCreator:
             cwd=self.repo_path,
             capture_output=True,
             text=True,
+            check=False,
         )
 
         if result.returncode == 0:
@@ -200,8 +199,7 @@ class PRCreator:
         if parts:
             detail = ", ".join(parts)
             return f"🤖 Auto-update models: {detail}"
-        else:
-            return f"🤖 Auto-update models ({total} changes)"
+        return f"🤖 Auto-update models ({total} changes)"
 
     def _generate_pr_body(self, changelog: ChangeReport) -> str:
         """Generate PR body with changelog.

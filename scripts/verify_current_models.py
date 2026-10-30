@@ -26,7 +26,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Optional
 
 # Add parent directory to path to import ai_models
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -51,10 +51,10 @@ class ModelVerifier:
 
     def __init__(self):  # type: ignore[no-untyped-def]
         """Initialize verifier."""
-        self.results: Dict[str, Dict[str, any]] = {}  # type: ignore[valid-type]
+        self.results: dict[str, dict[str, any]] = {}  # type: ignore[valid-type]
         self.definitions_dir = Path(__file__).parent.parent / "ai_models" / "definitions"
 
-    def verify_anthropic_model(self, model_id: str, api_identifier: str) -> Dict[str, any]:  # type: ignore[valid-type]
+    def verify_anthropic_model(self, model_id: str, api_identifier: str) -> dict[str, any]:  # type: ignore[valid-type]
         """Verify Anthropic model.
 
         Args:
@@ -99,9 +99,9 @@ class ModelVerifier:
         except anthropic.AuthenticationError:
             return {"success": False, "error": "Authentication failed", "skip_reason": "auth_error"}
         except Exception as e:
-            return {"success": False, "error": f"{type(e).__name__}: {str(e)}"}
+            return {"success": False, "error": f"{type(e).__name__}: {e!s}"}
 
-    def verify_openai_model(self, model_id: str, api_identifier: str) -> Dict[str, any]:  # type: ignore[valid-type]
+    def verify_openai_model(self, model_id: str, api_identifier: str) -> dict[str, any]:  # type: ignore[valid-type]
         """Verify OpenAI model.
 
         Args:
@@ -148,9 +148,9 @@ class ModelVerifier:
         except openai.AuthenticationError:
             return {"success": False, "error": "Authentication failed", "skip_reason": "auth_error"}
         except Exception as e:
-            return {"success": False, "error": f"{type(e).__name__}: {str(e)}"}
+            return {"success": False, "error": f"{type(e).__name__}: {e!s}"}
 
-    def verify_google_model(self, model_id: str, api_identifier: str) -> Dict[str, any]:  # type: ignore[valid-type]
+    def verify_google_model(self, model_id: str, api_identifier: str) -> dict[str, any]:  # type: ignore[valid-type]
         """Verify Google Gemini model.
 
         Args:
@@ -196,12 +196,11 @@ class ModelVerifier:
                     "error": "Authentication failed",
                     "skip_reason": "auth_error",
                 }
-            elif "not found" in error_msg.lower():
+            if "not found" in error_msg.lower():
                 return {"success": False, "error": f"Model not found: {api_identifier}"}
-            else:
-                return {"success": False, "error": f"{type(e).__name__}: {error_msg}"}
+            return {"success": False, "error": f"{type(e).__name__}: {error_msg}"}
 
-    def verify_model(self, provider: str, model_id: str, api_identifier: str) -> Dict[str, any]:  # type: ignore[valid-type]
+    def verify_model(self, provider: str, model_id: str, api_identifier: str) -> dict[str, any]:  # type: ignore[valid-type]
         """Verify a model based on its provider.
 
         Args:
@@ -214,16 +213,15 @@ class ModelVerifier:
         """
         if provider.lower() == "anthropic":
             return self.verify_anthropic_model(model_id, api_identifier)
-        elif provider.lower() == "openai":
+        if provider.lower() == "openai":
             return self.verify_openai_model(model_id, api_identifier)
-        elif provider.lower() == "google":
+        if provider.lower() == "google":
             return self.verify_google_model(model_id, api_identifier)
-        else:
-            return {"success": False, "error": f"Unknown provider: {provider}"}
+        return {"success": False, "error": f"Unknown provider: {provider}"}
 
     def verify_all_models(
         self, provider_filter: Optional[str] = None, model_filter: Optional[str] = None
-    ) -> Dict[str, Dict[str, any]]:  # type: ignore[valid-type]
+    ) -> dict[str, dict[str, any]]:  # type: ignore[valid-type]
         """Verify all model definitions.
 
         Args:

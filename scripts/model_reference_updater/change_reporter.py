@@ -8,7 +8,7 @@ This module generates comprehensive reports of scans and updates.
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 from scripts.model_reference_updater.reference_scanner import ScanResults
 from scripts.model_reference_updater.reference_updater import UpdateResults
@@ -92,7 +92,7 @@ class ChangeReporter:
 
         # Category breakdown
         # Categorize files by type
-        categories: Dict[str, List[Path]] = {
+        categories: dict[str, list[Path]] = {
             "Python files": [],
             "Markdown docs": [],
             "YAML configs": [],

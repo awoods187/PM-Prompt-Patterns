@@ -8,16 +8,15 @@ This version properly extracts sections and creates clean files.
 import os
 import re
 from pathlib import Path
-from typing import Dict, List
 
 
-def read_file_lines(file_path: Path) -> List[str]:
+def read_file_lines(file_path: Path) -> list[str]:
     """Read file and return lines."""
-    with open(file_path, "r", encoding="utf-8") as f:
+    with open(file_path, encoding="utf-8") as f:
         return f.readlines()
 
 
-def find_section_ranges(lines: List[str]) -> Dict[str, tuple]:
+def find_section_ranges(lines: list[str]) -> dict[str, tuple]:
     """
     Find line ranges for each major section.
 
@@ -48,7 +47,7 @@ def find_section_ranges(lines: List[str]) -> Dict[str, tuple]:
     return sections
 
 
-def extract_header(lines: List[str]) -> str:
+def extract_header(lines: list[str]) -> str:
     """Extract title and metadata (before first ## header)."""
     header_lines = []
     for line in lines:
@@ -58,12 +57,12 @@ def extract_header(lines: List[str]) -> str:
     return "".join(header_lines).strip()
 
 
-def extract_section(lines: List[str], start: int, end: int) -> str:
+def extract_section(lines: list[str], start: int, end: int) -> str:
     """Extract section content between line numbers."""
     return "".join(lines[start:end]).strip()
 
 
-def get_base_prompt_content(lines: List[str], sections: Dict[str, tuple]) -> str:
+def get_base_prompt_content(lines: list[str], sections: dict[str, tuple]) -> str:
     """
     Extract just the core prompt instructions from Base Prompt section.
 
@@ -96,7 +95,7 @@ def get_base_prompt_content(lines: List[str], sections: Dict[str, tuple]) -> str
     return "".join(lines[start + 1 : end]).strip()
 
 
-def create_base_prompt_md(lines: List[str], sections: Dict[str, tuple]) -> str:
+def create_base_prompt_md(lines: list[str], sections: dict[str, tuple]) -> str:
     """
     Create the clean base prompt.md file.
 
@@ -158,7 +157,7 @@ def create_base_prompt_md(lines: List[str], sections: Dict[str, tuple]) -> str:
     return "\n".join(parts)
 
 
-def create_claude_md(lines: List[str], sections: Dict[str, tuple], title: str) -> str:
+def create_claude_md(lines: list[str], sections: dict[str, tuple], title: str) -> str:
     """Create Claude-optimized file."""
 
     # Get base prompt
@@ -244,7 +243,7 @@ def create_claude_md(lines: List[str], sections: Dict[str, tuple], title: str) -
     return "\n".join(output)
 
 
-def create_openai_md(lines: List[str], sections: Dict[str, tuple], title: str) -> str:
+def create_openai_md(lines: list[str], sections: dict[str, tuple], title: str) -> str:
     """Create OpenAI-optimized file."""
 
     base_prompt = get_base_prompt_content(lines, sections)
@@ -302,7 +301,7 @@ def create_openai_md(lines: List[str], sections: Dict[str, tuple], title: str) -
     return "\n".join(output)
 
 
-def create_gemini_md(lines: List[str], sections: Dict[str, tuple], title: str) -> str:
+def create_gemini_md(lines: list[str], sections: dict[str, tuple], title: str) -> str:
     """Create Gemini-optimized file."""
 
     base_prompt = get_base_prompt_content(lines, sections)
@@ -413,7 +412,7 @@ def main() -> None:
 
     # Find all prompt directories
     prompt_dirs = []
-    for root, dirs, files in os.walk(prompts_dir):
+    for root, _dirs, files in os.walk(prompts_dir):
         if "prompt.md" in files:
             prompt_dirs.append(Path(root))
 

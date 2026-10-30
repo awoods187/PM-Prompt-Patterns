@@ -202,9 +202,11 @@ class TestAPIFetching:
     ) -> None:
         """Test that missing openai package raises ImportError."""
         # Simulate import failure by making the import raise ImportError
-        with patch("builtins.__import__", side_effect=ImportError("openai not installed")):
-            with pytest.raises(ImportError, match="openai package not installed"):
-                openai_fetcher.fetch_from_api()
+        with (
+            patch("builtins.__import__", side_effect=ImportError("openai not installed")),
+            pytest.raises(ImportError, match="openai package not installed"),
+        ):
+            openai_fetcher.fetch_from_api()
 
     @patch.dict("os.environ", {"OPENAI_API_KEY": "test-api-key"})
     @patch("openai.OpenAI")

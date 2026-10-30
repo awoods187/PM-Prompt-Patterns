@@ -8,7 +8,7 @@ throughout the codebase, including outdated patterns that need migration.
 """
 
 import re
-from typing import List, Pattern, Tuple
+from re import Pattern
 
 # ============================================================================
 # CURRENT MODELS (Source of Truth from ai_models/definitions/)
@@ -47,7 +47,7 @@ CURRENT_MODELS = {
 # ============================================================================
 
 # Each pattern maps: (regex_pattern, replacement_model_id, description)
-OUTDATED_PATTERNS: List[Tuple[str, str, str]] = [
+OUTDATED_PATTERNS: list[tuple[str, str, str]] = [
     # -------------------------------------------------------------------------
     # Anthropic Claude - deprecated/retired → replacement (verified 2026-10-30)
     # -------------------------------------------------------------------------
@@ -81,7 +81,7 @@ OUTDATED_PATTERNS: List[Tuple[str, str, str]] = [
 ]
 
 # Compile patterns for efficiency
-COMPILED_PATTERNS: List[Tuple[Pattern, str, str]] = [
+COMPILED_PATTERNS: list[tuple[Pattern, str, str]] = [
     (re.compile(pattern, re.IGNORECASE), replacement, desc)
     for pattern, replacement, desc in OUTDATED_PATTERNS
 ]
@@ -127,7 +127,7 @@ EXCLUDE_DIRS = {
 # ============================================================================
 
 
-def get_all_current_models() -> List[str]:
+def get_all_current_models() -> list[str]:
     """Get list of all current model IDs."""
     all_models = []
     for provider_models in CURRENT_MODELS.values():
@@ -135,7 +135,7 @@ def get_all_current_models() -> List[str]:
     return all_models
 
 
-def get_all_current_model_names() -> List[str]:
+def get_all_current_model_names() -> list[str]:
     """Get list of all current model display names."""
     all_names = []
     for provider_models in CURRENT_MODELS.values():
@@ -145,13 +145,10 @@ def get_all_current_model_names() -> List[str]:
 
 def is_outdated_pattern(text: str) -> bool:
     """Check if text contains any outdated model patterns."""
-    for pattern, _, _ in COMPILED_PATTERNS:
-        if pattern.search(text):
-            return True
-    return False
+    return any(pattern.search(text) for pattern, _, _ in COMPILED_PATTERNS)
 
 
-def find_outdated_references(text: str) -> List[Tuple[str, str, str]]:
+def find_outdated_references(text: str) -> list[tuple[str, str, str]]:
     """Find all outdated model references in text.
 
     Returns:

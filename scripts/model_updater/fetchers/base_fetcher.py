@@ -6,7 +6,7 @@
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from typing import Any, Callable, Optional
 
 logger = logging.getLogger(__name__)
@@ -139,14 +139,14 @@ class BaseFetcher(ABC):
         cache_key = self.provider_name
         if cache_key in self._cache:
             cached_time, cached_data = self._cache[cache_key]
-            age = (datetime.now() - cached_time).total_seconds()
+            age = (datetime.now(timezone.utc) - cached_time).total_seconds()
             if age < self.cache_ttl:
                 self.logger.info(f"Using cached data for {self.provider_name} (age: {age:.0f}s)")
                 return cached_data
 
         self.logger.info(f"Fetching fresh data for {self.provider_name}")
         models = self.fetch_models()
-        self._cache[cache_key] = (datetime.now(), models)
+        self._cache[cache_key] = (datetime.now(timezone.utc), models)
         return models
 
     def fetch_from_api(self) -> list[ModelData]:
@@ -332,4 +332,4 @@ class BaseFetcher(ABC):
                 else:
                     self.logger.error(f"All {max_retries} attempts failed")
 
-        raise last_exception  # type: ignore
+        raise last_exception  # type: ignore[misc]

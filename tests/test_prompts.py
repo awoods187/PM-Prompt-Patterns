@@ -156,7 +156,6 @@ class TestProviderDetection:
         [
             ("gpt-4o", "openai"),
             ("gpt-4o-mini", "openai"),
-            ("gpt-4o", "openai"),
             ("claude-sonnet-4-5", "claude"),
             ("claude-haiku", "claude"),
             ("claude-opus", "claude"),
@@ -201,7 +200,8 @@ class TestPromptContent:
         prompt = get_prompt("analytics/signal-classification", provider="claude")
 
         # Should contain XML-style tags
-        assert "<" in prompt and ">" in prompt
+        assert "<" in prompt
+        assert ">" in prompt
         # Should have category tags
         assert "category" in prompt.lower()
 
@@ -333,9 +333,11 @@ class TestEdgeCases:
         (test_dir / "README.txt").write_text("This is not a prompt file")
 
         # Temporarily override PROMPTS_DIR
-        with patch.object(PromptRegistry, "PROMPTS_DIR", test_prompts_dir):
-            with pytest.raises(FileNotFoundError, match="No prompt files found"):
-                PromptRegistry.get_prompt("test-empty")
+        with (
+            patch.object(PromptRegistry, "PROMPTS_DIR", test_prompts_dir),
+            pytest.raises(FileNotFoundError, match="No prompt files found"),
+        ):
+            PromptRegistry.get_prompt("test-empty")
 
     def test_list_prompts_when_no_prompts_dir(self, tmp_path: Path) -> None:
         """Test list_prompts returns empty list when PROMPTS_DIR doesn't exist."""

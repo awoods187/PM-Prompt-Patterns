@@ -196,11 +196,14 @@ class TestAPIFetching:
     ) -> None:
         """Test that missing google-generativeai package raises ImportError."""
         # Simulate import failure
-        with patch(
-            "builtins.__import__", side_effect=ImportError("No module named 'google.generativeai'")
+        with (
+            patch(
+                "builtins.__import__",
+                side_effect=ImportError("No module named 'google.generativeai'"),
+            ),
+            pytest.raises(ImportError, match="google-generativeai package not installed"),
         ):
-            with pytest.raises(ImportError, match="google-generativeai package not installed"):
-                google_fetcher.fetch_from_api()
+            google_fetcher.fetch_from_api()
 
     @patch.dict("os.environ", {"GOOGLE_API_KEY": "test-api-key"})
     @patch("google.generativeai.configure")

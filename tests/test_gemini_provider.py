@@ -326,7 +326,7 @@ class TestModelMapping:
 
     def test_model_ids_match_pricing(self) -> None:
         """Test all model IDs have corresponding pricing."""
-        for model_name, model_id in GEMINI_MODEL_IDS.items():
+        for model_id in GEMINI_MODEL_IDS.values():
             assert model_id in GEMINI_PRICING, f"Missing pricing for {model_id}"
             assert model_id in GEMINI_CACHE_PRICING, f"Missing cache pricing for {model_id}"
 

@@ -10,7 +10,6 @@ model references that need to be updated.
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List
 
 from scripts.model_reference_updater import patterns
 
@@ -38,9 +37,9 @@ class ScanResults:
     total_references: int = 0
     outdated_references: int = 0
     current_references: int = 0
-    references_by_file: Dict[Path, List[FileReference]] = field(default_factory=dict)
-    references_by_pattern: Dict[str, int] = field(default_factory=dict)
-    files_by_type: Dict[str, int] = field(default_factory=dict)
+    references_by_file: dict[Path, list[FileReference]] = field(default_factory=dict)
+    references_by_pattern: dict[str, int] = field(default_factory=dict)
+    files_by_type: dict[str, int] = field(default_factory=dict)
 
     def add_reference(self, ref: FileReference) -> None:
         """Add a reference to the results."""
@@ -93,7 +92,7 @@ class ReferenceScanner:
 
         return self.results
 
-    def _find_scannable_files(self) -> List[Path]:
+    def _find_scannable_files(self) -> list[Path]:
         """Find all files that should be scanned.
 
         Returns:
@@ -153,7 +152,7 @@ class ReferenceScanner:
         except Exception as e:
             logger.warning(f"Error scanning {file_path}: {e}")
 
-    def get_top_files_needing_updates(self, limit: int = 10) -> List[tuple]:
+    def get_top_files_needing_updates(self, limit: int = 10) -> list[tuple]:
         """Get top files with most outdated references.
 
         Args:
@@ -165,13 +164,13 @@ class ReferenceScanner:
         file_counts = [(path, len(refs)) for path, refs in self.results.references_by_file.items()]
         return sorted(file_counts, key=lambda x: x[1], reverse=True)[:limit]
 
-    def get_references_by_category(self) -> Dict[str, List[Path]]:
+    def get_references_by_category(self) -> dict[str, list[Path]]:
         """Categorize files with references by type.
 
         Returns:
             Dictionary mapping category to list of files
         """
-        categories: Dict[str, List[Path]] = {
+        categories: dict[str, list[Path]] = {
             "Python files": [],
             "Markdown docs": [],
             "YAML configs": [],
