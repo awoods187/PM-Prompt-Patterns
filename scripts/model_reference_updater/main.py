@@ -172,9 +172,9 @@ def get_mode_description(args: argparse.Namespace) -> str:
     """Get description of the mode being run."""
     if args.scan_only:
         return "Scan only (no changes)"
-    elif args.dry_run:
+    if args.dry_run:
         return "Dry run (preview changes)"
-    elif args.update:
+    if args.update:
         return "Update (apply all changes)"
     return "Unknown"
 

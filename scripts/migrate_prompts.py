@@ -18,8 +18,8 @@ Usage:
 import argparse
 import re
 import shutil
+import sys
 from pathlib import Path
-from typing import Dict, List
 
 
 class PromptMigrator:
@@ -28,9 +28,9 @@ class PromptMigrator:
     def __init__(self, prompts_dir: Path, dry_run: bool = False):
         self.prompts_dir = prompts_dir
         self.dry_run = dry_run
-        self.changes: List[str] = []
+        self.changes: list[str] = []
 
-    def find_single_file_prompts(self) -> List[Path]:
+    def find_single_file_prompts(self) -> list[Path]:
         """Find all single-file prompts that need migration."""
         prompts = []
 
@@ -120,7 +120,7 @@ class PromptMigrator:
 
         return True
 
-    def _extract_metadata(self, content: str, file_path: Path) -> Dict[str, str]:
+    def _extract_metadata(self, content: str, file_path: Path) -> dict[str, str]:
         """Extract metadata from prompt content."""
         # Extract title (first # heading)
         title_match = re.search(r"^#\s+(.+)$", content, re.MULTILINE)
@@ -146,7 +146,7 @@ class PromptMigrator:
         }
 
     def _generate_claude_variant(
-        self, base_content: str, output_file: Path, metadata: Dict[str, str]
+        self, base_content: str, output_file: Path, metadata: dict[str, str]
     ) -> None:
         """Generate Claude-optimized variant with XML tags."""
         # Add Claude-specific header
@@ -211,7 +211,7 @@ Your final answer or output here...
         output_file.write_text(claude_content, encoding="utf-8")
 
     def _generate_openai_variant(
-        self, base_content: str, output_file: Path, metadata: Dict[str, str]
+        self, base_content: str, output_file: Path, metadata: dict[str, str]
     ) -> None:
         """Generate OpenAI-optimized variant with function calling."""
         openai_content = f"""# {metadata['title']} (OpenAI Optimized)
@@ -300,7 +300,7 @@ result = json.loads(response.choices[0].message.content)
         output_file.write_text(openai_content, encoding="utf-8")
 
     def _generate_gemini_variant(
-        self, base_content: str, output_file: Path, metadata: Dict[str, str]
+        self, base_content: str, output_file: Path, metadata: dict[str, str]
     ) -> None:
         """Generate Gemini-optimized variant with caching and large context."""
         gemini_content = f"""# {metadata['title']} (Gemini Optimized)
@@ -399,7 +399,7 @@ response = model.generate_content(batch_input)
 """
         output_file.write_text(gemini_content, encoding="utf-8")
 
-    def _generate_readme(self, output_file: Path, metadata: Dict[str, str]) -> None:
+    def _generate_readme(self, output_file: Path, metadata: dict[str, str]) -> None:
         """Generate README with prompt metadata and usage guide."""
         readme_content = f"""# {metadata['title']}
 
@@ -490,7 +490,7 @@ Browse more prompts in the [prompts directory](../../).
         print(message)
         self.changes.append(message)
 
-    def migrate_all(self, skip_existing: bool = False) -> Dict[str, int]:
+    def migrate_all(self, skip_existing: bool = False) -> dict[str, int]:
         """
         Migrate all single-file prompts.
 
@@ -589,4 +589,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    exit(main())
+    sys.exit(main())

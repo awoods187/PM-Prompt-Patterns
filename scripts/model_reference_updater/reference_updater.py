@@ -10,7 +10,6 @@ with current versions.
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List
 
 from scripts.model_reference_updater import patterns
 
@@ -23,9 +22,9 @@ class UpdateResults:
 
     files_updated: int = 0
     total_updates: int = 0
-    updates_by_pattern: Dict[str, int] = field(default_factory=dict)
-    failed_files: List[Path] = field(default_factory=list)
-    errors: List[str] = field(default_factory=list)
+    updates_by_pattern: dict[str, int] = field(default_factory=dict)
+    failed_files: list[Path] = field(default_factory=list)
+    errors: list[str] = field(default_factory=list)
 
 
 class ReferenceUpdater:
@@ -56,7 +55,7 @@ class ReferenceUpdater:
             updates_made = 0
 
             # Apply each pattern replacement
-            for pattern, replacement, desc in patterns.COMPILED_PATTERNS:
+            for pattern, replacement, _desc in patterns.COMPILED_PATTERNS:
                 matches = list(pattern.finditer(updated_content))
                 if matches:
                     # Replace all occurrences
@@ -84,10 +83,10 @@ class ReferenceUpdater:
         except Exception as e:
             logger.error(f"Error updating {file_path}: {e}")
             self.results.failed_files.append(file_path)
-            self.results.errors.append(f"{file_path}: {str(e)}")
+            self.results.errors.append(f"{file_path}: {e!s}")
             return 0
 
-    def update_files(self, file_paths: List[Path]) -> UpdateResults:
+    def update_files(self, file_paths: list[Path]) -> UpdateResults:
         """Update model references in multiple files.
 
         Args:

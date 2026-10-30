@@ -307,7 +307,7 @@ class TestModelMapping:
 
     def test_model_ids_match_pricing(self) -> None:
         """Test all model IDs have corresponding pricing."""
-        for model_name, model_id in OPENAI_MODEL_IDS.items():
+        for model_id in OPENAI_MODEL_IDS.values():
             assert model_id in OPENAI_PRICING, f"Missing pricing for {model_id}"
 
     def test_pricing_covers_all_models(self) -> None:

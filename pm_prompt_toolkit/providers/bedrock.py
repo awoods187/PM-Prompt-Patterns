@@ -25,7 +25,7 @@ Example:
 
 import json
 import logging
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 from xml.sax.saxutils import escape  # nosec B406  # Used to escape user input, not parse XML
 
 try:
@@ -137,7 +137,7 @@ class BedrockProvider(LLMProvider):
         self.region = region or settings.aws_region
 
         # Initialize Bedrock client
-        session_kwargs: Dict[str, Any] = {
+        session_kwargs: dict[str, Any] = {
             "aws_access_key_id": settings.aws_access_key_id,
             "aws_secret_access_key": settings.aws_secret_access_key,
             "region_name": self.region,
@@ -252,7 +252,7 @@ class BedrockProvider(LLMProvider):
 category|confidence|evidence
 </output_format>"""
 
-    def _parse_response(self, response: str) -> Tuple[SignalCategory, float, str]:
+    def _parse_response(self, response: str) -> tuple[SignalCategory, float, str]:
         """Parse Claude's response.
 
         Expected format: category|confidence|evidence

@@ -546,7 +546,7 @@ class OpenAIFetcher(BaseFetcher):
         try:
             from openai import OpenAI
         except ImportError:
-            raise ImportError("openai package not installed")
+            raise ImportError("openai package not installed") from None
 
         client = OpenAI(api_key=api_key)
 

@@ -347,7 +347,7 @@ class AnthropicFetcher(BaseFetcher):
         try:
             import anthropic
         except ImportError:
-            raise ImportError("anthropic package not installed")
+            raise ImportError("anthropic package not installed") from None
 
         client = anthropic.Anthropic(api_key=api_key)
 

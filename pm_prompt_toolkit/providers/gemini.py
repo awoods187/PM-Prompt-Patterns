@@ -20,7 +20,6 @@ Example:
 
 import json
 import logging
-from typing import Tuple
 
 try:
     import google.generativeai as genai
@@ -247,7 +246,7 @@ Be precise with confidence scores:
 
 Respond with JSON only, no other text."""
 
-    def _parse_response(self, response: str) -> Tuple[SignalCategory, float, str]:
+    def _parse_response(self, response: str) -> tuple[SignalCategory, float, str]:
         """Parse Gemini's JSON response.
 
         Expected format: {"category": "...", "confidence": 0.95, "evidence": "..."}

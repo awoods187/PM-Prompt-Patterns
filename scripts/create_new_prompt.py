@@ -14,7 +14,7 @@ This script will:
 
 import re
 from pathlib import Path
-from typing import Dict, List, Union
+from typing import Union
 
 
 def sanitize_filename(name: str) -> str:
@@ -39,21 +39,20 @@ def get_category_path() -> str:
 
     if choice == "1":
         return "analytics"
-    elif choice == "2":
+    if choice == "2":
         return "developing-internal-tools"
-    elif choice == "3":
+    if choice == "3":
         return "product-strategy"
-    elif choice == "4":
+    if choice == "4":
         return "stakeholder-communication"
-    elif choice == "5":
+    if choice == "5":
         new_category = input("Enter new category name (lowercase-with-hyphens): ").strip()
         return sanitize_filename(new_category)
-    else:
-        print("Invalid choice, defaulting to 'developing-internal-tools'")
-        return "developing-internal-tools"
+    print("Invalid choice, defaulting to 'developing-internal-tools'")
+    return "developing-internal-tools"
 
 
-def get_prompt_metadata() -> Dict[str, str]:
+def get_prompt_metadata() -> dict[str, str]:
     """Collect prompt metadata from user."""
     print("\n=== PROMPT METADATA ===")
 
@@ -100,11 +99,11 @@ def get_prompt_metadata() -> Dict[str, str]:
     return metadata
 
 
-def get_prompt_content() -> Dict[str, Union[str, List[str]]]:
+def get_prompt_content() -> dict[str, Union[str, list[str]]]:
     """Collect prompt content from user."""
     print("\n=== PROMPT CONTENT ===")
 
-    content: Dict[str, Union[str, List[str]]] = {}
+    content: dict[str, Union[str, list[str]]] = {}
 
     # Overview
     print("\nOverview (1-2 sentences describing what this prompt does):")
@@ -149,7 +148,7 @@ def get_prompt_content() -> Dict[str, Union[str, List[str]]]:
     return content
 
 
-def create_base_prompt(metadata: Dict[str, str], content: Dict[str, Union[str, List[str]]]) -> str:
+def create_base_prompt(metadata: dict[str, str], content: dict[str, Union[str, list[str]]]) -> str:
     """Generate the base prompt.md file content."""
 
     parts = [f"# {metadata['name']}\n"]
@@ -215,7 +214,7 @@ def create_base_prompt(metadata: Dict[str, str], content: Dict[str, Union[str, L
 
 
 def create_claude_prompt(
-    metadata: Dict[str, str], content: Dict[str, Union[str, List[str]]]
+    metadata: dict[str, str], content: dict[str, Union[str, list[str]]]
 ) -> str:
     """Generate the Claude-optimized prompt.claude.md file."""
 
@@ -254,7 +253,7 @@ def create_claude_prompt(
 
 
 def create_openai_prompt(
-    metadata: Dict[str, str], content: Dict[str, Union[str, List[str]]]
+    metadata: dict[str, str], content: dict[str, Union[str, list[str]]]
 ) -> str:
     """Generate the OpenAI-optimized prompt.openai.md file."""
 
@@ -302,7 +301,7 @@ def create_openai_prompt(
 
 
 def create_gemini_prompt(
-    metadata: Dict[str, str], content: Dict[str, Union[str, List[str]]]
+    metadata: dict[str, str], content: dict[str, Union[str, list[str]]]
 ) -> str:
     """Generate the Gemini-optimized prompt.gemini.md file."""
 
@@ -367,7 +366,7 @@ def validate_prompt_structure(prompt_dir: Path) -> bool:
             all_valid = False
             continue
 
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             content = f.read()
 
         # Validate base prompt

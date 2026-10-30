@@ -12,16 +12,15 @@ This script:
 import os
 import re
 from pathlib import Path
-from typing import Dict
 
 
-def extract_base_content(prompt_md_path: Path) -> Dict[str, str]:
+def extract_base_content(prompt_md_path: Path) -> dict[str, str]:
     """
     Extract sections from the base prompt.md file.
 
     Returns dict with keys: header, overview, business_value, prompt_content
     """
-    with open(prompt_md_path, "r", encoding="utf-8") as f:
+    with open(prompt_md_path, encoding="utf-8") as f:
         content = f.read()
 
     sections = {}
@@ -77,7 +76,7 @@ def extract_base_content(prompt_md_path: Path) -> Dict[str, str]:
     return sections
 
 
-def create_base_prompt(sections: Dict[str, str]) -> str:
+def create_base_prompt(sections: dict[str, str]) -> str:
     """Create the model-agnostic base prompt.md content."""
 
     parts = [sections.get("header", "")]
@@ -111,7 +110,7 @@ def create_base_prompt(sections: Dict[str, str]) -> str:
     return "\n\n".join(parts)
 
 
-def create_claude_optimized(base_sections: Dict[str, str], title: str) -> str:
+def create_claude_optimized(base_sections: dict[str, str], title: str) -> str:
     """Create Claude-optimized prompt file with minimal duplication."""
 
     # Extract just the core prompt content
@@ -121,7 +120,7 @@ def create_claude_optimized(base_sections: Dict[str, str], title: str) -> str:
     prompt_content = re.sub(r"^```\n|```$", "", prompt_content.strip())
     prompt_content = re.sub(r"<task>|</task>", "", prompt_content)
 
-    template = f"""# {title} - Claude Optimized
+    return f"""# {title} - Claude Optimized
 
 > Extends `prompt.md` with Claude-specific optimizations
 
@@ -167,17 +166,15 @@ For optimal performance with Claude:
 - Provider documentation: `docs/provider-specific-prompts.md`
 """
 
-    return template
 
-
-def create_openai_optimized(base_sections: Dict[str, str], title: str) -> str:
+def create_openai_optimized(base_sections: dict[str, str], title: str) -> str:
     """Create OpenAI-optimized prompt file with minimal duplication."""
 
     prompt_content = base_sections.get("prompt_content", "")
     prompt_content = re.sub(r"^```\n|```$", "", prompt_content.strip())
     prompt_content = re.sub(r"<task>|</task>", "", prompt_content)
 
-    template = f"""# {title} - OpenAI Optimized
+    return f"""# {title} - OpenAI Optimized
 
 > Extends `prompt.md` with OpenAI-specific optimizations
 
@@ -248,17 +245,15 @@ result = provider.generate(
 - Provider documentation: `docs/provider-specific-prompts.md`
 """
 
-    return template
 
-
-def create_gemini_optimized(base_sections: Dict[str, str], title: str) -> str:
+def create_gemini_optimized(base_sections: dict[str, str], title: str) -> str:
     """Create Gemini-optimized prompt file with minimal duplication."""
 
     prompt_content = base_sections.get("prompt_content", "")
     prompt_content = re.sub(r"^```\n|```$", "", prompt_content.strip())
     prompt_content = re.sub(r"<task>|</task>", "", prompt_content)
 
-    template = f"""# {title} - Gemini Optimized
+    return f"""# {title} - Gemini Optimized
 
 > Extends `prompt.md` with Gemini-specific optimizations
 
@@ -315,8 +310,6 @@ result = provider.generate(
 - Base prompt: `prompt.md` (examples, testing checklist, business value)
 - Provider documentation: `docs/provider-specific-prompts.md`
 """
-
-    return template
 
 
 def restructure_prompt_directory(prompt_dir: Path) -> None:
@@ -382,7 +375,7 @@ def main() -> None:
 
     # Find all prompt directories
     prompt_dirs = []
-    for root, dirs, files in os.walk(prompts_dir):
+    for root, _dirs, files in os.walk(prompts_dir):
         if "prompt.md" in files:
             prompt_dirs.append(Path(root))
 

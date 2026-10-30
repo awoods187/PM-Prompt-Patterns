@@ -516,7 +516,7 @@ class TestGeminiRouting:
             "gemini-2-5-pro",
             "gemini-2-5-flash",
             "gemini-1.5",
-            "gemini-2-5-pro",  # Case insensitive
+            "GEMINI-2-5-PRO",  # Case insensitive
         ],
     )
     @patch("pm_prompt_toolkit.providers.factory.get_settings")
@@ -566,7 +566,7 @@ class TestEdgeCases:
         mock_get_settings.return_value = Mock()
 
         # Act & Assert
-        with pytest.raises(ValueError, match="Unknown model.*Supported models"):
+        with pytest.raises(ValueError, match=r"Unknown model.*Supported models"):
             get_provider("totally-unknown-model")
 
     @patch("pm_prompt_toolkit.providers.factory.get_settings")

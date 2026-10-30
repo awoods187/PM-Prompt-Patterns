@@ -19,7 +19,7 @@ Example:
 """
 
 import logging
-from typing import Tuple, cast
+from typing import cast
 from xml.sax.saxutils import escape  # nosec B406  # Used to escape user input, not parse XML
 
 try:
@@ -150,7 +150,7 @@ class ClaudeProvider(LLMProvider):
         )
 
         # Parse response
-        result_text = cast(TextBlock, response.content[0]).text
+        result_text = cast("TextBlock", response.content[0]).text
         category, confidence, evidence = self._parse_response(result_text)
 
         # Calculate cost
@@ -203,7 +203,7 @@ class ClaudeProvider(LLMProvider):
 category|confidence|evidence
 </output_format>"""
 
-    def _parse_response(self, response: str) -> Tuple[SignalCategory, float, str]:
+    def _parse_response(self, response: str) -> tuple[SignalCategory, float, str]:
         """Parse Claude's response.
 
         Expected format: category|confidence|evidence

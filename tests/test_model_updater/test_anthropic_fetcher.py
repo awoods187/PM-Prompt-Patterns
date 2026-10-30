@@ -240,9 +240,11 @@ class TestAPIFetching:
     ) -> None:
         """Test that missing anthropic package raises ImportError."""
         # Simulate import failure
-        with patch("builtins.__import__", side_effect=ImportError("No module named 'anthropic'")):
-            with pytest.raises(ImportError, match="anthropic package not installed"):
-                anthropic_fetcher.fetch_from_api()
+        with (
+            patch("builtins.__import__", side_effect=ImportError("No module named 'anthropic'")),
+            pytest.raises(ImportError, match="anthropic package not installed"),
+        ):
+            anthropic_fetcher.fetch_from_api()
 
     @patch.dict("os.environ", {"ANTHROPIC_API_KEY": "test-api-key"})
     @patch("anthropic.Anthropic")

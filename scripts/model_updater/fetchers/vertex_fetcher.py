@@ -49,7 +49,7 @@ class VertexFetcher(BaseFetcher):
         try:
             import anthropic  # noqa: F401
         except ImportError:
-            raise ImportError("anthropic[vertex] package not installed")
+            raise ImportError("anthropic[vertex] package not installed") from None
 
         # This would require GCP credentials configuration
         # Commenting out for now as it's complex to set up

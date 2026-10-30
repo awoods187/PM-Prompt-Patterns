@@ -87,7 +87,7 @@ class TestMockProviderInitialization:
     def test_init_with_invalid_confidence_raises_value_error(self, invalid_confidence: Any) -> None:
         """Test that invalid confidence values raise ValueError."""
         # Arrange & Act & Assert
-        with pytest.raises(ValueError, match="base_confidence must be between 0.0 and 1.0"):
+        with pytest.raises(ValueError, match=r"base_confidence must be between 0\.0 and 1\.0"):
             MockProvider(base_confidence=invalid_confidence)
 
     @pytest.mark.parametrize(
@@ -541,7 +541,7 @@ class TestClassificationRules:
     def test_classification_rules_keywords_are_strings(self) -> None:
         """Test that all keywords are strings."""
         # Act & Assert
-        for category, keywords in CLASSIFICATION_RULES.items():
+        for keywords in CLASSIFICATION_RULES.values():
             assert isinstance(keywords, list)
             for keyword in keywords:
                 assert isinstance(keyword, str)
