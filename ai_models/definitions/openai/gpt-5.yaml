@@ -1,20 +1,24 @@
 # GPT-5 Model Definition
-# Last verified: 2025-11-01
-# Source: https://platform.openai.com/docs/models
+# Last verified: 2026-10-30
+# Source: https://developers.openai.com/api/docs/deprecations
 
 schema_version: "1.0.0"
 model_id: "gpt-5"
 provider: "openai"
 name: "GPT-5"
 api_identifier: "gpt-5-2025-08-07"
+deprecated: true
+replacement: "gpt-6.1-sol"
 
 metadata:
-  context_window_input: 256000
-  context_window_output: 16384
-  knowledge_cutoff: "October 2025"
+  context_window_input: 272000
+  context_window_output: 128000
+  knowledge_cutoff: "September 2024"
   release_date: "2025-08-07"
-  last_verified: "2025-11-01"
-  docs_url: "https://platform.openai.com/docs/models/gpt-5"
+  last_verified: "2026-10-30"
+  deprecation_date: "2026-06-11"
+  retirement_date: "2026-12-11"
+  docs_url: "https://developers.openai.com/api/docs/models/gpt-5"
 
 capabilities:
   - text_input
@@ -28,8 +32,9 @@ capabilities:
   - advanced_reasoning
 
 pricing:
-  input_per_1m: 3.00
-  output_per_1m: 12.00
+  input_per_1m: 1.25
+  output_per_1m: 10.00
+  cache_read_per_1m: 0.125
 
 optimization:
   recommended_for:
@@ -52,4 +57,4 @@ optimization:
   cost_tier: "mid-tier"
   speed_tier: "balanced"
 
-notes: "OpenAI's flagship model with auto-routing between Instant and Thinking modes. Released August 7, 2025. 256k context window."
+notes: "DEPRECATED: OpenAI shuts down gpt-5 on 2026-12-11. OpenAI lists gpt-5.6-sol as the replacement; this library migrates to gpt-6.1-sol. Context window is 400k total (272k input, 128k output)."

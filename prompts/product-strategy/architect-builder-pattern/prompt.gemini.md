@@ -7,8 +7,8 @@
 This Gemini-optimized variant leverages Gemini's extended context window, multimodal capabilities, and instruction-following strengths for the two-phase Architect-Builder workflow. Particularly effective for design phases requiring visual diagrams or architectural sketches.
 
 **Recommended models:**
-- **Phase 1 (Design & Validation)**: Gemini 1.5 Pro or Gemini 2.0 Flash Exp for strategic architecture decisions and codebase analysis
-- **Phase 2 (Execution)**: Gemini 2.0 Flash Exp or Gemini Code Assist for autonomous implementation
+- **Phase 1 (Design & Validation)**: Gemini 4 Argon or Gemini 3.8 Flash for strategic architecture decisions and codebase analysis
+- **Phase 2 (Execution)**: Gemini 3.8 Flash or Gemini Code Assist for autonomous implementation
 
 ---
 
@@ -19,7 +19,7 @@ You are implementing the Architect-Builder Pattern, a two-phase workflow for com
 
 # PHASE 1: ARCHITECTURE, DESIGN & VALIDATION
 
-Use Gemini 1.5 Pro or Gemini 2.0 Flash Exp for strategic thinking and validation.
+Use Gemini 4 Argon or Gemini 3.8 Flash for strategic thinking and validation.
 
 **Design Request Template:**
 
@@ -171,7 +171,7 @@ Proceed autonomously but pause at each checkpoint for validation. Report progres
 - Concrete action items with deliverables
 
 ### 2. Extended Context Window
-- Gemini 1.5 Pro: Up to 2M tokens context
+- Gemini 4 Argon: Up to 1M tokens context
 - Can include entire codebases for validation
 - Supports long architectural documentation
 - Maintains coherence across all 3 phases
@@ -195,16 +195,16 @@ Phase 1 can accept:
 
 ### Phase 1: Design (Gemini API or AI Studio)
 
-Use Gemini 1.5 Pro or 2.0 Flash Exp for strategic design:
+Use Gemini 4 Argon or 3.8 Flash for strategic design:
 
 ```python
 import google.generativeai as genai
 
 genai.configure(api_key="...")
 
-# For complex designs, use Gemini 1.5 Pro
+# For complex designs, use Gemini 4 Argon
 model = genai.GenerativeModel(
-    model_name='gemini-1.5-pro',
+    model_name='gemini-4-argon',
     system_instruction=open("prompt.gemini.md").read()
 )
 
@@ -227,12 +227,12 @@ design = response.text
 print(design)
 ```
 
-### Phase 2: Validation (Gemini 2.0 Flash Exp + Codebase)
+### Phase 2: Validation (Gemini 3.8 Flash + Codebase)
 
 ```python
 # Use faster model for validation
 model = genai.GenerativeModel(
-    model_name='gemini-2.0-flash-exp',
+    model_name='gemini-3.8-flash',
     system_instruction="You are validating an architecture design against an existing codebase."
 )
 
@@ -268,7 +268,7 @@ validated_design = response.text
 # Generate implementation for each component
 def generate_component(component_spec: str) -> str:
     """Use Gemini to generate implementation from spec."""
-    model = genai.GenerativeModel('gemini-2.0-flash-exp')
+    model = genai.GenerativeModel('gemini-3.8-flash')
 
     response = model.generate_content(f"""
     Generate production-ready Python code with tests for:
@@ -336,21 +336,19 @@ for i, phase in enumerate(phases, 1):
 
 | Phase | Recommended Model | Cost (per 1M tokens) | Why |
 |-------|------------------|---------------------|-----|
-| Phase 1: Design & Validation | Gemini 1.5 Pro or 2.0 Flash Exp | $1.25/$5.00 or $0 (free) | Strategic decisions, complex reasoning, codebase analysis |
-| Phase 2: Execution | Gemini 2.0 Flash Exp | $0 (free tier) | Code generation |
+| Phase 1: Design & Validation | Gemini 4 Argon or 3.8 Flash | $2.00/$10.00 or $0.75/$3.75 | Strategic decisions, complex reasoning, codebase analysis |
+| Phase 2: Execution | Gemini 3.8 Flash | $0.75/$3.75 | Code generation |
 
 ### Token Management
 
 **Typical costs per feature:**
-- Phase 1 (Design & Validation with 1.5 Pro): $0.05-0.15
-- Phase 1 (Design & Validation with 2.0 Flash Exp): $0 (free tier)
-- Phase 2 (Execution): $0 (free tier)
-- **Total: $0-0.15** (extremely cost-effective)
+- Phase 1 (Design & Validation with 4 Argon): $0.08-0.30
+- Phase 1 (Design & Validation with 3.8 Flash): $0.03-0.11
 
 **Best practices:**
-- Use Gemini 2.0 Flash Exp for validation and execution (free tier)
-- Reserve 1.5 Pro for complex architectural decisions only
-- Leverage 2M token context to include entire codebases
+- Use Gemini 3.8 Flash for validation and execution
+- Reserve 4 Argon for complex architectural decisions only
+- Leverage 1M token context to include entire codebases
 - Use multimodal inputs to reduce text descriptions
 
 ---
@@ -365,7 +363,7 @@ import PIL.Image
 # Upload existing architecture diagram
 current_arch = genai.upload_file("current_system.png")
 
-model = genai.GenerativeModel('gemini-1.5-pro')
+model = genai.GenerativeModel('gemini-4-argon')
 
 response = model.generate_content([
     current_arch,
@@ -451,7 +449,7 @@ Provide architecture design with:
 
 **Solution:** Leverage extended context window:
 ```python
-# Include entire codebase (Gemini 1.5 Pro supports 2M tokens)
+# Include entire codebase (Gemini 4 Argon supports 1M tokens)
 all_files = []
 for root, dirs, files in os.walk("src"):
     for file in files:

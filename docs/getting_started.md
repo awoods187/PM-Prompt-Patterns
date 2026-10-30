@@ -114,7 +114,7 @@ models = list_models()
 print(f"Available models: {len(models)}")
 
 # Get a specific model
-model = get_model("claude-sonnet-4-5")
+model = get_model("claude-sonnet-5-5")
 print(f"Model: {model.name}")
 print(f"Context window: {model.metadata.context_window_input:,} tokens")
 print(f"Cost: ${model.pricing.input_per_1m}/1M input tokens")
@@ -155,7 +155,7 @@ PM Prompt Toolkit - Basic Example
 ======================================================================
 
 📦 Initializing SignalClassifier...
-   Model: claude-sonnet-4-5
+   Model: claude-sonnet-5-5
    Keyword filter: True
 
 🔍 Classifying signals...
@@ -235,12 +235,12 @@ cheap_models = [m for m in all_models if m.pricing.cost_tier == "budget"]
 from pm_prompt_toolkit.providers import get_provider
 
 # Force specific provider
-claude_provider = get_provider("claude:claude-sonnet-4-5")
-gpt_provider = get_provider("openai:gpt-4o")
-gemini_provider = get_provider("google:gemini-2-5-flash")
+claude_provider = get_provider("claude:claude-sonnet-5-5")
+gpt_provider = get_provider("openai:gpt-6-luna")
+gemini_provider = get_provider("google:gemini-3-8-flash")
 
 # Use AWS Bedrock (requires configuration)
-bedrock_provider = get_provider("bedrock:claude-sonnet-4-5")
+bedrock_provider = get_provider("bedrock:claude-sonnet-5-5")
 ```
 
 **See:** [Provider Documentation](./python_package_readme.md#providers)
@@ -340,12 +340,9 @@ for model in models:
 ```
 
 **Available models:**
-- Claude: `claude-haiku-4-5`, `claude-sonnet-4-5`, `claude-opus-4-1`
-- GPT-5: `gpt-5`, `gpt-5-mini`, `gpt-5-nano`, `gpt-5-pro`
-- GPT-4.1: `gpt-4.1`, `gpt-4.1-mini`
-- o-series: `o3`, `o3-pro`, `o4-mini`, `o4-mini-high`
-- GPT-4o: `gpt-4o` (multimodal specialist)
-- Gemini: `gemini-2-5-flash`, `gemini-2-5-pro`, `gemini-2-5-flash-lite`
+- Claude: `claude-haiku-5-5`, `claude-sonnet-5-5`, `claude-opus-5-5`
+- OpenAI: `gpt-6.1-sol`, `gpt-6.1-terra`, `gpt-6-luna`
+- Gemini: `gemini-3-8-flash`, `gemini-4-argon`, `gemini-3-5-flash-lite`
 
 #### 5. Tests Failing
 

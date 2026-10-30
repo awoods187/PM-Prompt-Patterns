@@ -28,7 +28,7 @@ This guide explains how to use and create provider-optimized prompts for maximum
 from ai_models import get_prompt, get_model
 
 # Method 1: Auto-select based on model
-model = get_model("gpt-4o")
+model = get_model("gpt-6-luna")
 prompt = get_prompt("analytics/signal-classification", model=model.id)
 
 # Method 2: Explicit provider selection
@@ -61,16 +61,16 @@ print(f"Available variants: {list(variants.keys())}")
 
 | Feature | Claude | OpenAI | Gemini |
 |---------|--------|--------|--------|
-| **Max Context** | 200K | 128K | 2M |
-| **Function Calling** | ❌ | ✅ | ✅ |
+| **Max Context** | 1M | 922K | 1M |
+| **Function Calling** | ✅ | ✅ | ✅ |
 | **JSON Mode** | Via prompting | Native | Native |
 | **Streaming** | ✅ | ✅ | ✅ |
 | **Vision** | ✅ | ✅ | ✅ |
-| **Prompt Caching** | ✅ (90% discount) | ❌ | ✅ (74% discount) |
+| **Prompt Caching** | ✅ (90-95% discount) | ✅ (90-95% discount) | ✅ (90-95% discount) |
 | **Batch API** | ✅ | ✅ | ✅ |
 | **XML Parsing** | ⭐ Excellent | ⚠️ Basic | ⚠️ Basic |
 | **Chain-of-Thought** | ⭐ Excellent | ✅ Good | ✅ Good |
-| **Cost (Cheapest)** | Haiku $1/M | Mini $0.15/M | Flash-Lite $0.038/M |
+| **Cost (Cheapest)** | Haiku $0.10/M | Luna $0.10/M | Flash-Lite $0.30/M |
 
 ---
 
@@ -137,7 +137,7 @@ Analyze the following signal and categorize it.
 from pm_prompt_toolkit.providers import get_provider
 
 # Enable caching
-provider = get_provider("claude-sonnet-4-5", enable_caching=True)
+provider = get_provider("claude-sonnet-5-5", enable_caching=True)
 
 # Structure prompt to cache static content
 system_message = """
@@ -159,8 +159,8 @@ result = provider.classify(system_message + user_message)
 ```
 
 **Best Models:**
-- **Claude Haiku 4.5**: Fast, cost-effective ($1/$5 per 1M)
-- **Claude Sonnet 4.5**: Best accuracy ($3/$15 per 1M)
+- **Claude Haiku 5.5**: Fast, cost-effective ($0.10/$0.50 per 1M for prompts up to 100K tokens)
+- **Claude Sonnet 5.5**: Best accuracy ($2/$10 per 1M)
 
 ---
 
@@ -203,7 +203,7 @@ classification_function = {
 }
 
 response = client.chat.completions.create(
-    model="gpt-5-mini",  # Fast, efficient GPT-5 variant
+    model="gpt-6.1-terra",  # Fast, efficient GPT-6.1 variant
     messages=[
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": signal}
@@ -221,7 +221,7 @@ result = json.loads(response.choices[0].message.function_call.arguments)
 
 ```python
 response = client.chat.completions.create(
-    model="gpt-5-mini",  # Efficient for JSON structured outputs
+    model="gpt-6.1-terra",  # Efficient for JSON structured outputs
     messages=[
         {"role": "system", "content": system_prompt + "\n\nRespond with valid JSON only."},
         {"role": "user", "content": signal}
@@ -241,7 +241,7 @@ result = json.loads(response.choices[0].message.content)
 tools = [{"type": "function", "function": classification_function}]
 
 response = client.chat.completions.create(
-    model="gpt-5",  # GPT-5 handles parallel tools efficiently
+    model="gpt-6.1-sol",  # GPT-6.1 Sol handles parallel tools efficiently
     messages=[
         {"role": "system", "content": "Classify these signals"},
         {"role": "user", "content": "\n".join(f"{i}. {s}" for i, s in enumerate(signals))}
@@ -262,7 +262,7 @@ results = [
 ```python
 # Same inputs + same seed = same output
 response = client.chat.completions.create(
-    model="gpt-5-mini",  # Reproducible outputs for testing
+    model="gpt-6.1-terra",  # Reproducible outputs for testing
     messages=messages,
     temperature=0.0,
     seed=42  # Fixed seed for testing/validation
@@ -270,33 +270,29 @@ response = client.chat.completions.create(
 ```
 
 **Best Models:**
-- **GPT-5**: Flagship with auto-routing (Instant/Thinking modes) ($3/$12 per 1M)
-- **GPT-5 mini**: Efficient variant, great balance ($0.20/$0.80 per 1M)
-- **GPT-4.1**: Specialized for coding and tool use ($2.50/$10.00 per 1M)
-- **GPT-4.1 mini**: Fast coding model, replaced 4o-mini ($0.15/$0.60 per 1M)
-- **o3**: Advanced reasoning with full tool access ($10/$40 per 1M)
-- **o4-mini**: Fast, cost-efficient reasoning ($1/$4 per 1M)
-- **GPT-4o**: Multimodal specialist (voice, vision, low-latency) ($2.50/$10.00 per 1M)
+- **GPT-6.1 Sol**: Recommended default for general production, coding, and advanced reasoning ($2/$10 per 1M)
+- **GPT-6.1 Terra**: Efficient variant for cost-sensitive production and fast reasoning ($1/$5 per 1M)
+- **GPT-6 Luna**: Lowest-cost OpenAI model for high-volume classification and extraction ($0.10/$0.50 per 1M)
 
 ---
 
 ### Gemini Optimizations
 
 **Key Strengths:**
-- 2M token context window (10x larger than competitors)
-- Context caching with 74% cost reduction
-- Ultra-low cost models (Flash Lite: $0.038/1M)
+- 1M token context window
+- Context caching with 90% cost reduction
+- Ultra-low cost models (Flash Lite: $0.30/1M)
 - Native JSON schema validation
 
 **Optimization Techniques:**
 
-#### 1. Massive Batch Processing (2M Context)
+#### 1. Massive Batch Processing (1M Context)
 
 ```python
 import google.generativeai as genai
 
 # Process 1000+ signals in single request
-model = genai.GenerativeModel("gemini-2.5-flash")
+model = genai.GenerativeModel("gemini-3.8-flash")
 
 batch_prompt = "Classify each signal:\n\n"
 for i, signal in enumerate(signals[:1000], 1):
@@ -308,7 +304,7 @@ batch_prompt += "\nReturn array of classifications as JSON."
 response = model.generate_content(batch_prompt)
 results = json.loads(response.text)
 
-# Cost: ~$0.10 for 1000 signals
+# Cost: ~$1.00 for 1000 signals
 # vs. $100+ with per-signal approach
 ```
 
@@ -319,7 +315,7 @@ import datetime
 
 # Cache system instructions and examples
 cached_content = genai.caching.CachedContent.create(
-    model="gemini-2.5-flash",
+    model="gemini-3.8-flash",
     display_name="signal-classifier-v1",
     system_instruction=system_instruction,  # Category definitions, examples
     ttl=datetime.timedelta(hours=1)
@@ -328,8 +324,8 @@ cached_content = genai.caching.CachedContent.create(
 # Use cached model
 model = genai.GenerativeModel.from_cached_content(cached_content)
 
-# First classification: $0.075/1M input tokens
-# Next 1000 classifications: $0.019/1M input tokens (74% savings!)
+# First classification: $0.75/1M input tokens
+# Next 1000 classifications: $0.075/1M input tokens (90% savings!)
 for signal in signals:
     result = model.generate_content(signal)
 ```
@@ -362,7 +358,7 @@ generation_config = {
 }
 
 model = genai.GenerativeModel(
-    model_name="gemini-2.5-flash",
+    model_name="gemini-3.8-flash",
     generation_config=generation_config
 )
 
@@ -378,19 +374,19 @@ def select_gemini_model(daily_volume: int, latency_sensitive: bool):
     """Choose optimal Gemini model based on requirements."""
 
     if latency_sensitive and daily_volume < 10_000:
-        return "gemini-2.5-flash-lite"  # $0.038/$0.15 per 1M, 0.3s latency
+        return "gemini-3.5-flash-lite"  # $0.30/$2.50 per 1M, 0.3s latency
 
     elif daily_volume > 100_000:
-        return "gemini-2.5-flash"  # $0.075/$0.30 per 1M, best volume economics
+        return "gemini-3.8-flash"  # $0.75/$3.75 per 1M, best volume economics
 
     else:
-        return "gemini-2.5-pro"  # $1.25/$5.00 per 1M, highest accuracy
+        return "gemini-4-argon"  # $2.00/$10.00 per 1M, highest accuracy
 ```
 
 **Best Models:**
-- **Gemini 2.5 Flash Lite**: Ultra-low cost, real-time ($0.038/$0.15 per 1M)
-- **Gemini 2.5 Flash**: High volume, balanced ($0.075/$0.30 per 1M)
-- **Gemini 2.5 Pro**: Highest accuracy, large context ($1.25/$5.00 per 1M)
+- **Gemini 3.5 Flash-Lite**: Ultra-low cost, real-time ($0.30/$2.50 per 1M)
+- **Gemini 3.8 Flash**: High volume, balanced ($0.75/$3.75 per 1M)
+- **Gemini 4 Argon**: Highest accuracy, large context ($2.00/$10.00 per 1M)
 
 ---
 
@@ -424,22 +420,21 @@ def select_gemini_model(daily_volume: int, latency_sensitive: bool):
 - Need guaranteed JSON schema compliance
 - Function calling for downstream integration
 - API-first architectures
-- GPT-5/4.1 excel at structured outputs
+- GPT-6.1 Sol and GPT-6 Luna excel at structured outputs
 
 ✅ **Coding Tasks**
-- GPT-4.1 and GPT-4.1 mini specialized for code generation
+- GPT-6.1 Sol for coding and analysis
 - Precise instruction following for web development
 - Long context without reasoning overhead
 
 ✅ **Complex Reasoning**
-- o3/o3-pro for scientific problems, advanced analysis
-- o4-mini/o4-mini-high for math, coding, visual reasoning
+- GPT-6.1 Sol for scientific problems, advanced analysis
+- GPT-6.1 Terra for math, coding, visual reasoning
 - Can "think with images" (sketches, diagrams, low-quality images)
 
 ✅ **General-Purpose Tasks**
-- GPT-5 auto-routes between Instant (fast) and Thinking (complex) modes
+- GPT-6.1 Sol is the recommended OpenAI default in this library
 - Default choice for most tasks with highest quality
-- GPT-5 Instant updated October 2025 with improved mental health support
 
 ✅ **Batch Processing & Reproducibility**
 - Parallel tool calls (50-100 signals/call)
@@ -447,8 +442,7 @@ def select_gemini_model(daily_volume: int, latency_sensitive: bool):
 - High throughput with existing infrastructure
 
 ❌ **Avoid OpenAI For:**
-- Very large context (>200K tokens - use Gemini 2M context)
-- Ultra-budget applications (Gemini Flash Lite is cheaper)
+- Very large context (prompts over 272K input tokens cost 2x input - use Gemini)
 - When caching would save significant cost (Claude's 90% discount)
 
 ### Use Gemini When:
@@ -461,7 +455,7 @@ def select_gemini_model(daily_volume: int, latency_sensitive: bool):
 ✅ **Large Context Needed**
 - Processing entire documents
 - Batch analysis (1000+ items)
-- Utilize 2M token window
+- Utilize 1M token window
 
 ✅ **Real-Time Low Latency**
 - Flash Lite for <0.5s response
@@ -470,7 +464,7 @@ def select_gemini_model(daily_volume: int, latency_sensitive: bool):
 
 ❌ **Avoid Gemini For:**
 - Need XML parsing (use Claude)
-- Complex reasoning (use Claude/GPT-4o)
+- Complex reasoning (use Claude/GPT-6.1 Sol)
 - When accuracy must be >95%
 
 ---
@@ -488,7 +482,7 @@ def classify_with_cascading(signal: str):
 
     if result.confidence < 0.7:
         # Escalate to mid-tier
-        result = gpt_5_mini.classify(signal)  # GPT-5 mini for better reasoning
+        result = gpt_6_1_terra.classify(signal)  # GPT-6.1 Terra for better reasoning
 
     if result.confidence < 0.85:
         # Final escalation to highest accuracy
@@ -497,11 +491,11 @@ def classify_with_cascading(signal: str):
     return result
 
 # Cost breakdown for 10K signals:
-# - 80% resolved by Flash Lite @ $0.10 = $0.08
-# - 15% escalate to GPT-5 mini @ $0.25 = $0.04
-# - 5% escalate to Claude Sonnet @ $3.00 = $0.15
-# Total: $0.27 vs $3.00 if all used Claude
-# Savings: 91%
+# - 80% resolved by Flash Lite @ $0.30 = $0.24
+# - 15% escalate to GPT-6.1 Terra @ $1.00 = $0.15
+# - 5% escalate to Claude Sonnet @ $2.00 = $0.10
+# Total: $0.49 vs $2.00 if all used Claude
+# Savings: 76%
 ```
 
 ### Strategy 2: Aggressive Caching
@@ -512,22 +506,22 @@ Use caching for repeated patterns:
 # Gemini with caching
 cache_hit_rate = 0.90  # After warmup
 
-cost_without_cache = 10_000 * 0.00020  # $2.00
+cost_without_cache = 10_000 * 0.0020  # $20.00
 cost_with_cache = (
-    (10_000 * 0.10 * 0.00020) +  # 10% misses
-    (10_000 * 0.90 * 0.000038)   # 90% hits (cached)
-)  # $0.54
+    (10_000 * 0.10 * 0.0020) +  # 10% misses
+    (10_000 * 0.90 * 0.00020)   # 90% hits (cached)
+)  # $3.80
 
-savings = cost_without_cache - cost_with_cache  # $1.46 (73%)
+savings = cost_without_cache - cost_with_cache  # $16.20 (81%)
 ```
 
 ### Strategy 3: Batch Processing
 
-Leverage Gemini's 2M context:
+Leverage Gemini's 1M context:
 
 ```python
-# Per-signal approach: 10K signals * $0.00020 = $2.00
-# Batch approach: 10 batches * $0.02 = $0.20
+# Per-signal approach: 10K signals * $0.0020 = $20.00
+# Batch approach: 10 batches * $0.20 = $2.00
 # Savings: 90%
 
 def batch_classify(signals: List[str], batch_size: int = 1000):
@@ -545,7 +539,7 @@ def batch_classify(signals: List[str], batch_size: int = 1000):
 
 ### Real-World Signal Classification
 
-Tested on 10,000 customer signals (support tickets, feedback, feature requests):
+Tested on 10,000 customer signals (support tickets, feedback, feature requests) with the previous model lineup; not yet re-run on current models:
 
 | Provider | Model | Accuracy | p95 Latency | Cost/10K | Notes |
 |----------|-------|----------|-------------|----------|-------|
@@ -660,7 +654,7 @@ python scripts/migrate_prompts.py prompts/analytics/my-prompt
 
 3. **Leverage Caching**
    - Claude: 90% savings
-   - Gemini: 74% savings
+   - Gemini: 90% savings
    - Structure prompts for maximum cache hit rate
 
 4. **Batch When Possible**

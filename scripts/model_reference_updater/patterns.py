@@ -16,27 +16,29 @@ from typing import List, Pattern, Tuple
 
 CURRENT_MODELS = {
     "anthropic": {
-        "model_ids": ["claude-haiku-4-5", "claude-sonnet-4-5", "claude-opus-4-1"],
-        "api_identifiers": [
-            "claude-haiku-4-5-20251001",
-            "claude-sonnet-4-5-20250929",
-            "claude-opus-4-1-20250805",
+        "model_ids": [
+            "claude-fable-5-1",
+            "claude-opus-5-5",
+            "claude-sonnet-5-5",
+            "claude-haiku-5-5",
         ],
-        "names": ["Claude Haiku 4.5", "Claude Sonnet 4.5", "Claude Opus 4.1"],
+        "api_identifiers": [
+            "claude-fable-5-1",
+            "claude-opus-5-5",
+            "claude-sonnet-5-5",
+            "claude-haiku-5-5",
+        ],
+        "names": ["Claude Fable 5.1", "Claude Opus 5.5", "Claude Sonnet 5.5", "Claude Haiku 5.5"],
     },
     "openai": {
-        "model_ids": ["gpt-4o", "gpt-4o-mini"],
-        "api_identifiers": ["gpt-4o-2024-08-06", "gpt-4o-mini-2024-07-18"],
-        "names": ["GPT-4o", "GPT-4o Mini"],
+        "model_ids": ["gpt-6-astra", "gpt-6.1-sol", "gpt-6.1-terra", "gpt-6-luna"],
+        "api_identifiers": ["gpt-6-astra", "gpt-6.1-sol", "gpt-6.1-terra", "gpt-6-luna"],
+        "names": ["GPT-6 Astra", "GPT-6.1 Sol", "GPT-6.1 Terra", "GPT-6 Luna"],
     },
     "google": {
-        "model_ids": ["gemini-2-5-pro", "gemini-2-5-flash", "gemini-2-5-flash-lite"],
-        "api_identifiers": [
-            "gemini-2.5-pro-002",
-            "gemini-2.5-flash-002",
-            "gemini-2.5-flash-lite-002",
-        ],
-        "names": ["Gemini 2.5 Pro", "Gemini 2.5 Flash", "Gemini 2.5 Flash-Lite"],
+        "model_ids": ["gemini-4-argon", "gemini-3-8-flash", "gemini-3-5-flash-lite"],
+        "api_identifiers": ["gemini-4-argon", "gemini-3.8-flash", "gemini-3.5-flash-lite"],
+        "names": ["Gemini 4 Argon", "Gemini 3.8 Flash", "Gemini 3.5 Flash-Lite"],
     },
 }
 
@@ -47,83 +49,35 @@ CURRENT_MODELS = {
 # Each pattern maps: (regex_pattern, replacement_model_id, description)
 OUTDATED_PATTERNS: List[Tuple[str, str, str]] = [
     # -------------------------------------------------------------------------
-    # Anthropic Claude - Old model IDs and names
+    # Anthropic Claude - deprecated/retired → replacement (verified 2026-10-30)
     # -------------------------------------------------------------------------
-    # Claude Sonnet 4.5 (various formats)
-    (r"claude-sonnet-4-5-20\d{6}", "claude-sonnet-4-5", "Claude Sonnet 4.5 dated API ID"),
-    (r"claude-sonnet-4-5", "claude-sonnet-4-5", "Claude Sonnet 4.5 model ID"),
-    (r"claude-sonnet-4-5", "claude-sonnet-4-5", "Claude 35 Sonnet alternate"),
-    (r"Claude 3\.5 Sonnet", "Claude Sonnet 4.5", "Claude Sonnet 4.5 name"),
-    (r"Claude Sonnet 4.5", "Claude Sonnet 4.5", "Claude Sonnet 4.5 name variant"),
-    # Claude Haiku 4.5
-    (r"claude-haiku-4-5-20\d{6}", "claude-haiku-4-5", "Claude Haiku 4.5 dated API ID"),
-    (r"claude-haiku-4-5", "claude-haiku-4-5", "Claude Haiku 4.5 model ID"),
-    (r"claude-haiku-4-5", "claude-haiku-4-5", "Claude 35 Haiku alternate"),
-    (r"Claude 3\.5 Haiku", "Claude Haiku 4.5", "Claude Haiku 4.5 name"),
-    (r"Claude Haiku 4.5", "Claude Haiku 4.5", "Claude Haiku 4.5 name variant"),
-    # Claude Opus 4.1
-    (r"claude-opus-4-1-20\d{6}", "claude-opus-4-1", "Claude Opus 4.1 dated API ID"),
-    (r"claude-opus-4-1", "claude-opus-4-1", "Claude Opus 4.1 model ID"),
-    (r"Claude Opus 4.1", "Claude Opus 4.1", "Claude Opus 4.1 name"),
-    # Claude Sonnet 4.5 (older)
-    (r"claude-sonnet-4-5-20\d{6}", "claude-sonnet-4-5", "Claude Sonnet 4.5 dated API ID"),
-    (r"claude-sonnet-4-5", "claude-sonnet-4-5", "Claude Sonnet 4.5 model ID"),
-    (r"Claude Sonnet 4.5", "Claude Sonnet 4.5", "Claude Sonnet 4.5 name"),
-    # Claude Haiku 4.5 (older)
-    (r"claude-haiku-4-5-20\d{6}", "claude-haiku-4-5", "Claude Haiku 4.5 dated API ID"),
-    (r"claude-haiku-4-5", "claude-haiku-4-5", "Claude Haiku 4.5 model ID"),
-    (r"Claude Haiku 4.5", "Claude Haiku 4.5", "Claude Haiku 4.5 name"),
-    # Claude Haiku 4.5 (very old)
-    (r"claude-haiku-4-5-\d+", "claude-haiku-4-5", "Claude Haiku 4.5 model"),
-    (r"claude-haiku-4-5", "claude-haiku-4-5", "Claude Haiku 4.5 generic"),
-    (r"Claude Haiku 4.5", "Claude Haiku 4.5", "Claude Haiku 4.5 name"),
+    (
+        r"claude-sonnet-4-5(-20\d{6})?",
+        "claude-sonnet-5-5",
+        "Claude Sonnet 4.5 (retires 2026-11-30)",
+    ),
+    (r"Claude Sonnet 4\.5", "Claude Sonnet 5.5", "Claude Sonnet 4.5 name"),
+    (r"claude-opus-4-1(-20\d{6})?", "claude-opus-5-5", "Claude Opus 4.1 (retired 2026-08-05)"),
+    (r"Claude Opus 4\.1", "Claude Opus 5.5", "Claude Opus 4.1 name"),
+    (r"claude-haiku-4-5(-20\d{6})?", "claude-haiku-5-5", "Claude Haiku 4.5 (legacy)"),
+    (r"Claude Haiku 4\.5", "Claude Haiku 5.5", "Claude Haiku 4.5 name"),
     # -------------------------------------------------------------------------
-    # OpenAI GPT - Old model IDs and names
+    # OpenAI - deprecated/shut down → replacement
     # -------------------------------------------------------------------------
-    # GPT-4o (various formats)
-    (r"gpt-4o-20\d{4}-\d{2}-\d{2}", "gpt-4o", "GPT-4o dated"),
-    (r"gpt-4o", "gpt-4o", "GPT-4o preview"),
-    (r"gpt-4o", "gpt-4o", "GPT-4 1106 preview"),
-    (r"gpt-4o", "gpt-4o", "GPT-4 0125 preview"),
-    (r"gpt-4o", "gpt-4o", "GPT-4o generic"),
-    (r"GPT-4o", "GPT-4o", "GPT-4o name"),
-    (r"gpt-4o", "GPT-4o", "gpt-4o name variant"),
-    # GPT-4o Mini (various formats)
-    (r"gpt-4o-mini-\d{4}", "gpt-4o-mini", "GPT-4o Mini dated"),
-    (r"gpt-4o-mini", "gpt-4o-mini", "GPT-4o Mini 16k"),
-    (r"gpt-4o-mini", "gpt-4o-mini", "GPT-4o Mini generic"),
-    (r"gpt-4o-mini", "gpt-4o-mini", "GPT-35 Turbo variant"),
-    (r"GPT-3\.5 Turbo", "GPT-4o Mini", "GPT-4o Mini name"),
-    (r"GPT-4o Mini", "GPT-4o Mini", "GPT-4o Mini name variant"),
-    # GPT-3.5 older
-    (r"gpt-4o-mini", "gpt-4o-mini", "gpt-4o-mini"),
-    (r"gpt-4o-mini", "gpt-4o-mini", "gpt-4o-mini"),
+    (r"gpt-5-mini(-2025-08-07)?", "gpt-6.1-terra", "GPT-5 mini (shuts down 2026-12-11)"),
+    (r"gpt-5(-2025-08-07)?(?![.\w-])", "gpt-6.1-sol", "GPT-5 (shuts down 2026-12-11)"),
+    (r"\bo3(-2025-04-16)?(?![\w-])", "gpt-6.1-sol", "o3 (shuts down 2026-12-11)"),
+    (r"\bo4-mini(-2025-04-16)?(?![\w-])", "gpt-6.1-terra", "o4-mini (shut down 2026-10-23)"),
+    (r"gpt-4\.1-mini(-2025-04-14)?", "gpt-6-luna", "GPT-4.1 mini (shuts down 2027-01-14)"),
+    (r"gpt-4\.1(-2025-04-14)?(?![\w-])", "gpt-6-luna", "GPT-4.1 (shuts down 2027-01-14)"),
+    (r"gpt-4o-mini(-2024-07-18)?", "gpt-6-luna", "GPT-4o mini (shuts down 2027-01-14)"),
+    (r"gpt-4o(-20\d{2}-\d{2}-\d{2})?(?![\w-])", "gpt-6-luna", "GPT-4o (shuts down 2027-01-14)"),
     # -------------------------------------------------------------------------
-    # Google Gemini - Old model IDs and names
+    # Google Gemini - limited to existing users → recommended replacement
     # -------------------------------------------------------------------------
-    # Gemini 2.5 Pro
-    (r"gemini-2-5-pro-\d+", "gemini-2-5-pro", "Gemini 2.5 Pro dated"),
-    (r"gemini-1\.5-pro-\d+", "gemini-2-5-pro", "Gemini 2.5 Pro dot dated"),
-    (r"gemini-2-5-pro", "gemini-2-5-pro", "Gemini 2.5 Pro model ID"),
-    (r"gemini-1\.5-pro", "gemini-2-5-pro", "Gemini 2.5 Pro dot model ID"),
-    (r"Gemini 1\.5 Pro", "Gemini 2.5 Pro", "Gemini 2.5 Pro name"),
-    (r"Gemini 2.5 Pro", "Gemini 2.5 Pro", "Gemini 2.5 Pro name variant"),
-    # Gemini 2.5 Flash
-    (r"gemini-2-5-flash-\d+", "gemini-2-5-flash", "Gemini 2.5 Flash dated"),
-    (r"gemini-1\.5-flash-\d+", "gemini-2-5-flash", "Gemini 2.5 Flash dot dated"),
-    (r"gemini-2-5-flash", "gemini-2-5-flash", "Gemini 2.5 Flash model ID"),
-    (r"gemini-1\.5-flash", "gemini-2-5-flash", "Gemini 2.5 Flash dot model ID"),
-    (r"Gemini 1\.5 Flash", "Gemini 2.5 Flash", "Gemini 2.5 Flash name"),
-    (r"Gemini 2.5 Flash", "Gemini 2.5 Flash", "Gemini 2.5 Flash name variant"),
-    # Gemini 2.5 Pro (very old)
-    (r"gemini-2-5-pro", "gemini-2-5-pro", "Gemini 2.5 Pro model ID"),
-    (r"gemini-1\.0-pro", "gemini-2-5-pro", "Gemini 2.5 Pro dot model ID"),
-    (r"Gemini 1\.0 Pro", "Gemini 2.5 Pro", "Gemini 2.5 Pro name"),
-    # Gemini 2.5 Pro/Flash (no version)
-    (r"gemini-2-5-pro(?!-)", "gemini-2-5-pro", "Gemini 2.5 Pro generic"),
-    (r"Gemini 2.5 Pro(?! \d)", "Gemini 2.5 Pro", "Gemini 2.5 Pro name"),
-    (r"gemini-2-5-flash(?!-)", "gemini-2-5-flash", "Gemini 2.5 Flash generic"),
-    (r"Gemini 2.5 Flash(?! \d)", "Gemini 2.5 Flash", "Gemini 2.5 Flash name"),
+    (r"gemini-2[-.]5-flash-lite(-\d{3})?", "gemini-3-5-flash-lite", "Gemini 2.5 Flash-Lite"),
+    (r"gemini-2[-.]5-flash(-\d{3})?(?!-)", "gemini-3-8-flash", "Gemini 2.5 Flash"),
+    (r"gemini-2[-.]5-pro(-\d{3})?", "gemini-4-argon", "Gemini 2.5 Pro"),
 ]
 
 # Compile patterns for efficiency

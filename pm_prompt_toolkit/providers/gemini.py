@@ -1,9 +1,9 @@
 # Copyright (c) 2025 Andy Woods
 # Licensed under the MIT License (see LICENSE file)
 
-"""Google Gemini 2.5 Provider implementation.
+"""Google Gemini provider implementation.
 
-This module provides integration with Google's Gemini models (Gemini 2.5 Pro, Flash)
+This module provides integration with Google's Gemini models (Gemini 4 Argon, 3.8 Flash, and older)
 with support for massive context windows, multimodal capabilities, and context caching.
 
 Security:
@@ -12,7 +12,7 @@ Security:
 
 Example:
     >>> from pm_prompt_toolkit.providers import GeminiProvider
-    >>> provider = GeminiProvider(model="gemini-2-5-flash")
+    >>> provider = GeminiProvider(model="gemini-3-8-flash")
     >>> result = provider.classify("We need SSO integration")
     >>> print(result.category, result.confidence)
     feature_request 0.96
@@ -35,45 +35,58 @@ logger = logging.getLogger(__name__)
 # Model ID mapping for Gemini
 # Maps our simplified names to Gemini's model identifiers
 GEMINI_MODEL_IDS = {
-    "gemini-2-5-pro": "gemini-2.5-pro-002",
-    "gemini-2-5-flash": "gemini-2.5-flash-001",
-    "gemini-2-5-flash-lite": "gemini-2.5-flash-lite-001",
+    # Current models
+    "gemini-4-argon": "gemini-4-argon",
+    "gemini-3-8-flash": "gemini-3.8-flash",
+    "gemini-3-5-flash-lite": "gemini-3.5-flash-lite",
+    # Gemini 2.5: not deprecated, but limited to existing users
+    "gemini-2-5-pro": "gemini-2.5-pro",
+    "gemini-2-5-flash": "gemini-2.5-flash",
+    "gemini-2-5-flash-lite": "gemini-2.5-flash-lite",
 }
 
 # Gemini pricing (per 1M tokens) - Input/Output
-# Last verified: 2025-01-28
-# Note: Gemini has different pricing for cached tokens
+# Last verified: 2026-10-30 (paid tier, text input; 2.5 Pro rate is for prompts up to 200k)
+# Gemini 4 Argon and 3.8 Flash are at launch prices that double on 2026-12-01 and 2027-01-01
 GEMINI_PRICING = {
-    "gemini-2.5-pro-002": (1.25, 5.00),
-    "gemini-2.5-flash-001": (0.075, 0.30),
-    "gemini-2.5-flash-lite-001": (0.038, 0.15),
+    "gemini-4-argon": (2.00, 10.00),
+    "gemini-3.8-flash": (0.75, 3.75),
+    "gemini-3.5-flash-lite": (0.30, 2.50),
+    "gemini-2.5-pro": (1.25, 10.00),
+    "gemini-2.5-flash": (0.30, 2.50),
+    "gemini-2.5-flash-lite": (0.10, 0.40),
 }
 
 # Context caching pricing (per 1M tokens) - Write/Read
+# Gemini bills cache storage per hour rather than per write, so write is 0.0
 GEMINI_CACHE_PRICING = {
-    "gemini-2.5-pro-002": (3.13, 0.31),
-    "gemini-2.5-flash-001": (0.19, 0.019),
-    "gemini-2.5-flash-lite-001": (0.095, 0.0095),
+    "gemini-4-argon": (0.0, 0.10),
+    "gemini-3.8-flash": (0.0, 0.075),
+    "gemini-3.5-flash-lite": (0.0, 0.03),
+    "gemini-2.5-pro": (0.0, 0.125),
+    "gemini-2.5-flash": (0.0, 0.03),
+    "gemini-2.5-flash-lite": (0.0, 0.01),
 }
 
 
 class GeminiProvider(LLMProvider):
-    """Google Gemini 2.5 Provider with massive context and multimodal support.
+    """Google Gemini provider with massive context and multimodal support.
 
     This provider implements Gemini-specific features including:
-        - 2M token context window (Pro) or 1M (Flash)
+        - 1M token context window
         - Context caching for large repeated contexts
         - Multimodal capabilities (text + images)
         - JSON mode for structured outputs
         - Efficient pricing for high-volume tasks
 
     Supported Models:
-        - gemini-2-5-pro: 2M context, highest quality ($1.25/$5.00 per 1M tokens)
-        - gemini-2-5-flash: 1M context, fast and efficient ($0.075/$0.30 per 1M tokens)
-        - gemini-2-5-flash-lite: 1M context, ultra-low cost ($0.038/$0.15 per 1M tokens)
+        - gemini-3-8-flash: Default; fast and efficient ($0.75/$3.75 per 1M tokens)
+        - gemini-4-argon: Most capable ($2.00/$10.00 per 1M tokens)
+        - gemini-3-5-flash-lite: Lowest cost ($0.30/$2.50 per 1M tokens)
+        - gemini-2-5-pro, gemini-2-5-flash, gemini-2-5-flash-lite: limited to existing users
 
     Example:
-        >>> provider = GeminiProvider(model="gemini-2-5-flash", enable_caching=True)
+        >>> provider = GeminiProvider(model="gemini-3-8-flash", enable_caching=True)
         >>> result = provider.classify("Dashboard broken, getting 500 errors")
         >>> assert result.category == SignalCategory.BUG_REPORT
         >>> assert result.cost < 0.0005
@@ -84,13 +97,13 @@ class GeminiProvider(LLMProvider):
 
     def __init__(
         self,
-        model: str = "gemini-2-5-flash",
+        model: str = "gemini-3-8-flash",
         enable_caching: bool = True,
     ) -> None:
-        """Initialize Gemini 2.5 Provider.
+        """Initialize Gemini provider.
 
         Args:
-            model: Gemini model to use ('gemini-2-5-pro', 'gemini-2-5-flash', 'gemini-2-5-flash-lite')
+            model: Gemini model to use (e.g., 'gemini-3-8-flash', 'gemini-4-argon')
             enable_caching: Enable context caching for cost savings
 
         Raises:
@@ -134,9 +147,7 @@ class GeminiProvider(LLMProvider):
             generation_config=generation_config,  # type: ignore[arg-type]
         )
 
-        logger.info(
-            f"Gemini 2.5 Provider initialized: model={model}, model_id={self.gemini_model_id}"
-        )
+        logger.info(f"Gemini provider initialized: model={model}, model_id={self.gemini_model_id}")
 
     def _classify_impl(self, text: str, prompt: str) -> ClassificationResult:
         """Classify using Gemini with JSON mode for structured output.
@@ -292,7 +303,7 @@ Respond with JSON only, no other text."""
             logger.warning(
                 f"No pricing found for {self.gemini_model_id}, using default Flash pricing"
             )
-            pricing = (0.075, 0.30)
+            pricing = GEMINI_PRICING["gemini-3.8-flash"]
 
         input_price, output_price = pricing
 

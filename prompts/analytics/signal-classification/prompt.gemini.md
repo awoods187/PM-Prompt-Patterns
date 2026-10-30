@@ -2,14 +2,14 @@
 
 **Category**: Analytics / Classification
 **Complexity**: 🟡 Moderate
-**Model Compatibility**: Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite
+**Model Compatibility**: Gemini 4 Argon, Gemini 3.8 Flash, Gemini 3.5 Flash-Lite
 
 ## Gemini-Specific Optimizations
 
 - **Context Caching**: 90% cost reduction on repeated prompts
-- **2M Token Context**: Process 1000+ signals in single request
+- **1M Token Context**: Process 1000+ signals in single request
 - **JSON Schema**: Native structured output validation
-- **Best Models**: Gemini 2.5 Flash Lite (ultra-low cost), Flash (balanced), Pro (accuracy)
+- **Best Models**: Gemini 3.5 Flash-Lite (ultra-low cost), Gemini 3.8 Flash (balanced), Gemini 4 Argon (accuracy)
 
 ## System Instruction (Cacheable)
 
@@ -157,7 +157,7 @@ system_instruction = get_prompt(
 
 # Create model with configuration
 model = genai.GenerativeModel(
-    model_name="gemini-2.5-flash",
+    model_name="gemini-3.8-flash",
     generation_config=generation_config,
     system_instruction=system_instruction
 )
@@ -176,7 +176,7 @@ classification = json.loads(response.text)
 ```python
 # Create cached content with system instruction and examples
 cached_content = genai.caching.CachedContent.create(
-    model="gemini-2.5-flash",
+    model="gemini-3.8-flash",
     display_name="signal-classification-cache",
     system_instruction=system_instruction,
     ttl=datetime.timedelta(hours=1)  # Cache for 1 hour
@@ -188,13 +188,13 @@ model = genai.GenerativeModel.from_cached_content(
     generation_config=generation_config
 )
 
-# First classification: $0.075/1M input tokens
-# Subsequent classifications: $0.019/1M input tokens (74% savings!)
+# First classification: $0.75/1M input tokens
+# Subsequent classifications: $0.075/1M input tokens (90% savings!)
 for signal in signals:
     classification = model.generate_content(signal)
 ```
 
-## Batch Processing (2M Token Context)
+## Batch Processing (1M Token Context)
 
 ```python
 # Process up to 1000 signals in a single request
@@ -216,7 +216,7 @@ batch_prompt += "\nProvide an array of classifications in JSON format."
 response = model.generate_content(batch_prompt)
 classifications = json.loads(response.text)
 
-# Cost: ~$0.10 for 1000 signals with Flash
+# Cost: ~$0.75 for 1000 signals with Flash
 # vs. $100+ with traditional per-signal approach
 ```
 
@@ -228,15 +228,15 @@ def select_gemini_model(volume: int, latency_sensitive: bool):
 
     if latency_sensitive and volume < 10_000:
         # Ultra-fast, lowest cost
-        return "gemini-2.5-flash-lite"  # $0.038/$0.15 per 1M
+        return "gemini-3.5-flash-lite"  # $0.30/$2.50 per 1M
 
     elif volume > 100_000:
         # High volume, batch processing
-        return "gemini-2.5-flash"  # $0.075/$0.30 per 1M
+        return "gemini-3.8-flash"  # $0.75/$3.75 per 1M
 
     else:
         # Highest accuracy for moderate volume
-        return "gemini-2.5-pro"  # $1.25/$5.00 per 1M
+        return "gemini-4-argon"  # $2.00/$10.00 per 1M
 ```
 
 ## Expected Output
@@ -264,18 +264,20 @@ def select_gemini_model(volume: int, latency_sensitive: bool):
 | **Flash** | 88-91% | 0.5-0.8s | $0.0002 | Balanced performance/cost |
 | **Pro** | 91-94% | 0.8-1.5s | $0.003 | Highest accuracy, complex cases |
 
+_Measured on the previous model lineup; not yet re-run on current models._
+
 ## Cost Comparison
 
 ```python
 # Example: 10,000 signals/day
 
 # Without caching:
-# - Flash: 10K * $0.0002 = $2.00/day
-# - Pro: 10K * $0.003 = $30.00/day
+# - Flash: 10K * $0.00075 = $7.50/day
+# - Argon: 10K * $0.002 = $20.00/day
 
 # With caching (90% cached):
-# - Flash: (10K * 0.1 * $0.0002) + (10K * 0.9 * $0.000038) = $0.54/day (73% savings!)
-# - Pro: (10K * 0.1 * $0.003) + (10K * 0.9 * $0.00031) = $5.79/day (81% savings!)
+# - Flash: (10K * 0.1 * $0.00075) + (10K * 0.9 * $0.000075) = $1.43/day (81% savings!)
+# - Argon: (10K * 0.1 * $0.002) + (10K * 0.9 * $0.0001) = $2.90/day (86% savings!)
 ```
 
 ## Streaming for Real-Time Processing
@@ -312,9 +314,9 @@ except (json.JSONDecodeError, AssertionError, Exception) as e:
 ## Notes
 
 - **Context caching** is killer feature - 90% cost reduction for repeated use
-- **2M token context** enables massive batch processing (1000+ signals per request)
+- **1M token context** enables massive batch processing (1000+ signals per request)
 - **Flash Lite** is incredibly cost-effective for high-volume classification
 - **JSON schema** guarantees valid structured output
 - **Streaming** enables real-time processing for immediate routing
 - Gemini excels at pattern recognition across large batches
-- Cost per classification as low as $0.0001 with Flash Lite
+- Cost per classification as low as $0.0003 with Flash Lite

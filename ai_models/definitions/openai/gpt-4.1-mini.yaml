@@ -1,20 +1,24 @@
 # GPT-4.1 mini Model Definition
-# Last verified: 2025-11-01
-# Source: https://platform.openai.com/docs/models
+# Last verified: 2026-10-30
+# Source: https://developers.openai.com/api/docs/deprecations
 
 schema_version: "1.0.0"
 model_id: "gpt-4.1-mini"
 provider: "openai"
 name: "GPT-4.1 mini"
-api_identifier: "gpt-4.1-mini-2025-04"
+api_identifier: "gpt-4.1-mini-2025-04-14"
+deprecated: true
+replacement: "gpt-6-luna"
 
 metadata:
-  context_window_input: 128000
-  context_window_output: 16384
-  knowledge_cutoff: "April 2025"
-  release_date: "2025-04-01"
-  last_verified: "2025-11-01"
-  docs_url: "https://platform.openai.com/docs/models/gpt-4.1-mini"
+  context_window_input: 1047576
+  context_window_output: 32768
+  knowledge_cutoff: "June 2024"
+  release_date: "2025-04-14"
+  last_verified: "2026-10-30"
+  deprecation_date: "2026-10-14"
+  retirement_date: "2027-01-14"
+  docs_url: "https://developers.openai.com/api/docs/models/gpt-4.1-mini"
 
 capabilities:
   - text_input
@@ -28,8 +32,9 @@ capabilities:
   - tool_use
 
 pricing:
-  input_per_1m: 0.15
-  output_per_1m: 0.60
+  input_per_1m: 0.40
+  output_per_1m: 1.60
+  cache_read_per_1m: 0.10
 
 optimization:
   recommended_for:
@@ -51,4 +56,4 @@ optimization:
   cost_tier: "budget"
   speed_tier: "fast"
 
-notes: "Fast coding model that replaced GPT-4o mini. Released April 2025. 128k context window."
+notes: "DEPRECATED: OpenAI shuts down gpt-4.1-mini on 2027-01-14. Replacement: gpt-6-luna."

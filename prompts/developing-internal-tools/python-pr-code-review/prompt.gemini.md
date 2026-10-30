@@ -96,7 +96,7 @@ PR DIFF TO REVIEW:
 from pm_prompt_toolkit.providers import get_provider
 
 # Initialize Gemini provider
-provider = get_provider("gemini-2.5-pro")
+provider = get_provider("gemini-4-argon")
 
 result = provider.generate(
     system_instruction="<prompt from above>",
@@ -106,9 +106,9 @@ result = provider.generate(
 
 ## Model Recommendations
 
-- **gemini-2.5-pro**: Best for most reviews, especially large PRs
-- **gemini-2.5-flash**: Faster and cheaper for small PRs
-- **gemini-2.5-flash-lite**: Lowest cost for high-volume first-pass triage
+- **gemini-4-argon**: Best for most reviews, especially large PRs
+- **gemini-3-8-flash**: Faster and cheaper for small PRs
+- **gemini-3-5-flash-lite**: Lowest cost for high-volume first-pass triage
 
 ## See Also
 

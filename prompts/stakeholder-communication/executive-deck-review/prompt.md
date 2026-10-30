@@ -2,7 +2,7 @@
 
 **Complexity**: 🔴 Advanced
 **Category**: Stakeholder Communication / Executive Presentations
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-5 | ✅ Gemini 2.5 Pro
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-6.1 Sol | ✅ Gemini 4 Argon
 
 ## Overview
 
@@ -253,7 +253,7 @@ def review_board_deck(
 """
 
     response = client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-5-5",
         max_tokens=8000,
         temperature=0,  # Consistent, rigorous feedback
         messages=[{

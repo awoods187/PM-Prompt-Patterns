@@ -298,11 +298,11 @@ class TestCalculateCost:
 
         provider = ClaudeProvider(model="claude-haiku")
 
-        # Haiku: $1.00 input, $5.00 output per 1M tokens
+        # Haiku: $0.10 input, $0.50 output per 1M tokens
         cost = provider._calculate_cost(input_tokens=1000, output_tokens=500)
 
-        # (1000/1M * 1.00) + (500/1M * 5.00) = 0.001 + 0.0025 = 0.0035
-        assert cost == pytest.approx(0.0035, rel=1e-6)
+        # (1000/1M * 0.10) + (500/1M * 0.50) = 0.0001 + 0.00025 = 0.00035
+        assert cost == pytest.approx(0.00035, rel=1e-6)
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
@@ -313,11 +313,11 @@ class TestCalculateCost:
 
         provider = ClaudeProvider(model="claude-sonnet")
 
-        # Sonnet: $3.00 input, $15.00 output per 1M tokens
+        # Sonnet: $2.00 input, $10.00 output per 1M tokens
         cost = provider._calculate_cost(input_tokens=1000, output_tokens=500)
 
-        # (1000/1M * 3.00) + (500/1M * 15.00) = 0.003 + 0.0075 = 0.0105
-        assert cost == pytest.approx(0.0105, rel=1e-6)
+        # (1000/1M * 2.00) + (500/1M * 10.00) = 0.002 + 0.005 = 0.007
+        assert cost == pytest.approx(0.007, rel=1e-6)
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
@@ -328,30 +328,30 @@ class TestCalculateCost:
 
         provider = ClaudeProvider(model="claude-opus")
 
-        # Opus: $15.00 input, $75.00 output per 1M tokens
+        # Opus: $4.00 input, $20.00 output per 1M tokens
         cost = provider._calculate_cost(input_tokens=1000, output_tokens=500)
 
-        # (1000/1M * 15.00) + (500/1M * 75.00) = 0.015 + 0.0375 = 0.0525
-        assert cost == pytest.approx(0.0525, rel=1e-6)
+        # (1000/1M * 4.00) + (500/1M * 20.00) = 0.004 + 0.01 = 0.014
+        assert cost == pytest.approx(0.014, rel=1e-6)
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
     def test_calculate_cost_with_caching(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
-        """Test cost calculation with cached tokens (90% discount)."""
+        """Test cost calculation with cached tokens (Sonnet cache reads cost 5% of input)."""
         mock_settings.return_value.get_api_key.return_value = "test-key"
         mock_anthropic.Anthropic.return_value = MagicMock()
 
         provider = ClaudeProvider(model="claude-sonnet")
 
-        # 1000 input tokens, 900 cached (90% discount)
+        # 1000 input tokens, 900 cached
         # Uncached: 100 tokens, Cached: 900 tokens
         cost = provider._calculate_cost(input_tokens=1000, output_tokens=500, cached_tokens=900)
 
-        # Uncached input: (100/1M * 3.00) = 0.0003
-        # Cached input: (900/1M * 3.00 * 0.1) = 0.00027
-        # Output: (500/1M * 15.00) = 0.0075
-        # Total: 0.00807
-        assert cost == pytest.approx(0.00807, rel=1e-5)
+        # Uncached input: (100/1M * 2.00) = 0.0002
+        # Cached input: (900/1M * 2.00 * 0.05) = 0.00009
+        # Output: (500/1M * 10.00) = 0.005
+        # Total: 0.00529
+        assert cost == pytest.approx(0.00529, rel=1e-5)
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
@@ -365,10 +365,10 @@ class TestCalculateCost:
         # All 1000 input tokens are cached
         cost = provider._calculate_cost(input_tokens=1000, output_tokens=500, cached_tokens=1000)
 
-        # Cached input: (1000/1M * 1.00 * 0.1) = 0.0001
-        # Output: (500/1M * 5.00) = 0.0025
-        # Total: 0.0026
-        assert cost == pytest.approx(0.0026, rel=1e-6)
+        # Cached input: (1000/1M * 0.10 * 0.1) = 0.00001
+        # Output: (500/1M * 0.50) = 0.00025
+        # Total: 0.00026
+        assert cost == pytest.approx(0.00026, rel=1e-6)
 
 
 class TestGetModelId:
@@ -385,8 +385,7 @@ class TestGetModelId:
         model_id = provider._get_model_id()
 
         # Should return the real API identifier from registry
-        assert model_id.startswith("claude-haiku-4-5-")
-        assert len(model_id.split("-")) == 5  # claude-haiku-4-5-YYYYMMDD
+        assert model_id == "claude-haiku-5-5"
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
@@ -399,8 +398,7 @@ class TestGetModelId:
         model_id = provider._get_model_id()
 
         # Should return the real API identifier from registry
-        assert model_id.startswith("claude-sonnet-4-5-")
-        assert len(model_id.split("-")) == 5  # claude-sonnet-4-5-YYYYMMDD
+        assert model_id == "claude-sonnet-5-5"
 
     @patch("pm_prompt_toolkit.providers.claude.anthropic")
     @patch("pm_prompt_toolkit.providers.claude.get_settings")
@@ -413,8 +411,19 @@ class TestGetModelId:
         model_id = provider._get_model_id()
 
         # Should return the real API identifier from registry
-        assert model_id.startswith("claude-opus-4-1-")
-        assert len(model_id.split("-")) == 5  # claude-opus-4-1-YYYYMMDD
+        assert model_id == "claude-opus-5-5"
+
+    @patch("pm_prompt_toolkit.providers.claude.anthropic")
+    @patch("pm_prompt_toolkit.providers.claude.get_settings")
+    def test_full_model_id_resolves_to_alias(self, mock_settings, mock_anthropic) -> None:  # type: ignore[no-untyped-def]
+        """Test a full model ID like claude-sonnet-5-5 is accepted as its alias."""
+        mock_settings.return_value.get_api_key.return_value = "test-key"
+        mock_anthropic.Anthropic.return_value = MagicMock()
+
+        provider = ClaudeProvider(model="claude-sonnet-5-5")
+
+        assert provider.model == "claude-sonnet"
+        assert provider._get_model_id() == "claude-sonnet-5-5"
 
 
 class TestClassifyImpl:

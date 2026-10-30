@@ -170,14 +170,14 @@ if metric_seems_unusual:
 
 | Model | Cost | Speed | When to Use |
 |-------|------|-------|-------------|
-| **Claude Haiku 4.5** | $1/M | ⚡⚡⚡ | **RECOMMENDED**: Fast anomaly detection |
-| **Gemini 2.5 Flash** | $0.075/M | ⚡⚡⚡ | Ultra-high volume monitoring |
-| **GPT-4o mini** | $0.15/M | ⚡⚡⚡ | Budget monitoring with good accuracy |
-| Claude Sonnet | $3/M | ⚡⚡ | Complex pattern recognition |
+| **Claude Haiku 5.5** | $0.10/M | ⚡⚡⚡ | **RECOMMENDED**: Fast anomaly detection |
+| **Gemini 3.8 Flash** | $0.75/M | ⚡⚡⚡ | Ultra-high volume monitoring |
+| **GPT-6 Luna** | $0.10/M | ⚡⚡⚡ | Budget monitoring with good accuracy |
+| Claude Sonnet | $2/M | ⚡⚡ | Complex pattern recognition |
 
 **Cost Optimization**: For 10K daily checks:
-- Haiku: ~$30/month
-- Flash: ~$2.25/month
+- Haiku: ~$3/month
+- Flash: ~$22.50/month
 - Savings from early detection: $10K-100K+ (prevented incidents)
 
 ## Integration Patterns

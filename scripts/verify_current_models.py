@@ -7,7 +7,7 @@ the model identifier is valid and the API is accessible.
 Usage:
     python scripts/verify_current_models.py                    # Test all models
     python scripts/verify_current_models.py --provider anthropic  # Single provider
-    python scripts/verify_current_models.py --model claude-sonnet-4-5  # Single model
+    python scripts/verify_current_models.py --model claude-sonnet-5-5  # Single model
 
 Requires:
     - API keys set in .env file or environment variables:
@@ -341,7 +341,7 @@ def main() -> int:
 Examples:
   python scripts/verify_current_models.py                    # Test all models
   python scripts/verify_current_models.py --provider anthropic  # Single provider
-  python scripts/verify_current_models.py --model claude-sonnet-4-5  # Single model
+  python scripts/verify_current_models.py --model claude-sonnet-5-5  # Single model
 
 API Keys Required:
   Set in .env file or environment:

@@ -215,7 +215,7 @@ FAILED tests/test_model_registry.py::TestStalenessDetection::test_no_stale_model
 
 ⚠️  STALE MODELS DETECTED (>90 days since verification):
 
-  - claude-sonnet-4.5: 91 days old (verified: 2025-01-24)
+  - claude-sonnet-5-5: 91 days old (verified: 2026-07-31)
 
 Action Required:
   1. Check official docs: See VERIFICATION_SOURCES in registry.py

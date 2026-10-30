@@ -200,7 +200,7 @@ class ModelStalenessChecker:
         if stale:
             print("\n⚠️  ACTION REQUIRED:")
             print(
-                f"   {len(stale)} model(s) need verification. Follow docs/workflows/MODEL_UPDATE_WORKFLOW.md"
+                f"   {len(stale)} model(s) need verification. Follow docs/model_update_system.md (Manual Update Procedure)"
             )
             print("=" * 80 + "\n")
         else:

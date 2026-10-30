@@ -1,20 +1,24 @@
 # Claude Sonnet 4.5 Model Definition
-# Last verified: 2025-10-25
-# Source: https://docs.claude.com/en/docs/about-claude/models
+# Last verified: 2026-10-30
+# Source: https://platform.claude.com/docs/en/about-claude/model-deprecations
 
 schema_version: "1.0.0"
 model_id: "claude-sonnet-4-5"
 provider: "anthropic"
 name: "Claude Sonnet 4.5"
 api_identifier: "claude-sonnet-4-5-20250929"
+deprecated: true
+replacement: "claude-sonnet-5-5"
 
 metadata:
   context_window_input: 200000
   context_window_output: null  # Same as input
   knowledge_cutoff: "January 2025"
   release_date: "2025-09-29"
-  last_verified: "2025-10-29"
-  docs_url: "https://docs.claude.com/en/docs/about-claude/models"
+  last_verified: "2026-10-30"
+  deprecation_date: "2026-09-30"
+  retirement_date: "2026-11-30"
+  docs_url: "https://platform.claude.com/docs/en/about-claude/models/overview"
 
 capabilities:
   - text_input
@@ -50,4 +54,4 @@ optimization:
   cost_tier: "mid-tier"
   speed_tier: "balanced"
 
-notes: "RECOMMENDED for most use cases. Training data through July 2025. Extended context window (1M tokens) available in beta."
+notes: "DEPRECATED: Anthropic deprecated Claude Sonnet 4.5 on 2026-09-30 and retires it on the Claude API on 2026-11-30. Migrate to claude-sonnet-5-5."

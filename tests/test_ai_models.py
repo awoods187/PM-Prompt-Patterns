@@ -47,14 +47,14 @@ class TestModelRegistry:
     def test_get_by_provider(self) -> None:
         """Should filter models by provider."""
         anthropic_models = ModelRegistry.get_by_provider("anthropic")
-        assert len(anthropic_models) == 3
+        assert len(anthropic_models) == 7
         assert all(m.provider == "anthropic" for m in anthropic_models)
 
         openai_models = ModelRegistry.get_by_provider("openai")
-        assert len(openai_models) == 8  # Updated for new OpenAI model lineup (Nov 2025)
+        assert len(openai_models) == 12  # 8 deprecated models + GPT-6 family (Oct 2026)
 
         google_models = ModelRegistry.get_by_provider("google")
-        assert len(google_models) == 3
+        assert len(google_models) == 6
 
     def test_model_metadata(self) -> None:
         """Model metadata should be correctly loaded."""
@@ -438,7 +438,7 @@ class TestAvailabilityFiltering:
 
     def test_get_available_models_with_future_date(self) -> None:
         """Should return all models if date is in future."""
-        future_date = date(2026, 1, 1)
+        future_date = date(2100, 1, 1)
         available = ModelRegistry.get_available_models(future_date)
         all_models = ModelRegistry.get_all()
         # Should get all models
@@ -473,16 +473,16 @@ class TestAvailabilityFiltering:
         """Should get the most recent OpenAI model."""
         latest = ModelRegistry.get_latest_model("openai")
         assert latest is not None
-        # As of Nov 2025, should be GPT-5 or GPT-5 mini (both released August 7, 2025)
-        assert latest.model_id in ["gpt-5", "gpt-5-mini"]
-        assert latest.metadata.release_date == date(2025, 8, 7)
+        # As of Oct 2026, GPT-6.1 Terra (released October 26, 2026)
+        assert latest.model_id == "gpt-6.1-terra"
+        assert latest.metadata.release_date == date(2026, 10, 26)
 
     def test_get_latest_model_anthropic(self) -> None:
         """Should get the most recent Anthropic model."""
         latest = ModelRegistry.get_latest_model("anthropic")
         assert latest is not None
-        # Should be Claude Opus 4.1 (Oct 2025) or Sonnet/Haiku 4.5 (Sept 2025)
-        assert latest.model_id in ["claude-opus-4-1", "claude-sonnet-4-5", "claude-haiku-4-5"]
+        # As of Oct 2026, Claude Haiku 5.5 (released October 7, 2026)
+        assert latest.model_id == "claude-haiku-5-5"
 
     def test_get_latest_model_with_past_date(self) -> None:
         """Should get latest model as of a specific date."""

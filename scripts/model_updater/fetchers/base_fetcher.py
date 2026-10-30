@@ -175,6 +175,44 @@ class BaseFetcher(ABC):
         """
         raise NotImplementedError(f"{self.provider_name} does not support documentation parsing")
 
+    def _model_data_from_specs(
+        self, model_id: str, specs: dict[str, Any], docs_url: str, source: str
+    ) -> ModelData:
+        """Build a ModelData object from a static spec dictionary.
+
+        Args:
+            model_id: Model identifier
+            specs: Static spec dict (same shape as the YAML definition fields)
+            docs_url: Documentation URL to record
+            source: Where the data came from (e.g. "openai_docs")
+
+        Returns:
+            ModelData object
+        """
+        pricing = specs["pricing"]
+        return ModelData(
+            model_id=model_id,
+            provider=self.provider_name,
+            name=specs["name"],
+            api_identifier=specs["api_identifier"],
+            context_window_input=specs["context_window_input"],
+            context_window_output=specs.get("context_window_output"),
+            knowledge_cutoff=specs["knowledge_cutoff"],
+            release_date=date.fromisoformat(specs["release_date"]),
+            docs_url=docs_url,
+            capabilities=list(specs["capabilities"]),
+            input_per_1m=pricing["input_per_1m"],
+            output_per_1m=pricing["output_per_1m"],
+            cache_write_per_1m=pricing.get("cache_write_per_1m"),
+            cache_read_per_1m=pricing.get("cache_read_per_1m"),
+            recommended_for=list(specs.get("recommended_for", [])),
+            best_practices=list(specs.get("best_practices", [])),
+            cost_tier=specs.get("cost_tier", "mid-tier"),
+            speed_tier=specs.get("speed_tier", "balanced"),
+            notes=specs.get("notes", ""),
+            source=source,
+        )
+
     def validate_model_data(self, model: ModelData) -> tuple[bool, list[str]]:
         """Validate model data for sanity checks.
 
@@ -234,6 +272,15 @@ class BaseFetcher(ABC):
             "streaming",
             "json_mode",
             "tool_use",
+            "code_execution",
+            "search",
+            "code_generation",
+            "advanced_reasoning",
+            "auto_routing",
+            "scientific_analysis",
+            "visual_reasoning",
+            "realtime_api",
+            "voice",
         }
         invalid_caps = set(model.capabilities) - valid_capabilities
         if invalid_caps:

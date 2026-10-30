@@ -41,6 +41,8 @@ This guide covers cost optimization strategies actually implemented in this tool
 | **Accuracy**                          | 92%                 | 94%                | **+2% quality**    |
 | **P95 latency**                       | 450ms               | 320ms              | **29% faster**     |
 
+_Measured on the previous model lineup; not yet re-run on current models._
+
 ### Cost Breakdown by Technique
 
 ```python
@@ -48,7 +50,7 @@ from ai_models import calculate_cost
 
 # Baseline: Claude Sonnet for all requests
 baseline_cost = 1_500_000 * calculate_cost(
-    "claude-sonnet-4-5",
+    "claude-sonnet-5-5",
     input_tokens=150,
     output_tokens=50,
     cached_input_tokens=0
@@ -58,13 +60,13 @@ baseline_cost = 1_500_000 * calculate_cost(
 # Optimized: Model cascading + caching + keywords
 optimized_cost = (
     1_050_000 * 0 +  # 70% keyword matches (FREE)
-    375_000 * calculate_cost("claude-haiku-4-5", 150, 50, 0) +  # 25% Haiku
-    60_000 * calculate_cost("claude-sonnet-4-5", 150, 50, 135) +  # 4% Sonnet (90% cached)
-    15_000 * calculate_cost("claude-opus-4-1", 150, 50, 0)  # 1% Opus
+    375_000 * calculate_cost("claude-haiku-5-5", 150, 50, 0) +  # 25% Haiku
+    60_000 * calculate_cost("claude-sonnet-5-5", 150, 50, 135) +  # 4% Sonnet (90% cached)
+    15_000 * calculate_cost("claude-opus-5-5", 150, 50, 0)  # 1% Opus
 )
-# = $180/month
+# = $72/month
 
-# Savings: $1,020/month (85% reduction)
+# Savings: $1,128/month (94% reduction)
 ```
 
 **Source:** `ai_models/pricing.py`, `examples/basic_example.py`
@@ -83,9 +85,9 @@ Start with cheapest/fastest solution, escalate only when needed. Achieves 60-85%
 
 ```
 Stage 1: Keyword Filter   → $0.00        (70% of requests)
-Stage 2: Claude Haiku     → $0.0002      (25% of requests)
+Stage 2: Claude Haiku     → $0.00004     (25% of requests)
 Stage 3: Claude Sonnet    → $0.0008      (4% of requests)
-Stage 4: Claude Opus      → $0.0040      (1% of requests)
+Stage 4: Claude Opus      → $0.0016      (1% of requests)
 ```
 
 ### Implementation
@@ -111,24 +113,24 @@ def classify_with_cascading(signal: str) -> ClassificationResult:
             model="keyword-filter"
         )
 
-    # Stage 2: Claude Haiku ($1.00/$5.00 per 1M)
-    haiku = get_provider("claude-haiku-4-5")
+    # Stage 2: Claude Haiku ($0.10/$0.50 per 1M)
+    haiku = get_provider("claude-haiku-5-5")
     haiku_result = haiku.classify(signal)
 
     if haiku_result.confidence > 0.85:
-        return haiku_result  # ~$0.0002, good enough
+        return haiku_result  # ~$0.00004, good enough
 
-    # Stage 3: Claude Sonnet ($3.00/$15.00 per 1M)
-    sonnet = get_provider("claude-sonnet-4-5")
+    # Stage 3: Claude Sonnet ($2.00/$10.00 per 1M)
+    sonnet = get_provider("claude-sonnet-5-5")
     sonnet_result = sonnet.classify(signal)
 
     if sonnet_result.confidence > 0.90:
         return sonnet_result  # ~$0.0008, high confidence
 
-    # Stage 4: Claude Opus ($15.00/$75.00 per 1M)
+    # Stage 4: Claude Opus ($4.00/$20.00 per 1M)
     # Only for most difficult cases
-    opus = get_provider("claude-opus-4-1")
-    return opus.classify(signal)  # ~$0.0040, highest quality
+    opus = get_provider("claude-opus-5-5")
+    return opus.classify(signal)  # ~$0.0016, highest quality
 
 
 def check_keywords(signal: str) -> Optional[ClassificationResult]:
@@ -185,6 +187,8 @@ def check_keywords(signal: str) -> Optional[ClassificationResult]:
 | **Savings** | **85%** |
 | **Accuracy change** | +2% (keywords are very precise) |
 
+_Measured on the previous model lineup; not yet re-run on current models._
+
 ### When to Use Cascading
 
 ✅ **Good fit:**
@@ -205,14 +209,14 @@ def check_keywords(signal: str) -> Optional[ClassificationResult]:
 
 ### Overview
 
-Claude's prompt caching reduces repeated content costs by 90%. Enables aggressive use of context without cost penalty.
+Claude's prompt caching reduces repeated content costs by 95%. Enables aggressive use of context without cost penalty.
 
 **Implementation:** `ai_models/pricing.py:49-86`
 
 ### How Caching Works
 
 1. **Cache write** (first request): Pay full price + small cache write fee
-2. **Cache read** (subsequent requests): Pay 10% of input cost
+2. **Cache read** (subsequent requests): Pay 5% of input cost
 3. **Cache duration**: 5 minutes of inactivity
 4. **Cache key**: Exact prefix match
 
@@ -225,34 +229,34 @@ from ai_models import calculate_cost
 
 # WITHOUT caching
 cost_no_cache = 100 * calculate_cost(
-    "claude-sonnet-4-5",
+    "claude-sonnet-5-5",
     input_tokens=150,
     output_tokens=50,
     cached_input_tokens=0
 )
-# = 100 * $0.00105 = $0.105
+# = 100 * $0.0008 = $0.08
 
 # WITH caching (assume 90% cache hit on 135 tokens)
 cost_first = calculate_cost(
-    "claude-sonnet-4-5",
+    "claude-sonnet-5-5",
     input_tokens=150,
     output_tokens=50,
     cached_input_tokens=0
-)  # $0.00105
+)  # $0.0008
 
 cost_cached = 99 * calculate_cost(
-    "claude-sonnet-4-5",
+    "claude-sonnet-5-5",
     input_tokens=150,
     output_tokens=50,
     cached_input_tokens=135  # 90% of input cached
 )
-# = 99 * $0.000795 = $0.0787
+# = 99 * $0.0005435 = $0.0538
 
 total_with_cache = cost_first + cost_cached
-# = $0.00105 + $0.0787 = $0.0797
+# = $0.0008 + $0.0538 = $0.0546
 
-# Savings: $0.105 - $0.0797 = $0.0253 (24% savings)
-# At 100K requests/month: $2,530 savings
+# Savings: $0.08 - $0.0546 = $0.0254 (32% savings)
+# At 100K requests/month: ~$25 savings
 ```
 
 **Source:** `ai_models/pricing.py:49-86`
@@ -264,7 +268,7 @@ from pm_prompt_toolkit.providers import ClaudeProvider
 
 # Enable caching (default)
 provider = ClaudeProvider(
-    model="claude-sonnet-4-5",
+    model="claude-sonnet-5-5",
     enable_caching=True
 )
 
@@ -273,7 +277,7 @@ provider = ClaudeProvider(
 
 result = provider.classify("Dashboard is broken")
 # First request: Full cost
-# Next 100 requests (within 5 min): 10% input cost
+# Next 100 requests (within 5 min): 5% input cost
 
 # Monitor cache effectiveness
 metrics = provider.get_metrics()
@@ -373,21 +377,21 @@ for tier in ["budget", "balanced", "premium"]:
 **Output:**
 ```
 BUDGET TIER:
-  Claude Haiku 4.5
-    Input: $1.00/1M
-    Output: $5.00/1M
+  Claude Haiku 5.5
+    Input: $0.10/1M
+    Output: $0.50/1M
     Use case: Fast, affordable intelligence for simple tasks
 
 BALANCED TIER:
-  Claude Sonnet 4.5
-    Input: $3.00/1M
-    Output: $15.00/1M
+  Claude Sonnet 5.5
+    Input: $2.00/1M
+    Output: $10.00/1M
     Use case: Balance of intelligence, speed, and cost
 
 PREMIUM TIER:
-  Claude Opus 4.1
-    Input: $15.00/1M
-    Output: $75.00/1M
+  Claude Opus 5.5
+    Input: $4.00/1M
+    Output: $20.00/1M
     Use case: Top-level intelligence for complex tasks
 ```
 
@@ -410,9 +414,9 @@ from ai_models import calculate_cost
 # Scenario: 10,000 requests, 150 input tokens, 50 output tokens
 
 tasks = [
-    ("claude-haiku-4-5", "Budget"),
-    ("claude-sonnet-4-5", "Balanced"),
-    ("claude-opus-4-1", "Premium"),
+    ("claude-haiku-5-5", "Budget"),
+    ("claude-sonnet-5-5", "Balanced"),
+    ("claude-opus-5-5", "Premium"),
 ]
 
 for model_id, tier in tasks:
@@ -420,9 +424,9 @@ for model_id, tier in tasks:
     print(f"{tier:12} ({model_id:20}): ${cost:6.2f}")
 
 # Output:
-# Budget       (claude-haiku-4-5       ): $ 20.00
-# Balanced     (claude-sonnet-4-5      ): $ 60.00
-# Premium      (claude-opus-4-1        ): $300.00
+# Budget       (claude-haiku-5-5       ): $  0.40
+# Balanced     (claude-sonnet-5-5      ): $  8.00
+# Premium      (claude-opus-5-5        ): $ 16.00
 ```
 
 ### Selection Framework
@@ -440,20 +444,20 @@ def select_model_tier(complexity: str, importance: str) -> str:
     """
 
     tier_matrix = {
-        ("simple", "low"): "claude-haiku-4-5",
-        ("simple", "medium"): "claude-haiku-4-5",
-        ("simple", "high"): "claude-sonnet-4-5",
+        ("simple", "low"): "claude-haiku-5-5",
+        ("simple", "medium"): "claude-haiku-5-5",
+        ("simple", "high"): "claude-sonnet-5-5",
 
-        ("moderate", "low"): "claude-haiku-4-5",
-        ("moderate", "medium"): "claude-sonnet-4-5",
-        ("moderate", "high"): "claude-sonnet-4-5",
+        ("moderate", "low"): "claude-haiku-5-5",
+        ("moderate", "medium"): "claude-sonnet-5-5",
+        ("moderate", "high"): "claude-sonnet-5-5",
 
-        ("complex", "low"): "claude-sonnet-4-5",
-        ("complex", "medium"): "claude-sonnet-4-5",
-        ("complex", "high"): "claude-opus-4-1",
+        ("complex", "low"): "claude-sonnet-5-5",
+        ("complex", "medium"): "claude-sonnet-5-5",
+        ("complex", "high"): "claude-opus-5-5",
     }
 
-    return tier_matrix.get((complexity, importance), "claude-sonnet-4-5")
+    return tier_matrix.get((complexity, importance), "claude-sonnet-5-5")
 
 
 # Usage
@@ -479,7 +483,7 @@ from typing import List
 def batch_classify(
     signals: List[str],
     batch_size: int = 100,
-    model: str = "claude-haiku-4-5"
+    model: str = "claude-haiku-5-5"
 ) -> List[ClassificationResult]:
     """Classify signals in batches for cost efficiency.
 
@@ -515,10 +519,10 @@ signals = load_signals()  # Load 1000 signals
 results = batch_classify(
     signals=signals,
     batch_size=100,
-    model="claude-haiku-4-5"  # Cheapest model for high volume
+    model="claude-haiku-5-5"  # Cheapest model for high volume
 )
 
-# Total cost: ~$2.00 (vs $8.00 for Sonnet)
+# Total cost: ~$0.04 (vs $0.80 for Sonnet)
 ```
 
 **Source:** `examples/basic_example.py:38-96`
@@ -574,7 +578,7 @@ concise = """<task>Classify customer signal</task>
 <output_format>category|confidence|evidence</output_format>"""
 
 # Savings: (350 - 85) = 265 tokens = 76% reduction
-# Cost savings at $3/1M input: $0.000795 → $0.000192 (76% savings)
+# Cost savings at $2/1M input: $0.0007 → $0.00017 (76% savings)
 ```
 
 **Source:** `pm_prompt_toolkit/providers/claude.py:150-184`
@@ -637,9 +641,9 @@ def optimize_prompt(prompt: str) -> str:
 
 | Version | Tokens | Cost (1M requests) | Quality |
 |---------|--------|-------------------|---------|
-| Original | 350 | $1,050 | 92% |
-| Optimized | 85 | $255 | 92% |
-| **Savings** | **76%** | **$795** | **No change** |
+| Original | 350 | $700 | 92% |
+| Optimized | 85 | $170 | 92% |
+| **Savings** | **76%** | **$530** | **No change** |
 
 ---
 
@@ -659,9 +663,9 @@ from ai_models import calculate_cost
 # Scenario: 100K requests/month, 150 input, 50 output tokens
 
 providers = {
-    "Anthropic Direct": calculate_cost("claude-sonnet-4-5", 150, 50, 0),
-    "AWS Bedrock": calculate_cost("claude-sonnet-4-5", 150, 50, 0),  # Same pricing
-    "Google Vertex AI": calculate_cost("claude-sonnet-4-5", 150, 50, 0),  # Same pricing
+    "Anthropic Direct": calculate_cost("claude-sonnet-5-5", 150, 50, 0),
+    "AWS Bedrock": calculate_cost("claude-sonnet-5-5", 150, 50, 0),  # Same pricing
+    "Google Vertex AI": calculate_cost("claude-sonnet-5-5", 150, 50, 0),  # Same pricing
 }
 
 monthly_requests = 100_000
@@ -702,13 +706,13 @@ from pm_prompt_toolkit.providers import get_provider
 # Priority: Bedrock > Vertex > Anthropic
 
 # If you have AWS Savings Plan:
-provider = get_provider("bedrock:claude-sonnet-4-5")
+provider = get_provider("bedrock:claude-sonnet-5-5")
 
 # If you have GCP committed use:
-provider = get_provider("vertex:claude-sonnet-4-5")
+provider = get_provider("vertex:claude-sonnet-5-5")
 
 # Development/testing:
-provider = get_provider("anthropic:claude-sonnet-4-5")
+provider = get_provider("anthropic:claude-sonnet-5-5")
 ```
 
 **Source:** `pm_prompt_toolkit/providers/factory.py:49-180`
@@ -728,7 +732,7 @@ Track costs in real-time to identify optimization opportunities and prevent budg
 ```python
 from pm_prompt_toolkit.providers import get_provider
 
-provider = get_provider("claude-sonnet-4-5")
+provider = get_provider("claude-sonnet-5-5")
 
 # ... process requests ...
 
@@ -874,7 +878,7 @@ def calculate_roi(
 # - 17 hours/month of support time
 
 results = calculate_roi(
-    llm_cost_monthly=180,  # Our optimized cost
+    llm_cost_monthly=72,  # Our optimized cost
     human_hours_saved=333 - 17,  # 316 hours saved
     hourly_rate=25,
     quality_improvement=500,  # Better routing = faster resolution = happier customers
@@ -893,13 +897,13 @@ Annual Net Benefit:    ${results['annual_net_benefit']:.2f}/year
 
 # Output:
 # === ROI ANALYSIS ===
-# LLM Cost:              $180.00/month
+# LLM Cost:              $72.00/month
 # Human Cost Saved:      $7,900.00/month
 # Quality Improvement:   $500.00/month
-# Net Monthly Benefit:   $8,220.00/month
-# ROI:                   4,567%
+# Net Monthly Benefit:   $8,328.00/month
+# ROI:                   11,567%
 # Payback Period:        0.5 months
-# Annual Net Benefit:    $98,640.00/year
+# Annual Net Benefit:    $99,936.00/year
 ```
 
 ### ROI Decision Matrix

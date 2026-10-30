@@ -119,10 +119,10 @@ class TestModelRegistry:
 
     def test_get_model_by_id(self):
         """Should retrieve model by ID."""
-        model = ModelRegistry.get("claude-sonnet-4-5")
+        model = ModelRegistry.get("claude-sonnet-5-5")
         assert model is not None
-        assert model.name == "Claude Sonnet 4.5"
-        assert model.api_identifier == "claude-sonnet-4-5-20250929"
+        assert model.name == "Claude Sonnet 5.5"
+        assert model.api_identifier == "claude-sonnet-5-5"
 
     def test_get_model_not_found(self):
         """Should return None for unknown model."""
@@ -145,7 +145,7 @@ class TestModelIntegration:
     def test_full_workflow_claude_sonnet(self):
         """Test complete workflow with Claude Sonnet."""
         # Get model
-        model = ModelRegistry.get("claude-sonnet-4-5")
+        model = ModelRegistry.get("claude-sonnet-5-5")
         assert model is not None
 
         # Check capabilities
@@ -158,7 +158,7 @@ class TestModelIntegration:
             output_tokens=2_000,
             cached_input_tokens=5_000
         )
-        assert 0.046 < cost < 0.047
+        assert 0.030 < cost < 0.031
 
         # Check optimization
         assert "Production" in str(model.optimization.recommended_for)
@@ -178,10 +178,10 @@ class TestPricingConsistency:
 
     def test_claude_haiku_correct_pricing(self):
         """Claude Haiku should have correct pricing (was 4x wrong before)."""
-        model = ModelRegistry.get("claude-haiku-4-5")
+        model = ModelRegistry.get("claude-haiku-5-5")
         # Regression test for pricing bug
-        assert model.pricing.input_per_1m == 1.00
-        assert model.pricing.output_per_1m == 5.00
+        assert model.pricing.input_per_1m == 0.10
+        assert model.pricing.output_per_1m == 0.50
 
     def test_all_pricing_positive(self):
         """All pricing should be non-negative."""
@@ -697,14 +697,14 @@ def test_pricing():
 ```python
 def test_get_model_by_id():
     # Arrange
-    model_id = "claude-sonnet-4-5"
+    model_id = "claude-sonnet-5-5"
 
     # Act
     model = ModelRegistry.get(model_id)
 
     # Assert
     assert model is not None
-    assert model.name == "Claude Sonnet 4.5"
+    assert model.name == "Claude Sonnet 5.5"
 ```
 
 **3. Test One Thing**

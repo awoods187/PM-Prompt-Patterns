@@ -10,7 +10,7 @@ Example:
     >>> from ai_models import ModelRegistry
     >>>
     >>> # Get model by ID
-    >>> model = ModelRegistry.get("claude-sonnet-4-5")
+    >>> model = ModelRegistry.get("claude-sonnet-5-5")
     >>> print(model.name)
     Claude Sonnet 4.5
     >>>
@@ -81,7 +81,7 @@ class Model:
             True if model has the capability
 
         Example:
-            >>> model = ModelRegistry.get("claude-sonnet-4-5")
+            >>> model = ModelRegistry.get("claude-sonnet-5-5")
             >>> model.has_capability("vision")
             True
         """
@@ -247,13 +247,13 @@ class ModelRegistry:
         """Get model by ID.
 
         Args:
-            model_id: Model identifier (e.g., "claude-sonnet-4-5")
+            model_id: Model identifier (e.g., "claude-sonnet-5-5")
 
         Returns:
             Model object or None if not found
 
         Example:
-            >>> model = ModelRegistry.get("claude-haiku-4-5")
+            >>> model = ModelRegistry.get("claude-haiku-5-5")
             >>> model.name
             'Claude Haiku 4.5'
         """
@@ -395,7 +395,7 @@ class ModelRegistry:
             >>> # Get latest available OpenAI model
             >>> latest = ModelRegistry.get_latest_model("openai")
             >>> print(latest.model_id)
-            gpt-5
+            gpt-6.1-terra
         """
         models = cls.get_available_by_provider(provider, as_of_date)
         if not models:

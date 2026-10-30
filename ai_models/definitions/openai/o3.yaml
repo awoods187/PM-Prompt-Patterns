@@ -1,20 +1,24 @@
 # o3 Model Definition
-# Last verified: 2025-11-01
-# Source: https://platform.openai.com/docs/models
+# Last verified: 2026-10-30
+# Source: https://developers.openai.com/api/docs/deprecations
 
 schema_version: "1.0.0"
 model_id: "o3"
 provider: "openai"
 name: "o3"
 api_identifier: "o3-2025-04-16"
+deprecated: true
+replacement: "gpt-6.1-sol"
 
 metadata:
-  context_window_input: 128000
-  context_window_output: 16384
-  knowledge_cutoff: "April 2025"
+  context_window_input: 200000
+  context_window_output: 100000
+  knowledge_cutoff: "June 2024"
   release_date: "2025-04-16"
-  last_verified: "2025-11-01"
-  docs_url: "https://platform.openai.com/docs/models/o3"
+  last_verified: "2026-10-30"
+  deprecation_date: "2026-06-11"
+  retirement_date: "2026-12-11"
+  docs_url: "https://developers.openai.com/api/docs/models/o3"
 
 capabilities:
   - text_input
@@ -29,8 +33,9 @@ capabilities:
   - scientific_analysis
 
 pricing:
-  input_per_1m: 10.00
-  output_per_1m: 40.00
+  input_per_1m: 2.00
+  output_per_1m: 8.00
+  cache_read_per_1m: 0.50
 
 optimization:
   recommended_for:
@@ -52,4 +57,4 @@ optimization:
   cost_tier: "premium"
   speed_tier: "thorough"
 
-notes: "Advanced reasoning model with full tool access. Released April 16, 2025. Most capable reasoning before GPT-5."
+notes: "DEPRECATED: OpenAI shuts down o3 on 2026-12-11. OpenAI lists gpt-5.6-sol as the replacement; this library migrates to gpt-6.1-sol."

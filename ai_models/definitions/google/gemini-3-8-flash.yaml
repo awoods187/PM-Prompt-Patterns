@@ -1,0 +1,46 @@
+# Gemini 3.8 Flash Model Definition
+# Last verified: 2026-10-30
+# Source: https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash
+
+schema_version: "1.0.0"
+model_id: "gemini-3-8-flash"
+provider: "google"
+name: "Gemini 3.8 Flash"
+api_identifier: "gemini-3.8-flash"
+
+metadata:
+  context_window_input: 1048576
+  context_window_output: 65536
+  knowledge_cutoff: "Not published"
+  release_date: "2026-09-02"
+  last_verified: "2026-10-30"
+  docs_url: "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - prompt_caching
+  - streaming
+  - json_mode
+  - code_execution
+  - search
+
+pricing:
+  input_per_1m: 0.75
+  output_per_1m: 3.75
+  cache_read_per_1m: 0.075
+
+optimization:
+  recommended_for:
+    - "General production workloads"
+    - "Replacement for gemini-2-5-pro and gemini-2-5-flash"
+  best_practices:
+    - "Thinking levels low/medium/high; minimal returns an error"
+    - "Use Batch or Flex inference for non-urgent work"
+  cost_tier: "mid-tier"
+  speed_tier: "fast"
+
+notes: "RECOMMENDED Gemini default in this library. Launch pricing through 2026-12-31; from 2027-01-01 it rises to $1.50 input / $7.50 output / $0.15 cache read per 1M."

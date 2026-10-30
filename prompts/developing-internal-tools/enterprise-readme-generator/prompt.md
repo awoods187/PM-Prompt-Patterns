@@ -2,7 +2,7 @@
 
 **Complexity**: 🟡 Intermediate
 **Category**: Technical Documentation / Developer Experience
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-5 | ✅ Gemini 2.5 Pro
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-6.1 Sol | ✅ Gemini 4 Argon
 
 ## Overview
 
@@ -140,7 +140,7 @@ Generate a complete enterprise-standard README following the structure and princ
 """
 
     response = client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-5-5",
         max_tokens=4000,
         temperature=0,
         messages=[{"role": "user", "content": context}]
@@ -297,7 +297,7 @@ TIME_TO_FIX: {{minutes}}
 """
 
     response = client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-5-5",
         max_tokens=2000,
         temperature=0,
         messages=[{"role": "user", "content": prompt}]

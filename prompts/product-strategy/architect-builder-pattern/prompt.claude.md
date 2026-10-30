@@ -7,8 +7,8 @@
 This Claude-optimized variant leverages Claude's extended context window, XML tag understanding, and prompt caching capabilities for maximum efficiency in the two-phase Architect-Builder workflow.
 
 **Recommended models:**
-- **Phase 1 (Design & Validation)**: Claude Opus 4 or Claude Sonnet 4.5 for strategic architecture decisions and codebase analysis
-- **Phase 2 (Execution)**: Claude Sonnet 4.5 with Claude Code for autonomous implementation
+- **Phase 1 (Design & Validation)**: Claude Opus 5.5 or Claude Sonnet 5.5 for strategic architecture decisions and codebase analysis
+- **Phase 2 (Execution)**: Claude Sonnet 5.5 with Claude Code for autonomous implementation
 
 ---
 
@@ -19,7 +19,7 @@ You are implementing the Architect-Builder Pattern, a two-phase workflow for com
 
 ## PHASE 1: ARCHITECTURE, DESIGN & VALIDATION
 
-Use Claude Opus 4 or Claude Sonnet 4.5 for strategic thinking and codebase analysis.
+Use Claude Opus 5.5 or Claude Sonnet 5.5 for strategic thinking and codebase analysis.
 
 **Design Request Template:**
 
@@ -173,7 +173,7 @@ The static prompt structure is cacheable, providing:
 - Phase 3 varies based on design (partial caching)
 
 ### 3. Extended Context Window
-- Leverages Claude's 200K token context for large codebases
+- Leverages Claude's 1M token context for large codebases
 - Can include extensive architectural documentation
 - Supports multi-file validation in single request
 
@@ -201,7 +201,7 @@ This mirrors professional development workflows where senior architects design a
 
 ### Phase 1: Design & Validation (Claude Web UI or API)
 
-Use Claude Opus 4 or Sonnet 4.5 for strategic design and validation:
+Use Claude Opus 5.5 or Sonnet 5.5 for strategic design and validation:
 
 ```python
 import anthropic
@@ -209,7 +209,7 @@ import anthropic
 client = anthropic.Anthropic(api_key="...")
 
 response = client.messages.create(
-    model="claude-opus-4-20250514",  # or claude-sonnet-4-5-20250929
+    model="claude-opus-5-5",  # or claude-sonnet-5-5
     max_tokens=8000,
     system=[{
         "type": "text",
@@ -252,8 +252,8 @@ design = response.content[0].text
 
 | Phase | Recommended Model | Why |
 |-------|------------------|-----|
-| Phase 1: Design & Validation | Claude Opus 4 or Sonnet 4.5 | Strategic decisions, complex reasoning, pattern matching |
-| Phase 2: Execution | Claude Sonnet 4.5 + Claude Code | Autonomous implementation, file operations |
+| Phase 1: Design & Validation | Claude Opus 5.5 or Sonnet 5.5 | Strategic decisions, complex reasoning, pattern matching |
+| Phase 2: Execution | Claude Sonnet 5.5 + Claude Code | Autonomous implementation, file operations |
 
 ### Token Management
 
@@ -286,7 +286,7 @@ with open("prompt.claude.md") as f:
 # Phase 1: Design
 print("🎨 Phase 1: Designing architecture...")
 design_response = client.messages.create(
-    model="claude-opus-4-20250514",
+    model="claude-opus-5-5",
     max_tokens=8000,
     system=[{
         "type": "text",

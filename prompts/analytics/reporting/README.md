@@ -230,10 +230,10 @@ Conversion rate: 2.9%
 
 | Model | Cost | Speed | When to Use |
 |-------|------|-------|-------------|
-| **Claude Sonnet 4.5** | $3/M | ⚡⚡ | **RECOMMENDED**: Best insight quality |
-| Claude Opus 4.1 | $15/M | ⚡ | Critical exec reports (quarterly reviews) |
-| GPT-4o | $2.50/M | ⚡⚡ | Structured extraction, dashboard narration |
-| Gemini 2.5 Pro | $1.25/M | ⚡⚡ | Large context reports (100+ metrics) |
+| **Claude Sonnet 5.5** | $2/M | ⚡⚡ | **RECOMMENDED**: Best insight quality |
+| Claude Opus 5.5 | $4/M | ⚡ | Critical exec reports (quarterly reviews) |
+| GPT-6 Luna | $0.10/M | ⚡⚡ | Structured extraction, dashboard narration |
+| Gemini 4 Argon | $2/M | ⚡⚡ | Large context reports (100+ metrics) |
 
 **Cost Optimization**: For weekly business reviews:
 - Manual analysis: 4 hours @ $100/hr = $400/week

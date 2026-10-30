@@ -39,6 +39,15 @@ class ModelValidator:
         "streaming",
         "json_mode",
         "tool_use",
+        "code_execution",
+        "search",
+        "code_generation",
+        "advanced_reasoning",
+        "auto_routing",
+        "scientific_analysis",
+        "visual_reasoning",
+        "realtime_api",
+        "voice",
     }
 
     # Valid tier values

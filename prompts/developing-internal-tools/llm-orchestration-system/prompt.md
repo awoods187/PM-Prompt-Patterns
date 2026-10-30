@@ -2,7 +2,7 @@
 
 **Complexity**: 🔴 Advanced
 **Category**: Code Generation / System Architecture
-**Model Compatibility**: ✅ Claude Opus (best) | ✅ Claude Sonnet 4 | ⚠️ GPT-5 (may need more guidance)
+**Model Compatibility**: ✅ Claude Opus (best) | ✅ Claude Sonnet 4 | ⚠️ GPT-6.1 Sol (may need more guidance)
 
 ## Overview
 
@@ -74,16 +74,16 @@ Build a complete Python library for multi-provider LLM orchestration that provid
 # Week 1: Add new provider to config
 # config.yaml
 active_provider: "openai"  # Still using OpenAI
-active_model: "gpt-4"
+active_model: "gpt-6-luna"
 
 providers:
   openai:
     api_key: "${OPENAI_API_KEY}"
-    fallback_models: ["gpt-4", "gpt-4o-mini"]
+    fallback_models: ["gpt-6-luna"]
 
   anthropic:  # Add Anthropic
     api_key: "${ANTHROPIC_API_KEY}"
-    fallback_models: ["claude-opus-4-20250514"]
+    fallback_models: ["claude-opus-5-5"]
 
 # Week 2: Test Anthropic integration
 from llm_orchestrator import LLMOrchestrator
@@ -97,7 +97,7 @@ print(f"Anthropic ready: {len(anthropic_models)} models")
 # Week 3: Switch active provider
 # config.yaml
 active_provider: "anthropic"  # Switch!
-active_model: "claude-opus-4-20250514"
+active_model: "claude-opus-5-5"
 
 # No code changes needed - just config update
 ```
@@ -112,9 +112,8 @@ import pandas as pd
 
 # Run experiment with different models
 configs = [
-    ("openai", "gpt-4"),
-    ("openai", "gpt-4o-mini"),
-    ("anthropic", "claude-sonnet-4-5"),
+    ("openai", "gpt-6-luna"),
+    ("anthropic", "claude-sonnet-5-5"),
 ]
 
 results = []
@@ -144,10 +143,9 @@ df = pd.DataFrame(results)
 print(df.sort_values("cost"))
 
 # Output:
-#     provider                          model      cost  cost_per_request
-# 1    openai              gpt-4o-mini   0.42          0.0042
-# 2  anthropic  claude-sonnet-4-5   1.85          0.0185
-# 0    openai                      gpt-4   6.30          0.0630
+#     provider              model  cost  cost_per_request
+# 0     openai         gpt-6-luna  0.35            0.0035
+# 1  anthropic  claude-sonnet-5-5  1.23            0.0123
 ```
 
 ### Pattern 3: Multi-Environment Configuration
@@ -157,12 +155,12 @@ print(df.sort_values("cost"))
 ```python
 # config.dev.yaml (cheap models for testing)
 active_provider: "openai"
-active_model: "gpt-4o-mini"
+active_model: "gpt-6-luna"
 
 providers:
   openai:
     api_key: "${OPENAI_API_KEY}"
-    fallback_models: ["gpt-4o-mini"]
+    fallback_models: ["gpt-6-luna"]
 
 cost_tracking:
   enabled: true
@@ -170,14 +168,14 @@ cost_tracking:
 
 # config.prod.yaml (production models)
 active_provider: "anthropic"
-active_model: "claude-opus-4-20250514"
+active_model: "claude-opus-5-5"
 
 providers:
   anthropic:
     api_key: "${ANTHROPIC_API_KEY}"
     fallback_models:
-      - "claude-opus-4-20250514"
-      - "claude-sonnet-4-5"  # Fallback to cheaper
+      - "claude-opus-5-5"
+      - "claude-sonnet-5-5"  # Fallback to cheaper
 
 cost_tracking:
   enabled: true
@@ -217,14 +215,14 @@ import anthropic
 
 # OpenAI
 openai_response = openai.ChatCompletion.create(
-    model="gpt-4",
+    model="gpt-6-luna",
     messages=[{"role": "user", "content": "Hello"}]
 )
 
 # Anthropic (completely different API)
 anthropic_client = anthropic.Anthropic(api_key="...")
 anthropic_response = anthropic_client.messages.create(
-    model="claude-opus-4-20250514",
+    model="claude-opus-5-5",
     messages=[{"role": "user", "content": "Hello"}]
 )
 

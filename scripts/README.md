@@ -102,7 +102,7 @@ python scripts/verify_current_models.py
 python scripts/verify_current_models.py --provider anthropic
 
 # Test specific model
-python scripts/verify_current_models.py --model claude-sonnet-4-5
+python scripts/verify_current_models.py --model claude-sonnet-5-5
 ```
 
 **Requirements:**
@@ -122,9 +122,9 @@ python scripts/verify_current_models.py --model claude-sonnet-4-5
 
 **Output:**
 ```
-Testing claude-sonnet-4-5 (claude-sonnet-4-5-20250929)... ✅ PASS
-Testing gpt-4o (gpt-4o)... ✅ PASS
-Testing gemini-2-5-pro (gemini-2.5-pro)... ✅ PASS
+Testing claude-sonnet-5-5 (claude-sonnet-5-5)... ✅ PASS
+Testing gpt-6-luna (gpt-6-luna)... ✅ PASS
+Testing gemini-4-argon (gemini-4-argon)... ✅ PASS
 
 ================================================================================
 MODEL VERIFICATION SUMMARY
@@ -198,7 +198,7 @@ The `check_staleness.py` script runs automatically via GitHub Actions:
 
 ## Related Documentation
 
-- [Model Update Workflow](../docs/workflows/MODEL_UPDATE_WORKFLOW.md) - Complete update procedure
+- [Model Update Workflow](../docs/model_update_system.md#manual-update-procedure) - Complete update procedure
 - [Contributing Guide](../CONTRIBUTING.md) - How to contribute changes
 
 ## Troubleshooting

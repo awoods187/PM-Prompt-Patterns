@@ -1,20 +1,20 @@
 # Gemini 2.5 Pro Model Definition
-# Last verified: 2025-10-25
-# Source: https://ai.google.dev/gemini-api/docs/models/gemini
+# Last verified: 2026-10-30
+# Source: https://ai.google.dev/gemini-api/docs/models
 
 schema_version: "1.0.0"
 model_id: "gemini-2-5-pro"
 provider: "google"
 name: "Gemini 2.5 Pro"
-api_identifier: "gemini-2.5-pro-002"
+api_identifier: "gemini-2.5-pro"
 
 metadata:
-  context_window_input: 2000000
-  context_window_output: 8192
-  knowledge_cutoff: "August 2024"
-  release_date: "2024-12-01"
-  last_verified: "2025-10-25"
-  docs_url: "https://ai.google.dev/gemini-api/docs/models/gemini"
+  context_window_input: 1048576
+  context_window_output: 65536
+  knowledge_cutoff: "January 2025"
+  release_date: "2025-06-17"
+  last_verified: "2026-10-30"
+  docs_url: "https://ai.google.dev/gemini-api/docs/models/gemini-2.5-pro"
 
 capabilities:
   - text_input
@@ -29,20 +29,19 @@ capabilities:
 
 pricing:
   input_per_1m: 1.25
-  output_per_1m: 5.00
-  cache_write_per_1m: 3.13
-  cache_read_per_1m: 0.31
+  output_per_1m: 10.00
+  cache_read_per_1m: 0.125
 
 optimization:
   recommended_for:
-    - "Massive context processing (up to 2M tokens)"
+    - "Massive context processing (up to 1M tokens)"
     - "Long document analysis"
     - "Codebase understanding"
     - "Multi-file reasoning"
     - "Research paper analysis"
     - "Book summarization"
   best_practices:
-    - "Leverage 2M token context for comprehensive analysis"
+    - "Leverage 1M token context for comprehensive analysis"
     - "Use context caching for large repeated contexts"
     - "Native code execution capability"
     - "Excellent for multi-document tasks"
@@ -51,4 +50,4 @@ optimization:
   cost_tier: "mid-tier"
   speed_tier: "balanced"
 
-notes: "Industry-leading 2M token context window. Excellent for processing large documents and codebases."
+notes: "Not deprecated, but Google limits access to existing users and recommends gemini-3-8-flash for new projects. Prices shown are for prompts up to 200k tokens; longer prompts cost $2.50 input / $15.00 output per 1M."

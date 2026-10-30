@@ -1,0 +1,47 @@
+# GPT-6 Luna Model Definition
+# Last verified: 2026-10-30
+# Source: https://developers.openai.com/api/docs/models/gpt-6-luna
+
+schema_version: "1.0.0"
+model_id: "gpt-6-luna"
+provider: "openai"
+name: "GPT-6 Luna"
+api_identifier: "gpt-6-luna"
+
+metadata:
+  context_window_input: 922000
+  context_window_output: 128000
+  knowledge_cutoff: "May 2026"
+  release_date: "2026-09-22"
+  last_verified: "2026-10-30"
+  docs_url: "https://developers.openai.com/api/docs/models/gpt-6-luna"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - prompt_caching
+  - streaming
+  - json_mode
+  - search
+
+pricing:
+  input_per_1m: 0.10
+  output_per_1m: 0.50
+  cache_write_per_1m: 0.125
+  cache_read_per_1m: 0.01
+
+optimization:
+  recommended_for:
+    - "High-volume, low-cost tasks"
+    - "Classification and extraction"
+    - "Replacement for gpt-4o, gpt-4o-mini, gpt-4.1, and gpt-4.1-mini"
+  best_practices:
+    - "On Chat Completions, function calling requires reasoning_effort set to none"
+    - "Use Batch or Flex for 50% off non-urgent work"
+  cost_tier: "budget"
+  speed_tier: "fast"
+
+notes: "OpenAI's lowest-cost current model. 1.05M total context (922k input, 128k output)."

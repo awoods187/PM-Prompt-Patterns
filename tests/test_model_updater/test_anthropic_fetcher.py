@@ -17,6 +17,17 @@ import pytest
 from scripts.model_updater.fetchers.anthropic_fetcher import AnthropicFetcher
 from scripts.model_updater.fetchers.base_fetcher import ModelData
 
+# Every model in ai_models/definitions/anthropic/, in fetcher order.
+ALL_CLAUDE_MODELS = [
+    "claude-fable-5-1",
+    "claude-opus-5-5",
+    "claude-sonnet-5-5",
+    "claude-haiku-5-5",
+    "claude-sonnet-4-5",
+    "claude-haiku-4-5",
+    "claude-opus-4-1",
+]
+
 # ============================================================================
 # FIXTURES
 # ============================================================================
@@ -47,6 +58,7 @@ class TestStaticModelSpecs:
         assert specs["context_window_output"] is None
         assert specs["knowledge_cutoff"] == "January 2025"
         assert specs["release_date"] == "2025-09-29"
+        assert specs["api_identifier"] == "claude-sonnet-4-5-20250929"
         assert "pricing" in specs
         assert specs["pricing"]["input_per_1m"] == 3.00
         assert specs["pricing"]["output_per_1m"] == 15.00
@@ -63,10 +75,14 @@ class TestStaticModelSpecs:
         specs = anthropic_fetcher._get_static_model_specs("claude-haiku-4-5")
 
         assert specs is not None
+        assert specs["api_identifier"] == "claude-haiku-4-5-20251001"
         assert specs["context_window_input"] == 200000
-        assert specs["context_window_output"] == 16000
-        assert specs["pricing"]["input_per_1m"] == 0.80
-        assert specs["pricing"]["output_per_1m"] == 4.00
+        assert specs["context_window_output"] is None
+        assert specs["release_date"] == "2025-10-01"
+        assert specs["pricing"]["input_per_1m"] == 1.00
+        assert specs["pricing"]["output_per_1m"] == 5.00
+        assert specs["pricing"]["cache_write_per_1m"] == 1.25
+        assert specs["pricing"]["cache_read_per_1m"] == 0.10
         assert specs["cost_tier"] == "budget"
         assert specs["speed_tier"] == "fast"
 
@@ -123,11 +139,8 @@ class TestDocsFallback:
         """Test that fetch_from_docs returns all supported models."""
         models = anthropic_fetcher.fetch_from_docs()
 
-        assert len(models) == 3  # Sonnet 4.5, Haiku 4.5, and Opus 4.1
-        model_ids = [m.model_id for m in models]
-        assert "claude-sonnet-4-5" in model_ids
-        assert "claude-haiku-4-5" in model_ids
-        assert "claude-opus-4-1" in model_ids
+        assert len(models) == 7
+        assert {m.model_id for m in models} == set(ALL_CLAUDE_MODELS)
 
     def test_fetch_from_docs_creates_valid_model_data(
         self, anthropic_fetcher: AnthropicFetcher
@@ -171,8 +184,17 @@ class TestDocsFallback:
         models = anthropic_fetcher.fetch_from_docs()
 
         model_ids = [m.model_id for m in models]
-        expected_order = ["claude-sonnet-4-5", "claude-haiku-4-5", "claude-opus-4-1"]
-        assert model_ids == expected_order
+        assert model_ids == ALL_CLAUDE_MODELS
+
+    def test_fetch_from_docs_uses_dateless_api_ids_for_5x_models(
+        self, anthropic_fetcher: AnthropicFetcher
+    ) -> None:
+        """Test that API IDs come from the spec table, not a {model_id}-{date} guess."""
+        models = {m.model_id: m for m in anthropic_fetcher.fetch_from_docs()}
+
+        assert models["claude-sonnet-5-5"].api_identifier == "claude-sonnet-5-5"
+        assert models["claude-haiku-4-5"].api_identifier == "claude-haiku-4-5-20251001"
+        assert models["claude-opus-4-1"].api_identifier == "claude-opus-4-1-20250805"
 
 
 # ============================================================================
@@ -196,13 +218,10 @@ class TestAPIFetching:
         # Execute
         models = anthropic_fetcher.fetch_from_api()
 
-        # Verify - should get 3 models (Sonnet, Haiku, Opus)
-        assert len(models) == 3
+        # Verify - should get every tracked Claude model
+        assert len(models) == 7
         assert all(isinstance(m, ModelData) for m in models)
-        model_ids = [m.model_id for m in models]
-        assert "claude-sonnet-4-5" in model_ids
-        assert "claude-haiku-4-5" in model_ids
-        assert "claude-opus-4-1" in model_ids
+        assert [m.model_id for m in models] == ALL_CLAUDE_MODELS
 
         # Verify API was called
         mock_anthropic_class.assert_called_once_with(api_key="test-api-key")
@@ -235,51 +254,21 @@ class TestAPIFetching:
         mock_client = Mock()
         mock_anthropic_class.return_value = mock_client
 
-        # Patch _get_model_details to fail for one model
-        with patch.object(anthropic_fetcher, "_get_model_details") as mock_get_details:
-            # First call (Sonnet) succeeds, second (Haiku) fails, third (Opus) succeeds
-            mock_get_details.side_effect = [
-                ModelData(
-                    model_id="claude-sonnet-4-5",
-                    provider="anthropic",
-                    name="Claude Sonnet 4.5",
-                    api_identifier="claude-sonnet-4-5-20250929",
-                    context_window_input=200000,
-                    context_window_output=None,
-                    knowledge_cutoff="January 2025",
-                    release_date=date(2025, 9, 29),
-                    docs_url="https://docs.claude.com/en/docs/about-claude/models",
-                    capabilities=["text_input", "text_output"],
-                    input_per_1m=3.0,
-                    output_per_1m=15.0,
-                    cost_tier="mid-tier",
-                    speed_tier="balanced",
-                ),
-                Exception("Model verification failed"),
-                ModelData(
-                    model_id="claude-opus-4-1",
-                    provider="anthropic",
-                    name="Claude Opus 4.1",
-                    api_identifier="claude-opus-4-1-20250514",
-                    context_window_input=200000,
-                    context_window_output=16000,
-                    knowledge_cutoff="August 2024",
-                    release_date=date(2025, 5, 14),
-                    docs_url="https://docs.claude.com/en/docs/about-claude/models",
-                    capabilities=["text_input", "text_output"],
-                    input_per_1m=15.0,
-                    output_per_1m=75.0,
-                    cost_tier="premium",
-                    speed_tier="thorough",
-                ),
-            ]
+        real_get_details = anthropic_fetcher._get_model_details
 
+        def fail_for_haiku_45(client: Mock, api_id: str, base_info: dict) -> ModelData:
+            if base_info["model_id"] == "claude-haiku-4-5":
+                raise RuntimeError("Model verification failed")
+            return real_get_details(client, api_id, base_info)  # type: ignore[return-value]
+
+        # Haiku 4.5 fails; every other model succeeds
+        with patch.object(anthropic_fetcher, "_get_model_details", side_effect=fail_for_haiku_45):
             models = anthropic_fetcher.fetch_from_api()
 
-            # Should return only the 2 successful models
-            assert len(models) == 2
-            assert models[0].model_id == "claude-sonnet-4-5"
-            assert models[1].model_id == "claude-opus-4-1"
+            # Should return all models except the failed one, order preserved
+            assert [m.model_id for m in models] == [
+                m for m in ALL_CLAUDE_MODELS if m != "claude-haiku-4-5"
+            ]
 
     @patch.dict("os.environ", {"ANTHROPIC_API_KEY": "test-api-key"})
     @patch("anthropic.Anthropic")
@@ -355,9 +344,8 @@ class TestMainFetchMethod:
         models = anthropic_fetcher.fetch_models()
 
         model_ids = [m.model_id for m in models]
-        assert "claude-sonnet-4-5" in model_ids
-        assert "claude-haiku-4-5" in model_ids
-        assert "claude-opus-4-1" in model_ids
+        for model_id in ALL_CLAUDE_MODELS:
+            assert model_id in model_ids
 
     @patch.dict("os.environ", {"ANTHROPIC_API_KEY": "test-api-key"})
     def test_fetch_models_falls_back_on_api_failure(
@@ -410,9 +398,9 @@ class TestEdgeCases:
         self, anthropic_fetcher: AnthropicFetcher
     ) -> None:
         """Test that all static specs follow the same structure."""
-        # Note: 'name' and 'api_identifier' are NOT in static specs
-        # They are added when creating ModelData objects
         required_keys = {
+            "name",
+            "api_identifier",
             "context_window_input",
             "context_window_output",
             "knowledge_cutoff",
@@ -426,7 +414,7 @@ class TestEdgeCases:
             "notes",
         }
 
-        for model_id in ["claude-sonnet-4-5", "claude-haiku-4-5", "claude-opus-4-1"]:
+        for model_id in ALL_CLAUDE_MODELS:
             specs = anthropic_fetcher._get_static_model_specs(model_id)
             assert specs is not None
             assert required_keys.issubset(set(specs.keys()))
@@ -488,13 +476,17 @@ class TestEdgeCases:
         assert sonnet.cost_tier == "mid-tier"
         assert opus.cost_tier == "premium"
 
-    def test_all_models_have_200k_context(self, anthropic_fetcher: AnthropicFetcher) -> None:
-        """Test that all Claude models have 200k input context window."""
+    def test_context_windows_by_generation(self, anthropic_fetcher: AnthropicFetcher) -> None:
+        """Test that 4.x models have 200k input context and 5.x models have 1M."""
         models = anthropic_fetcher.fetch_from_docs()
 
         for model in models:
-            assert model.context_window_input == 200000
-            # Output context may vary (some models have None, some 16000)
+            if model.model_id.endswith(("-4-5", "-4-1")):
+                assert model.context_window_input == 200000
+                assert model.context_window_output is None
+            else:
+                assert model.context_window_input == 1000000
+                assert model.context_window_output == 128000
 
     def test_sonnet_is_recommended_for_production(
         self, anthropic_fetcher: AnthropicFetcher

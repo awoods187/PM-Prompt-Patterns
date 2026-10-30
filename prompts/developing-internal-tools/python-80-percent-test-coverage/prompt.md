@@ -2,7 +2,7 @@
 
 **Complexity**: 🔴 Advanced
 **Category**: Code Quality / Testing / Python
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-5 | ⚠️ Gemini (large context needed)
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-6.1 Sol | ⚠️ Gemini (large context needed)
 
 ## Overview
 
@@ -636,11 +636,13 @@ echo "✅ Coverage check passed"
 | **GPT-5o** | 128K | $0.10-0.25 | Fast | 70-85% | Good | Fast iteration |
 | **Gemini Pro 1.5** | 2M | $0.08-0.20 | Medium | 70-85% | Good | Large modules |
 
+_Measured on the previous model lineup; not yet re-run on current models._
+
 **Module = ~100-500 lines of code**
 
 **Recommendation**:
-- **Claude Sonnet 3.5**: Best balance for most projects (comprehensive tests, good edge case coverage)
-- **GPT-5o**: Faster iteration when time is critical, acceptable quality
+- **Claude Sonnet 5.5**: Best balance for most projects (comprehensive tests, good edge case coverage)
+- **GPT-6 Luna**: Faster iteration when time is critical, acceptable quality
 - **Claude Opus**: Security-critical modules requiring exceptional coverage
 
 **ROI Calculation**:

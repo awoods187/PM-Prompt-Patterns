@@ -1,0 +1,48 @@
+# Claude Haiku 5.5 Model Definition
+# Last verified: 2026-10-30
+# Source: https://platform.claude.com/docs/en/models/haiku-5-5/overview
+
+schema_version: "1.0.0"
+model_id: "claude-haiku-5-5"
+provider: "anthropic"
+name: "Claude Haiku 5.5"
+api_identifier: "claude-haiku-5-5"
+
+metadata:
+  context_window_input: 1000000
+  context_window_output: 128000
+  knowledge_cutoff: "June 2026"
+  release_date: "2026-10-07"
+  last_verified: "2026-10-30"
+  docs_url: "https://platform.claude.com/docs/en/models/haiku-5-5/overview"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - prompt_caching
+  - streaming
+  - json_mode
+
+pricing:
+  input_per_1m: 0.10
+  output_per_1m: 0.50
+  cache_write_per_1m: 0.125
+  cache_read_per_1m: 0.01
+
+optimization:
+  recommended_for:
+    - "High-volume classification and routing"
+    - "Extraction"
+    - "Subagent tasks"
+    - "Latency-sensitive applications"
+  best_practices:
+    - "Keep prompts under 100k tokens to stay on the lower price tier"
+    - "Do not set temperature, top_p, or top_k"
+    - "Expect about 30% more tokens than Haiku 4.5 for the same text (newer tokenizer)"
+  cost_tier: "budget"
+  speed_tier: "fast"
+
+notes: "Prices shown are for prompts up to 100k tokens. Prompts over 100k cost $0.50 input / $2.50 output / $0.625 cache write / $0.05 cache read per 1M. Retirement not sooner than 2027-10-07."

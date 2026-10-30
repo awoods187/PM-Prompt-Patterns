@@ -14,7 +14,7 @@ Example:
     >>> from pm_prompt_toolkit.providers import ClaudeProvider
     >>>
     >>> settings = get_settings()
-    >>> provider = ClaudeProvider(model="claude-haiku-4-5")
+    >>> provider = ClaudeProvider(model="claude-haiku")
     >>> result = provider.classify("We need SSO integration ASAP")
     >>> print(result.category, result.confidence)
     feature_request 0.96

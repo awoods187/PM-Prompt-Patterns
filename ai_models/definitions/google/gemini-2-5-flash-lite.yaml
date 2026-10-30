@@ -1,20 +1,20 @@
 # Gemini 2.5 Flash-Lite Model Definition
-# Last verified: 2025-10-25
-# Source: https://ai.google.dev/gemini-api/docs/models/gemini
+# Last verified: 2026-10-30
+# Source: https://ai.google.dev/gemini-api/docs/models
 
 schema_version: "1.0.0"
 model_id: "gemini-2-5-flash-lite"
 provider: "google"
 name: "Gemini 2.5 Flash-Lite"
-api_identifier: "gemini-2.5-flash-lite-002"
+api_identifier: "gemini-2.5-flash-lite"
 
 metadata:
-  context_window_input: 1000000
-  context_window_output: 8192
-  knowledge_cutoff: "August 2024"
-  release_date: "2024-12-01"
-  last_verified: "2025-10-25"
-  docs_url: "https://ai.google.dev/gemini-api/docs/models/gemini"
+  context_window_input: 1048576
+  context_window_output: 65536
+  knowledge_cutoff: "January 2025"
+  release_date: "2025-07-22"
+  last_verified: "2026-10-30"
+  docs_url: "https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash-lite"
 
 capabilities:
   - text_input
@@ -24,8 +24,9 @@ capabilities:
   - streaming
 
 pricing:
-  input_per_1m: 0.00
-  output_per_1m: 0.00
+  input_per_1m: 0.10
+  output_per_1m: 0.40
+  cache_read_per_1m: 0.01
 
 optimization:
   recommended_for:
@@ -45,4 +46,4 @@ optimization:
   cost_tier: "budget"
   speed_tier: "fast"
 
-notes: "Free tier model with limited capabilities. Subject to rate limits and quota restrictions."
+notes: "Not deprecated, but Google limits access to existing users and recommends gemini-3-5-flash-lite for new projects. Paid model ($0.10/$0.40 per 1M); audio input costs $0.30 per 1M."

@@ -1,0 +1,47 @@
+# Claude Fable 5.1 Model Definition
+# Last verified: 2026-10-30
+# Source: https://platform.claude.com/docs/en/models/fable-5-1/overview
+
+schema_version: "1.0.0"
+model_id: "claude-fable-5-1"
+provider: "anthropic"
+name: "Claude Fable 5.1"
+api_identifier: "claude-fable-5-1"
+
+metadata:
+  context_window_input: 1000000
+  context_window_output: 128000
+  knowledge_cutoff: "June 2026"
+  release_date: "2026-09-01"
+  last_verified: "2026-10-30"
+  docs_url: "https://platform.claude.com/docs/en/models/fable-5-1/overview"
+
+capabilities:
+  - text_input
+  - text_output
+  - function_calling
+  - vision
+  - large_context
+  - prompt_caching
+  - streaming
+  - json_mode
+
+pricing:
+  input_per_1m: 10.00
+  output_per_1m: 50.00
+  cache_write_per_1m: 12.50
+  cache_read_per_1m: 0.25
+
+optimization:
+  recommended_for:
+    - "Demanding multi-step reasoning"
+    - "Long-horizon agentic work"
+    - "Tasks where Opus 5.5 at high effort still falls short"
+  best_practices:
+    - "Start with claude-opus-5-5 and move up only when evals require it"
+    - "Thinking is always on; steer depth with the effort parameter"
+    - "Cache long system prompts: cache reads cost 2.5% of base input"
+  cost_tier: "premium"
+  speed_tier: "thorough"
+
+notes: "Anthropic's most capable generally available model. Retirement not sooner than 2027-09-01."

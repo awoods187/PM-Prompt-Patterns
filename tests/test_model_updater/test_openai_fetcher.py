@@ -17,6 +17,22 @@ import pytest
 from scripts.model_updater.fetchers.base_fetcher import ModelData
 from scripts.model_updater.fetchers.openai_fetcher import OpenAIFetcher
 
+# Every model in ai_models/definitions/openai/, in fetcher order.
+ALL_OPENAI_MODELS = [
+    "gpt-6-astra",
+    "gpt-6.1-sol",
+    "gpt-6.1-terra",
+    "gpt-6-luna",
+    "gpt-5",
+    "gpt-5-mini",
+    "gpt-4.1",
+    "gpt-4.1-mini",
+    "gpt-4o",
+    "gpt-4o-mini",
+    "o3",
+    "o4-mini",
+]
+
 # ============================================================================
 # FIXTURES
 # ============================================================================
@@ -68,6 +84,8 @@ class TestStaticModelSpecs:
         assert "pricing" in specs
         assert specs["pricing"]["input_per_1m"] == 2.50
         assert specs["pricing"]["output_per_1m"] == 10.00
+        assert specs["pricing"]["cache_read_per_1m"] == 1.25
+        assert "cache_write_per_1m" not in specs["pricing"]
         assert "capabilities" in specs
         assert "vision" in specs["capabilities"]
         assert "function_calling" in specs["capabilities"]
@@ -89,6 +107,25 @@ class TestStaticModelSpecs:
         assert specs["pricing"]["output_per_1m"] == 0.60
         assert specs["cost_tier"] == "budget"
         assert specs["speed_tier"] == "fast"
+
+    def test_get_static_specs_gpt6_astra_returns_valid_specs(
+        self, openai_fetcher: OpenAIFetcher
+    ) -> None:
+        """Test that GPT-6 Astra specs include cache write and read pricing."""
+        specs = openai_fetcher._get_static_model_specs("gpt-6-astra")
+
+        assert specs is not None
+        assert specs["api_identifier"] == "gpt-6-astra"
+        assert specs["context_window_input"] == 922000
+        assert specs["context_window_output"] == 128000
+        assert specs["release_date"] == "2026-09-03"
+        assert specs["pricing"] == {
+            "input_per_1m": 10.0,
+            "output_per_1m": 50.0,
+            "cache_write_per_1m": 12.5,
+            "cache_read_per_1m": 1.0,
+        }
+        assert specs["cost_tier"] == "premium"
 
     def test_get_static_specs_unknown_model_returns_none(
         self, openai_fetcher: OpenAIFetcher
@@ -143,10 +180,9 @@ class TestAPIFetching:
         models = openai_fetcher.fetch_from_api()
 
         # Verify
-        assert len(models) == 2  # gpt-4o and gpt-4o-mini
+        assert len(models) == 12
         assert all(isinstance(m, ModelData) for m in models)
-        assert any(m.model_id == "gpt-4o" for m in models)
-        assert any(m.model_id == "gpt-4o-mini" for m in models)
+        assert [m.model_id for m in models] == ALL_OPENAI_MODELS
 
         # Verify API was called
         mock_openai_class.assert_called_once_with(api_key="test-api-key")
@@ -183,20 +219,19 @@ class TestAPIFetching:
         # Mock successful list but failed retrieve for one model
         mock_client.models.list.return_value = Mock()
 
-        # First retrieve (gpt-4o) fails, second (gpt-4o-mini) succeeds
-        mock_model = Mock()
-        mock_model.id = "gpt-4o-mini"
-        mock_client.models.retrieve.side_effect = [
-            Exception("Model not found"),
-            mock_model,
-        ]
+        # Retrieving gpt-4o fails; every other model succeeds
+        def retrieve(model_id: str) -> Mock:
+            if model_id == "gpt-4o":
+                raise RuntimeError("Model not found")
+            return Mock(id=model_id)
+
+        mock_client.models.retrieve.side_effect = retrieve
 
         # Execute
         models = openai_fetcher.fetch_from_api()
 
-        # Should return only the successful model
-        assert len(models) == 1
-        assert models[0].model_id == "gpt-4o-mini"
+        # Should return every model except the failed one
+        assert [m.model_id for m in models] == [m for m in ALL_OPENAI_MODELS if m != "gpt-4o"]
 
     @patch.dict("os.environ", {"OPENAI_API_KEY": "test-api-key"})
     @patch("openai.OpenAI")
@@ -213,21 +248,18 @@ class TestAPIFetching:
         mock_model = Mock()
         mock_client.models.retrieve.return_value = mock_model
 
-        # Get real specs for gpt-4o-mini once before patching
-        real_specs = openai_fetcher._get_static_model_specs("gpt-4o-mini")
+        real_get_specs = openai_fetcher._get_static_model_specs
 
-        # Patch _get_static_model_specs to return None for one model
+        # Patch _get_static_model_specs to return None for gpt-4o only
         with patch.object(openai_fetcher, "_get_static_model_specs") as mock_get_specs:
-            mock_get_specs.side_effect = [
-                None,  # gpt-4o has no specs
-                real_specs,  # gpt-4o-mini has specs
-            ]
+            mock_get_specs.side_effect = lambda model_id: (
+                None if model_id == "gpt-4o" else real_get_specs(model_id)
+            )
 
             models = openai_fetcher.fetch_from_api()
 
-            # Should only return gpt-4o-mini
-            assert len(models) == 1
-            assert models[0].model_id == "gpt-4o-mini"
+            # gpt-4o is skipped; the rest are returned
+            assert [m.model_id for m in models] == [m for m in ALL_OPENAI_MODELS if m != "gpt-4o"]
 
     @patch.dict("os.environ", {"OPENAI_API_KEY": "test-api-key"})
     @patch("openai.OpenAI")
@@ -254,10 +286,12 @@ class TestAPIFetching:
         assert gpt4o.context_window_output == 16384
         assert gpt4o.knowledge_cutoff == "October 2023"
         assert gpt4o.release_date == date(2024, 8, 6)
-        assert gpt4o.docs_url == "https://platform.openai.com/docs/models/gpt-4o"
+        assert gpt4o.docs_url == "https://developers.openai.com/api/docs/models"
         assert "vision" in gpt4o.capabilities
         assert gpt4o.input_per_1m == 2.50
         assert gpt4o.output_per_1m == 10.00
+        assert gpt4o.cache_write_per_1m is None
+        assert gpt4o.cache_read_per_1m == 1.25
         assert gpt4o.cost_tier == "mid-tier"
         assert gpt4o.speed_tier == "balanced"
         assert gpt4o.source == "openai_api"
@@ -275,10 +309,8 @@ class TestDocsFallback:
         """Test that fetch_from_docs returns all supported models."""
         models = openai_fetcher.fetch_from_docs()
 
-        assert len(models) == 2
-        model_ids = [m.model_id for m in models]
-        assert "gpt-4o" in model_ids
-        assert "gpt-4o-mini" in model_ids
+        assert len(models) == 12
+        assert [m.model_id for m in models] == ALL_OPENAI_MODELS
 
     def test_fetch_from_docs_creates_valid_model_data(self, openai_fetcher: OpenAIFetcher) -> None:
         """Test that docs-based models have all required fields."""
@@ -411,7 +443,7 @@ class TestEdgeCases:
             "notes",
         }
 
-        for model_id in ["gpt-4o", "gpt-4o-mini"]:
+        for model_id in ALL_OPENAI_MODELS:
             specs = openai_fetcher._get_static_model_specs(model_id)
             assert specs is not None
             assert required_keys.issubset(set(specs.keys()))

@@ -22,7 +22,7 @@ Production-grade prompt patterns and multi-cloud AI orchestration for product te
 **Key Benefits:**
 - **Proven ROI:** 99.7% cost reduction through intelligent model cascading (Haiku → Sonnet → Opus)
 - **Production Metrics:** 95% accuracy on 5K+ weekly signals, validated on $100M+ ARR systems
-- **Multi-Model Expertise:** Optimized patterns for Claude 4.x, GPT-4o, Gemini 2.5 families
+- **Multi-Model Expertise:** Optimized patterns for Claude 5.x, GPT-6.x, Gemini 3.x and 4 families
 - **Zero to Production:** Complete examples with evaluation methodology, not just prompts
 - **Developer Tools:** Python package with YAML-based model registry, pricing service, capability validation
 
@@ -39,7 +39,7 @@ cd PM-Prompt-Patterns
 pip install -e .
 
 # Verify installation
-python -c "from ai_models import get_model; print(get_model('claude-sonnet-4-5').name)"
+python -c "from ai_models import get_model; print(get_model('claude-sonnet-5-5').name)"
 ```
 
 **Next Steps by Role:**
@@ -79,8 +79,8 @@ The toolkit supports **6 AI providers** with intelligent routing and cost optimi
 - **Anthropic Claude** (direct API) - Haiku, Sonnet, Opus
 - **AWS Bedrock** - Claude models via AWS infrastructure
 - **Google Vertex AI** - Claude models via Google Cloud
-- **OpenAI** - GPT-5 (all variants), GPT-4.1, o3, o4-mini, GPT-4o
-- **Google Gemini** - Gemini 2.5 Pro, Flash, Flash Lite
+- **OpenAI** - GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna
+- **Google Gemini** - Gemini 4 Argon, Gemini 3.8 Flash, Gemini 3.5 Flash-Lite
 - **Mock Provider** - Zero-cost testing provider
 
 **Installation:**
@@ -135,19 +135,19 @@ GOOGLE_API_KEY=your_key_here
 from pm_prompt_toolkit.providers import get_provider
 
 # Explicit provider selection with prefix
-claude = get_provider("anthropic:claude-sonnet-4-5")
-bedrock = get_provider("bedrock:claude-sonnet-4-5")
-vertex = get_provider("vertex:claude-sonnet-4-5")
-openai = get_provider("openai:gpt-5")  # GPT-5 flagship with auto-routing
-gemini = get_provider("gemini:gemini-2-5-pro")
+claude = get_provider("anthropic:claude-sonnet-5-5")
+bedrock = get_provider("bedrock:claude-sonnet-5-5")
+vertex = get_provider("vertex:claude-sonnet-5-5")
+openai = get_provider("openai:gpt-6.1-sol")  # OpenAI default
+gemini = get_provider("gemini:gemini-4-argon")
 
 # Automatic routing (Claude models prefer Bedrock if enabled)
-provider = get_provider("claude-sonnet-4-5")  # Uses Bedrock if enabled
+provider = get_provider("claude-sonnet-5-5")  # Uses Bedrock if enabled
 result = provider.classify("We need SSO integration")
 
 # Direct model routing
-openai_provider = get_provider("gpt-5")  # Routes to OpenAI if enabled (auto-routing Instant/Thinking)
-gemini_provider = get_provider("gemini-2-5-flash")  # Routes to Gemini
+openai_provider = get_provider("gpt-6.1-sol")  # Routes to OpenAI if enabled
+gemini_provider = get_provider("gemini-3-8-flash")  # Routes to Gemini
 
 # Mock provider for testing (zero cost)
 mock = get_provider("mock:claude-sonnet")
@@ -157,7 +157,7 @@ mock = get_provider("mock:claude-sonnet")
 - **Bedrock:** Enterprise AWS infrastructure, AWS-native billing, regional data residency
 - **Vertex AI:** Google Cloud integration, GCP-native billing, unified GCP experience
 - **OpenAI:** Advanced function calling, structured outputs, multimodal
-- **Gemini:** 2M token context (Pro), ultra-low cost (Flash Lite), context caching
+- **Gemini:** 1M token context (Argon), low cost (Flash-Lite), context caching
 - **Fallback:** Automatically falls back to direct Anthropic API if cloud providers unavailable
 
 ---
@@ -170,7 +170,7 @@ mock = get_provider("mock:claude-sonnet")
 from ai_models import get_model, has_vision, has_prompt_caching
 
 # Get model specifications
-model = get_model("gpt-5")  # GPT-5 flagship
+model = get_model("gpt-6.1-sol")  # GPT-6.1 Sol
 print(f"Context: {model.metadata.context_window_input:,} tokens")
 print(f"Cost: ${model.pricing.input_per_1m}/M input tokens")
 
@@ -178,11 +178,11 @@ print(f"Cost: ${model.pricing.input_per_1m}/M input tokens")
 cost = model.calculate_cost(
     input_tokens=10_000,
     output_tokens=2_000,
-    cached_input_tokens=5_000  # 90% discount on cached tokens
+    cached_input_tokens=5_000  # 95% discount on cached tokens
 )
 
 # Validate capabilities before API calls
-if has_vision("gpt-5"):  # GPT-5 has vision capabilities
+if has_vision("gpt-6.1-sol"):  # GPT-6.1 Sol has vision capabilities
     process_image()
 ```
 
@@ -192,7 +192,7 @@ if has_vision("gpt-5"):  # GPT-5 has vision capabilities
 from ai_models import ModelRegistry
 
 budget_models = ModelRegistry.filter_by_cost_tier("budget")
-# Returns: Haiku 4.5, GPT-5 mini, GPT-4.1 mini, Gemini 2.5 Flash
+# Returns: Haiku 5.5, GPT-6 Luna, Gemini 3.5 Flash-Lite
 ```
 
 **Advanced Examples:** [API Documentation](./docs/api-examples.md) | [Production Architecture](./examples/epic-categorization/)
@@ -209,7 +209,7 @@ prompts = list_prompts()
 # Returns: ['analytics/signal-classification', 'developing-internal-tools/claude-md-generator', ...]
 
 # Automatically select best prompt variant for your model
-model = get_model("gpt-5")  # GPT-5 default model
+model = get_model("gpt-6.1-sol")  # GPT-6.1 Sol default model
 prompt = get_prompt("analytics/signal-classification", model=model.id)
 
 # Or explicitly choose a provider optimization
@@ -222,9 +222,9 @@ gemini_prompt = get_prompt("stakeholder-communication/executive-deck-review", pr
 
 | Provider | Key Optimizations | Best For | Cost/1K Operations |
 |----------|-------------------|----------|-------------------|
-| **Claude** | XML tags, chain-of-thought, caching | Complex reasoning, accuracy | $1-15 |
-| **OpenAI** | Auto-routing modes, reasoning (o3/o4), function calling, JSON mode | Coding (4.1), reasoning (o3), general tasks (GPT-5) | $0.15-40 |
-| **Gemini** | 2M context, caching, batch processing | High volume, cost optimization | $0.038-5 |
+| **Claude** | XML tags, chain-of-thought, caching | Complex reasoning, accuracy | $0.10-10 |
+| **OpenAI** | Function calling, JSON mode | Coding, reasoning, and general tasks (GPT-6.1 Sol), high volume (GPT-6 Luna) | $0.10-10 |
+| **Gemini** | 1M context, caching, batch processing | High volume, cost optimization | $0.30-10 |
 
 **All 13 Prompts Available:**
 - **Analytics:** [signal-classification](./prompts/analytics/signal-classification/)
@@ -244,20 +244,16 @@ Choose the right model for your workload:
 
 | Model | Input/Output (per 1M) | Context | Best For | Our Usage |
 |-------|----------------------|---------|----------|-----------|
-| **Claude Haiku 4.5** | $1/$5 | 200K | High-volume classification | 70% |
-| **Claude Sonnet 4.5** | $3/$15 | 200K | Production workhorse | 25% |
-| **Claude Opus 4.1** | $15/$75 | 200K | High-stakes decisions | 5% |
-| **GPT-5** | $3/$12 | 256K | Flagship auto-routing (Instant/Thinking modes) | Default |
-| **GPT-5 mini** | $0.20/$0.80 | 128K | Fast, efficient GPT-5 variant | Budget |
-| **GPT-4.1** | $2.5/$10 | 200K | Specialized for coding, precise instructions | Coding |
-| **GPT-4.1 mini** | $0.15/$0.60 | 128K | Fast coding model, replaced 4o-mini | Budget coding |
-| **o3** | $10/$40 | 128K | Advanced reasoning, full tool access | Complex reasoning |
-| **o4-mini** | $1/$4 | 128K | Fast, cost-efficient reasoning | Math/coding |
-| **GPT-4o** | $2.5/$10 | 128K | Multimodal specialist (voice, vision) | Multimodal |
-| **Gemini 2.5 Pro** | $1.25/$5 | 2M | Massive context analysis | Large docs |
-| **Gemini 2.5 Flash** | $0.075/$0.30 | 1M | Speed-critical apps | Real-time |
+| **Claude Haiku 5.5** | $0.10/$0.50 | 1M | High-volume classification | 70% |
+| **Claude Sonnet 5.5** | $2/$10 | 1M | Production workhorse | 25% |
+| **Claude Opus 5.5** | $4/$20 | 1M | High-stakes decisions | 5% |
+| **GPT-6.1 Sol** | $2/$10 | 922K | General production, coding, and reasoning | Default |
+| **GPT-6.1 Terra** | $1/$5 | 922K | Cost-sensitive production workloads | Budget |
+| **GPT-6 Luna** | $0.10/$0.50 | 922K | High-volume, low-cost tasks; multimodal | High volume |
+| **Gemini 4 Argon** | $2/$10 | 1M | Massive context analysis | Large docs |
+| **Gemini 3.8 Flash** | $0.75/$3.75 | 1M | Speed-critical apps | Real-time |
 
-*Pricing verified October 2025. See [MODEL_OPTIMIZATION_GUIDE.md](./MODEL_OPTIMIZATION_GUIDE.md) for detailed comparison.*
+*Pricing verified October 2026 (Gemini 4 Argon and 3.8 Flash at launch prices). See [MODEL_OPTIMIZATION_GUIDE.md](./MODEL_OPTIMIZATION_GUIDE.md) for detailed comparison.*
 
 ### Cost Optimization Pattern
 

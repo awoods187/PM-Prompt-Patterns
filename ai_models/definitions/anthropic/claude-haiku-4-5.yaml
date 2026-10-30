@@ -1,6 +1,6 @@
 # Claude Haiku 4.5 Model Definition
-# Last verified: 2025-10-25
-# Source: https://docs.claude.com/en/docs/about-claude/models
+# Last verified: 2026-10-30
+# Source: https://platform.claude.com/docs/en/about-claude/models/overview
 
 schema_version: "1.0.0"
 model_id: "claude-haiku-4-5"
@@ -13,8 +13,8 @@ metadata:
   context_window_output: null
   knowledge_cutoff: "February 2025"
   release_date: "2025-10-01"
-  last_verified: "2025-10-29"
-  docs_url: "https://docs.claude.com/en/docs/about-claude/models"
+  last_verified: "2026-10-30"
+  docs_url: "https://platform.claude.com/docs/en/models/haiku-4-5/overview"
 
 capabilities:
   - text_input
@@ -50,4 +50,4 @@ optimization:
   cost_tier: "budget"
   speed_tier: "fast"
 
-notes: "Fast processing model. Price INCREASED from Haiku 3.x ($0.25→$1.00 input, $1.25→$5.00 output) but capabilities greatly enhanced. Training data through July 2025."
+notes: "Legacy model, still active. Claude Haiku 5.5 is the current Haiku and is cheaper for prompts under 100k tokens."

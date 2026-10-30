@@ -14,7 +14,7 @@ Three-tier routing logic:
 Example:
     >>> from pm_prompt_toolkit.providers import get_provider
     >>> # Explicit provider selection
-    >>> provider = get_provider("bedrock:claude-sonnet-4-5")
+    >>> provider = get_provider("bedrock:claude-sonnet-5-5")
     >>> # Automatic provider selection
     >>> provider = get_provider("claude-sonnet")
     >>> result = provider.classify("We need SSO")
@@ -54,7 +54,7 @@ def get_provider(
 
     This function implements three-tier routing logic:
     1. **Explicit prefix** (highest priority):
-       - bedrock:claude-sonnet-4-5 → BedrockProvider
+       - bedrock:claude-sonnet-5-5 → BedrockProvider
        - vertex:claude-opus-4 → VertexProvider
        - mock:claude-sonnet → MockProvider
 
@@ -80,7 +80,7 @@ def get_provider(
 
     Examples:
         >>> # Explicit provider selection
-        >>> provider = get_provider("bedrock:claude-sonnet-4-5")
+        >>> provider = get_provider("bedrock:claude-sonnet-5-5")
         >>> provider = get_provider("vertex:claude-opus-4")
 
         >>> # Automatic selection based on enabled providers
@@ -96,7 +96,7 @@ def get_provider(
         raise ValueError(
             f"Unknown model: {model}. "
             f"Supported models: claude-haiku, claude-sonnet, claude-opus, "
-            f"gpt-4, gpt-4o, gpt-4o-mini, gemini-2-5-pro, gemini-2-5-flash. "
+            f"gpt-6.1-sol, gpt-6-astra, gpt-6.1-terra, gpt-6-luna, gemini-3-8-flash, gemini-4-argon. "
             f"See README.md for full list and setup instructions."
         )
 
@@ -117,10 +117,9 @@ def get_provider(
 
     # Check if model is a Claude model
     claude_models = [
-        "claude-sonnet-4-5",
-        "claude-sonnet-4",
-        "claude-opus-4-1",
-        "claude-opus-4",
+        "claude-sonnet-5-5",
+        "claude-opus-5-5",
+        "claude-haiku-5-5",
         "claude-sonnet",
         "claude-haiku",
         "claude-opus",
@@ -153,7 +152,15 @@ def get_provider(
         return ClaudeProvider(model=model_normalized, enable_caching=enable_caching)
 
     # Check for OpenAI models
-    openai_models = ["gpt-4", "gpt-4o", "gpt-4o-mini", "gpt-3.5", "gpt-4o", "o1", "o1-mini"]
+    openai_models = [
+        "gpt-6.1-sol",
+        "gpt-6-astra",
+        "gpt-6.1-terra",
+        "gpt-6-luna",
+        "o3",
+        "o3-pro",
+        "o4-mini",
+    ]
     if any(model_normalized in m for m in openai_models) or model_normalized.startswith("gpt"):
         if settings.enable_openai:
             logger.info(f"Routing OpenAI model '{model_normalized}' to OpenAI provider")
@@ -167,24 +174,23 @@ def get_provider(
 
     # Check for Gemini models
     gemini_models = [
+        "gemini-4-argon",
+        "gemini-3-8-flash",
+        "gemini-3-5-flash-lite",
         "gemini-2-5-pro",
         "gemini-2-5-flash",
         "gemini-2-5-flash-lite",
-        "gemini-2-5-pro",
-        "gemini-2-5-flash",
-        "gemini-1.5",
-        "gemini-2.0",
     ]
     if any(model_normalized in m for m in gemini_models) or model_normalized.startswith("gemini"):
-        logger.info(f"Routing Gemini model '{model_normalized}' to Gemini 2.5 Provider")
+        logger.info(f"Routing Gemini model '{model_normalized}' to Gemini provider")
         return GeminiProvider(model=model_normalized, enable_caching=enable_caching)
 
     # Unknown model
     raise ValueError(
         f"Unknown model: {model}. "
         f"Supported models: Claude (claude-haiku, claude-sonnet, claude-opus), "
-        f"OpenAI (gpt-4, gpt-4o, gpt-4o-mini, gpt-4o), "
-        f"Gemini (gemini-2-5-pro, gemini-2-5-flash, gemini-2-5-flash-lite). "
+        f"OpenAI (gpt-6.1-sol, gpt-6-astra, gpt-6.1-terra, gpt-6-luna), "
+        f"Gemini (gemini-3-8-flash, gemini-4-argon, gemini-3-5-flash-lite). "
         f"See README.md for full list and setup instructions."
     )
 

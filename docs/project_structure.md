@@ -58,9 +58,7 @@ PM-Prompt-Patterns/
 │   ├── license_faq.md         # License FAQ
 │   ├── prompt_design_principles.md  # Prompt design principles
 │   ├── python_package_readme.md     # Python package documentation
-│   ├── project_structure.md   # This file
-│   └── workflows/             # Workflow documentation
-│       └── MODEL_UPDATE_WORKFLOW.md
+│   └── project_structure.md   # This file
 │
 ├── examples/                   # Usage examples
 │   ├── basic_example.py       # Basic usage example
@@ -79,7 +77,7 @@ PM-Prompt-Patterns/
 │   │   ├── base.py           # Base provider interface
 │   │   ├── claude.py         # Anthropic Claude provider
 │   │   ├── openai.py         # OpenAI GPT provider
-│   │   ├── gemini.py         # Google Gemini 2.5 Provider
+│   │   ├── gemini.py         # Google Gemini Provider
 │   │   ├── bedrock.py        # AWS Bedrock provider
 │   │   ├── vertex.py         # Google Vertex AI provider
 │   │   ├── mock.py           # Mock provider for testing

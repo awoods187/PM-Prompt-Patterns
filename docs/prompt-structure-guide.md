@@ -124,7 +124,7 @@ This structure reduces duplication by ~80% while maintaining copy/paste-ready mo
 - **XML structure**: Uses XML tags for clear task delineation
 - **Structured thinking**: Encourages `<thinking>` tags for complex reasoning
 - **Prompt caching**: Static content is cacheable for cost savings
-- **Extended context**: Leverages Claude's 200K token context window
+- **Extended context**: Leverages Claude's 1M token context window
 
 ## Usage
 
@@ -132,7 +132,7 @@ This structure reduces duplication by ~80% while maintaining copy/paste-ready mo
 from pm_prompt_toolkit.providers import get_provider
 
 # Initialize Claude provider with caching
-provider = get_provider("claude-sonnet-4-5", enable_caching=True)
+provider = get_provider("claude-sonnet-5-5", enable_caching=True)
 
 result = provider.generate(
     system_prompt="<prompt from above>",
@@ -177,7 +177,7 @@ result = provider.generate(
 - **Clear role definition**: Explicit system message with responsibilities
 - **Structured output**: Consistent formatting instructions
 - **Function calling ready**: Can combine with function schemas
-- **Concise directives**: Optimized for GPT-4's instruction-following
+- **Concise directives**: Optimized for GPT-6 Luna's instruction-following
 
 ## Usage
 
@@ -185,7 +185,7 @@ result = provider.generate(
 from pm_prompt_toolkit.providers import get_provider
 
 # Initialize OpenAI provider
-provider = get_provider("gpt-4o")
+provider = get_provider("gpt-6-luna")
 
 result = provider.generate(
     system_prompt="<prompt from above>",
@@ -195,9 +195,7 @@ result = provider.generate(
 
 ## Model Recommendations
 
-- **gpt-4o**: Best balance of speed, quality, and cost
-- **gpt-4o-mini**: Faster and more cost-effective for simpler tasks
-- **gpt-4-turbo**: Use for extended context needs (>128k tokens)
+- **gpt-6-luna**: Best balance of speed, quality, and cost
 
 ## See Also
 
@@ -245,7 +243,7 @@ result = provider.generate(
 from pm_prompt_toolkit.providers import get_provider
 
 # Initialize Gemini provider
-provider = get_provider("gemini-2.0-flash-exp")
+provider = get_provider("gemini-3-8-flash")
 
 result = provider.generate(
     system_instruction="<prompt from above>",
@@ -255,9 +253,8 @@ result = provider.generate(
 
 ## Model Recommendations
 
-- **gemini-2.0-flash-exp**: Best for most use cases (fast, high quality)
-- **gemini-1.5-pro**: Maximum context window (2M tokens)
-- **gemini-1.5-flash**: Fastest option for simpler tasks
+- **gemini-3-8-flash**: Best for most use cases (fast, high quality)
+- **gemini-4-argon**: Hardest reasoning and agentic tasks
 
 ## See Also
 

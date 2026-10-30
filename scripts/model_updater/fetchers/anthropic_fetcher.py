@@ -4,17 +4,307 @@
 """Anthropic Claude model fetcher."""
 
 import os
-from datetime import date
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from scripts.model_updater.fetchers.base_fetcher import BaseFetcher, ModelData
 
 if TYPE_CHECKING:
     import anthropic
 
+DOCS_URL = "https://platform.claude.com/docs/en/about-claude/models/overview"
+
+# Static specs mirror ai_models/definitions/anthropic/*.yaml (last verified 2026-10-30).
+# Keep them in sync: tests/test_model_updater/test_static_specs_match_definitions.py
+# fails if a YAML and this table disagree.
+_STATIC_SPECS: dict[str, dict[str, Any]] = {
+    "claude-fable-5-1": {
+        "name": "Claude Fable 5.1",
+        "api_identifier": "claude-fable-5-1",
+        "context_window_input": 1000000,
+        "context_window_output": 128000,
+        "knowledge_cutoff": "June 2026",
+        "release_date": "2026-09-01",
+        "capabilities": [
+            "text_input",
+            "text_output",
+            "function_calling",
+            "vision",
+            "large_context",
+            "prompt_caching",
+            "streaming",
+            "json_mode",
+        ],
+        "pricing": {
+            "input_per_1m": 10.0,
+            "output_per_1m": 50.0,
+            "cache_write_per_1m": 12.5,
+            "cache_read_per_1m": 0.25,
+        },
+        "cost_tier": "premium",
+        "speed_tier": "thorough",
+        "recommended_for": [
+            "Demanding multi-step reasoning",
+            "Long-horizon agentic work",
+            "Tasks where Opus 5.5 at high effort still falls short",
+        ],
+        "best_practices": [
+            "Start with claude-opus-5-5 and move up only when evals require it",
+            "Thinking is always on; steer depth with the effort parameter",
+            "Cache long system prompts: cache reads cost 2.5% of base input",
+        ],
+        "notes": "Anthropic's most capable generally available model. Retirement not sooner than 2027-09-01.",
+    },
+    "claude-opus-5-5": {
+        "name": "Claude Opus 5.5",
+        "api_identifier": "claude-opus-5-5",
+        "context_window_input": 1000000,
+        "context_window_output": 128000,
+        "knowledge_cutoff": "June 2026",
+        "release_date": "2026-09-22",
+        "capabilities": [
+            "text_input",
+            "text_output",
+            "function_calling",
+            "vision",
+            "large_context",
+            "prompt_caching",
+            "streaming",
+            "json_mode",
+        ],
+        "pricing": {
+            "input_per_1m": 4.0,
+            "output_per_1m": 20.0,
+            "cache_write_per_1m": 5.0,
+            "cache_read_per_1m": 0.2,
+        },
+        "cost_tier": "premium",
+        "speed_tier": "balanced",
+        "recommended_for": [
+            "Long-running agentic coding",
+            "Complex analysis and knowledge work",
+            "Default choice for most demanding workloads",
+        ],
+        "best_practices": [
+            "Thinking is always on; steer depth with the effort parameter (default medium)",
+            "Do not set temperature, top_p, or top_k",
+            "Cache long system prompts: cache reads cost 5% of base input",
+        ],
+        "notes": "Anthropic's recommended starting model for most workloads. Replaces claude-opus-4-1 in this library. Retirement not sooner than 2027-09-22.",
+    },
+    "claude-sonnet-5-5": {
+        "name": "Claude Sonnet 5.5",
+        "api_identifier": "claude-sonnet-5-5",
+        "context_window_input": 1000000,
+        "context_window_output": 128000,
+        "knowledge_cutoff": "June 2026",
+        "release_date": "2026-09-28",
+        "capabilities": [
+            "text_input",
+            "text_output",
+            "function_calling",
+            "vision",
+            "large_context",
+            "prompt_caching",
+            "streaming",
+            "json_mode",
+        ],
+        "pricing": {
+            "input_per_1m": 2.0,
+            "output_per_1m": 10.0,
+            "cache_write_per_1m": 2.5,
+            "cache_read_per_1m": 0.1,
+        },
+        "cost_tier": "mid-tier",
+        "speed_tier": "fast",
+        "recommended_for": [
+            "Production workhorse applications",
+            "Code generation and review",
+            "Document analysis and summarization",
+            "Multi-step instructions",
+        ],
+        "best_practices": [
+            "Use XML tags for structured prompts",
+            "Enable prompt caching for repeated system prompts (cache reads cost 5% of base input)",
+            "Do not set temperature, top_p, or top_k",
+            "Forced tool use (tool_choice any/tool) returns an error; use auto",
+        ],
+        "notes": "RECOMMENDED default for most use cases. Replaces claude-sonnet-4-5. Retirement not sooner than 2027-09-28.",
+    },
+    "claude-haiku-5-5": {
+        "name": "Claude Haiku 5.5",
+        "api_identifier": "claude-haiku-5-5",
+        "context_window_input": 1000000,
+        "context_window_output": 128000,
+        "knowledge_cutoff": "June 2026",
+        "release_date": "2026-10-07",
+        "capabilities": [
+            "text_input",
+            "text_output",
+            "function_calling",
+            "vision",
+            "large_context",
+            "prompt_caching",
+            "streaming",
+            "json_mode",
+        ],
+        "pricing": {
+            "input_per_1m": 0.1,
+            "output_per_1m": 0.5,
+            "cache_write_per_1m": 0.125,
+            "cache_read_per_1m": 0.01,
+        },
+        "cost_tier": "budget",
+        "speed_tier": "fast",
+        "recommended_for": [
+            "High-volume classification and routing",
+            "Extraction",
+            "Subagent tasks",
+            "Latency-sensitive applications",
+        ],
+        "best_practices": [
+            "Keep prompts under 100k tokens to stay on the lower price tier",
+            "Do not set temperature, top_p, or top_k",
+            "Expect about 30% more tokens than Haiku 4.5 for the same text (newer tokenizer)",
+        ],
+        "notes": "Prices shown are for prompts up to 100k tokens. Prompts over 100k cost $0.50 input / $2.50 output / $0.625 cache write / $0.05 cache read per 1M. Retirement not sooner than 2027-10-07.",
+    },
+    "claude-sonnet-4-5": {
+        "name": "Claude Sonnet 4.5",
+        "api_identifier": "claude-sonnet-4-5-20250929",
+        "context_window_input": 200000,
+        "context_window_output": None,
+        "knowledge_cutoff": "January 2025",
+        "release_date": "2025-09-29",
+        "capabilities": [
+            "text_input",
+            "text_output",
+            "function_calling",
+            "vision",
+            "large_context",
+            "prompt_caching",
+            "streaming",
+            "json_mode",
+        ],
+        "pricing": {
+            "input_per_1m": 3.0,
+            "output_per_1m": 15.0,
+            "cache_write_per_1m": 3.75,
+            "cache_read_per_1m": 0.3,
+        },
+        "cost_tier": "mid-tier",
+        "speed_tier": "balanced",
+        "recommended_for": [
+            "Production workhorse applications",
+            "Complex analysis and reasoning tasks",
+            "Long-form content generation",
+            "Code generation and review",
+            "Multi-step instructions",
+            "Document analysis and summarization",
+        ],
+        "best_practices": [
+            "Use XML tags for structured prompts (Claude's native format)",
+            "Enable prompt caching for repeated system prompts (90% cost savings)",
+            "Leverage 200k context window for comprehensive analysis",
+            "Use function calling for structured outputs",
+            "Place examples in system prompt to benefit from caching",
+            "Use thinking tags for complex reasoning tasks",
+        ],
+        "notes": "DEPRECATED: Anthropic deprecated Claude Sonnet 4.5 on 2026-09-30 and retires it on the Claude API on 2026-11-30. Migrate to claude-sonnet-5-5.",
+    },
+    "claude-haiku-4-5": {
+        "name": "Claude Haiku 4.5",
+        "api_identifier": "claude-haiku-4-5-20251001",
+        "context_window_input": 200000,
+        "context_window_output": None,
+        "knowledge_cutoff": "February 2025",
+        "release_date": "2025-10-01",
+        "capabilities": [
+            "text_input",
+            "text_output",
+            "function_calling",
+            "vision",
+            "large_context",
+            "prompt_caching",
+            "streaming",
+            "json_mode",
+        ],
+        "pricing": {
+            "input_per_1m": 1.0,
+            "output_per_1m": 5.0,
+            "cache_write_per_1m": 1.25,
+            "cache_read_per_1m": 0.1,
+        },
+        "cost_tier": "budget",
+        "speed_tier": "fast",
+        "recommended_for": [
+            "High-volume classification tasks",
+            "Fast processing requirements",
+            "Real-time applications",
+            "Cost-conscious projects",
+            "Simple content generation",
+            "Data extraction and parsing",
+        ],
+        "best_practices": [
+            "Ideal for tasks under 10 seconds response time",
+            "Use for high-frequency API calls (>1000/day)",
+            "Enable prompt caching for maximum cost savings",
+            "Perfect for customer signal classification",
+            "Use XML tags for best structured output",
+            "Cascade from Haiku to Sonnet for edge cases",
+        ],
+        "notes": "Legacy model, still active. Claude Haiku 5.5 is the current Haiku and is cheaper for prompts under 100k tokens.",
+    },
+    "claude-opus-4-1": {
+        "name": "Claude Opus 4.1",
+        "api_identifier": "claude-opus-4-1-20250805",
+        "context_window_input": 200000,
+        "context_window_output": None,
+        "knowledge_cutoff": "December 2024",
+        "release_date": "2025-08-05",
+        "capabilities": [
+            "text_input",
+            "text_output",
+            "function_calling",
+            "vision",
+            "large_context",
+            "prompt_caching",
+            "streaming",
+            "json_mode",
+        ],
+        "pricing": {
+            "input_per_1m": 15.0,
+            "output_per_1m": 75.0,
+            "cache_write_per_1m": 18.75,
+            "cache_read_per_1m": 1.5,
+        },
+        "cost_tier": "premium",
+        "speed_tier": "thorough",
+        "recommended_for": [
+            "Highest quality reasoning tasks",
+            "Complex research and analysis",
+            "Expert-level content generation",
+            "Legal and medical document review",
+            "Scientific reasoning",
+            "Creative writing and ideation",
+        ],
+        "best_practices": [
+            "Use when Sonnet quality is insufficient",
+            "Leverage for complex multi-step reasoning",
+            "Ideal for tasks requiring deep domain expertise",
+            "Worth the premium for business-critical decisions",
+            "Enable caching to reduce costs on repeated prompts",
+            "Use for final review in cascading workflows",
+        ],
+        "notes": "RETIRED on the Claude API on 2026-08-05 (requests fail). Still offered on Amazon Bedrock and Google-managed Vertex AI on their own schedules. Anthropic's listed replacement is claude-opus-4-8; this library migrates to claude-opus-5-5.",
+    },
+}
+
 
 class AnthropicFetcher(BaseFetcher):
     """Fetcher for Anthropic Claude models."""
+
+    # Models tracked in ai_models/definitions/anthropic/, deprecated ones included.
+    MODEL_IDS = tuple(_STATIC_SPECS)
 
     @property
     def provider_name(self) -> str:
@@ -44,8 +334,8 @@ class AnthropicFetcher(BaseFetcher):
     def fetch_from_api(self) -> list[ModelData]:
         """Fetch models using Anthropic API.
 
-        Note: Anthropic doesn't have a models list endpoint yet,
-        so we use a known list and verify with API.
+        The API doesn't expose pricing or context specs, so we use the
+        static table and verify availability with the API.
 
         Returns:
             List of ModelData objects
@@ -61,31 +351,18 @@ class AnthropicFetcher(BaseFetcher):
 
         client = anthropic.Anthropic(api_key=api_key)
 
-        # Known Claude 4.5 models (as of 2025)
-        # Since Anthropic doesn't have a models list endpoint,
-        # we maintain a reference list and verify availability
         known_models = [
             {
-                "model_id": "claude-sonnet-4-5",
-                "api_identifier": "claude-sonnet-4-5-20250929",
-                "name": "Claude Sonnet 4.5",
-            },
-            {
-                "model_id": "claude-haiku-4-5",
-                "api_identifier": "claude-haiku-4-5-20250805",
-                "name": "Claude Haiku 4.5",
-            },
-            {
-                "model_id": "claude-opus-4-1",
-                "api_identifier": "claude-opus-4-1-20250514",
-                "name": "Claude Opus 4.1",
-            },
+                "model_id": model_id,
+                "api_identifier": _STATIC_SPECS[model_id]["api_identifier"],
+                "name": _STATIC_SPECS[model_id]["name"],
+            }
+            for model_id in self.MODEL_IDS
         ]
 
         models = []
         for model_info in known_models:
             try:
-                # Verify model exists by making a small test request
                 model_data = self._get_model_details(
                     client, model_info["api_identifier"], model_info
                 )
@@ -114,35 +391,14 @@ class AnthropicFetcher(BaseFetcher):
         if not model_specs:
             return None
 
-        return ModelData(
-            model_id=base_info["model_id"],
-            provider="anthropic",
-            name=base_info["name"],
-            api_identifier=api_id,
-            context_window_input=model_specs["context_window_input"],
-            context_window_output=model_specs.get("context_window_output"),
-            knowledge_cutoff=model_specs["knowledge_cutoff"],
-            release_date=date.fromisoformat(model_specs["release_date"]),
-            docs_url="https://docs.claude.com/en/docs/about-claude/models",
-            capabilities=model_specs["capabilities"],
-            input_per_1m=model_specs["pricing"]["input_per_1m"],
-            output_per_1m=model_specs["pricing"]["output_per_1m"],
-            cache_write_per_1m=model_specs["pricing"].get("cache_write_per_1m"),
-            cache_read_per_1m=model_specs["pricing"].get("cache_read_per_1m"),
-            recommended_for=model_specs.get("recommended_for", []),
-            best_practices=model_specs.get("best_practices", []),
-            cost_tier=model_specs.get("cost_tier", "mid-tier"),
-            speed_tier=model_specs.get("speed_tier", "balanced"),
-            notes=model_specs.get("notes", ""),
-            source="anthropic_api",
-        )
+        specs = {**model_specs, "name": base_info["name"], "api_identifier": api_id}
+        return self._model_data_from_specs(base_info["model_id"], specs, DOCS_URL, "anthropic_api")
 
     def _get_static_model_specs(self, model_id: str) -> Optional[dict]:
         """Get static model specifications.
 
         This is needed because Anthropic's API doesn't provide
-        model specifications through an endpoint. These specs
-        should be updated periodically from official docs.
+        model specifications through an endpoint.
 
         Args:
             model_id: Model identifier
@@ -150,180 +406,23 @@ class AnthropicFetcher(BaseFetcher):
         Returns:
             Dictionary of model specifications
         """
-        specs = {
-            "claude-sonnet-4-5": {
-                "context_window_input": 200000,
-                "context_window_output": None,
-                "knowledge_cutoff": "January 2025",
-                "release_date": "2025-09-29",
-                "capabilities": [
-                    "text_input",
-                    "text_output",
-                    "function_calling",
-                    "vision",
-                    "large_context",
-                    "prompt_caching",
-                    "streaming",
-                    "json_mode",
-                ],
-                "pricing": {
-                    "input_per_1m": 3.00,
-                    "output_per_1m": 15.00,
-                    "cache_write_per_1m": 3.75,
-                    "cache_read_per_1m": 0.30,
-                },
-                "cost_tier": "mid-tier",
-                "speed_tier": "balanced",
-                "recommended_for": [
-                    "Production workhorse applications",
-                    "Complex analysis and reasoning tasks",
-                    "Long-form content generation",
-                    "Code generation and review",
-                ],
-                "best_practices": [
-                    "Use XML tags for structured prompts (Claude's native format)",
-                    "Enable prompt caching for repeated system prompts (90% cost savings)",
-                    "Leverage 200k context window for comprehensive analysis",
-                    "Use function calling for structured outputs",
-                ],
-                "notes": "RECOMMENDED for most use cases. Training data through July 2025.",
-            },
-            "claude-haiku-4-5": {
-                "context_window_input": 200000,
-                "context_window_output": 16000,
-                "knowledge_cutoff": "July 2024",
-                "release_date": "2025-08-05",
-                "capabilities": [
-                    "text_input",
-                    "text_output",
-                    "function_calling",
-                    "vision",
-                    "large_context",
-                    "prompt_caching",
-                    "streaming",
-                    "json_mode",
-                ],
-                "pricing": {
-                    "input_per_1m": 0.80,
-                    "output_per_1m": 4.00,
-                    "cache_write_per_1m": 1.00,
-                    "cache_read_per_1m": 0.08,
-                },
-                "cost_tier": "budget",
-                "speed_tier": "fast",
-                "recommended_for": [
-                    "High-volume applications",
-                    "Fast response requirements",
-                    "Simple classification tasks",
-                    "Content moderation",
-                ],
-                "best_practices": [
-                    "Use for high-throughput workloads",
-                    "Leverage speed for real-time applications",
-                    "Enable caching for cost optimization",
-                    "Good for simple to moderate complexity tasks",
-                ],
-                "notes": "Fastest Claude model. Best for high-volume, cost-sensitive applications.",
-            },
-            "claude-opus-4-1": {
-                "context_window_input": 200000,
-                "context_window_output": 16000,
-                "knowledge_cutoff": "August 2024",
-                "release_date": "2025-05-14",
-                "capabilities": [
-                    "text_input",
-                    "text_output",
-                    "function_calling",
-                    "vision",
-                    "large_context",
-                    "prompt_caching",
-                    "streaming",
-                    "json_mode",
-                ],
-                "pricing": {
-                    "input_per_1m": 15.00,
-                    "output_per_1m": 75.00,
-                    "cache_write_per_1m": 18.75,
-                    "cache_read_per_1m": 1.50,
-                },
-                "cost_tier": "premium",
-                "speed_tier": "thorough",
-                "recommended_for": [
-                    "Complex research and analysis",
-                    "Advanced reasoning tasks",
-                    "Critical decision support",
-                    "High-stakes content generation",
-                ],
-                "best_practices": [
-                    "Reserve for most demanding tasks",
-                    "Use caching extensively to reduce costs",
-                    "Leverage extended thinking for complex problems",
-                    "Best for tasks requiring highest accuracy",
-                ],
-                "notes": "Most capable Claude model. Use for tasks requiring maximum intelligence.",
-            },
-        }
-
-        return specs.get(model_id)  # type: ignore[return-value]
+        return _STATIC_SPECS.get(model_id)
 
     def fetch_from_docs(self) -> list[ModelData]:
-        """Fetch models by parsing Anthropic documentation.
+        """Fetch models from the static specifications (docs fallback).
 
         Returns:
             List of ModelData objects
         """
-        # For now, fallback to static specs
-        # In production, this would parse the actual docs page
+        # Docs parsing isn't implemented; the static table is the fallback.
         self.logger.info("Using static model specifications (docs parsing not implemented)")
 
         models = []
-        for model_id in ["claude-sonnet-4-5", "claude-haiku-4-5", "claude-opus-4-1"]:
+        for model_id in self.MODEL_IDS:
             specs = self._get_static_model_specs(model_id)
             if specs:
-                # Infer API identifier from model_id and release date
-                api_id = self._infer_api_identifier(model_id, specs["release_date"])
-
                 models.append(
-                    ModelData(
-                        model_id=model_id,
-                        provider="anthropic",
-                        name=specs.get("name", model_id.replace("-", " ").title()),
-                        api_identifier=api_id,
-                        context_window_input=specs["context_window_input"],
-                        context_window_output=specs.get("context_window_output"),
-                        knowledge_cutoff=specs["knowledge_cutoff"],
-                        release_date=date.fromisoformat(specs["release_date"]),
-                        docs_url="https://docs.claude.com/en/docs/about-claude/models",
-                        capabilities=specs["capabilities"],
-                        input_per_1m=specs["pricing"]["input_per_1m"],
-                        output_per_1m=specs["pricing"]["output_per_1m"],
-                        cache_write_per_1m=specs["pricing"].get("cache_write_per_1m"),
-                        cache_read_per_1m=specs["pricing"].get("cache_read_per_1m"),
-                        recommended_for=specs.get("recommended_for", []),
-                        best_practices=specs.get("best_practices", []),
-                        cost_tier=specs.get("cost_tier", "mid-tier"),
-                        speed_tier=specs.get("speed_tier", "balanced"),
-                        notes=specs.get("notes", ""),
-                        source="anthropic_docs",
-                    )
+                    self._model_data_from_specs(model_id, specs, DOCS_URL, "anthropic_docs")
                 )
 
         return models
-
-    def _infer_api_identifier(self, model_id: str, release_date: str) -> str:
-        """Infer API identifier from model ID and release date.
-
-        Anthropic uses format: claude-{tier}-{version}-{YYYYMMDD}
-
-        Args:
-            model_id: Model ID (e.g., "claude-sonnet-4-5")
-            release_date: Release date in ISO format
-
-        Returns:
-            API identifier
-        """
-        # Parse date
-        date_obj = date.fromisoformat(release_date)
-        date_str = date_obj.strftime("%Y%m%d")
-
-        return f"{model_id}-{date_str}"

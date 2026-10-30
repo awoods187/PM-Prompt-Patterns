@@ -2,7 +2,7 @@
 
 **Complexity**: 🟡 Intermediate
 **Category**: Technical Documentation
-**Model Compatibility**: ✅ Claude (all) | ✅ GPT-5 | ✅ Gemini
+**Model Compatibility**: ✅ Claude (all) | ✅ GPT-6.1 Sol | ✅ Gemini
 
 ## Overview
 
@@ -308,6 +308,8 @@ The new system provides several benefits:
 | **Claude Opus** | ~3,500 | $0.070 | 97% | Highest quality, expensive |
 | **GPT-5o** | ~3,000 | $0.025 | 92% | Good structured output |
 | **Gemini 2.5 Pro** | ~2,500 | $0.004 | 88% | Budget option |
+
+_Measured on the previous model lineup; not yet re-run on current models._
 
 **Recommended**: Claude Sonnet for production use (best accuracy/cost balance)
 
