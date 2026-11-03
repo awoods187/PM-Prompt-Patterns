@@ -1,8 +1,14 @@
 # Roadmap Planning
 
-🚧 **Coming Soon**
+## Available Prompts
 
-This section will include production-tested prompts for roadmap planning tasks.
+- **[Sales Request Intake](./sales-request-intake/)** - 🔴 Advanced (Claude Code skill)
+  - Turns a sales or CX Slack message into customer needs on Linear projects
+  - Checks the docs for shipped capabilities first, avoids duplicate projects and needs
+  - Ends with a paste-ready Slack reply for the rep
+  - **Best for**: Capturing integration and feature asks from intro calls, demos, and QBRs
+
+## Coming Soon
 
 Planned prompts:
 - Feature prioritization (RICE, ICE frameworks)
