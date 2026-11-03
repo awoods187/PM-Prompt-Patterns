@@ -51,6 +51,13 @@ Production-tested prompts for building internal tools, libraries, and developmen
   - **Production metrics**: 90%+ test coverage, <1% failure rate, 100% cost visibility
   - **Best for**: LLM-powered applications, provider flexibility, cost optimization
 
+### Automation & Agents
+
+- **[Slack Account Owner Tagger](./slack-account-owner-tagger/)** - 🔴 Advanced
+  - Unattended twice-daily agent that tags HubSpot and Pylon account owners on bot-posted customer questions
+  - Customer vs prospect rate limits, personal-email and dev-post filtering, admin fallback
+  - **Best for**: Routing in-product AI assistant questions to the right account owner
+
 ### Prompt Engineering & Analysis
 
 - **[Prompt Extraction & Cataloging System](./prompt-extraction-cataloging.md)** - 🔴 Advanced
