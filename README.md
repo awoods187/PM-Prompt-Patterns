@@ -232,7 +232,7 @@ gemini_prompt = get_prompt("stakeholder-communication/executive-deck-review", pr
 - **Roadmap Planning:** [sales-request-intake](./prompts/roadmap-planning/sales-request-intake/), [file-project](./prompts/roadmap-planning/file-project/), [file-ticket](./prompts/roadmap-planning/file-ticket/) (Claude Code skills)
 - **Strategy:** [meta-prompt-designer](./prompts/product-strategy/meta-prompt-designer/), [opus-code-execution-pattern](./prompts/product-strategy/opus-code-execution-pattern/)
 - **Communication:** [executive-deck-review](./prompts/stakeholder-communication/executive-deck-review/), [remove-ai-writing-patterns](./prompts/stakeholder-communication/remove-ai-writing-patterns/), [how-to-guide](./prompts/stakeholder-communication/how-to-guide/) (Claude Code skill)
-- **Customer Research:** [call-notes](./prompts/customer-research/call-notes/), [closed-lost-thank-you](./prompts/customer-research/closed-lost-thank-you/) (Claude Code skills)
+- **Customer Research:** [call-notes](./prompts/customer-research/call-notes/), [closed-lost-thank-you](./prompts/customer-research/closed-lost-thank-you/) (Claude Code skills), [closed-lost-feedback-agent](./prompts/customer-research/closed-lost-feedback-agent/)
 
 **Total:** 13 prompts × 4 variants (base + Claude + OpenAI + Gemini) = **52 optimized prompt variants**
 
