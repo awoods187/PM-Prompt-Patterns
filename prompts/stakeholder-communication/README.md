@@ -20,6 +20,11 @@ Production-tested prompts for effective executive and cross-functional communica
   - Makes documentation more natural and human-like
   - Best for: Executive communications, customer-facing docs, professional writing
 
+- **[How-To Guide Writer](./how-to-guide/)** - 🟡 Intermediate (Claude Code skill)
+  - Turns docs, specs, transcripts, or notes into a Diátaxis-compliant how-to guide (.md)
+  - Names the reader's goal, cuts explanation and reference material, sequences for real workflow
+  - Best for: Runbooks, playbooks, rewriting feature-shaped docs into task-shaped ones
+
 ---
 
 ## Coming Soon
