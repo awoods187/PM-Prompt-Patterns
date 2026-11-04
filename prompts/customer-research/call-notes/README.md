@@ -32,7 +32,7 @@ This is a [Claude Code skill](https://docs.claude.com/en/docs/claude-code/skills
 - **Linear MCP server** (`list_projects`, `list_issues`) for linking asks
 - **Google Drive connector** (`create_file`) for delivery; falls back to a local `.md` file
 - **Call recorder MCP** (optional) for fetching transcripts by name
-- `/anti-ai` for the edit pass. This is the [Remove AI Writing Patterns](../../stakeholder-communication/remove-ai-writing-patterns/) prompt installed as a skill.
+- [Remove AI Writing Patterns](../../stakeholder-communication/remove-ai-writing-patterns/) for the edit pass.
 - Optional hand-offs: [`/file-project`](../../roadmap-planning/file-project/) and [`/sales-request`](../../roadmap-planning/sales-request-intake/)
 
 ## 🚀 Setup

@@ -140,7 +140,7 @@ The test is whether the finding survives you not being asked a follow-up questio
 
 Two things stay off limits. Do not edit, reprioritize, reroute, or clear dates on issues and projects that belong to other people, even when you are confident they are wrong; surface it and let the owner decide. And do not rename someone's existing project to match a convention.
 
-## Step 7: Run authored prose through /anti-ai
+## Step 7: Run authored prose through Remove AI Writing Patterns
 
 Everything you wrote in your own voice gets the pass: project descriptions and summaries, customer need bodies, your report, and the Slack reply from Step 10. Apply the diffs before saving.
 
@@ -198,7 +198,7 @@ Write it to the rep in plain words, the way a colleague would reply in a thread:
 
 Keep it under about 120 words. Slack does not render tables or headers, and `<url|text>` link syntax does not survive a paste into the composer, so use bare URLs, `•` bullets, and no bold beyond Slack's single-asterisk `*bold*` if anything needs it. Leave out the internal detail from the report (need IDs, unset priority and lead, label names); the rep cannot act on it. Never imply a timeline. "On the roadmap backlog" is accurate; "coming soon" is a promise nobody made.
 
-Run it through `/anti-ai` with everything else in Step 7. For a request that was already tracked:
+Run it through Remove AI Writing Patterns with everything else in Step 7. For a request that was already tracked:
 
 ```text
 Logged, thanks. GoCardless was already tracked for Harbor Clinics from the Sept 9 demo, so no new project.

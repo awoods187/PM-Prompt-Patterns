@@ -23,7 +23,7 @@ This is a [Claude Code skill](https://docs.claude.com/en/docs/claude-code/skills
 
 ## 🔧 Requirements
 
-- `/anti-ai` for the final pass. This is the [Remove AI Writing Patterns](../../stakeholder-communication/remove-ai-writing-patterns/) prompt installed as a skill.
+- [Remove AI Writing Patterns](../../stakeholder-communication/remove-ai-writing-patterns/) for the final pass.
 
 ## 🚀 Setup
 

@@ -127,9 +127,9 @@ Two habits keep this honest. Quote the customer verbatim where you have their wo
 
 Set `summary` too, in one line under 255 characters. It is what shows in list views and it is the only thing most people will read.
 
-## Step 6: Run the prose through /anti-ai
+## Step 6: Run the prose through Remove AI Writing Patterns
 
-The description and summary are prose a human will read, and text that pattern-matches to generated filler gets skimmed rather than read, which defeats the point of writing it. Run `/anti-ai` on both before saving and apply the diffs.
+The description and summary are prose a human will read, and text that pattern-matches to generated filler gets skimmed rather than read, which defeats the point of writing it. Run the [Remove AI Writing Patterns](../../stakeholder-communication/remove-ai-writing-patterns/) prompt on both before saving and apply the diffs.
 
 Watch particularly for the tells this kind of writing attracts: bolded list lead-ins in the scope section, "it's not just X, it's Y" framing about why the request matters, and three-beat parallel sentences about customer pain. Structured fields, titles, and labels do not need the pass.
 

@@ -28,7 +28,7 @@ If more than one call matches a search, list the candidates and ask which one ra
 3. Enrich with Linear. For every feature ask, integration, and named gap, search `Linear:list_projects` (fall back to `Linear:list_issues` for smaller items) and link the real project inline on the feature name. Never invent a URL. If nothing exists, say so in the doc; a missing project is signal, not an omission to paper over.
 4. Get the call link. If the transcript came from the call recorder or a call can be found there, link the call from the doc title the way the exemplars do. Only use a URL that actually came back from a tool. If none exists, leave the title unlinked.
 5. Draft the doc using the template below. Match it against the exemplars in `references/` (read at least one before your first draft in a session).
-6. Run the draft through the `/anti-ai` skill in edit mode, and fix what it flags before the user sees anything. Notes full of generated-sounding filler will not get read, and worse, will not get trusted.
+6. Run the draft through the [Remove AI Writing Patterns](../../stakeholder-communication/remove-ai-writing-patterns/) prompt, and fix what it flags before the user sees anything. Notes full of generated-sounding filler will not get read, and worse, will not get trusted.
 7. Deliver as a Google Doc (see Output).
 
 Step 6 is not optional.
@@ -84,7 +84,7 @@ Deliver as a Google Doc:
 2. Give the user the Doc link.
 3. If Drive is unavailable or the upload fails, fall back to a local `.md` file presented to the user, and say why.
 
-After the link, add two or three lines flagging what the user should act on: feature asks with no Linear project (offer /file-project), a customer with no Linear customer record (offer /sales-request), or a claim in the doc worth double-checking. Do not narrate the anti-ai pass or the Linear searches.
+After the link, add two or three lines flagging what the user should act on: feature asks with no Linear project (offer /file-project), a customer with no Linear customer record (offer /sales-request), or a claim in the doc worth double-checking. Do not narrate the Remove AI Writing Patterns pass or the Linear searches.
 
 ## Exemplars
 

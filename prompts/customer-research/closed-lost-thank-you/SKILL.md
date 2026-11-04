@@ -20,7 +20,7 @@ Warm and personal, never a sales touch.
 1. Read the notes and pull out what the buyer actually said about the product.
 2. Check for missing pieces and ask for them in one batch (see "What to ask for").
 3. Draft the email using the structure below.
-4. Run the draft through the `/anti-ai` skill and fix what it flags. Do this before showing the user anything.
+4. Run the draft through the [Remove AI Writing Patterns](../../stakeholder-communication/remove-ai-writing-patterns/) prompt and fix what it flags. Do this before showing the user anything.
 5. Deliver the cleaned-up version, subject line included, ready to paste.
 
 Step 4 is not optional. A thank-you note that reads like it came from a language model does the opposite of what this email is for.
@@ -81,7 +81,7 @@ Target 120 to 180 words. If it runs longer than 200, cut the bullets, not the wa
 
 If a message composition tool is available, use it so the user gets a copy or open-in-mail button. Otherwise put the subject line and body in a single code block so the whole thing can be copied in one go.
 
-Add one or two lines after the email noting anything the user should check before sending, such as a roadmap claim that needs confirming. Keep it short. Do not narrate the anti-ai pass or list what it caught.
+Add one or two lines after the email noting anything the user should check before sending, such as a roadmap claim that needs confirming. Keep it short. Do not narrate the Remove AI Writing Patterns pass or list what it caught.
 
 ## Example
 

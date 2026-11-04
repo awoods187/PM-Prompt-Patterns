@@ -31,7 +31,7 @@ This is a [Claude Code skill](https://docs.claude.com/en/docs/claude-code/skills
 
 - **Linear MCP server** (`list_projects`, `list_issues`, `list_project_labels`, `save_project`)
 - **Web fetch** for the docs check (optional; skipped if your docs have no page index)
-- `/anti-ai` for the description pass. This is the [Remove AI Writing Patterns](../../stakeholder-communication/remove-ai-writing-patterns/) prompt installed as a skill.
+- [Remove AI Writing Patterns](../../stakeholder-communication/remove-ai-writing-patterns/) for the description pass.
 
 ## 🚀 Setup
 
