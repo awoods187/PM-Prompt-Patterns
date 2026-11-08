@@ -1,6 +1,6 @@
 ---
 name: file-project
-description: Creates a well-formed Linear project from a feature request, integration ask, or chunk of work that does not yet have a home. Searches for existing projects first so demand consolidates instead of fragmenting, picks the owning team, applies the right labels, writes a description a PM can act on, and links the source. Use this whenever something needs a Linear project or a project-sized piece of work needs logging, even casually ("we should track this", "is there a project for this", "make a project for the TravelPerk ask", "where does this live"), and use it especially when a customer or prospect asks for a capability the product does not have yet. Also use it when you are unsure whether a project already exists or which Eng team would own it. Do not use it for bugs; /file-ticket owns those.
+description: Creates a well-formed Linear project from a feature request, integration ask, or chunk of work that does not yet have a home. Searches for existing projects first so demand consolidates instead of fragmenting, picks the owning team, applies the right labels, writes a description a PM can act on, and links the source. Use this whenever something needs a Linear project or a project-sized piece of work needs logging, even casually ("we should track this", "is there a project for this", "make a project for the TravelPerk ask", "where does this live"), and use it especially when a customer or prospect asks for a capability the product does not have yet. Also use it when you are unsure whether a project already exists or which Eng team would own it. Do not use it for bugs; /file-bug owns those.
 ---
 
 # File a Linear project
@@ -74,7 +74,7 @@ Keep it legible in a Linear list view, roughly 60 characters. Skip prefixes like
 
 Integrations go to your **Integrations** team, if one owns them.
 
-For everything else, route by **product surface, not technical layer**, the same rule `/file-ticket` uses: a reporting request goes to the Reporting team even if the work is mostly backend. `references/routing.md` has an example surface-to-team map to replace with your own.
+For everything else, route by **product surface, not technical layer**, the same rule `/file-bug` uses: a reporting request goes to the Reporting team even if the work is mostly backend. `references/routing.md` has an example surface-to-team map to replace with your own.
 
 The map drifts, so verify against live data when the surface is not obvious. Whichever team owns *recent* projects on that surface is your answer:
 

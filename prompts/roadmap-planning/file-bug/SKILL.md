@@ -1,6 +1,6 @@
 ---
-name: file-ticket
-description: Files a bug ticket in Linear from whatever raw material the user has on hand, including pasted screenshots, screen recordings, error text, Sentry links, or a half-remembered complaint. Fills the team's required bug template, infers the owning Eng team, shows the draft for approval, then creates the issue and uploads the media. Use this whenever the user reports something broken in the product or wants a ticket, issue, or bug filed or logged, even casually ("this page is busted", "can you write this up", "log this for the team", "make a ticket for this"), and use it especially when they paste a screenshot or video of a defect with little or no explanation. Also use it when a ticket needs to be filed and you are unsure which Eng team owns the area.
+name: file-bug
+description: Files a bug ticket in Linear from screenshots, recordings, error text, Sentry links, or a vague complaint, using the team's required bug template. Use whenever something in the product is broken. Not for improvements or project work; /file-issue owns those.
 ---
 
 # File a bug ticket
@@ -16,6 +16,8 @@ Your job here is narrow on purpose: take messy input, produce one complete, corr
 **In scope:** extracting facts from screenshots, videos, and prose; filling the bug template; picking the team; uploading media; creating the issue.
 
 **Out of scope:** root cause analysis, reading the codebase, prior art searches, acceptance criteria. That is what `/enrich-ticket` is for, if you have it. Offer it after filing (see step 7) rather than doing it here. Staying out of the code is what makes this skill fast enough to use mid-conversation.
+
+**Not a bug:** if the thing works as designed and the design should change (a missing column, a confusing default, a slow flow), it is an improvement and belongs to `/file-issue`. If it is a capability the product does not have, it belongs to `/file-project`. When you cannot tell, ask one question: "Is it doing something it was built not to do, or doing what it was built to do, and that is the problem?" Then hand off rather than forcing the bug template onto a feature request.
 
 ## Step 1: Take inventory of what you were given
 

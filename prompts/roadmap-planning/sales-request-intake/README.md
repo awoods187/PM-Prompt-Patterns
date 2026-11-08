@@ -31,7 +31,7 @@ This is a [Claude Code skill](https://docs.claude.com/en/docs/claude-code/skills
 
 - **Linear MCP server** (`list_issues`, `list_customers`, `save_customer`, `save_customer_need`)
 - **Web search and fetch** for the docs check
-- Companion skills it calls by name: [`/file-project`](../file-project/) (project search, naming, routing), [`/file-ticket`](../file-ticket/) (bugs). Run prose through the [Remove AI Writing Patterns](../../stakeholder-communication/remove-ai-writing-patterns/) prompt. Install both skills alongside this one.
+- Companion skills it calls by name: [`/file-project`](../file-project/) (project search, naming, routing), [`/file-bug`](../file-bug/) (bugs), [`/file-issue`](../file-issue/) (improvements). Run prose through the [Remove AI Writing Patterns](../../stakeholder-communication/remove-ai-writing-patterns/) prompt. Install these skills alongside this one.
 
 ## 🚀 Setup
 

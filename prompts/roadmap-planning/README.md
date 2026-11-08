@@ -13,10 +13,16 @@
   - Bare-noun prior-art search, surface-based team routing, labels, and a scoped description
   - **Best for**: Consolidating demand instead of creating duplicate projects
 
-- **[File Ticket](./file-ticket/)** - 🟡 Intermediate (Claude Code skill)
+- **[File Bug](./file-bug/)** - 🟡 Intermediate (Claude Code skill)
   - Turns screenshots, recordings, or error text into a complete Linear bug ticket
   - Fills a fixed bug template, checks for duplicates, routes by surface, uploads media after approval
+  - Hands improvements and new capabilities off to File Issue and File Project
   - **Best for**: Fast, reproducible bug reports from messy input
+
+- **[File Issue](./file-issue/)** - 🟡 Intermediate (Claude Code skill)
+  - Files non-bug issues: one standalone improvement, or the chunks that break a project into what it delivers
+  - Describes what the product must do and leaves how, sizing, and sequencing to engineering
+  - **Best for**: Improvements to existing behavior and project breakdowns
 
 ## Coming Soon
 

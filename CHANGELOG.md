@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Linear filing skills
+- **Renamed** the `file-ticket` skill to `file-bug` and narrowed its trigger to defects; it now hands improvements to `/file-issue` and new capabilities to `/file-project`
+- **Added** the `file-issue` skill for non-bug Linear issues: standalone improvements and project decomposition into user-visible chunks
+- **Changed** `sales-request-intake` and `file-project` to point at `/file-bug` for bugs
+
 ### Model definitions verified 2026-10-30 (#41)
 - **Added** definitions for Claude Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5; GPT-6 Astra, GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna; Gemini 4 Argon, 3.8 Flash, 3.5 Flash-Lite
 - **Changed** defaults: Claude `claude-sonnet-4-5` → `claude-sonnet-5-5` (and the `claude-sonnet`/`claude-opus`/`claude-haiku` aliases now resolve to the 5.5 models), OpenAI `gpt-5` → `gpt-6.1-sol`, Gemini `gemini-2-5-flash` → `gemini-3-8-flash`
