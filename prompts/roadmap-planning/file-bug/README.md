@@ -1,4 +1,4 @@
-# File Ticket (Claude Code Skill)
+# File Bug (Claude Code Skill)
 
 ## 🎯 Purpose
 
@@ -16,6 +16,8 @@ Mines screenshots and video frames for the link, environment, org, and error tex
 - A screen recording of a defect with no explanation
 - Handing off a suspected defect from [Sales Request Intake](../sales-request-intake/)
 
+**Not for**: improvements to things that work as designed ([File Issue](../file-issue/)) or new capabilities ([File Project](../file-project/)). The skill asks one question to tell a bug from an improvement and hands off instead of forcing the bug template onto a feature request.
+
 **Complexity**: 🟡 Intermediate
 
 ## 📦 Format
@@ -26,11 +28,12 @@ This is a [Claude Code skill](https://docs.claude.com/en/docs/claude-code/skills
 
 - **Linear MCP server** (`list_issues`, `list_issue_statuses`, `list_issue_labels`, `save_issue`, `prepare_attachment_upload`, `create_attachment_from_upload`)
 - **ffmpeg** and **curl** for video frames and media upload
+- Companion skills: [`/file-issue`](../file-issue/) and [`/file-project`](../file-project/) for work that is not a bug.
 - Optional companions: `/verify-ticket` (template checker) and `/enrich-ticket` (root cause and acceptance criteria). The skill works without them.
 
 ## 🚀 Setup
 
-1. Copy this folder to `~/.claude/skills/file-ticket/` (or your project's `.claude/skills/`).
+1. Copy this folder to `~/.claude/skills/file-bug/` (or your project's `.claude/skills/`).
 2. Replace the bug template in Step 3 with your team's, and set `[TEMPLATE-ISSUE]` if the canonical copy lives in Linear.
 3. Replace the example team map in Step 4 and the `missing-production-definition` label name with your workspace's.
 
