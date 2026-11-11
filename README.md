@@ -229,14 +229,76 @@ gemini_prompt = get_prompt("stakeholder-communication/executive-deck-review", pr
 **All 13 Prompts Available:**
 - **Analytics:** [signal-classification](./prompts/analytics/signal-classification/)
 - **Development:** [claude-md-generator](./prompts/developing-internal-tools/claude-md-generator/), [code-review-refactoring](./prompts/developing-internal-tools/code-review-refactoring/), [enterprise-readme-generator](./prompts/developing-internal-tools/enterprise-readme-generator/), [github-actions-python-cicd](./prompts/developing-internal-tools/github-actions-python-cicd/), [llm-orchestration-system](./prompts/developing-internal-tools/llm-orchestration-system/), [prompt-extraction-cataloging](./prompts/developing-internal-tools/prompt-extraction-cataloging/), [pytest-cicd-optimization](./prompts/developing-internal-tools/pytest-cicd-optimization/), [python-pr-code-review](./prompts/developing-internal-tools/python-pr-code-review/), [python-80-percent-test-coverage](./prompts/developing-internal-tools/python-80-percent-test-coverage/), [slack-account-owner-tagger](./prompts/developing-internal-tools/slack-account-owner-tagger/)
-- **Roadmap Planning:** [sales-request-intake](./prompts/roadmap-planning/sales-request-intake/), [file-project](./prompts/roadmap-planning/file-project/), [file-bug](./prompts/roadmap-planning/file-bug/), [file-issue](./prompts/roadmap-planning/file-issue/) (Claude Code skills)
-- **Strategy:** [meta-prompt-designer](./prompts/product-strategy/meta-prompt-designer/), [opus-code-execution-pattern](./prompts/product-strategy/opus-code-execution-pattern/)
+- **Roadmap Planning:** [sales-request-intake](./prompts/roadmap-planning/sales-request-intake/), [file-project](./prompts/roadmap-planning/file-project/), [file-bug](./prompts/roadmap-planning/file-bug/), [file-issue](./prompts/roadmap-planning/file-issue/), [prioritize-demand](./prompts/roadmap-planning/prioritize-demand/), [enrich-ticket](./prompts/roadmap-planning/enrich-ticket/), [accept-against-spec](./prompts/roadmap-planning/accept-against-spec/), [factory-retro](./prompts/roadmap-planning/factory-retro/) (Claude Code skills)
+- **Strategy:** [meta-prompt-designer](./prompts/product-strategy/meta-prompt-designer/), [opus-code-execution-pattern](./prompts/product-strategy/opus-code-execution-pattern/), [write-prd](./prompts/product-strategy/write-prd/), [review-prd](./prompts/product-strategy/review-prd/), [specify-evals](./prompts/product-strategy/specify-evals/) (Claude Code skills)
 - **Communication:** [executive-deck-review](./prompts/stakeholder-communication/executive-deck-review/), [remove-ai-writing-patterns](./prompts/stakeholder-communication/remove-ai-writing-patterns/), [how-to-guide](./prompts/stakeholder-communication/how-to-guide/) (Claude Code skill)
 - **Customer Research:** [call-notes](./prompts/customer-research/call-notes/), [closed-lost-thank-you](./prompts/customer-research/closed-lost-thank-you/) (Claude Code skills), [closed-lost-feedback-agent](./prompts/customer-research/closed-lost-feedback-agent/)
 
 **Total:** 13 prompts × 4 variants (base + Claude + OpenAI + Gemini) = **52 optimized prompt variants**
 
 [→ Learn more about provider-optimized prompts](./docs/provider-specific-prompts.md) | [→ Migration tool](./scripts/migrate_prompts.py)
+
+---
+
+## 🏭 Product factory
+
+A set of Claude Code skills that take a B2B SaaS product team from raw customer demand to an accepted release. Each skill does one step, hands off to the next, and leaves a trace (labels, documents, requirement IDs) that the next skill and the weekly retro can read. Two gates hold the line: a PRD must pass review before work is cut from it, and a release must pass every acceptance criterion before Product approves it.
+
+```mermaid
+flowchart TD
+    SRC[Sources: calls, sales and CX messages, support tickets, bug reports] --> CAP
+
+    subgraph CAP[Capture]
+        CN[call-notes]
+        SR[sales-request]
+        FP[file-project]
+        FI1[file-issue: improvement]
+        FB[file-bug]
+    end
+
+    CAP --> PD[prioritize-demand]
+    PD --> WP[write-prd]
+    WP --> SE[specify-evals]
+    SE --> RP[review-prd]
+    RP --> G1{Gate: Spec ready}
+    G1 -- errors --> WP
+    G1 -- zero errors --> FI2[file-issue: decompose]
+    FI2 --> ET[enrich-ticket]
+    ET --> TR[Ticket-readiness check]
+    TR --> ENG[Engineering builds: out of scope]
+    ENG --> AAS[accept-against-spec on staging]
+    AAS --> G2{Gate: every acceptance criterion passes, then Product approves}
+    G2 -- hold --> FB
+    G2 -- pass --> DOCS[Docs]
+
+    RETRO[factory-retro: weekly] -. measures outcomes .-> CAP
+    RETRO -. measures outcomes .-> G1
+    RETRO -. measures outcomes .-> G2
+    RETRO == proposes skill edits ==> SKILLS[(Skill files)]
+```
+
+**Skills**
+
+| Stage | Skill | What it does |
+|---|---|---|
+| Capture | [call-notes](./prompts/customer-research/call-notes/) | Turns a customer call transcript into feedback notes with each feature ask linked to its project. |
+| Capture | [sales-request](./prompts/roadmap-planning/sales-request-intake/) | Turns a sales or CX chat message into customer needs on the right projects and drafts a reply for the rep. |
+| Capture | [file-project](./prompts/roadmap-planning/file-project/) | Finds the existing project for a request, or creates one well-formed project so demand consolidates. |
+| Capture | [file-issue](./prompts/roadmap-planning/file-issue/) | Files one standalone improvement, or cuts a Spec ready project into user-visible chunks from its PRD. |
+| Capture | [file-bug](./prompts/roadmap-planning/file-bug/) | Turns screenshots, recordings or error text into one reproducible, correctly routed bug ticket. |
+| Prioritize | [prioritize-demand](./prompts/roadmap-planning/prioritize-demand/) | Ranks open demand projects by customer needs and CRM deal data with a formula anyone can recompute. |
+| Specify | [write-prd](./prompts/product-strategy/write-prd/) | Gathers evidence, interrogates the PM through five hard gates, and drafts a one-page PRD with testable criteria. |
+| Specify | [specify-evals](./prompts/product-strategy/specify-evals/) | Writes the eval spec for an AI feature: real-wording cases, grading rules and a launch gate (stub). |
+| Specify | [review-prd](./prompts/product-strategy/review-prd/) | Grades a PRD against the template and product invariants, and sets Spec ready only at zero errors. |
+| Build prep | [enrich-ticket](./prompts/roadmap-planning/enrich-ticket/) | Completes a ticket against its template, copying acceptance criteria by ID from the PRD. |
+| Accept | [accept-against-spec](./prompts/roadmap-planning/accept-against-spec/) | Tests every acceptance criterion on every surface in staging and holds Product's approval until all pass. |
+| Improve | [factory-retro](./prompts/roadmap-planning/factory-retro/) | Measures the factory's outcomes weekly and proposes exact edits to the skills behind repeat failures. |
+
+**Shared files**
+- [PRD template](./templates/prd-template.md): the one-page PRD every specify and accept skill reads, with optional modules and an example product invariants table.
+- [Factory config](./templates/factory-config.example.md): every placeholder the skills use (tracker, labels, statuses, teams, environments, north stars, tools, review cadence). Copy it, fill it in, and the skills read values from it.
+
+Engineering-owned pieces (the ticket-readiness check, the eval harness, the build itself) are referenced by role and not included.
 
 ---
 

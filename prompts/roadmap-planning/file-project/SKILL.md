@@ -1,25 +1,25 @@
 ---
 name: file-project
-description: Creates a well-formed Linear project from a feature request, integration ask, or chunk of work that does not yet have a home. Searches for existing projects first so demand consolidates instead of fragmenting, picks the owning team, applies the right labels, writes a description a PM can act on, and links the source. Use this whenever something needs a Linear project or a project-sized piece of work needs logging, even casually ("we should track this", "is there a project for this", "make a project for the TravelPerk ask", "where does this live"), and use it especially when a customer or prospect asks for a capability the product does not have yet. Also use it when you are unsure whether a project already exists or which Eng team would own it. Do not use it for bugs; /file-bug owns those.
+description: Creates a well-formed project in your issue tracker from a feature request, integration ask, or chunk of work that has no home yet. Searches for existing projects first so demand consolidates instead of fragmenting, picks the owning team, applies labels, writes a description a PM can act on, and links the source. Use whenever something needs a project, even casually ("we should track this", "is there a project for this", "make a project for the Initech ask", "where does this live"), and especially when a customer or prospect asks for a capability the product does not have yet. Also use it when you are unsure whether a project exists or which team owns it. Not for bugs; /file-bug owns those.
 ---
 
-# File a Linear project
+# File a project
 
-> **Setup:** replace `[Product]` with your product name, `docs.example.com` with your public docs site, and the team names, label names, and project examples with your workspace's. The ones below are from a fictional workspace.
+> **Setup:** workspace values (statuses, labels, the team map, your docs site) come from your factory config. See [`factory-config.example.md`](../../../templates/factory-config.example.md). Tool calls below use Linear MCP names as an example of how the issue tracker role is filled. Vendor and customer names are fictional.
 
-A Linear project is the unit demand accumulates against. Ten customers asking for TravelPerk is a roadmap decision; ten separate records of one customer asking for TravelPerk is noise nobody can prioritize. So the highest-value thing this skill does is not creating a project. It is finding the one that already exists.
+A project is the unit demand accumulates against. Ten customers asking for an Initech Expense integration is a roadmap decision. Ten separate records of the same ask is noise nobody can rank. So the most valuable thing this skill does is not creating a project. It is finding the one that already exists.
 
-Your job is narrow: one correctly named, correctly routed, correctly labeled project, or a pointer to the one that already covers it. You are not scoping the work, estimating it, or deciding when it ships.
+Your job is narrow. Produce one correctly named, routed and labeled project, or point to the one that already covers it. You are not scoping the work, estimating it, or deciding when it ships.
 
 ## Scope
 
-**In scope:** searching for prior art, judging whether a near-match is the same work, naming, team routing, labels, status, the description, and linking the source.
+**In scope:** searching for prior art, judging whether a near match is the same work, naming, routing, labels, status, the description, and linking the source.
 
-**Out of scope:** writing the issues inside the project, milestones, priority, target dates, and picking a lead. Those belong to whoever plans the work. A project arriving with a guessed target date reads as a commitment nobody made.
+**Out of scope:** the issues inside the project, milestones, priority, target dates and the lead. Those belong to whoever plans the work. A guessed target date reads as a commitment nobody made.
 
 ## Step 1: Search for prior art, then read what comes back
 
-Search the **bare noun** for the thing being asked for, not the project name you intend to create:
+Search the **bare noun** for the thing being asked for, not the project name you plan to create:
 
 ```
 list_projects(query="<vendor or feature noun>",
@@ -27,123 +27,120 @@ list_projects(query="<vendor or feature noun>",
               limit=25)
 ```
 
-Searching the bare noun matters because project naming in most workspaces drifts before anyone standardizes it. Names like `Airbase integration`, `Add Zendesk integration`, `Plaid Integration`, and plain `Coupa` end up living side by side. A search for "Coupa Integration" returns nothing and you would create a duplicate of a project that has existed for months. A search for "Coupa" finds it.
+Project names drift in every workspace. `Hooli Pay integration`, `Add Umbrella integration` and plain `Initech` end up side by side. A search for "Initech Integration" finds nothing, and you create a duplicate of a project that has existed for months. A search for "Initech" finds it.
 
-Then read every hit and decide whether it is actually the same work. Substring matches lie in both directions:
+Read every hit and decide whether it is the same work. Substring matches mislead in both directions:
 
-- `Planning Grid (Pigment Style)` matches a search for "Pigment" and has nothing to do with integrating Pigment. It is a planning feature that borrowed a competitor's UX. Creating a Pigment integration project is correct here.
-- A project like `Square Integration (misc)` might be a catch-all for bugs and small improvements, not the place a net-new capability request belongs. Judge by the summary and what is inside it.
+- `Planning Grid (Vandelay style)` matches "Vandelay" but is a planning feature that borrowed a competitor's layout. It is not a Vandelay integration. Creating the integration project is correct.
+- `Hooli Pay Integration (misc)` may be a catch-all for bugs and small fixes, not the home for a new capability. Judge by the summary and what is inside it.
 
-Run a second search on obvious aliases before concluding nothing exists: acquired product names, the parent company, the abbreviation the team actually says out loud. `SFDC` and `Salesforce`, `Bill.com` and `BILL`, `Navan` and `TripActions`.
+Before concluding nothing exists, search obvious aliases: a former product name, the parent company, the abbreviation people say out loud.
 
-**Search issues as well as projects.** Work does not only live in projects, and an issue search surfaces the specific gap or limitation that a project title hides:
+**Search issues too.** An issue search finds the specific gap that a project title hides:
 
 ```
 list_issues(query="<vendor or capability>", fields=["title","team","status","project","url","createdAt","labels"], limit=15)
 ```
 
-There is no `identifier` field on this tool and passing one fails the whole call, so read the identifiers off the `url` values instead.
+Read identifiers from the `url` values.
 
-An open issue saying a data-warehouse export has no scheduled refresh tells you more about what to build than the existence of an export project does, and it belongs in the description of whatever you create. A recently-fixed bug matters too, since a customer may be asking for something that started working two weeks ago.
+An open issue saying an export has no scheduled refresh tells you more than the existence of an export project. Put it in the description. A recently fixed bug matters too. The customer may be asking for something that started working two weeks ago.
 
-**Then check whether the capability already shipped.** If your docs publish a page index (for example `https://docs.example.com/llms.txt`), search it for the capability, not just the vendor, because non-integration features ship too and live outside the integrations section: approval workflows are usually documented under configuration or settings. Read the index rather than a marketing-facing getting-started page, which names a handful of marquee integrations and will tell you a vendor is missing when it has shipped docs.
+**Then check whether it already shipped.** If your docs site publishes a page index (`{{DOCS_INDEX}}`), search it for the capability, not just the vendor. Non-integration features live outside the integrations section, often under settings or configuration. Read the full index, not a marketing page that lists a few headline integrations.
 
 ### What to do with what you find
 
 | Finding | Action |
 |---|---|
-| Shipped, and the ask is a bare vendor name or a plain restatement of the doc page | No project. Say so and link the page. |
-| Shipped, but the ask names something the docs do not cover: a cadence, a direction, a volume, or a hard requirement | Create. Name the shipped capability in the description and state exactly where it falls short. |
-| Shipped, and the ask is vaguer than the docs | Create, with the ambiguity as the first open question. "Something for consolidation reporting" cannot be checked against a page, and a guess in either direction is worse than a project that says so. |
+| Shipped, and the ask is a bare vendor name or restates the doc page | No project. Say so and link the page. |
+| Shipped, but the ask names something the docs do not cover (a cadence, a direction, a volume, a hard requirement) | Create. Name the shipped capability and say exactly where it falls short. |
+| Shipped, and the ask is vaguer than the docs | Create, with the ambiguity as the first open question. |
 | Same work, open project | No project. Return the existing one so the caller can attach demand to it. |
-| Same work, `Completed` or `Canceled` project | Create. A closed project is a decision already made, and new demand hung on it disappears. Link it and say why this ask is different. |
-| Near miss on a different surface | Create, and name the near miss in the description. Shared root causes are worth flagging. |
+| Same work, closed or canceled project | Create. A closed project is a decision already made. New demand hung on it disappears. Link it and say why this ask is different. |
+| Near miss on a different surface | Create, and name the near miss. Shared root causes are worth flagging. |
 | Nothing | Create. |
 
-A vendor that competes with one of your own modules is still an ordinary request. If Pigment overlaps your planning module and a shipped project borrowed its UX, file the integration project anyway. Whether you would rather displace that product than connect to it is a commercial decision, and it is not yours to make from a Slack message.
+A vendor that competes with one of your own modules is still an ordinary request. Whether to replace that product or connect to it is a commercial decision. It is not yours to make from a chat message.
 
 ## Step 2: Name it so the next search finds it
 
-For integrations, use `<Vendor> Integration`. For everything else, a short noun phrase naming the outcome, not the request: `Multi-currency bank feed reconciliation`, not `Customer wants multi-currency`.
+For integrations, use `<Vendor> Integration`. For everything else, a short noun phrase that names the outcome, not the request: `Multi-currency bank feed matching`, not `Customer wants multi-currency`.
 
-The vendor's own capitalization is the right capitalization. Sales messages arrive as "anaplan" and "travelperk" and copying that through makes the project look careless and, worse, makes it harder to spot in a list. Anaplan, TravelPerk, Coupa, AvidXchange.
+Use the vendor's own capitalization. Requests arrive as "initech" or "hooli pay". Copying that makes the project look careless and harder to spot.
 
-Keep it legible in a Linear list view, roughly 60 characters. Skip prefixes like "Add" or "Build" that add no information, and skip the requesting customer's name entirely. The customer belongs in the description and in a customer need, because the project will outlive their particular ask and a second customer asking for the same thing should not have to work out that `TravelPerk for Northwind` is where their request goes.
+Keep it under about 60 characters. Skip "Add" or "Build". Leave the customer's name out. The customer belongs in the description and in a customer need. The project will outlive their ask, and the next customer should not have to guess that `Initech for Acme Co` is where their request goes.
 
 ## Step 3: Route it to a team
 
-Integrations go to your **Integrations** team, if one owns them.
+Integrations go to `{{INTEGRATIONS_TEAM}}`, if one team owns them. Deviate only when the integration is really a change to a core surface. A tax-engine connector is mostly tax-engine work, so it goes to the team that owns the tax engine.
 
-For everything else, route by **product surface, not technical layer**, the same rule `/file-bug` uses: a reporting request goes to the Reporting team even if the work is mostly backend. `references/routing.md` has an example surface-to-team map to replace with your own.
+Everything else routes by **product surface, not technical layer**, the same rule `/file-bug` uses. A reporting request goes to the reporting team even if the work is mostly backend. Ask what the customer would do differently in the product, and route to whoever owns that screen or model. Not everything that names another company is an integration. Single sign-on with an identity provider is platform work.
 
-The map drifts, so verify against live data when the surface is not obvious. Whichever team owns *recent* projects on that surface is your answer:
+`{{TEAM_MAP}}` in the factory config is a starting point. It drifts. When the surface is not obvious, check live data:
 
 ```
 list_projects(query="<surface noun>", fields=["name","teams","status","updatedAt"], limit=15)
 ```
 
-Weight the last few months and disregard old `Completed` work, because surfaces move between teams and a stale match will route confidently to the wrong place. When a request spans surfaces or has no clear eng owner yet, your **Product** triage team is the honest home; it is where shaping happens before a team takes it.
+The team that owns *recent* projects on that surface is your answer. Ignore old completed work. When a request spans surfaces or has no clear owner, `{{PRODUCT_TEAM}}` is the honest home. Shaping happens there before a team takes it.
+
+Pick one team. Adding several teams to a fresh project gives ownership to nobody. Planning can add a second team later.
 
 ## Step 4: Set the fields
 
-**Status:** `Backlog`. New requests have not been planned, and any other status makes a claim about intent.
+**Status:** `{{BACKLOG_STATUS}}`. Any other status claims an intent nobody stated.
 
-**Labels** come in two kinds. One says who is blocked, one says where the ask came from. Call `list_project_labels()` and use exact names rather than guessing between near-duplicates. An example set:
+**Labels:** call `list_project_labels()` and use exact names.
 
-- `Customer Gap` when a named customer or prospect wants this. This is the label that makes a project show up in gap reviews, so it carries real weight.
-- An origin label such as `Sales Request` or `CX Request`. If your workspace distinguishes "logged for later assessment" from "judged small enough to sprint", default to the former unless you have been told the work is small and scoped. Guessing the sprintable label puts a promise in front of a deal team.
-- `Partnerships` when shipping this needs a commercial relationship with the vendor, not just engineering time.
+- `{{CUSTOMER_GAP_LABEL}}` when a named customer or prospect wants this. This label puts the project in gap reviews and in `/prioritize-demand`.
+- One of `{{ORIGIN_LABELS}}` for where the ask came from.
+- If you use `{{DEAL_LABELS}}`, default to the "logged for later" label. Picking the "sprintable" one puts a promise in front of a deal team.
+- `{{PARTNERSHIP_LABEL}}` when shipping needs a commercial agreement with the vendor.
 
-Leave release labels alone. Those are cohorts a PM assigns during planning, and adding one silently puts unplanned work in a release.
+Never set `{{RELEASE_LABELS}}`. A PM assigns those during planning.
 
-**Priority, lead, dates:** unset. See Scope.
+**Priority, lead, dates:** unset.
 
-**Links:** attach the source. A Slack permalink, call recording, or ticket is what lets an engineer six weeks from now find out what the customer actually meant. Pass it in `links` as `{url, title}` with a title naming the origin, like `Slack: #sales-feedback, Sam, Aug 21`.
+**Links:** attach the source as `{url, title}`, with a title that names the origin, for example `Chat: sales channel, Sam, Aug 21`. The link is how an engineer finds out later what the customer meant.
 
 ## Step 5: Write a description worth reading
 
-Many integration projects get created with empty descriptions, which means every one of them costs someone a round of archaeology before it can be scoped. A few sentences of real context is the cheapest quality win available here.
-
-Use this structure:
+An empty description costs someone a round of digging before the work can be scoped. A few sentences of real context is the cheapest quality win here.
 
 ```markdown
 ## What is being asked for
-[One or two sentences in plain terms. What would the customer be able to do that they cannot do today.]
+[One or two plain sentences. What could the customer do that they cannot do today?]
 
 ## Who is asking
-[Customer or prospect names, with deal context if known: prospect vs live customer, and what the ask blocks.]
+[Customer or prospect names, with deal context if known: prospect or live customer, and what the ask blocks.]
 
 ## What we know about scope
-[Direction of sync, objects involved, whether the vendor has a public API, whatever the source actually said. Only what is known.]
+[Sync direction, objects involved, whether the vendor has a public API. Only what the source said.]
 
 ## Open questions
-[What someone needs to answer before this can be scoped.]
+[What someone must answer before this can be scoped.]
 
 ## Source
 [Where this came from, with a link.]
 ```
 
-Two habits keep this honest. Quote the customer verbatim where you have their words, because a paraphrase of a paraphrase is how requirements drift. And keep the open questions section rather than resolving it with plausible guesses: "unclear whether they need bill sync or just expense categories" is useful, while a confidently invented answer sends someone building the wrong thing.
+Quote the customer word for word where you can. A paraphrase of a paraphrase is how requirements drift. Keep open questions open. "Unclear whether they need bill sync or only expense categories" is useful. A confident guess sends someone building the wrong thing.
 
-Set `summary` too, in one line under 255 characters. It is what shows in list views and it is the only thing most people will read.
+Set `summary` too: one line, under 255 characters. It is what most people will read.
 
-## Step 6: Run the prose through Remove AI Writing Patterns
+## Step 6: Clean up the prose
 
-The description and summary are prose a human will read, and text that pattern-matches to generated filler gets skimmed rather than read, which defeats the point of writing it. Run the [Remove AI Writing Patterns](../../stakeholder-communication/remove-ai-writing-patterns/) prompt on both before saving and apply the diffs.
-
-Watch particularly for the tells this kind of writing attracts: bolded list lead-ins in the scope section, "it's not just X, it's Y" framing about why the request matters, and three-beat parallel sentences about customer pain. Structured fields, titles, and labels do not need the pass.
+Run `/anti-ai` (the [Remove AI Writing Patterns](../../stakeholder-communication/remove-ai-writing-patterns/) prompt) on the description and summary and apply the changes. Watch for bolded list lead-ins, "it's not just X, it's Y" framing, and three-part sentences about customer pain. Names, labels and other structured fields do not need the pass.
 
 ## Step 7: Create it
 
 ```
 save_project(name, addTeams=[<team>], description, summary,
-             labels=[...], state="Backlog", links=[{url, title}])
+             labels=[...], state="{{BACKLOG_STATUS}}", links=[{url, title}])
 ```
 
-Then report the project name, URL, team, and labels, and say plainly what you did not set and why, so the caller knows a PM still needs to look at it.
+Report the name, URL, team and labels. Say what you did not set and why, so the caller knows a PM still needs to look at it.
 
-If you found existing prior art and created anyway, name it in your report. The caller may know something that makes them the same project after all, and they can only tell you that if you show your work.
+If you found prior art and created anyway, name it in the report. The caller may know it is the same project after all.
 
-## Reference files
-
-- `references/routing.md` — example surface-to-team map, and how to verify it against live Linear data
+Once a project is ready to be specified, the next step is `/write-prd`.
