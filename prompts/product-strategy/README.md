@@ -19,9 +19,9 @@ These Claude Code skills are part of the [product factory](../../README.md#-prod
   - Sets Spec ready only at zero errors
   - **Best for**: The gate between spec and build
 
-- **[Specify Evals](./specify-evals/)** - 🔴 Advanced (Claude Code skill, stub)
+- **[Specify Evals](./specify-evals/)** - 🔴 Advanced (Claude Code skill)
   - Eval cases in real user wording, including negative and near-miss cases
-  - Grading rules and a launch gate, linked from the PRD's AI module
+  - A deterministic grader per case where possible, draft cases for engineering's eval harness, and a launch gate linked from the PRD's AI module
   - **Best for**: AI features before review-prd
 
 ## Coming Soon

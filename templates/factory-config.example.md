@@ -110,6 +110,7 @@ These belong to engineering. The skills call them by role and never recreate the
 |---|---|---|
 | `{{TICKET_READINESS_CHECK}}` | /verify-ticket | Your ticket-readiness check. It grades a ticket against its template and applies `{{AGENT_READY_LABEL}}` when it passes. |
 | `{{EVAL_HARNESS}}` | Engineering's eval harness | Where engineering stores and runs eval cases and posts results. |
+| `{{EVAL_REGRESSION_SOURCE}}` | A team chat channel or harness report | Where eval regressions are reported. specify-evals reads it to find the blast-radius eval sets for a launch gate. |
 | `{{AGENT_HANDOFF}}` | /ticket-to-pr | The step that hands a ready ticket to a coding agent, if you have one. |
 
 ## Review cadence

@@ -288,7 +288,7 @@ flowchart TD
 | Capture | [file-bug](./prompts/roadmap-planning/file-bug/) | Turns screenshots, recordings or error text into one reproducible, correctly routed bug ticket. |
 | Prioritize | [prioritize-demand](./prompts/roadmap-planning/prioritize-demand/) | Ranks open demand projects by customer needs and CRM deal data with a formula anyone can recompute. |
 | Specify | [write-prd](./prompts/product-strategy/write-prd/) | Gathers evidence, interrogates the PM through five hard gates, and drafts a one-page PRD with testable criteria. |
-| Specify | [specify-evals](./prompts/product-strategy/specify-evals/) | Writes the eval spec for an AI feature: real-wording cases, grading rules and a launch gate (stub). |
+| Specify | [specify-evals](./prompts/product-strategy/specify-evals/) | Writes the eval spec for an AI feature: real-wording cases including negative and near-miss ones, a grader per case, and a launch gate. |
 | Specify | [review-prd](./prompts/product-strategy/review-prd/) | Grades a PRD against the template and product invariants, and sets Spec ready only at zero errors. |
 | Build prep | [enrich-ticket](./prompts/roadmap-planning/enrich-ticket/) | Completes a ticket against its template, copying acceptance criteria by ID from the PRD. |
 | Accept | [accept-against-spec](./prompts/roadmap-planning/accept-against-spec/) | Tests every acceptance criterion on every surface in staging and holds Product's approval until all pass. |
