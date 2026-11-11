@@ -1,90 +1,82 @@
 ---
-name: "sales-request"
-description: Turns a raw Slack message from sales or CX about what a customer or prospect asked for into tracked demand in Linear. Checks the product docs to see whether the capability already shipped, creates the customer if Linear does not have them, finds or creates a project per request via /file-project, attaches a customer need so demand accumulates against the right project, and ends with a copy-paste Slack reply telling the rep what was logged and what to say to the customer. Use this whenever someone pastes or points to a sales, CX, or call note listing integrations, features, or gaps a customer mentioned, even when they do not say "Linear" or "log this" and only say things like "here's what northwind asked for", "notes from the intro call", "these came up on the demo", "can you get these tracked", or just drop the message. Use it especially for a bare list of vendor names attached to a company name. Do not use it for bugs; /file-bug owns those.
+name: sales-request
+description: Turns a raw team chat message from sales or CX about what a customer or prospect asked for into tracked demand in your issue tracker. Checks your docs for whether the capability already shipped, creates the customer if needed, finds or creates a project per request via /file-project, attaches a customer need so demand accumulates on the right project, and ends with a paste-ready reply telling the rep what was logged and what to tell the customer. Use whenever someone pastes or points to a sales, CX or call note listing integrations, features or gaps a customer mentioned, even if they only say "here's what acme asked for", "notes from the intro call", "can you get these tracked", or just drop the message. Use it especially for a bare list of vendor names next to a company name. Not for bugs; /file-bug owns those.
 ---
 
-# Log a sales feature request into Linear
+# Log a sales request as demand
 
-> **Setup:** replace `[Product]` with your product name and `docs.example.com` with your public docs site. Team names, labels, and examples below are from a fictional workspace; swap in your own.
+> **Setup:** workspace values (labels, teams, your docs site, your team chat) come from your factory config. See [`factory-config.example.md`](../../../templates/factory-config.example.md). Tool calls below use Linear MCP names as an example of how the issue tracker role is filled. Every company and vendor name here is fictional.
 
-Sales hears the same six requests in a hundred calls and none of it reaches the roadmap unless somebody does this data entry. That is the whole value here: a message that would have scrolled away becomes demand attached to a project, so that when a PM asks "who wants TravelPerk", the answer is a list of names instead of a shrug.
+Sales hears the same six requests in a hundred calls. None of it reaches the roadmap unless someone logs it. That is the value here. A message that would have scrolled away becomes demand on a project. When a PM asks "who wants Initech Expense?", the answer is a list of names.
 
-Getting it wrong is worse than not doing it. A fabricated customer, a duplicate project, or a request logged against the wrong vendor pollutes the exact dataset that prioritization depends on. So the work is mostly careful reading and searching, and only briefly writing.
+Getting it wrong is worse than not doing it. A made-up customer, a duplicate project, or a request logged against the wrong vendor pollutes the data that `/prioritize-demand` ranks. So the work is mostly careful reading and searching, and only briefly writing.
 
-You act without asking for confirmation. That is deliberate; this runs mid-conversation and a gate would defeat the point. It is also why the checks below matter, and why the two genuinely ambiguous cases in Step 8 stop rather than guess.
+You act without asking for confirmation. This runs mid-conversation, and a gate would defeat the point. That is why the checks below matter, and why the two truly ambiguous cases in Step 8 stop instead of guessing.
 
 ## Step 1: Read the message for what it actually says
 
 Pull out:
 
 - **The customer or prospect.** Usually a company name in the first line.
-- **What they asked for.** Often a bare comma-separated list of vendor names, sometimes prose with the asks buried in it.
-- **Where it came from.** Who wrote it, when, and the Slack permalink if you have it.
-- **Deal context.** "On an introduction with" means prospect. "Our QBR with" means live customer. This changes nothing about what you create and a lot about how the description reads.
+- **What they asked for.** Often a bare list of vendor names. Sometimes prose with the asks buried inside.
+- **Where it came from.** Who wrote it, when, and the message link if you have it.
+- **Deal context.** "On an intro with" means prospect. "Our quarterly review with" means live customer.
 
-Sales writes fast and correctly so. Expect lowercase company names, vendor names spelled by ear, and no punctuation. Normalize as you go: `northwind solar` is Northwind Solar, `anaplan` is Anaplan, `travelperk` is TravelPerk. Use the vendor's own capitalization, because a project called `anaplan` is harder to spot in a list and reads as though nobody was paying attention.
+Sales writes fast. Expect lowercase names, vendors spelled by ear, no punctuation. Normalize as you go, using each vendor's own capitalization.
 
-Two things to catch while reading:
+Watch for two things:
 
-**Not every named vendor is a request.** "They're moving off Bill.com" and "their FP&A team lives in Anaplan" describe a stack, not an ask. "The following were the integrations they mentioned" is an ask. When the framing is genuinely ambiguous, treat it as an ask and say in your report that you read it that way, since a logged non-request is cheap to close and a missed request is invisible forever.
+**Not every vendor named is a request.** "They're moving off Hooli Pay" describes their stack. "The integrations they mentioned were..." is an ask. When the framing is unclear, treat it as an ask and say so in your report. A logged non-request is cheap to close. A missed request is invisible forever.
 
-**Not every ask is an integration.** A list of vendor names usually is. But "they need approval chains on bills" and "SSO with Okta" are product requests that happen to name companies, and they route differently. `/file-project` handles that distinction; just do not assume the whole list is connectors.
+**Not every ask is an integration.** "They need approval chains on bills" and "single sign-on with their identity provider" are product requests that happen to name companies. `/file-project` handles that. Just do not assume the whole list is connectors.
 
-## Step 2: Check what already exists before touching Linear
+## Step 2: Check what already exists
 
-Start from the docs site at `https://docs.example.com/` and work down to an index of every published page (many docs platforms publish one at `/llms.txt`). That index is the fastest way to find out whether [Product] already does the thing being asked for.
+Start with your docs site (`{{DOCS_SITE}}`). If it publishes a page index (`{{DOCS_INDEX}}`), use it. It is the fastest way to learn whether the product already does the thing.
 
-You may not be able to jump straight to the index. Some fetch tools only open URLs that appeared in the user's message or in an earlier search or fetch result, and a URL written in this skill counts as neither, so fetching `llms.txt` cold can fail with a permissions error. If so, get there in hops:
+Some fetch tools only open URLs that appeared in the conversation or in an earlier search result. If so, get there in hops: search for the docs site, open a docs page, then follow its link to the index. Some indexes are nested. Check every level before deciding a vendor is missing.
 
-1. If the user's message contains any docs link, fetch it. Otherwise web search for your docs site and fetch the homepage or any docs result.
-2. Follow the link to the page index from there.
-3. If the index is split into sub-indexes (for example, developer docs at the top level and product features one level down), fetch the relevant sub-index and search it for each ask. A vendor missing from the top-level index is not evidence of anything until you have checked the sub-indexes.
+If the docs check fails, carry on. Say at the top of the report that it did not run and why, and ask the user to paste a docs link. Do not fill the gap from a project description in the tracker. Those are written by one person on one day and can be wrong.
 
-If the hops fail, carry on with the rest of the run rather than stopping. Say at the top of the report that the docs check did not run and why, and ask the user to paste the docs URL so you can finish it. Do not fill the gap from a Linear project description. Those are written by a person on one day and can be wrong: a project description may say one payment provider is the only one supported while another has had its own docs page for months.
+Read the full index, not a getting-started page. Marketing pages list a few headline integrations and will tell you a shipped vendor is missing.
 
-Read the index, not a getting-started page, even when a search lands you there on the way. Getting-started pages tend to feature a handful of marquee integrations, so checking one will tell you a vendor is missing when it has a shipped doc page.
+Search the docs for **every** ask, not only vendor names. Product features ship too, often under settings or configuration.
 
-Search it for **every** ask, not just the vendor names. Non-integration requests ship too and they live outside the integrations section: approval chains and multi-entity consolidation are usually documented under configuration or settings pages. Skipping the docs on a product request is how you end up filing a project for something that shipped last quarter.
-
-Then search Linear **issues** too, not only projects:
+Then search tracker **issues**, not only projects:
 
 ```
 list_issues(query="<vendor or capability>", fields=["title","team","status","project","url","createdAt","labels"], limit=15)
 ```
 
-There is no `identifier` field on this tool and passing one fails the whole call, so read the identifiers off the `url` values instead.
-
-This is worth the extra call because in-flight and recently-closed issues change the answer in ways a project search cannot see. A capability can have a doc page while an open issue records the exact limitation the customer is about to hit, and a feature can look broken to a customer because of a bug fixed two weeks ago rather than because it does not exist. Both are things the rep needs.
+Open and recently closed issues change the answer. A capability can have a doc page while an open issue records the exact limit the customer will hit. A feature can look missing because of a bug fixed two weeks ago. The rep needs both.
 
 ### Does "shipped" settle it?
 
-A published doc page usually means do nothing in Linear: no project, no need. It goes in the report with the doc link, because the rep is often about to tell a customer "not yet" and the useful thing to hand them is the page proving otherwise.
+A doc page usually means no project and no need. It goes in the report with the link, because the rep may be about to tell a customer "not yet".
 
-But a doc page proves a capability exists, not that it covers what this customer meant. So compare the **specificity of the ask against the specificity of the docs**:
+But a doc page proves a capability exists, not that it covers what this customer meant. Compare how specific the ask is with how specific the docs are:
 
-- **The ask is a bare vendor name and the docs cover that vendor.** Shipped settles it. ADP in a list of six vendor names, with an ADP doc page, is done. Report and move on.
-- **The ask is more specific than the docs.** The customer named a cadence, a direction, a volume, or called it a hard requirement, and the doc page does not speak to that. Shipped does not settle it. Say a data-warehouse export has a doc page, and an open issue says the export runs once with no scheduled refresh and no customer-facing trigger: a prospect calling that export a hard requirement is asking for something that does not exist yet.
-- **The ask is vaguer than the docs.** "Something for multi-entity consolidation reporting" is not a claim you can check against a page that describes consolidated statements. The vagueness is the point: either they are already covered or they are pointing at a gap nobody has named, and you cannot tell which from a Slack message.
+- **Bare vendor name, and the docs cover that vendor.** Shipped settles it. Report and move on.
+- **The ask is more specific than the docs.** The customer named a cadence, a direction, a volume, or called it a hard requirement, and the docs do not cover that. Shipped does not settle it.
+- **The ask is vaguer than the docs.** "Something for consolidated reporting" cannot be checked against a page. They may be covered, or they may be pointing at a gap nobody has named.
 
-In both of the unsettled cases, attach a need to the nearest **open** project and say in your report exactly where the shipped capability and the ask diverge. A need on an open project costs nothing and closes in one click; a hard requirement on a live deal that left no trace anywhere is unrecoverable.
+In both unsettled cases, attach a need to the nearest **open** project and say exactly where the shipped capability and the ask differ. A need on an open project costs nothing. A hard requirement on a live deal that left no trace is gone.
 
-If the only matching project is `Completed` or `Canceled`, do not attach the need there. A closed project is a decision that was already made, and hanging new demand on it hides the demand. That situation is evidence this is new work, so hand it to `/file-project` as a fresh request and say why in the description.
+If the only match is a closed or canceled project, do not attach the need there. Hand it to `/file-project` as new work and say why.
 
-Two traps in this step:
+Two traps:
 
-**Category adjacency.** Airbase is not shipped just because Divvy is, even though both are spend-management tools. Match the vendor, not the category.
+**Category adjacency.** One expense tool being supported does not mean another is. Match the vendor, not the category.
 
-**Competitors are ordinary requests.** Some vendors overlap a module of your own. If a prospect asks for a connector to a planning tool that competes with your planning module, and a shipped project called `Planning Grid (Pigment Style)` borrowed that tool's UX, log it as a request anyway, like any other vendor. Whether you would rather replace that product than connect to it is a commercial call that belongs to product, and turning the ask into a philosophical question in your report costs the rep a round trip to learn nothing.
+**Competitors are ordinary requests.** A vendor that overlaps one of your modules still gets logged like any other. Whether to replace it or connect to it is a product call. Do not turn the ask into a strategy debate in the report.
 
 ## Step 3: Find or create the customer
 
 ```
-list_customers(query="<company name>", includeNeeds=true)
+list_customers(query="<distinctive word from the company name>", includeNeeds=true)
 ```
 
-Search the distinctive word rather than the full legal name: "Northwind" finds more than "Northwind Solar Inc." Then search the domain if you have one, since the same company sometimes exists under a shorter name.
-
-Read the results before matching. Records like `Acme` and `acmeinc` can be two separate customer records, and near-identical names can be genuinely different companies. When there is exactly one plausible hit, use it. When a hit shares a domain with the request, that settles it.
+Search the distinctive word, not the full legal name. Then search the domain if you have one. Read results before matching. Near-identical names can be different companies. One plausible hit means use it. A hit that shares a domain with the request settles it.
 
 No match means create:
 
@@ -92,121 +84,122 @@ No match means create:
 save_customer(name="<Proper Name>", domains=["<domain>"], status="Prospect" or "Active")
 ```
 
-`Prospect` when the message describes an intro, a demo, or an evaluation. `Active` when they are a live customer.
+`Prospect` for an intro, demo or evaluation. `Active` for a live customer.
 
-Set `domains` if you can establish the real one, and web search for it rather than assuming the obvious form. A company's domain is often not just its short name plus `.com`, and the domain is what CRM sync matches on later, so a blank field quietly breaks that matching and a guessed one breaks it worse. If a search does not settle it, leave it blank and say so.
+Set the domain only if you can confirm it with a web search. Do not assume the obvious form. The domain is what CRM sync matches on later. A guessed domain breaks that matching. If you cannot confirm it, leave it blank and say so.
 
 Do not invent revenue or size.
 
 ## Step 4: Find or create a project per request
 
-For each remaining request, invoke **`/file-project`**. It owns the searching, naming, routing, labeling, and description, including the two traps that bite hardest here: projects named inconsistently (plain `Coupa` exists, so a search for "Coupa Integration" finds nothing) and substring matches that are different work (`Planning Grid (Pigment Style)` is not a Pigment integration).
+For each remaining request, invoke **`/file-project`**. It owns searching, naming, routing, labels and the description, including inconsistent project names and misleading substring matches.
 
-Pass it the customer, the verbatim ask, the deal context, and the source link, and tell it the request came from sales so it applies `Sales Request` and `Customer Gap`.
+Pass it the customer, the verbatim ask, the deal context and the source link. Tell it the request came from sales, so it applies the sales origin label and `{{CUSTOMER_GAP_LABEL}}`.
 
-When `/file-project` finds an existing open project, use it. That is the good outcome, not a failure: the second customer asking for Airbase is the signal that moves it up a roadmap, and it only registers if it lands on the same project as the first.
+When it finds an existing open project, use it. That is the good outcome. The second customer asking for the same thing is the signal that moves it up the roadmap, and it only counts if it lands on the same project.
 
 ## Step 5: Attach the customer need
 
-This is the step that makes the whole thing worth doing. A project with no needs attached looks like one person's idea; a project with six needs attached is a business case.
+This step makes the rest worth doing. A project with no needs looks like one person's idea. A project with six needs is a business case.
 
 ```
 save_customer_need(customer=<customer>, project=<project>,
                    body="<the ask, in their words, plus context>",
-                   source="<Slack permalink>")
+                   source="<message link>")
 ```
 
-Write the body as what the customer said and why, not as a restatement of the project name. `"Coupa integration"` on the Coupa project tells a reader nothing they did not already know. Something closer to: *"Named Coupa among six integrations they'd need in place. Prospect, intro call Aug 21, evaluating alongside their existing procurement stack. Not yet clear whether they need PO sync or invoice sync."*
+Write the body as what the customer said and why. Not a restatement of the project name. For example: *"Named Initech Expense among five integrations they'd need. Prospect, intro call Aug 21. Not yet clear whether they need bill sync or only receipt import."*
 
-Keep the customer's phrasing where you have it, and keep the uncertainty. "Not yet clear whether" is more useful to whoever scopes this than a confident guess about which direction the sync runs.
+Keep their phrasing and keep the uncertainty.
 
-A customer need's `priority` has exactly two values: `0` is Not important and `1` is Important. It is not the 0-to-4 issue priority scale, so there is no Urgent and no High here, and describing a need as Urgent in your report misrepresents what you set.
+Need priority in this example tracker is binary: `0` is not important, `1` is important. It is not the issue priority scale. Use `1` only when the message says the deal depends on it ("blocker", "requirement", "can't move forward without"). A prospect listing five integrations in passing is not calling all five blockers.
 
-Use `1` only when the message says the deal depends on it, in words like "blocker", "requirement", "must have before", "can't move forward without". A prospect listing six integrations conversationally is not signalling that all six are blockers, and marking them so makes the field meaningless. When only one of several asks carries that language, only that one gets `1`.
+Before attaching, check the needs returned in Step 3. If this customer already has a need on this project, update it. Duplicate needs inflate the count that prioritization runs on.
 
-Before attaching, check `includeNeeds=true` from Step 3: if this customer already has a need on this project, update it rather than adding a second. Duplicate needs inflate the count that prioritization runs on, which is the one number this whole workflow exists to make trustworthy.
+## Step 6: Record what you learned, not only what was asked
 
-## Step 6: Land what you learned, not just what was asked for
+Checking docs and issues turns up findings nobody asked for: a capability that works but is undocumented, a doc page that describes something the product does not do, a limit the next customer will also hit. These are easy to lose, because their obvious home is a paragraph in your report.
 
-Checking the docs and the issues turns up findings nobody requested: a capability that works but is undocumented, a doc page that describes something the product does not do, a limitation the next customer will also hit. These are the most valuable things this workflow produces and they are the easiest to lose, because the obvious home for them is a paragraph in your report, and a paragraph in a report is gone by tomorrow.
+Give each finding a home:
 
-So give each finding somewhere to live before you write the report:
+- **The docs are wrong or silent about something that works.** Note it in the need body. Say plainly in the report that the docs caused the confusion.
+- **You suspect a defect, not a missing feature.** Say so, name the evidence, and hand it to `/file-bug`. Do not file it yourself. A request logged as a feature gap when the feature is broken is the expensive mistake.
+- **A limit that will hit others.** Write it into the need body as a stated constraint.
 
-- **The docs are wrong or silent about something that works.** Say a card connector attaches receipts to synced bills but its doc page mentions only line items, which is why a customer asked for a feature they already have. That is a docs defect. Note it in the need body and say plainly in your report that the doc page caused the confusion, so the next rep is not surprised by the same thing.
-- **You suspect a defect rather than a missing feature.** Say so, name the evidence, and hand it to `/file-bug`. Do not file it yourself; that skill exists because bug tickets need a repro and an environment you do not have. What you can do is stop the request being logged as a feature gap when it is probably broken, which is the expensive mistake.
-- **A limitation that will hit others.** Say a payroll connector supports one entity per connection. If the customer's multi-entity setup makes that a blocker, that belongs in the need body as a stated constraint rather than as a conditional you leave for the rep to resolve.
+Do not edit, reprioritize, reroute or rename other people's issues and projects, even when you think they are wrong. Surface it and let the owner decide.
 
-The test is whether the finding survives you not being asked a follow-up question. If it only exists as "let me know and I'll file it", it does not survive.
+## Step 7: Clean up the prose
 
-Two things stay off limits. Do not edit, reprioritize, reroute, or clear dates on issues and projects that belong to other people, even when you are confident they are wrong; surface it and let the owner decide. And do not rename someone's existing project to match a convention.
-
-## Step 7: Run authored prose through Remove AI Writing Patterns
-
-Everything you wrote in your own voice gets the pass: project descriptions and summaries, customer need bodies, your report, and the Slack reply from Step 10. Apply the diffs before saving.
-
-Two carve-outs. Verbatim customer quotes stay exactly as the customer said them, even when they are clumsy, because the quote's value is that it is theirs. And structured fields (names, labels, statuses) are not prose.
-
-The tells this particular writing attracts are worth knowing in advance: bolded lead-ins in the scope sections, "this isn't just about X, it's about Y" framing on why a request matters, and three-part parallel sentences about customer pain. If the description reads like a pitch rather than a note, it will get skimmed, and a skimmed description is the same as an empty one.
+Run `/anti-ai` (the [Remove AI Writing Patterns](../../stakeholder-communication/remove-ai-writing-patterns/) prompt) on everything you wrote in your own voice: project descriptions, need bodies, the report, and the reply in Step 10. Leave verbatim customer quotes exactly as said. Names, labels and statuses are not prose.
 
 ## Step 8: Stop only for these two things
 
-You are otherwise acting without confirmation. Two cases are worth a question, because both create records that are annoying to unwind and neither can be resolved by looking harder:
+1. **Several plausible customer matches, none decisive.** A duplicate customer splits that company's history. Show the candidates and ask.
+2. **You cannot tell who the customer is**, or the message has no identifiable asks. Say what you see and ask.
 
-1. **Several plausible customer matches, none decisive.** Creating a duplicate customer splits that company's history in two. Show the candidates and ask which.
-2. **You cannot tell who the customer is at all**, or the message has no identifiable asks in it. Say what you see and ask, rather than inventing a subject.
-
-Everything else you decide and report. If you are unsure whether something is an ask, log it and flag it. If you are unsure which team owns a request, `/file-project` routes it to your default triage team, which is the designed answer for "not yet shaped".
+Decide everything else and report it. Unsure whether something is an ask? Log it and flag it. Unsure which team owns it? `/file-project` routes it to `{{PRODUCT_TEAM}}`.
 
 ## Step 9: Report what happened
 
-One table, one row per requested vendor, so the reader can see every branch at a glance:
+One table, one row per request:
 
 ```markdown
-**Northwind Solar**, new prospect, created in Linear
+**Acme Co**, new prospect, created in the tracker
 
 | Request | Status | Action taken |
 |---|---|---|
-| ADP | Already shipped | None. Docs: <link> |
-| Airbase | Existing project | Need attached to Airbase integration <link> |
-| Coupa | Existing project | Need attached to Coupa <link> |
-| Pigment | New | Created Pigment Integration <link>, need attached |
-| Anaplan | New | Created Anaplan Integration <link>, need attached |
-| TravelPerk | New | Created TravelPerk Integration <link>, need attached |
+| Hooli Payroll | Already shipped | None. Docs: <link> |
+| Initech Expense | Existing project | Need attached to Initech Expense Integration <link> |
+| Umbrella Planning | New | Created Umbrella Planning Integration <link>, need attached |
 ```
 
-Use a `Shipped, with a gap` status for the unsettled cases from Step 2, and say in one line what the gap is: *"Warehouse export ships but runs once with no scheduled refresh (<issue link>). They called this a hard requirement, so need attached."* That sentence is the whole reason the row exists.
+Use `Shipped, with a gap` for the unsettled cases from Step 2, and say what the gap is in one line: *"Warehouse export ships but runs once, with no scheduled refresh (PROJ-123). They called this a hard requirement, so need attached."*
 
 Then, briefly:
 
 - anything you read as an ask that might not be one
-- any near-miss project you decided was different work, and why
-- any open issue you found that changes what the rep should say, like a limitation the customer will hit or a bug fixed recently enough that they may have concluded the feature does not work
+- any near-miss project you judged to be different work, and why
+- any open issue that changes what the rep should say
 - what no human has set yet: priority, lead, dates, release label
 
-Close by naming the shipped ones in a sentence the rep can use with the customer, with the caveats attached where there are any. "ADP connects today, single-entity only" is useful. "ADP works" sets up a broken promise.
+Close with one sentence the rep can use with the customer, caveats included. "Hooli Payroll connects today, one entity per connection" is useful. "Hooli Payroll works" sets up a broken promise.
 
-## Step 10: Draft the Slack reply
+## Step 10: Draft the reply for the rep
 
-End with a message the user can paste straight into the rep's thread. The report is for whoever ran this skill; the Slack reply is for the rep, who needs to know two things: that it is logged, and what to say to the customer. Put it in a fenced `text` code block so it copies as raw text with nothing for Slack to mangle.
+End with a message the user can paste into the rep's thread in `{{TEAM_CHAT}}`. The report is for whoever ran this skill. The reply is for the rep, who needs to know two things: it is logged, and what to tell the customer. Put it in a fenced `text` block so it pastes as plain text.
 
-Write it to the rep in plain words, the way a colleague would reply in a thread:
+- One opening line: it is logged, plus anything surprising, such as the request already being tracked.
+- One `•` line per request: the vendor, the outcome in plain words (works today, already on the roadmap, newly logged), and the link.
+- One line starting `What you can tell <Customer>:` with the sentence from Step 9.
+- At most one question back, only if the answer would change scoping. Skip it if there is nothing worth asking.
 
-- One opening line saying it is logged, and naming anything surprising, such as the request already being tracked.
-- One `•` line per request: the vendor, the outcome in plain words (works today, already on the roadmap, newly logged), and the Linear or docs URL.
-- One line starting `What you can tell <Customer>:` with the customer-safe sentence from Step 9, caveats included.
-- At most one question back to the rep, and only if the answer would change the scoping, such as which direction a sync runs. Skip it if there is nothing worth asking.
+Keep it under about 120 words. Chat tools often do not render tables or headers, so use bare URLs and `•` bullets. Leave out internal detail (need IDs, unset fields, label names). Never imply a timeline. "In the roadmap backlog" is accurate. "Coming soon" is a promise nobody made.
 
-Keep it under about 120 words. Slack does not render tables or headers, and `<url|text>` link syntax does not survive a paste into the composer, so use bare URLs, `•` bullets, and no bold beyond Slack's single-asterisk `*bold*` if anything needs it. Leave out the internal detail from the report (need IDs, unset priority and lead, label names); the rep cannot act on it. Never imply a timeline. "On the roadmap backlog" is accurate; "coming soon" is a promise nobody made.
+## Worked example (fictional)
 
-Run it through Remove AI Writing Patterns with everything else in Step 7. For a request that was already tracked:
+Input:
 
 ```text
-Logged, thanks. GoCardless was already tracked for Harbor Clinics from the Sept 9 demo, so no new project.
-• GoCardless: not supported today. In the roadmap backlog with Harbor Clinics attached: https://linear.app/your-workspace/project/gocardless-integration-<id>
-What you can tell Harbor Clinics: we don't connect to GoCardless yet. Payments come into AR through Stripe today, and their request is logged against their account.
-One question if it comes up: do they need payment collection only, or payouts and fees too?
+Sam [4:12 PM]
+intro call with acme co today. integrations they mentioned:
+initech expense, hooli payroll, umbrella planning. initech is a must have before they sign
 ```
 
-## Worked example
+Reading it: the customer is **Acme Co**, a **prospect** ("intro call"). "Integrations they mentioned" is an explicit ask, so all three count. Only Initech Expense carries blocker language ("must have before they sign"), so only its need gets priority `1`.
 
-`references/worked-example.md` walks the Northwind Solar message end to end, including why Pigment gets a new project despite a search hit and why ADP gets nothing at all. Read it when a message has a mix of outcomes in it, which most do.
+Docs check: the index lists **Hooli Payroll**. It shipped, and the ask is a bare vendor name, so shipped settles it. No project, no need. It goes in the report with the doc link. An issue search shows an open limit of one entity per connection, so the rep hears that caveat.
+
+Customer: `list_customers(query="Acme")` returns nothing. Create `Acme Co` as a Prospect. A web search confirms the domain, so set it.
+
+Projects: `/file-project` searches "Initech" and finds an open `Initech Expense Integration` project. Attach the need there. It searches "Umbrella" and finds `Planning Grid (Umbrella style)`, a planning feature that borrowed a layout, not an integration. That is a near miss, not the same work, so it creates `Umbrella Planning Integration` and names the near miss in the description.
+
+Reply:
+
+```text
+Logged, thanks. Initech Expense was already tracked, so Acme Co is now attached to that project.
+• Initech Expense: on the roadmap backlog, Acme Co attached as a must-have: <project link>
+• Hooli Payroll: works today, one entity per connection: <docs link>
+• Umbrella Planning: newly logged: <project link>
+What you can tell Acme Co: Hooli Payroll connects today for one entity per connection. Initech Expense and Umbrella Planning are logged against their account.
+One question if it comes up: does Acme need Initech bill sync, or only receipt import?
+```

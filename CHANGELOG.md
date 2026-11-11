@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Product factory skills
+- **Added** a "Product factory" section to the README with a flowchart of the pipeline from demand capture to accepted release
+- **Added** the `prioritize-demand`, `enrich-ticket`, `accept-against-spec` and `factory-retro` skills under `prompts/roadmap-planning/`
+- **Added** the `write-prd`, `specify-evals` and `review-prd` skills under `prompts/product-strategy/`
+- **Added** `templates/prd-template.md` and `templates/factory-config.example.md`, which every factory skill reads for workspace values
+- **Changed** `file-bug`, `file-issue`, `file-project` and `sales-request-intake` to read values from the factory config, add the retro's adoption label, and gate decomposition on a Spec ready PRD
+- **Removed** `file-project/references/routing.md` and `sales-request-intake/references/worked-example.md`; routing guidance now lives in the skill and a short fictional example replaces the worked example
+
 ### Linear filing skills
 - **Renamed** the `file-ticket` skill to `file-bug` and narrowed its trigger to defects; it now hands improvements to `/file-issue` and new capabilities to `/file-project`
 - **Added** the `file-issue` skill for non-bug Linear issues: standalone improvements and project decomposition into user-visible chunks
